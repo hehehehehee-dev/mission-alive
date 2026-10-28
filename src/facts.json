@@ -1,0 +1,55 @@
+{
+  "curiosity": {
+    "id": "curiosity-habitable",
+    "claim": "Curiosity found chemical and mineral evidence that ancient Mars had environments that could support microbes. That is evidence of habitability, not proof of life.",
+    "value": null,
+    "unit": null,
+    "as_of": "2026-10-04",
+    "source_title": "NASA · Curiosity mission",
+    "source_url": "https://science.nasa.gov/mission/msl-curiosity/",
+    "status": "official"
+  },
+  "ingenuity": {
+    "id": "ingenuity-flights",
+    "claim": "Designed to attempt up to five flights, Ingenuity completed 72. Its final flight was on January 18, 2024.",
+    "value": 72,
+    "planned": 5,
+    "unit": "flights",
+    "as_of": "2024-01-18",
+    "source_title": "NASA · Ingenuity’s final flight",
+    "source_url": "https://www.nasa.gov/podcasts/small-steps-giant-leaps/small-steps-giant-leaps-episode-130-ingenuitys-final-flight-lessons-learned/",
+    "status": "official"
+  },
+  "webb": {
+    "id": "webb-mirrors",
+    "claim": "Webb’s 18 gold-coated primary mirror segments align to act as one mirror. The mirror structure folds for launch, then opens in space before alignment.",
+    "value": 18,
+    "unit": "mirror segments",
+    "as_of": "2026-10-04",
+    "source_title": "NASA · Webb’s mirrors",
+    "source_url": "https://science.nasa.gov/mission/webb/webbs-mirrors/",
+    "status": "official"
+  },
+  "voyager": {
+    "id": "voyager-record",
+    "claim": "Each Voyager carries a Golden Record with sounds and images of Earth, including spoken greetings in 55 languages. It is a time capsule of our world.",
+    "value": 55,
+    "unit": "languages",
+    "as_of": "2026-10-04",
+    "source_title": "NASA · The Golden Record",
+    "source_url": "https://science.nasa.gov/mission/voyager/voyager-golden-record-overview/",
+    "status": "official"
+  },
+  "distance": {
+    "id": "voyager-milestone",
+    "claim": "NASA projects Voyager 1 will reach one light-day from Earth on November 18, 2026.",
+    "value": 25.902,
+    "signal_hours": 24,
+    "unit": "billion km",
+    "as_of": "2026-11-18",
+    "source_title": "NASA · Where are the Voyagers?",
+    "source_url": "https://science.nasa.gov/mission/voyager/where-are-voyager-1-and-voyager-2-now/",
+    "status": "estimated",
+    "uncertainty": "NASA projected milestone, rounded distance; not a current or live position."
+  }
+}

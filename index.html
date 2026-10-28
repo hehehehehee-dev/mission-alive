@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080d12" />
+    <meta
+      name="description"
+      content="Train on four extraordinary machines. Drive, fly, unfold and listen in an interactive space academy."
+    />
+    <title>Mission Alive — An interactive space academy</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23080d12'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23eeb477'/%3E%3Cpath d='M8 23L16 7l8 16h-5l-3-7-3 7z' fill='%23eeb477'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <div class="space-photo" aria-hidden="true"></div>
+    <video
+      id="mission-film"
+      class="mission-film"
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster="/assets/voyager-heliosphere.jpg"
+      aria-hidden="true"
+    ></video>
+    <canvas id="space-ambience" aria-hidden="true"></canvas>
+    <div class="space-scrim" aria-hidden="true"></div>
+    <a class="skip" href="#controls">Skip to training controls</a>
+    <div id="museum-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="app">
+      <header>
+        <a class="brand" href="/#lobby"
+          ><span class="brand-mark">M<span>•</span></span
+          ><span
+            >MISSION ALIVE<small>THE MACHINES. THE STORIES. YOU.</small></span
+          ></a
+        >
+        <div class="header-actions">
+          <label class="language-picker"><span>Language</span><select id="ui-language" aria-label="Interface language"><option value="en" data-i18n-skip>English</option><option value="es" data-i18n-skip>Español</option><option value="vi" data-i18n-skip>Tiếng Việt</option></select></label>
+          <button id="sources">Field notes</button
+          ><button id="teachers-link">For Teachers</button
+          ><button id="sound" aria-pressed="false">Sound off</button
+          ><button class="passport" id="passport" aria-label="Open crew certification">0 / 4 stamped</button>
+        </div>
+      </header>
+      <main>
+        <section class="museum-lobby" id="lobby" aria-labelledby="lobby-title" hidden>
+          <div class="lobby-hero">
+            <div>
+              <p class="eyebrow">CREW BRIEFING</p>
+              <h1 id="lobby-title">FOUR MACHINES THAT NEVER CAME HOME</h1>
+              <div class="lobby-story-intro">
+                <p>Some of NASA's machines cannot be brought back. They are still out there, on Mars, in deep space, keeping their posts or resting where their work ended.</p>
+                <p>The machines cannot come home. So this academy does the next best thing: it trains you on them.</p>
+                <p>Complete all four training modules and you will be certified crew. Each module teaches the real job of the machine you train on.</p>
+              </div>
+              <button class="primary lobby-start" id="start-journey">Begin the journey</button>
+            </div>
+            <div id="dsn-widget-slot"></div>
+          </div>
+          <div id="mission-history-slot"></div>
+          <section class="mission-passport" aria-labelledby="passport-title">
+            <div class="passport-heading"><div><p class="eyebrow">FOUR MACHINES · FOUR REAL JOBS</p><h2 id="passport-title">CREW CERTIFICATION</h2></div><output id="lobby-progress">0 / 4 STAMPS</output></div>
+            <div class="passport-track" aria-hidden="true"><i id="passport-progress-bar"></i></div>
+            <p id="passport-message">Complete a machine’s challenge to earn its stamp.</p>
+            <button class="passport-certificate" id="lobby-certificate" hidden>Create your graduation certificate →</button>
+            <p class="teacher-invite">Teaching with this? <button id="lobby-teachers">For Teachers →</button></p>
+            <div id="hidden-fact-passport-slot"></div>
+            <div class="lobby-missions" id="lobby-missions"></div>
+          </section>
+        </section>
+        <section class="teachers-page" id="teachers-page" aria-labelledby="teachers-title" hidden></section>
+        <nav class="exhibits" aria-label="Choose a training module"></nav>
+        <section class="exhibit" aria-labelledby="title">
+          <div class="intro">
+            <p class="eyebrow" id="eyebrow"></p>
+            <h1 id="title"></h1>
+            <blockquote class="story" id="story"></blockquote>
+            <a
+              class="story-source"
+              id="story-source"
+              target="_blank"
+              rel="noopener"
+            ></a>
+            <button type="button" class="story-reopen" id="story-reopen">Story</button>
+          </div>
+          <section class="module-story-card" id="module-story" aria-labelledby="module-story-title"></section>
+          <section class="module-training" id="module-training" tabindex="-1" aria-label="Training brief"></section>
+          <details class="mission-story-more"><summary>Read more from the mission archive</summary><section class="machine-story-section" id="machine-story" aria-labelledby="machine-story-title"></section></details>
+          <section class="mission-briefing" id="briefing" aria-labelledby="briefing-title"></section>
+          <div class="challenge-heading" id="challenge-heading"><p class="eyebrow">MISSION CHALLENGE</p><h2>Now take control.</h2></div>
+          <div class="challenge-layout">
+            <div
+              id="stage"
+              role="region"
+              tabindex="0"
+              aria-label="Interactive three-dimensional spacecraft exhibit"
+            >
+              <div class="stage-grid"></div>
+              <div class="scene-label">
+                <span id="scene-name"></span
+                ><span>INTERACTIVE STUDY / NOT TO SCALE</span>
+              </div>
+              <div class="stage-caption">
+                <span id="stage-status">Choose your route</span
+                ><span class="orbit-hint">Drag or arrow keys to orbit · Scroll or +/− to zoom · 0 resets</span>
+              </div>
+            </div>
+            <aside id="controls" tabindex="-1"></aside>
+          </div>
+          <div id="mars-sounds-slot"></div>
+          <div id="hidden-facts-slot"></div>
+        </section>
+        <div id="voyager-announcements" class="sr-only" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+        <section id="greetings" hidden></section>
+        <section class="discovery" aria-live="polite" id="discovery"></section>
+      </main>
+      <footer>
+        <span>AN INDEPENDENT SPACE ACADEMY <b>•</b> PRACTICE EDITION<br><span class="ambient-credit" id="ambient-credit"></span><span class="ambient-credit machine-voice-credit" id="machine-voice-credit" hidden>Machine voices generated with ElevenLabs.</span></span
+        ><span
+          >Real missions. Your discoveries.
+          <button id="teachers-footer-link">For Teachers</button
+          >
+          <button id="motion" aria-pressed="false">Reduce motion</button
+          ><button id="view-mode" aria-pressed="false">2D view</button></span
+        >
+      </footer>
+    </div>
+    <section class="finale" id="finale" role="dialog" aria-modal="true" aria-labelledby="finale-title" hidden>
+      <div class="finale-confetti" id="finale-confetti" aria-hidden="true"></div>
+      <div class="finale-card">
+        <button type="button" class="finale-close" id="finale-close" aria-label="Close celebration">×</button>
+        <p class="eyebrow">CREW CERTIFICATION · 4 / 4 STAMPS</p>
+        <h2 id="finale-title">TRAINING COMPLETE</h2>
+        <p class="finale-lead">You have trained on all four machines. Curiosity is still climbing. Ingenuity is at rest. Webb is keeping watch. Voyager is still calling.</p>
+        <p class="finale-outro">You are certified crew now. Your first mission is not out there. It is here: tell one of their stories to one person who has never heard it. That is how machines that cannot come home get remembered.</p>
+        <div class="finale-patch">
+          <div class="finale-stamps" aria-label="All four mission stamps earned"><span>Curiosity<small>DRIVE ✓</small></span><span>Ingenuity<small>FLY ✓</small></span><span>Webb<small>UNFOLD ✓</small></span><span>Voyager<small>LISTEN ✓</small></span></div>
+          <p class="finale-date" id="finale-date"></p>
+          <div class="certificate-maker"><label for="graduate-name">Name on your certificate</label><div><input id="graduate-name" maxlength="60" autocomplete="name" placeholder="Your name"><button class="primary" id="print-certificate">Print certificate</button></div><p id="certificate-status" role="status">Your name stays in this browser and is not uploaded.</p></div>
+        </div>
+        <section class="graduation-crew" aria-labelledby="graduation-crew-title">
+          <p class="finale-gifts">You carry patience, daring, precision, and endurance now. That is the crew.</p>
+          <h3 id="graduation-crew-title">THE CREW IS ALREADY CHANGING</h3>
+          <p>In 2021, Hayley Arceneaux flew to orbit with a titanium rod in her leg. She was the first person with a prosthesis in space.</p>
+          <p>John McFall, a Paralympian and a surgeon, is medically certified for a long mission on the space station. He is waiting for his flight.</p>
+          <p>Wanda Diaz-Merced is blind. She studies the stars by listening to them.</p>
+        </section>
+        <div class="finale-actions"><button class="primary" id="finale-passport">Finish</button><button class="secondary" id="finale-teachers">For Teachers</button></div>
+      </div>
+    </section>
+    <dialog class="exhibit-story-dialog" id="exhibit-story-dialog" aria-labelledby="exhibit-story-title">
+      <p class="eyebrow" id="exhibit-story-machine"></p>
+      <h2 id="exhibit-story-title"></h2>
+      <dl class="exhibit-story-beats" id="exhibit-story-beats"></dl>
+      <p class="story-meanwhile" id="exhibit-story-meanwhile"></p>
+      <button type="button" class="primary" id="start-exploring">Start exploring</button>
+    </dialog>
+    <section class="graduate-certificate" id="graduate-certificate" aria-hidden="true">
+      <div class="certificate-frame">
+        <p class="certificate-overline">MISSION ALIVE · INTERACTIVE SPACE ACADEMY</p>
+        <div class="certificate-orbit" aria-hidden="true">✦</div>
+        <h1>Mission Alive Graduate</h1>
+        <p class="certificate-award">This certificate celebrates</p>
+        <p class="certificate-name" id="certificate-name">Explorer</p>
+        <p class="certificate-copy">for completing four training modules and earning every stamp in the crew certification.</p>
+        <div class="certificate-stamps" aria-label="Four missions completed"><span><b>01</b>Curiosity<small>DRIVE</small></span><span><b>02</b>Ingenuity<small>FLY</small></span><span><b>03</b>Webb<small>UNFOLD</small></span><span><b>04</b>Voyager 1<small>LISTEN</small></span></div>
+        <p class="certificate-finish">Four machines. Four missions. One explorer.</p>
+        <p class="certificate-date" id="certificate-date"></p>
+      </div>
+    </section>
+    <dialog id="notes">
+      <div class="dialog-top">
+        <p class="eyebrow">THE EVIDENCE BEHIND THE EXPERIENCE</p>
+        <button id="close-notes" aria-label="Close field notes">Close</button>
+      </div>
+      <h2>Field notes</h2>
+      <div id="notes-content"></div>
+      <p class="fine">
+        Independent educational practice prototype. Not affiliated with or
+        endorsed by NASA. Quotations and mission audio link to their NASA or JPL
+        source pages. Geometry, timing, routes, and control meters are
+        simplified learning models.
+      </p>
+    </dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
