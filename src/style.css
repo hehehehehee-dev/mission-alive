@@ -530,6 +530,74 @@ main {
   gap: 12px;
   margin-top: 24px;
 }
+.location-map {
+  margin-top: 30px;
+  padding: clamp(22px, 3vw, 36px);
+  border: 1px solid #52677a;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #0d1822ee, #080e15ee);
+  box-shadow: 0 24px 80px #0008;
+}
+.location-map-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.65fr);
+  gap: 30px;
+  align-items: end;
+  margin-bottom: 20px;
+}
+.location-map-heading .eyebrow { margin: 0 0 7px; color: #a8c8dc; }
+.location-map-heading h2 { margin: 0; color: #f2ede4; font: 400 clamp(1.7rem, 3vw, 2.65rem)/1.1 var(--story-serif); }
+.location-map-heading > p { margin: 0; color: #b6c1c8; font-size: .82rem; line-height: 1.6; }
+.location-map-field {
+  position: relative;
+  min-height: 350px;
+  overflow: hidden;
+  border: 1px solid #ffffff1f;
+  border-radius: 12px;
+  background: #080d14;
+}
+.location-map-field > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.location-dot {
+  position: absolute;
+  z-index: 1;
+  left: var(--map-x);
+  top: var(--map-y);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid #ffffff6b;
+  border-radius: 8px;
+  color: #f8f3e9;
+  background: #071019db;
+  box-shadow: 0 8px 24px #000b;
+  text-align: left;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(8px);
+}
+.location-dot:hover, .location-dot:focus-visible { border-color: #fff; background: #132536ef; transform: translate(-50%, -50%) scale(1.04); }
+.location-dot i { width: 10px; height: 10px; flex: none; border: 2px solid #fff; border-radius: 50%; background: #b9d9ff; box-shadow: 0 0 0 5px #b9d9ff25, 0 0 14px #b9d9ff; }
+.location-dot.is-moon i { background: #f0e2bd; box-shadow: 0 0 0 5px #f0e2bd22, 0 0 14px #f0e2bd; }
+.location-dot.is-mars i { background: #ef986c; box-shadow: 0 0 0 5px #ef986c22, 0 0 14px #ef986c; }
+.location-dot span { display: grid; font: 700 .68rem/1.2 Arial, sans-serif; white-space: nowrap; }
+.location-dot small { margin-top: 2px; color: #aebeca; font: .5rem/1.2 monospace; letter-spacing: .05em; }
+.location-map-credit { margin: 10px 0 0; color: #82939e; }
+
+.moon-panel { max-width: 1080px; }
+.moon-panel .dialog-top { position: sticky; top: -30px; z-index: 2; margin: -30px -30px 0; padding: 20px 30px 14px; background: linear-gradient(#101820 78%, transparent); }
+.moon-panel .dialog-top button { padding: 7px 10px; }
+.moon-panel-intro { max-width: 680px; }
+.moon-story-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 22px; }
+.moon-story-card { margin: 0; padding: clamp(20px, 3vw, 30px); border: 1px solid #8d9aa35e; border-radius: 11px; background: linear-gradient(150deg, #1a242c, #0b1218); }
+.moon-story-card .eyebrow { color: #d7c695; }
+.moon-story-card h3 { margin: 8px 0 20px; color: #f3eee4; font: 400 1.55rem/1.18 var(--story-serif); }
+.moon-story-facts { display: grid; gap: 14px; }
+.moon-story-facts p { margin: 0; }
+.moon-story-facts strong, .moon-story-sources > strong { display: block; margin-bottom: 4px; color: #a9c9da; font: 700 .61rem/1.3 monospace; letter-spacing: .1em; }
+.moon-story-facts span { display: block; color: #c7d0d5; font-size: .82rem; line-height: 1.58; }
+.moon-story-sources { display: grid; gap: 5px; margin: 23px 0 0; padding-top: 16px; border-top: 1px solid #ffffff19; }
+.moon-story-sources a { color: #e8cd92; font-size: .7rem; line-height: 1.4; }
 .lobby-mission-card {
   min-height: 210px;
   display: grid;
@@ -2073,6 +2141,7 @@ footer b {
 .ambient-credit a:hover {
   color: var(--accent);
 }
+.data-sources-credit { display: block; margin-top: 5px; color: #9baab3; }
 footer button {
   font-family: Arial;
   font-size: 0.75rem;
@@ -3206,6 +3275,15 @@ body[data-exhibit="voyager"] {
   .lobby-missions {
     grid-template-columns: 1fr;
   }
+  .location-map { padding: 18px 14px; }
+  .location-map-heading { grid-template-columns: 1fr; gap: 11px; }
+  .location-map-field { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 520px; padding: 150px 12px 14px; align-content: end; }
+  .location-map-field > img { height: 150px; object-position: center; }
+  .location-dot, .location-dot:hover, .location-dot:focus-visible { position: relative; left: auto; top: auto; width: 100%; min-height: 62px; transform: none; }
+  .location-dot span { white-space: normal; }
+  .moon-panel { width: calc(100% - 18px); max-height: 92vh; padding: 22px 16px; }
+  .moon-panel .dialog-top { top: -22px; margin: -22px -16px 0; padding: 16px; }
+  .moon-story-grid { grid-template-columns: 1fr; }
   .lobby-mission-card {
     min-height: 165px;
   }

@@ -28,6 +28,7 @@ import { dsnWidgetMarkup, mountDsnWidget } from "./dsn-widget.js";
 import { missionHistoryMarkup } from "./mission-history.js";
 import { marsSoundsMarkup, mountMarsSounds } from "./mars-sounds.js";
 import { hiddenFactPassportMarkup, mountHiddenFacts } from "./hidden-facts.js";
+import { mountMoonPanel, mountLocationMap } from "./moon-stories.js";
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -180,6 +181,7 @@ function loadProgress() {
   }
 }
 const $ = (s) => document.querySelector(s);
+const moonPanel = mountMoonPanel($("#moon-panel-slot"));
 let current = "curiosity",
   state = {},
   scene,
@@ -193,6 +195,7 @@ let current = "curiosity",
   stampCeremony,
   curiosityGallery,
   dsnWidget,
+  locationMap,
   marsSoundPlayer,
   hiddenFactCache,
   completed = loadProgress(),
@@ -301,6 +304,8 @@ function disposeOpenData() {
   webbAlignment = null;
   exhibitLayout?.dispose();
   exhibitLayout = null;
+  locationMap?.dispose();
+  locationMap = null;
 }
 const backgroundCredits = {
   lobby: [
@@ -348,6 +353,7 @@ async function navigateTo(id) {
   }
 }
 function setRoute(id) {
+  if (moonPanel.dialog.open) moonPanel.dialog.close();
   if (id === "teachers") {
     history.pushState({ route: id }, "", "/teachers");
     renderTeachers();
@@ -650,6 +656,10 @@ function renderLobby() {
   dsnWidget = mountDsnWidget($("#dsn-widget-slot"));
   $("#mission-history-slot").innerHTML = missionHistoryMarkup();
   $("#hidden-fact-passport-slot").innerHTML = hiddenFactPassportMarkup();
+  locationMap = mountLocationMap($("#location-map-slot"), {
+    onExhibit: (id) => navigateTo(id),
+    onMoon: (id, trigger) => moonPanel.open(id, trigger),
+  });
   $("#lobby-missions").innerHTML = Object.entries(exhibits)
     .map(
       ([id, exhibit], index) =>

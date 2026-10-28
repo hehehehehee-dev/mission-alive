@@ -4,9 +4,32 @@ export const WEBB_IMAGE_CREDIT = "Images: NASA/STScI";
 
 export const webbAlignmentAssets = Object.freeze({
   mosaic: "/assets/webb-hd84406-18-dots-mosaic.jpg",
+  selfie: "/assets/webb-primary-mirror-selfie.png",
   hexagonal: "/assets/webb-hd84406-hexagonal-array.jpg",
   deepField: "/assets/webb-first-deep-field-smacs0723.png",
 });
+
+const webbImageGalleryMarkup = () => `<section class="webb-real-images" aria-labelledby="webb-real-images-title">
+  <div class="webb-real-images-heading">
+    <p class="eyebrow">REAL WEBB IMAGERY</p>
+    <h3 id="webb-real-images-title">From eighteen stars to thousands of galaxies</h3>
+    <p>Webb was built jointly by NASA, ESA, and the Canadian Space Agency (CSA). <a href="https://science.nasa.gov/mission/webb/webb-team/" target="_blank" rel="noopener">NASA Webb team source ↗</a></p>
+  </div>
+  <div class="webb-real-images-grid">
+    <figure>
+      <img src="${webbAlignmentAssets.mosaic}" width="2487" height="1685" alt="Eighteen scattered images of the star HD 84406, one from each Webb primary mirror segment." loading="lazy" decoding="async">
+      <figcaption><strong>Before alignment</strong><span>The same star, HD 84406, appeared 18 times—once from each mirror segment.</span><small>Image credit: NASA</small><a href="https://science.nasa.gov/blogs/webb/2022/02/11/photons-received-webb-sees-its-first-star-18-times/" target="_blank" rel="noopener">Official image source ↗</a></figcaption>
+    </figure>
+    <figure>
+      <img src="${webbAlignmentAssets.selfie}" width="1024" height="1024" alt="Webb engineering selfie showing all 18 primary mirror segments, with one segment glowing brightly." loading="lazy" decoding="async">
+      <figcaption><strong>Webb's mirror selfie</strong><span>A special lens inside NIRCam photographed the primary mirror segments during alignment.</span><small>Image credit: NASA</small><a href="https://science.nasa.gov/blogs/webb/2022/02/11/photons-received-webb-sees-its-first-star-18-times/" target="_blank" rel="noopener">Official image source ↗</a></figcaption>
+    </figure>
+    <figure>
+      <img src="${webbAlignmentAssets.deepField}" width="1960" height="2000" alt="Webb's first deep field, SMACS 0723, filled with distant galaxies, bright stars, and stretched arcs of light." loading="lazy" decoding="async">
+      <figcaption><strong>After alignment</strong><span>SMACS 0723, Webb's first deep field, reveals thousands of galaxies.</span><small>Image credit: NASA, ESA, CSA, STScI</small><a href="https://science.nasa.gov/mission/webb/webbs-first-images/" target="_blank" rel="noopener">Official image source ↗</a></figcaption>
+    </figure>
+  </div>
+</section>`;
 
 // Eighteen points around a hexagonal array, used only to illustrate image stacking.
 // The preceding stages and final field use the real NASA images, not this diagram.
@@ -41,7 +64,7 @@ export function webbAlignmentMarkup() {
     </div>
     <figcaption class="webb-alignment-caption" data-alignment-caption hidden>${WEBB_DEEP_FIELD_CAPTION}</figcaption>
     <p class="fine webb-alignment-credit">${WEBB_IMAGE_CREDIT}</p>
-  </figure>`;
+  </figure>${webbImageGalleryMarkup()}`;
 }
 
 export function mountWebbAlignment(root, { schedule = setTimeout, cancel = clearTimeout } = {}) {

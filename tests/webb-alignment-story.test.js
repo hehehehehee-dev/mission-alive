@@ -35,6 +35,12 @@ test("real Webb images are shipped in their declared formats, with the exact req
     else assert.deepEqual(Array.from(bytes.subarray(0, 3)), [255, 216, 255]);
   }
   assert.equal((markup.match(/class="webb-alignment-dot"/g) || []).length, 18);
+  assert.equal((markup.match(/<section class="webb-real-images"/g) || []).length, 1);
+  assert.equal((markup.match(/<figure>/g) || []).length, 3);
+  assert.ok(markup.includes("Webb was built jointly by NASA, ESA, and the Canadian Space Agency (CSA)."));
+  assert.equal((markup.match(/Image credit: NASA<\/small>/g) || []).length, 2);
+  assert.equal((markup.match(/Image credit: NASA, ESA, CSA, STScI<\/small>/g) || []).length, 1);
+  assert.ok(markup.includes(webbAlignmentAssets.selfie));
 });
 
 test("unavailable local images silently fall back to a matching schematic without a broken image or misleading field caption", () => {

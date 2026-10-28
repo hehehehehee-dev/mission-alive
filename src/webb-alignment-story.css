@@ -73,6 +73,25 @@
   margin: 0.55rem 0 0;
 }
 
+.webb-real-images {
+  margin-top: 1.3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgb(229 199 133 / 25%);
+}
+
+.webb-real-images-heading .eyebrow { margin: 0 0 .45rem; }
+.webb-real-images-heading h3 { margin: 0 0 .75rem; color: #f2ecde; font: 400 1.35rem/1.2 var(--story-serif); }
+.webb-real-images-heading p { margin: 0; color: #bec7c9; font-size: .78rem; line-height: 1.55; }
+.webb-real-images-heading a, .webb-real-images figcaption a { color: #eed08a; }
+.webb-real-images-grid { display: grid; gap: 1rem; margin-top: 1rem; }
+.webb-real-images figure { margin: 0; overflow: hidden; border: 1px solid rgb(229 199 133 / 28%); border-radius: 10px; background: #080b0f; }
+.webb-real-images img { display: block; width: 100%; aspect-ratio: 1.18; object-fit: cover; background: #000; }
+.webb-real-images figure:nth-child(2) img { object-fit: contain; }
+.webb-real-images figcaption { display: grid; gap: .35rem; padding: .8rem; color: #bcc5c8; font-size: .72rem; line-height: 1.45; }
+.webb-real-images figcaption strong { color: #f4e7c8; font: 400 1rem/1.2 var(--story-serif); }
+.webb-real-images figcaption small { color: #d8bf85; font: .62rem/1.4 monospace; }
+.webb-real-images figcaption a { font-size: .65rem; }
+
 body.motion-reduced .webb-alignment-dot { transition: none; }
 
 @media (prefers-reduced-motion: reduce) {
