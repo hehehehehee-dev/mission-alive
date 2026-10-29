@@ -230,7 +230,7 @@ export function moonPanelMarkup() {
 
 export function locationMapMarkup() {
   return `<section class="location-map" aria-labelledby="location-map-title">
-    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">A little ship. A very big universe.</h2></div><div><p>Earth, the Moon, and Mars share one size scale. The space between stops is compressed; the Webb orbit view changes scale.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p></div></div>
+    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">A little ship. A very big universe.</h2></div><div><p>Earth, the Moon, and Mars share one size scale. The space between stops is compressed; the Webb orbit view changes scale.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p><button type="button" class="compare-planets-trigger" data-compare-planets aria-haspopup="dialog" aria-controls="planet-comparison">Put Earth beside Mars ↗</button></div></div>
     <div class="location-map-field" role="group" aria-label="Scroll journey from Earth to the Moon, Mars, Webb, and Voyager">
       <svg class="journey-scroll-route" viewBox="0 0 1000 3400" preserveAspectRatio="none" aria-hidden="true">
         <path class="journey-path-glow" d="${journeyRoutes.desktop}"/>
@@ -339,7 +339,7 @@ export function mountMoonPanel(root) {
   };
 }
 
-export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}, journeyProgress = 0 } = {}) {
+export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}, onCompare = () => {}, journeyProgress = 0 } = {}) {
   root.innerHTML = locationMapMarkup();
   let activeProgress = clampJourneyProgress(journeyProgress);
   updateJourneyRoute(root, activeProgress);
@@ -375,6 +375,8 @@ export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}
     return true;
   };
   const click = (event) => {
+    const comparison = event.target.closest('[data-compare-planets]');
+    if (comparison) { onCompare(comparison); return; }
     const exhibit = event.target.closest("[data-map-exhibit]");
     const moon = event.target.closest("[data-map-moon]");
     const stop = exhibit?.dataset.mapExhibit || moon?.dataset.mapMoon;

@@ -15,6 +15,7 @@ const image = (id, title, credit, source, file, original, usedIn, kind = 'Photog
 // Public catalog: add every external asset here before using it in the app.
 export const resourceCredits = [
   image('earth', 'Earth · Blue Marble 2002', "NASA's Earth Observatory", 'https://science.nasa.gov/resource/blue-marble-2002/', '/assets/journey-earth-nasa.jpg', 'https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/1/1-bluemarble_west-1.jpg', ['Lobby', 'Journey map'], 'Composite image', 'NASA composite; circular crop and a soft shadow in the map.'),
+  image('pale-blue-dot', 'Voyager · Pale Blue Dot Revisited', 'NASA / JPL-Caltech', 'https://science.nasa.gov/photojournal/pale-blue-dot-revisited/', '/assets/voyager-pale-blue-dot.jpg', 'https://assets.science.nasa.gov/content/dam/science/psd/photojournal/pia/pia23/pia23645/PIA23645.jpg', ['Voyager 1', 'Mission view', 'Graduation'], 'Photograph', 'Voyager 1 photograph from 14 February 1990, reprocessed by NASA in 2020. Original JPEG preserved; an overlay identifies Earth without changing the image file.'),
   image('moon-map', 'Moon · LRO surface map', "NASA's Scientific Visualization Studio / LRO / LROC", 'https://svs.gsfc.nasa.gov/4720/', '/assets/journey-moon-lroc.jpg', 'https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg', ['Journey map'], 'Surface map', 'NASA surface map projected onto a sphere, with simulated lighting.'),
   image('mars-map', 'Mars · Viking surface map', 'NASA / JPL / Caltech / USGS', 'https://space.jpl.nasa.gov/tmaps/mars.html', '/assets/journey-mars-viking.jpg', 'https://space.jpl.nasa.gov/tmaps/pix/mar0kuu2.jpg', ['Journey map'], 'Surface map', 'NASA surface map projected onto a sphere, with simulated lighting.'),
   image('sun', 'Sun · SDO/AIA 171 Å · 10 September 2025', 'NASA / GSFC / Solar Dynamics Observatory', 'https://science.nasa.gov/photojournal/image-of-sun-from-nasas-solar-dynamics-observatory/', '/assets/journey-sun-sdo.jpg', 'https://assets.science.nasa.gov/content/dam/science/psd/photojournal/pia/pia26/pia26681/PIA26681.jpg', ['Journey map'], 'Observation', 'Extreme-ultraviolet observation shown in gold false color. The map uses a soft edge mask; the original file is preserved.'),
@@ -41,6 +42,11 @@ export const resourceCredits = [
   { id: 'greetings', category: 'audio', kind: 'Audio archive', title: 'Voyager · 55 Golden Record greetings', credit: 'NASA / JPL-Caltech · Voyager Golden Record', source: greetingSource, files: ['golden-record-greetings/'], usedIn: ['Voyager 1'], presentation: 'Recordings supplied by the project owner, paired with NASA’s published language list and English translations. Individual recording provenance has not been independently authenticated.', languages: greetings.map(item => item.language) },
   ...marsSounds.map(clip => ({ id: `mars-${clip.id}`, category: 'audio', kind: 'Audio archive', title: clip.label, credit: 'NASA / JPL-Caltech · Perseverance', source: clip.source, files: [clip.file], usedIn: ['Curiosity'], presentation: clip.detail })),
 ];
+
+for (const entry of resourceCredits) {
+  if (['curiosity-panorama', 'ingenuity-aerial', 'first-deep-field'].includes(entry.id)) entry.usedIn.push('Mission view');
+  if (['earth', 'moon-map', 'mars-map'].includes(entry.id)) entry.usedIn.push('Planet comparison');
+}
 
 const archivePhotos = new Map();
 export function registerArchivePhotoCredits(items) {

@@ -31,6 +31,8 @@ import { hiddenFactPassportMarkup, mountHiddenFacts } from "./hidden-facts.js";
 import { journeyStops, mountMoonPanel, mountLocationMap } from "./moon-stories.js";
 import { mountResourceCredits } from './resource-credits.js';
 import './resource-credits.css';
+import { showMissionView, mountPlanetComparison, mountHomecoming } from './journey-experience.js';
+import './journey-experience.css';
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -350,8 +352,10 @@ function updateBackgroundCredit(id) {
 let navigationPending = false;
 async function navigateTo(id) {
   if (navigationPending) return;
+  const showPerspective = !!exhibits[id] && current !== id;
   if (reduce) {
     setRoute(id);
+    if (showPerspective) openExhibitStory(id);
     return;
   }
   navigationPending = true;
@@ -359,6 +363,7 @@ async function navigateTo(id) {
   try {
     await spaceAmbience.warp();
     setRoute(id);
+    if (showPerspective) openExhibitStory(id);
   } finally {
     window.setTimeout(() => {
       document.body.classList.remove("is-warping");
@@ -455,8 +460,11 @@ mountTeacherPage($("#teachers-page"), {
 });
 
 let finaleReturnFocus = null;
+const homecoming = mountHomecoming($('#finale'));
+const planetComparison = mountPlanetComparison($('#planet-comparison'));
 function closeFinale(restoreFocus = true) {
   if ($("#finale").hidden) return;
+  homecoming.stop();
   $("#finale").hidden = true;
   document.body.classList.remove("finale-open");
   $("#app").inert = false;
@@ -465,7 +473,7 @@ function closeFinale(restoreFocus = true) {
   finaleReturnFocus = null;
 }
 
-function openFinale() {
+function openFinale({ homecoming: playHomecoming = true } = {}) {
   if (!$("#finale").hidden) return;
   state.finaleOpened = true;
   for (const timer of completionTimers) clearTimeout(timer);
@@ -486,6 +494,8 @@ function openFinale() {
     confetti.append(piece);
   }
   $("#finale").hidden = false;
+  $('#finale').scrollTop = 0;
+  homecoming.start({ reducedMotion: reduce, requested: playHomecoming });
   $("#app").inert = true;
   document.body.classList.add("finale-open");
   $("#finale-close").focus({ preventScroll: true });
@@ -503,7 +513,7 @@ $("#finale-teachers").onclick = () => {
 };
 $("#finale-close").onclick = () => closeFinale();
 $("#lobby-certificate").onclick = () => {
-  if (completed.size === 4) openFinale();
+  if (completed.size === 4) openFinale({ homecoming: false });
 };
 $("#print-certificate").onclick = () => {
   if (completed.size !== 4) return;
@@ -656,6 +666,7 @@ function openExhibitStory(id) {
   const story = storyLayer[id];
   if (!story) return;
   if (storyDialog.open) storyDialog.close();
+  showMissionView(storyDialog, id);
   $("#exhibit-story-machine").textContent = exhibits[id].name;
   $("#exhibit-story-title").textContent = story.heading;
   $("#exhibit-story-meanwhile").textContent = story.meanwhile;
@@ -671,8 +682,13 @@ function openExhibitStory(id) {
     beats.append(beat);
   }
   storyDialog.showModal();
-  $("#start-exploring").focus();
+  storyDialog.scrollTop = 0;
+  $("#start-exploring").focus({ preventScroll: true });
 }
+$('#mission-view-close').onclick = () => storyDialog.close();
+storyDialog.addEventListener('close', () => {
+  if (document.activeElement === document.body || document.activeElement === storyDialog) $('#story-reopen').focus({ preventScroll: true });
+});
 $("#story-reopen").onclick = () => openExhibitStory(current);
 $("#start-exploring").onclick = () => {
   storyDialog.close();
@@ -715,6 +731,7 @@ function renderLobby() {
   $("#hidden-fact-passport-slot").innerHTML = hiddenFactPassportMarkup();
   locationMap = mountLocationMap($("#location-map-slot"), {
     journeyProgress,
+    onCompare: trigger => planetComparison.open($('#location-map-slot'), trigger),
     onExhibit: (id) => {
       advanceJourney(id);
       navigateTo(id);

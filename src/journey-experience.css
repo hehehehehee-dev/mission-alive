@@ -1,0 +1,127 @@
+/* Mission photography is the entrance to the existing story and challenge. */
+.exhibit-story-dialog.mission-view { position: fixed; inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; border: 0; border-radius: 0; background: #03080e; }
+.mission-view::backdrop { background: #02060b; }
+.mission-view-photo { position: fixed; inset: 0; pointer-events: none; }
+.mission-view-photo > img { width: 100%; height: 100%; object-fit: cover; object-position: 35% center; opacity: .9; animation: mission-image-arrival 1.3s cubic-bezier(.15,.7,.25,1) both; }
+.mission-view-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #02070b0a 15%, #02070b40 43%, #02070bf0 73%, #02070b 100%), linear-gradient(0deg, #02070baf, transparent 45%); }
+.mission-view-photo-label { position: absolute; z-index: 1; left: 4vw; bottom: 7vh; max-width: 38vw; color: #e2e8e7; text-shadow: 0 2px 14px #000; }
+.mission-view-photo-label .eyebrow { font: .6rem/1.5 monospace; color: #d3c099; letter-spacing: .12em; }
+.mission-view-photo-label p { margin: 12px 0; font: 400 clamp(1.2rem, 2.1vw, 1.8rem)/1.2 var(--story-serif); }
+.mission-view-photo-label > span:last-child { font: .63rem/1.6 monospace; color: #b3c7d3; }
+.mission-view-close { position: fixed; z-index: 5; top: 22px; right: 25px; width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 1.8rem; color: #fff2dc; background: #07111be6; border-color: #bdcbd66b; }
+.mission-view-content { position: relative; z-index: 2; width: min(570px, 48%); min-height: 100%; margin-left: auto; padding: 75px clamp(30px, 5vw, 70px) 45px 25px; }
+.mission-view-content > .eyebrow { color: #f3cb81; }
+.mission-view-voice { margin: 24px 0 32px; font: italic 400 clamp(1.35rem, 2.6vw, 2.15rem)/1.3 var(--story-serif); color: #ecdec4; }
+.mission-view-content h2 { font-size: clamp(1.9rem, 3.3vw, 3rem); margin-bottom: 28px; }
+.mission-view-content .exhibit-story-beats dd { font-size: .85rem; line-height: 1.7; }
+.mission-view-content .story-meanwhile { font-size: .76rem; line-height: 1.65; }
+.mission-view-content > a { display: block; margin-top: 23px; color: #b9cdd9; font: .65rem/1.6 monospace; text-underline-offset: 4px; }
+.mission-view[data-machine-view="voyager"] .mission-view-photo > img { object-fit: contain; width: 62%; object-position: center; }
+@keyframes mission-image-arrival { from { transform: scale(1.09); opacity: .15; } to { transform: scale(1); opacity: .9; } }
+
+/* A temporary, shared size scale; it never writes training progress. */
+.compare-planets-trigger { margin-top: 19px; padding: 9px 0; color: #bbdbea; font: 600 .68rem/1.5 monospace; border: 0; border-bottom: 1px solid #86b9d170; border-radius: 0; background: transparent; }
+.compare-planets-trigger:hover { color: #f6dc9f; border-color: #e6ca89; background: transparent; }
+.planet-comparison { --comparison-earth: min(43vw, 380px); width: min(1100px, calc(100% - 20px)); max-width: 1100px; max-height: 94dvh; padding: clamp(24px, 4vw, 44px); border: 1px solid #89b4c854; border-radius: 13px; color: #eaf0f2; background: radial-gradient(ellipse at 40% 50%, #15345066, transparent 64%), #050c15; overflow-x: hidden; }
+.planet-comparison::backdrop { background: #020811ed; backdrop-filter: blur(9px); }
+.comparison-heading { display: flex; justify-content: space-between; align-items: start; gap: 18px; }
+.comparison-heading h2 { margin: 0; font: 400 clamp(1.8rem, 4vw, 3rem)/1.1 var(--story-serif); }
+.comparison-heading .eyebrow { margin: 0 0 10px; color: #d1b778; }
+.comparison-close { flex: none; width: 42px; height: 42px; padding: 0; font-size: 1.7rem; }
+.comparison-intro, .comparison-explanation { max-width: 680px; color: #a9becb; font-size: .87rem; line-height: 1.75; }
+.comparison-worlds { display: flex; align-items: end; justify-content: center; gap: clamp(8px, 3vw, 38px); padding: 50px 0 25px; }
+.comparison-worlds figure { display: grid; justify-items: center; gap: 23px; flex: none; margin: 0; }
+.comparison-globe { position: relative; flex: none; border-radius: 50%; aspect-ratio: 1; }
+.comparison-globe canvas, .comparison-globe img { display: block; width: 100%; height: 100%; border-radius: inherit; }
+.comparison-earth { width: var(--comparison-earth); }
+.comparison-earth img { max-width: none; width: 112%; height: 112%; margin: -6%; }
+.comparison-moon { width: calc(var(--comparison-earth) * 3475 / 12756); }
+.comparison-mars { width: calc(var(--comparison-earth) * 6792 / 12756); }
+.comparison-worlds figcaption { display: grid; gap: 6px; justify-items: center; min-height: 65px; }
+.comparison-worlds figcaption strong { font: 600 .63rem/1.2 monospace; color: #b9d6e4; letter-spacing: .08em; }
+.comparison-worlds figcaption span { color: #f1e3c5; font: 400 1rem/1.25 var(--story-serif); white-space: nowrap; }
+.comparison-worlds figcaption small { color: #7d9baa; font: .6rem/1.3 monospace; }
+.comparison-source { display: grid; gap: 9px; margin: 20px 0 25px; color: #809aa9; font: .6rem/1.7 monospace; }
+.comparison-source a { color: #b5d2e0; text-underline-offset: 4px; }
+
+/* The same finale opens at the same fourth-stamp trigger. This is its intro. */
+.finale > .finale-close { position: fixed; z-index: 12; top: 18px; right: 20px; }
+.finale-homecoming { position: relative; z-index: 4; width: min(1100px, 100%); min-height: min(820px, calc(100dvh - 52px)); margin: auto; display: grid; place-items: center; align-content: center; text-align: center; color: #e8e5dc; }
+.homecoming-flight, .homecoming-photo { width: 100%; grid-area: 1 / 1; }
+.homecoming-flight > .eyebrow, .homecoming-photo > .eyebrow { color: #d2c197; letter-spacing: .18em; font-size: .62rem; }
+.homecoming-flight h2, .homecoming-photo h2 { font: 400 clamp(1.7rem, 4vw, 3.2rem)/1.16 var(--story-serif); color: #f0e7d8; }
+.homecoming-route { position: relative; width: min(800px, 100%); margin: 20px auto 0; aspect-ratio: 800 / 290; }
+.homecoming-route > svg { width: 100%; height: 100%; overflow: visible; }
+.return-stop { position: absolute; color: #a2c1d3; font: .65rem/1.3 monospace; }
+.return-voyager { left: 86%; top: 5%; }
+.return-webb { left: 66%; top: 75%; }
+.return-ingenuity { left: 40%; top: 25%; }
+.return-curiosity { left: 22%; top: 50%; }
+.return-earth { left: 4%; top: 94%; color: #d9deb6; }
+.homecoming-flight > .fine { margin-top: 23px; color: #7b98a9; font-size: .68rem; }
+.homecoming-photo { display: none; }
+.finale[data-homecoming-phase="flight"] .homecoming-flight { animation: homecoming-in .7s ease both; }
+.finale[data-homecoming-phase="photo"] .homecoming-flight { visibility: hidden; }
+.finale[data-homecoming-phase="photo"] .homecoming-photo { display: block; animation: homecoming-in 1.15s ease both; }
+.finale[data-homecoming-phase="flight"] .finale-card, .finale[data-homecoming-phase="photo"] .finale-card { display: none; }
+.finale[data-homecoming-phase="flight"] .finale-confetti, .finale[data-homecoming-phase="photo"] .finale-confetti { visibility: hidden; }
+.pale-dot-frame { position: relative; aspect-ratio: 5230 / 5175; width: min(49vh, 440px); max-width: 100%; margin: 0 auto; }
+.pale-dot-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.pale-dot-marker { position: absolute; left: 59.5%; top: 52%; width: 30px; height: 30px; transform: translate(-50%, -50%); border: 1px solid #f1dfb478; border-radius: 50%; }
+.pale-dot-marker > span { position: absolute; left: 30px; top: 8px; color: #e4d9c0; font: .5rem/1.2 monospace; letter-spacing: .08em; }
+.homecoming-photo h2 { margin: 20px 0 14px; font-size: clamp(1.35rem, 3vw, 2.2rem); }
+.homecoming-photo > .fine { color: #8fabb9; font: .61rem/1.5 monospace; }
+.homecoming-photo > a { display: inline-block; margin-top: 4px; color: #b6cbd8; font: .62rem/1.5 monospace; text-underline-offset: 4px; }
+.homecoming-skip { justify-self: center; margin-top: 35px; padding: 10px 16px; font-size: .72rem; border-color: #b9d0db4a; background: #ffffff05; }
+.homecoming-keepsake { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 20px; margin: 32px 0 0; padding-top: 25px; border-top: 1px solid #b1b8b92e; text-align: left; }
+.homecoming-keepsake .pale-dot-frame { width: 100%; }
+.homecoming-keepsake figcaption h3 { margin: 0 0 12px; font: 400 1.6rem/1.2 var(--story-serif); color: #efdebc; }
+.homecoming-keepsake figcaption > p { color: #bacbd3; font: .85rem/1.6 var(--story-serif); }
+.homecoming-keepsake figcaption > .fine { font: .55rem/1.6 monospace; color: #8da9b9; }
+.homecoming-keepsake a { display: block; margin: 15px 0; color: #a6c3d5; font: .58rem/1.6 monospace; }
+.homecoming-keepsake button { padding: 8px 11px; font-size: .63rem; background: transparent; }
+@keyframes homecoming-in { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
+body.motion-reduced .mission-view-photo > img, body.motion-reduced .homecoming-flight, body.motion-reduced .homecoming-photo { animation: none !important; }
+
+@media (max-width: 680px) {
+  .mission-view-photo { position: absolute; height: 78dvh; }
+  .mission-view-photo > img { object-position: center; }
+  .mission-view[data-machine-view="voyager"] .mission-view-photo > img { width: 100%; }
+  .mission-view-photo::after { background: linear-gradient(0deg, #03080e 2%, #03080e4d 60%, #03080e08), linear-gradient(180deg, #03080e2b, transparent 50%); }
+  .mission-view-photo-label { top: 70px; bottom: auto; left: 23px; max-width: 73%; }
+  .mission-view-photo-label p { font-size: 1.2rem; }
+  .mission-view-photo-label > span:last-child { font-size: .57rem; }
+  .mission-view-close { top: 16px; right: 17px; }
+  .mission-view-content { width: 100%; min-height: 100dvh; padding: 46dvh 25px 40px; margin: 0; }
+  .mission-view-voice { margin: 18px 0 27px; font-size: 1.7rem; }
+  .mission-view-content h2 { font-size: 2.15rem; }
+  .mission-view-content .exhibit-story-beats dd { font-size: .83rem; }
+  .planet-comparison { padding: 22px 13px; }
+  .comparison-heading { gap: 10px; }
+  .comparison-heading h2 { font-size: 1.85rem; }
+  .comparison-close { width: 36px; height: 36px; }
+  .comparison-worlds { padding: 45px 0 24px; gap: 8px; }
+  .comparison-worlds figure { gap: 20px; }
+  .comparison-worlds figcaption span { font-size: .75rem; }
+  .comparison-worlds figcaption strong { font-size: .53rem; }
+  .comparison-worlds figcaption small { font-size: .53rem; }
+  .comparison-intro, .comparison-explanation { font-size: .79rem; }
+  .comparison-source { font-size: .54rem; }
+  .finale-homecoming { min-height: calc(100dvh - 32px); padding: 0 3px; }
+  .homecoming-flight h2 { font-size: 1.9rem; }
+  .homecoming-route { width: 100%; margin-top: 65px; }
+  .return-stop { font-size: .47rem; }
+  .return-voyager { left: 78%; top: -3%; }
+  .return-curiosity { left: 16%; }
+  .homecoming-flight > .fine { margin-top: 35px; }
+  .pale-dot-frame { width: min(80vw, 360px); }
+  .homecoming-photo h2 { font-size: 1.5rem; }
+  .homecoming-photo > .fine { max-width: 260px; margin: 15px auto 8px; font-size: .56rem; }
+  .homecoming-skip { margin-top: 28px; }
+  .homecoming-keepsake { grid-template-columns: 1fr; text-align: center; gap: 17px; }
+  .homecoming-keepsake .pale-dot-frame { width: min(100%, 230px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:not(.motion-allowed) .mission-view-photo > img, body:not(.motion-allowed) .homecoming-flight, body:not(.motion-allowed) .homecoming-photo { animation: none !important; }
+}
+@media print { .mission-view, .planet-comparison, .finale-homecoming { display: none !important; } }

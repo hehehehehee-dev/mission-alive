@@ -6,10 +6,11 @@ import * as supplementalCopy from "./locales/supplemental.js";
 import * as greetingCopy from "./locales/greeting-translations.js";
 import * as serviceCopy from "./locales/service-errors.js";
 import * as creditCopy from './locales/credits.js';
+import * as journeyExperienceCopy from './locales/journey-experience.js';
 
 export const LANGUAGE_STORAGE_KEY = "mission-alive-language-v1";
 const catalogs = { es: {}, vi: {} };
-const modules = [interfaceCopy, storyCopy, teacherCopy, supplementalCopy, greetingCopy, serviceCopy, creditCopy];
+const modules = [interfaceCopy, storyCopy, teacherCopy, supplementalCopy, greetingCopy, serviceCopy, creditCopy, journeyExperienceCopy];
 for (const locale of ["es", "vi"]) {
   // Country names also remain searchable in their canonical English form.
   const english = new Intl.DisplayNames(["en"], { type: "region" });
