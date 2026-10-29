@@ -43,6 +43,7 @@
           <label class="language-picker"><span>Language</span><select id="ui-language" aria-label="Interface language"><option value="en" data-i18n-skip>English</option><option value="es" data-i18n-skip>Español</option><option value="vi" data-i18n-skip>Tiếng Việt</option></select></label>
           <button id="sources">Sources & credits</button
           ><button id="teachers-link">For Teachers</button
+          ><button id="access-settings" aria-haspopup="dialog" aria-controls="access-dialog">Display & access</button
           ><button id="sound" aria-pressed="false">Sound off</button
           ><button class="passport" id="passport" aria-label="Open crew certification">0 / 4 stamped</button>
         </div>
@@ -60,21 +61,20 @@
               </div>
               <button class="primary lobby-start" id="start-journey">Begin the journey</button>
             </div>
-            <div id="dsn-widget-slot"></div>
           </div>
-          <div id="mission-history-slot"></div>
           <section class="mission-passport" aria-labelledby="passport-title">
             <div class="passport-heading"><div><p class="eyebrow">FOUR MACHINES · FOUR REAL JOBS</p><h2 id="passport-title">CREW CERTIFICATION</h2></div><output id="lobby-progress">0 / 4 STAMPS</output></div>
             <div class="passport-track" aria-hidden="true"><i id="passport-progress-bar"></i></div>
             <p id="passport-message">Complete a machine’s challenge to earn its stamp.</p>
             <button class="passport-certificate" id="lobby-certificate" hidden>Create your graduation certificate →</button>
             <p class="teacher-invite">Teaching with this? <button id="lobby-teachers">For Teachers →</button></p>
+            <div class="lobby-missions" id="lobby-missions" tabindex="-1"></div>
             <div id="hidden-fact-passport-slot"></div>
             <div id="location-map-slot"></div>
-            <div class="lobby-missions" id="lobby-missions"></div>
           </section>
+          <details class="lobby-field-notes"><summary>Mission notes · live links & the archive</summary><div class="lobby-notes-grid"><div id="dsn-widget-slot"></div><div id="mission-history-slot"></div></div></details>
         </section>
-        <section class="teachers-page" id="teachers-page" aria-labelledby="teachers-title" hidden></section>
+        <section class="teachers-page" id="teachers-page" aria-labelledby="teachers-title" tabindex="-1" hidden></section>
         <nav class="exhibits" aria-label="Choose a training module"></nav>
         <section class="exhibit" aria-labelledby="title">
           <div class="intro">
@@ -164,9 +164,10 @@
     <dialog class="exhibit-story-dialog mission-view" id="exhibit-story-dialog" aria-labelledby="exhibit-story-title">
       <div class="mission-view-photo"><img id="mission-view-image" alt=""><div class="mission-view-photo-label"><span class="eyebrow">A VIEW FROM MY MISSION</span><p id="mission-view-caption"></p><span id="mission-view-kind"></span></div></div>
       <button type="button" class="mission-view-close" id="mission-view-close" aria-label="Close mission view">×</button>
-      <div class="mission-view-content"><p class="eyebrow" id="exhibit-story-machine"></p><p class="mission-view-voice" id="mission-view-voice"></p><h2 id="exhibit-story-title"></h2><dl class="exhibit-story-beats" id="exhibit-story-beats"></dl><p class="story-meanwhile" id="exhibit-story-meanwhile"></p><button type="button" class="primary" id="start-exploring">Start exploring</button><a id="mission-view-source" target="_blank" rel="noopener"></a></div>
+      <div class="mission-view-content"><p class="eyebrow" id="exhibit-story-machine"></p><p class="mission-view-voice" id="mission-view-voice"></p><h2 id="exhibit-story-title"></h2><details class="mission-view-notes"><summary>Read my mission notes</summary><dl class="exhibit-story-beats" id="exhibit-story-beats"></dl><p class="story-meanwhile" id="exhibit-story-meanwhile"></p></details><button type="button" class="primary" id="start-exploring">Start exploring</button><a id="mission-view-source" target="_blank" rel="noopener"></a></div>
     </dialog>
     <dialog class="planet-comparison" id="planet-comparison" aria-labelledby="comparison-title"></dialog>
+    <dialog class="access-dialog" id="access-dialog" aria-labelledby="access-title"></dialog>
     <div id="moon-panel-slot"></div>
     <section class="graduate-certificate" id="graduate-certificate" aria-hidden="true">
       <div class="certificate-frame">

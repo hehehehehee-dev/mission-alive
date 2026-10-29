@@ -33,6 +33,9 @@ import { mountResourceCredits } from './resource-credits.js';
 import './resource-credits.css';
 import { showMissionView, mountPlanetComparison, mountHomecoming } from './journey-experience.js';
 import './journey-experience.css';
+import { mountAccessPreferences } from './access-preferences.js';
+import { mountRoverTextMap, roverPosition, describeStar, mountRangeButtons, nextFlightCheckpoint } from './accessible-controls.js';
+import './accessible-academy.css';
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -150,7 +153,7 @@ const briefings = {
       ["IMAGINE", "The record is a time capsule rather than a conversation—the spacecraft may travel for billions of years."],
     ],
     challenge:
-      "Listen to a voice from Earth, then record or write your own greeting for the stamp. A microphone is optional. You can also send a signal to compare cosmic distances.",
+      "Play or read a greeting from Earth, then record or write your own greeting for the stamp. Sound and a microphone are optional. You can also send a signal to compare cosmic distances.",
   },
 };
 const trainingBriefs = {
@@ -163,7 +166,7 @@ const missionObjectives = {
   curiosity: "Program a route or drive freely, analyze a rock, then choose the scientific claim your evidence supports.",
   ingenuity: "Choose an onboard controller, test a landing site, then use the flight log to improve your next attempt.",
   webb: "Open both mirror wings, align the star images, then reveal what infrared light can show through some dust.",
-  voyager: "Play a Golden Record greeting, then record and save or type your own greeting to earn your stamp.",
+  voyager: "Play or read a Golden Record greeting, then record and save or type your own greeting to earn your stamp.",
 };
 const PROGRESS_KEY = "mission-alive-passport-v2";
 const MOTION_KEY = "mission-alive-reduced-motion";
@@ -213,6 +216,8 @@ let current = "curiosity",
   locationMap,
   marsSoundPlayer,
   hiddenFactCache,
+  roverTextMap,
+  rangeButtons = [],
   completed = loadProgress(),
   journeyProgress = loadJourneyProgress(completed),
   sound = false,
@@ -304,6 +309,9 @@ spaceAmbience.setReduced(reduce);
 const missionFilm = createMissionFilm($("#mission-film"));
 missionFilm.setReduced(reduce);
 function disposeOpenData() {
+  roverTextMap = null;
+  rangeButtons.forEach(control => control.dispose());
+  rangeButtons = [];
   stampCeremony?.dispose();
   stampCeremony = null;
   for (const timer of completionTimers) clearTimeout(timer);
@@ -570,26 +578,12 @@ function configureJourneyStart() {
   const button = $("#start-journey");
   if (!button) return;
   const nextMission = Object.keys(exhibits).find((id) => !completed.has(id));
-  const moonStop = journeyProgress < 2 ? journeyStops[journeyProgress + 1] : null;
-  button.textContent = moonStop === "apollo17"
-    ? "Begin with the Moon prologue"
-    : moonStop === "surveyor3"
-      ? "Continue at Surveyor 3"
-      : completed.size
+  button.textContent = completed.size
         ? nextMission
           ? `Continue with ${exhibits[nextMission].name}`
           : "Visit the machines again"
         : "Begin with Curiosity";
-  button.onclick = async () => {
-    if (moonStop) {
-      const trigger = document.querySelector(`[data-map-moon="${moonStop}"]`);
-      if (locationMap && !await locationMap.animateTo(moonStop)) return;
-      advanceJourney(moonStop);
-      moonPanel.open(moonStop, trigger || button);
-      return;
-    }
-    navigateTo(nextMission || "curiosity");
-  };
+  button.onclick = () => navigateTo(nextMission || "curiosity");
 }
 
 function updateMissionProgress() {
@@ -667,6 +661,7 @@ function openExhibitStory(id) {
   if (!story) return;
   if (storyDialog.open) storyDialog.close();
   showMissionView(storyDialog, id);
+  storyDialog.querySelector('.mission-view-notes').open = false;
   $("#exhibit-story-machine").textContent = exhibits[id].name;
   $("#exhibit-story-title").textContent = story.heading;
   $("#exhibit-story-meanwhile").textContent = story.meanwhile;
@@ -696,6 +691,8 @@ $("#start-exploring").onclick = () => {
 };
 
 function renderLobby() {
+  $('.skip').href = '#lobby-missions';
+  $('.skip').textContent = 'Skip to training modules';
   disposeOpenData();
   if (storyDialog.open) storyDialog.close();
   delete document.body.dataset.printResource;
@@ -774,6 +771,8 @@ function renderLobby() {
 }
 
 function renderTeachers() {
+  $('.skip').href = '#teachers-page';
+  $('.skip').textContent = 'Skip to teacher guide';
   disposeOpenData();
   if (storyDialog.open) storyDialog.close();
   machineAudio.stop();
@@ -1004,6 +1003,7 @@ function learningMarkup(id) {
 }
 function bindControls() {
   if (current === "curiosity") {
+    roverTextMap = mountRoverTextMap($('#program-workspace'), roverMission, () => state, message => announce(message, true));
     $$("[data-science-claim]").forEach((button) => {
       button.onclick = () => chooseCuriosityClaim(button.dataset.scienceClaim);
     });
@@ -1070,10 +1070,12 @@ function bindControls() {
     const missionPanel = document.createElement("section");
     missionPanel.id = "curiosity-mission-panel";
     missionPanel.setAttribute("role", "tabpanel");
+    missionPanel.setAttribute('aria-labelledby', 'curiosity-mission-tab');
     const photoPanel = document.createElement("section");
     photoPanel.id = "curiosity-photo-panel";
     photoPanel.className = "curiosity-photo-panel";
     photoPanel.setAttribute("role", "tabpanel");
+    photoPanel.setAttribute('aria-labelledby', 'curiosity-photos-tab');
     photoPanel.hidden = true;
     photoPanel.innerHTML =
       '<p class="eyebrow">REAL IMAGES FROM MARS</p><h3>Through Curiosity’s cameras</h3><p class="fine" id="curiosity-photo-status">Contacting NASA’s live image archive…</p><div class="curiosity-photo-grid" id="curiosity-photo-grid"></div><a class="curiosity-raw-source" id="curiosity-raw-source" target="_blank" rel="noopener">Explore Curiosity’s full NASA Raw Images archive ↗</a>';
@@ -1086,18 +1088,48 @@ function bindControls() {
     }
     intro.after(tabs, missionPanel, photoPanel);
     curiosityGallery = mountCuriosityGallery(photoPanel);
-    tabs.onclick = (event) => {
-      const button = event.target.closest("[data-curiosity-view]");
-      if (!button) return;
+    const selectCuriosityView = button => {
       const showPhotos = button.dataset.curiosityView === "photos";
       missionPanel.hidden = showPhotos;
       photoPanel.hidden = !showPhotos;
-      tabs.querySelectorAll("[data-curiosity-view]").forEach((item) =>
-        item.setAttribute("aria-selected", String(item === button)),
-      );
+      tabs.querySelectorAll("[data-curiosity-view]").forEach(item => {
+        item.setAttribute('aria-selected', String(item === button));
+        item.tabIndex = item === button ? 0 : -1;
+      });
     };
+    const viewTabs = [...tabs.querySelectorAll('[data-curiosity-view]')];
+    viewTabs.forEach((tab, index) => {
+      tab.id = index ? 'curiosity-photos-tab' : 'curiosity-mission-tab';
+      tab.setAttribute('aria-controls', index ? photoPanel.id : missionPanel.id);
+      tab.tabIndex = index ? -1 : 0;
+      tab.onclick = () => selectCuriosityView(tab);
+      tab.onkeydown = event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? viewTabs[0] : event.key === 'End' ? viewTabs[1] : viewTabs[1 - index];
+        selectCuriosityView(next);
+        next.focus();
+      };
+    });
   }
   if (current === "ingenuity") {
+    const pacing = document.createElement('fieldset');
+    pacing.className = 'flight-pacing';
+    pacing.innerHTML = '<legend>Choose your flight pace</legend><label><input type="radio" name="flight-pace" value="continuous" checked> Continuous flight</label><label><input type="radio" name="flight-pace" value="stepped"> Step-by-step flight</label><p class="fine">In step-by-step flight, nothing changes until you continue. Adjust trim between stages. Both ways earn the same stamp.</p><button type="button" id="flight-next" hidden disabled>Continue flight</button>';
+    $('#launch').before(pacing);
+    pacing.onchange = event => {
+      if (state.flying || event.target.name !== 'flight-pace') return;
+      state.flightPaced = event.target.value === 'stepped';
+      $('#flight-next').hidden = !state.flightPaced;
+    };
+    $('#flight-next').onclick = () => {
+      if (!state.flying || !state.flightPaced) return;
+      const next = nextFlightCheckpoint(state.flight);
+      state.flightAdvanceSoundUntil = performance.now() + 450;
+      advanceFlight(next, next - state.flight);
+      if (state.flying) announce(`${getSourceText($('#flight-phase'))}. ${getSourceText($('#wind-cue'))}`, true);
+    };
+    rangeButtons.push(mountRangeButtons($('#trim-input'), { label: 'wind trim' }));
     $$("[data-flight-controller]").forEach((button) => {
       button.onclick = () => {
         const onboard = button.dataset.flightController === "onboard";
@@ -1181,6 +1213,8 @@ function bindControls() {
       state.flight = 0;
       state.flightMaxAltitude = 0;
       state.flightPhase = "spool";
+      pacing.querySelectorAll('input').forEach(input => { input.disabled = true; });
+      $('#flight-next').disabled = false;
       state.stability = 100;
       state.windTarget = 65;
       state.spinning = false;
@@ -1197,11 +1231,25 @@ function bindControls() {
         "Wind band stays at trim 65. Use arrow keys or drag the slider into 53–77.";
       setStatus("ROTOR READY · Beginning launch sequence");
       beep(330, 0.5);
+      if (state.flightPaced) {
+        $('#wind-cue').textContent = 'Ready when you are. Set the trim, then continue to the next flight stage.';
+        $('#flight-next').focus({ preventScroll: true });
+      }
     };
     setMeter("stability", 100);
     $("#wind-target").style.left = "65%";
   }
   if (current === "webb") {
+    rangeButtons.push(mountRangeButtons($('#webb-wavelength'), { label: 'wavelength', step: 25 }));
+    $('#webb-deploy-field').insertAdjacentHTML('afterend', '<div class="wing-button-controls" role="group" aria-label="Open mirror wings without dragging"><button type="button" data-open-wing="left">Open left wing</button><button type="button" data-open-wing="right">Open right wing</button></div>');
+    $$('[data-open-wing]').forEach(button => { button.onclick = () => setWebbWingProgress(button.dataset.openWing, 1); });
+    $('#webb-focus-field').insertAdjacentHTML('afterend', '<fieldset class="star-button-controls"><legend>Fine adjustment without dragging</legend><div class="star-choices" role="group" aria-label="Choose a star image"><button type="button" data-star-choice="0" aria-pressed="true">Image A</button><button type="button" data-star-choice="1" aria-pressed="false">Image B</button><button type="button" data-star-choice="2" aria-pressed="false">Image C</button></div><p id="star-position" role="status"></p><div class="star-direction-pad" role="group" aria-label="Move the selected image"><button type="button" data-star-direction="up">↑ <span>Up</span></button><button type="button" data-star-direction="left">← <span>Left</span></button><button type="button" data-star-direction="right">→ <span>Right</span></button><button type="button" data-star-direction="down">↓ <span>Down</span></button></div><p class="fine">Each press moves the selected image 5%. The target is 50% across and 50% down.</p></fieldset>');
+    $$('[data-star-choice]').forEach(button => { button.onclick = () => { state.selectedStar = +button.dataset.starChoice; updateWebbPointerControls(); }; });
+    $$('[data-star-direction]').forEach(button => { button.onclick = () => {
+      const delta = { up: [0, -.05], down: [0, .05], left: [-.05, 0], right: [.05, 0] }[button.dataset.starDirection];
+      const spot = state.webbSpots[state.selectedStar];
+      setWebbSpot(state.selectedStar, spot.x + delta[0], spot.y + delta[1]);
+    }; });
     $("#webb-wavelength").oninput = (event) => updateWebbInfrared(Number(event.target.value));
     const deployField = $("#webb-deploy-field");
     $$("[data-webb-step]").forEach((button) => {
@@ -1265,6 +1313,7 @@ function bindControls() {
       const button = event.target.closest("[data-star]");
       if (!button) return;
       activeStar = Number(button.dataset.star);
+      state.selectedStar = activeStar;
       if (state.webbSpots[activeStar].locked) return;
       event.preventDefault();
       focusField.setPointerCapture(event.pointerId);
@@ -1301,13 +1350,11 @@ function bindControls() {
         const direction = directions[event.key];
         if (!direction) return;
         event.preventDefault();
+        state.selectedStar = index;
         const step = event.shiftKey ? 0.1 : 0.05;
         const spot = state.webbSpots[index];
         setWebbSpot(index, spot.x + direction[0] * step, spot.y + direction[1] * step);
-        if (!spot.locked) {
-          $("#webb-state").textContent = frictionFeedback.failure("webb", getSourceText($("#webb-state")));
-          void machineVoices.playMid("webb");
-        }
+        announce(`Image ${'ABC'[index]}. ${describeStar(spot)}`);
       };
     });
     updateWebb();
@@ -1420,7 +1467,7 @@ function drawRoverGrid() {
         labels.push(`rover facing ${roverDirections[state.roverDir].name}`);
       }
       cell.setAttribute(
-        "aria-label",
+        "title",
         `Column ${x + 1}, row ${y + 1}${labels.length ? `: ${labels.join(", ")}` : ""}`,
       );
       grid.append(cell);
@@ -1430,6 +1477,7 @@ function drawRoverGrid() {
     "aria-label",
     `Five by five rover map. Rover at column ${state.roverX + 1}, row ${state.roverY + 1}, facing ${roverDirections[state.roverDir].name}. ${state.sampleAnalyzed ? "Drill sample analyzed." : "Outcrop not analyzed."}`,
   );
+  roverTextMap?.update();
 }
 
 function updateRoverProgramUI() {
@@ -1510,6 +1558,10 @@ function editRoverProgram(index, offset) {
   state.programRevision += 1;
   resetRoverSimulation();
   updateRoverProgramUI();
+  const target = Math.min(state.program.length - 1, Math.max(0, index + offset));
+  const item = $(`#program-list [data-program-index="${target}"]`);
+  const preferred = item?.querySelectorAll('button')[offset === -1 ? 0 : offset === 1 ? 1 : 2];
+  (preferred && !preferred.disabled ? preferred : item?.querySelector('button:not(:disabled)') || $('#step-program:not(:disabled)') || $('[data-command="move"]')).focus({ preventScroll: true });
 }
 
 function addRoverCommand(command) {
@@ -1693,6 +1745,7 @@ function stepRoverProgram() {
   if (moved && state.programCounter >= state.execution.length)
     finishRoverProgram();
   else updateRoverProgramUI();
+  announce(`${getSourceText($('#program-status'))} ${roverPosition(state)}`, true);
 }
 
 function toggleFreeExplore() {
@@ -2055,6 +2108,8 @@ function finishFlightAttempt() {
   state.height = 0;
   state.rotor = 0;
   state.flying = false;
+  $('#flight-next').disabled = true;
+  $$('.flight-pacing input').forEach(input => { input.disabled = false; });
   machineAudio.stop();
   setMeter("rotor", 0);
   $("#trim-input").disabled = true;
@@ -2131,6 +2186,22 @@ function jumpWebbStep(step) {
   panel.scrollIntoView({ behavior: reduce ? "instant" : "smooth", block: "start" });
   (control || panel).focus({ preventScroll: true });
 }
+function updateWebbPointerControls() {
+  const selected = state.selectedStar;
+  const spot = state.webbSpots[selected];
+  $$('[data-open-wing]').forEach(button => {
+    const open = state.webbWings[button.dataset.openWing];
+    button.setAttribute('aria-disabled', String(open));
+    button.textContent = button.dataset.openWing === 'left' ? open ? 'Left wing open ✓' : 'Open left wing' : open ? 'Right wing open ✓' : 'Open right wing';
+  });
+  $$('[data-star-choice]').forEach(button => {
+    const index = +button.dataset.starChoice;
+    button.setAttribute('aria-pressed', String(index === selected));
+    button.textContent = `Image ${'ABC'[index]}${state.webbSpots[index].locked ? ' ✓' : ''}`;
+  });
+  if ($('#star-position')) $('#star-position').textContent = `Image ${'ABC'[selected]}. ${describeStar(spot)}`;
+  $$('[data-star-direction]').forEach(button => button.setAttribute('aria-disabled', String(spot.locked)));
+}
 function updateWebb() {
   const openCount = Number(state.webbWings.left) + Number(state.webbWings.right);
   state.deploy = (state.webbWingProgress.left + state.webbWingProgress.right) / 2;
@@ -2150,7 +2221,7 @@ function updateWebb() {
     button.style.left = `${spot.x * 100}%`;
     button.style.top = `${spot.y * 100}%`;
     button.classList.toggle("is-focused", spot.locked);
-    button.setAttribute("aria-label", `Star image ${"ABC"[index]}${spot.locked ? ", focused" : ". Drag to the center or use arrow keys"}`);
+    button.setAttribute("aria-label", `Image ${"ABC"[index]}. ${describeStar(spot)}`);
   });
   $("#webb-focus-count").textContent = `${focused} / 3 images focused`;
   $("#webb-infrared-step").hidden = focused !== 3 || openCount !== 2;
@@ -2168,6 +2239,7 @@ function updateWebb() {
         : "Aligned · Now shift to infrared to reveal what visible light misses.";
   setStatus($("#webb-state").textContent);
   webbAlignment?.updateProgress(state.align);
+  updateWebbPointerControls();
 }
 function updateWebbInfrared(value) {
   if (state.deploy < 1 || state.align < 1) return;
@@ -2256,7 +2328,7 @@ function checkVoyager() {
   });
   setStatus(
     !progress.listen
-      ? "Choose and play one of the 55 greetings from Earth."
+      ? "Choose and play or read one of the 55 greetings from Earth."
       : !progress.greeting
         ? "Now record or write your own greeting in the studio below."
         : "Your greeting joined the Golden Record story.",
@@ -2264,6 +2336,8 @@ function checkVoyager() {
   if (progress.listen && progress.greeting) success();
 }
 async function render(id) {
+  $('.skip').href = '#controls';
+  $('.skip').textContent = 'Skip to training controls';
   disposeOpenData();
   advanceJourney(id);
   frictionFeedback = createFrictionFeedback();
@@ -2331,6 +2405,7 @@ async function render(id) {
     landingSite: null,
     autonomySelected: false,
     flightAttempts: 0,
+    flightPaced: false,
     flightMaxAltitude: 0,
     crashed: false,
     deploy: 0,
@@ -2342,6 +2417,7 @@ async function render(id) {
       { x: 0.78, y: 0.35, locked: false },
       { x: 0.7, y: 0.78, locked: false },
     ],
+    selectedStar: 0,
     infrared: 0,
     rotation: 0,
     distance: 0,
@@ -2416,6 +2492,9 @@ async function render(id) {
   $("#controls").innerHTML =
     controls() + learningMarkup(id) + '<button class="secondary" id="reset">Reset exhibit</button>';
   if (id === "voyager") {
+    $('[data-voyager-step="listen"]').textContent = 'Play or read one Golden Record greeting';
+    $('#voyager-live-distance').insertAdjacentHTML('afterend', '<button type="button" id="read-voyager-distance">Read current distance</button>');
+    $('#read-voyager-distance').onclick = () => announceVoyager(`Distance reading: ${getSourceText($('#voyager-live-distance'))}. ${getSourceText($('#voyager-live-light-time'))}.`);
     $("#controls .voyager-live").insertAdjacentHTML("afterend", voyagerContactMarkup() + voyagerCountdownMarkup());
   }
   if (id === "webb") {
@@ -2457,6 +2536,7 @@ async function render(id) {
     greetingPlayer = mountGreetings($("#greetings"), {
       reducedMotion: reduce,
       onAnnounce: announceVoyager,
+      onRead: greeting => { if (greeting?.id) { state.listened = true; checkVoyager(); } },
       onPlay: (greeting) => {
         machineVoices.stop();
         sound = true;
@@ -2488,7 +2568,7 @@ async function render(id) {
     for (const region of document.querySelectorAll('.exhibit [role="status"], .exhibit [aria-live], .exhibit output, #greetings [role="status"], #greetings [aria-live], #greetings output')) {
       region.setAttribute("aria-live", "off");
       if (region.getAttribute("role") === "status") region.removeAttribute("role");
-      if (region.tagName === "OUTPUT" && !region.hasAttribute("role")) region.setAttribute("role", "generic");
+      if (region.tagName === "OUTPUT" && !region.hasAttribute("role")) region.setAttribute("role", "group");
     }
   }
   bindControls();
@@ -2530,7 +2610,7 @@ async function render(id) {
     $("#stage").classList.add("fallback");
     $("#stage").insertAdjacentHTML(
       "beforeend",
-      `<div class="fallback-card">${id === "voyager" ? `<img id="fallback-record-image" src="${recordArtifacts.front.image}" alt="${recordArtifacts.front.alt}" width="240" height="240">` : `<strong>${e.action}. Discover.</strong>`}<p>Use the exhibit controls to explore the same mission in this lightweight view.</p><div class="fallback-track"><i></i></div><output id="fallback-status"${id === "voyager" ? ' role="generic" aria-live="off"' : ""}>Ready to explore</output></div>`,
+      `<div class="fallback-card">${id === "voyager" ? `<img id="fallback-record-image" src="${recordArtifacts.front.image}" alt="${recordArtifacts.front.alt}" width="240" height="240">` : `<strong>${e.action}. Discover.</strong>`}<p>Use the exhibit controls to explore the same mission in this lightweight view.</p><div class="fallback-track"><i></i></div><output id="fallback-status"${id === "voyager" ? ' role="group" aria-live="off"' : ""}>Ready to explore</output></div>`,
     );
     hiddenFactCache?.enableFallback();
   }
@@ -2554,6 +2634,14 @@ const resourceCreditPanel = mountResourceCredits($("#resource-credits"), {
 });
 $("#sources").onclick = event => resourceCreditPanel.open(event.currentTarget);
 $("#credits-footer-link").onclick = event => resourceCreditPanel.open(event.currentTarget);
+$('.skip').onclick = event => {
+  event.preventDefault();
+  const target = $($('.skip').getAttribute('href'));
+  if (!target) return;
+  for (let parent = target.parentElement; parent; parent = parent.parentElement) if (parent.tagName === 'DETAILS') parent.open = true;
+  target.focus({ preventScroll: true });
+  target.scrollIntoView({ behavior: reduce ? 'instant' : 'smooth', block: 'start' });
+};
 $("#close-notes").onclick = () => $("#notes").close();
 $("#sound").onclick = () => {
   sound = !sound;
@@ -2565,8 +2653,8 @@ $("#sound").onclick = () => {
   updateSoundButton();
   if (sound) beep();
 };
-$("#motion").onclick = () => {
-  reduce = !reduce;
+function setReducedMotion(value) {
+  reduce = Boolean(value);
   try { localStorage.setItem(MOTION_KEY, String(reduce)); } catch { /* Keep the choice for this visit. */ }
   document.body.classList.toggle("motion-reduced", reduce);
   document.body.classList.toggle("motion-allowed", !reduce);
@@ -2579,7 +2667,10 @@ $("#motion").onclick = () => {
   voyagerDistance?.setReduced(reduce);
   greetingPlayer?.setReduced(reduce);
   announce(reduce ? "Motion reduced." : "Motion enabled.");
-};
+  accessPreferences?.syncMotion();
+}
+$("#motion").onclick = () => setReducedMotion(!reduce);
+const accessPreferences = mountAccessPreferences({ trigger: $('#access-settings'), dialog: $('#access-dialog'), getReduced: () => reduce, setReduced: setReducedMotion });
 $("#view-mode").onclick = () => {
   force2d = !force2d;
   $("#view-mode").setAttribute("aria-pressed", force2d);
@@ -2649,10 +2740,19 @@ window.addEventListener("popstate", () => {
     else render(exhibits[route] ? route : "curiosity");
   }
 });
+function advanceFlight(seconds, elapsed) {
+  state.flight = seconds;
+  const pose = flightPose(state.flight);
+  state.flightMaxAltitude = Math.max(state.flightMaxAltitude, pose.altitude);
+  state.height = reduce ? state.flight < 0.85 || state.flight >= 5.95 ? 0 : 2.15 : pose.altitude;
+  updateWindChallenge(elapsed);
+  updateFlightReadout({ ...pose, altitude: state.height });
+  if (state.flight >= 7.9) finishFlightAttempt();
+}
 function tick(now) {
   const dt = Math.min((now - last) / 1000, 0.05);
   last = now;
-  if (!document.hidden && !$("#notes").open) {
+  if (!document.hidden && !document.querySelector('dialog[open]') && $('#finale').hidden) {
     const roverMoving =
       current === "curiosity" &&
       !state.failed &&
@@ -2683,20 +2783,8 @@ function tick(now) {
     if (current === "ingenuity") {
       if (state.spinning && now >= (state.rotorPulseUntil || 0))
         state.spinning = false;
-      if (state.flying && !state.done) {
-        state.flight += dt;
-        const pose = flightPose(state.flight);
-        state.flightMaxAltitude = Math.max(state.flightMaxAltitude, pose.altitude);
-        state.height = reduce
-          ? state.flight < 0.85 || state.flight >= 5.95
-            ? 0
-            : 2.15
-          : pose.altitude;
-        updateWindChallenge(dt);
-        updateFlightReadout({ ...pose, altitude: state.height });
-        if (state.flight >= 7.9) finishFlightAttempt();
-      }
-      if ((state.spinning || state.flying) && !machineVoices.isPlaying) {
+      if (state.flying && !state.done && !state.flightPaced) advanceFlight(state.flight + dt, dt);
+      if ((state.spinning || state.flying && (!state.flightPaced || state.flightAdvanceSoundUntil > now)) && !machineVoices.isPlaying) {
         machineAudio.start("rotor");
         machineAudio.update({
           power: state.flying ? Math.max(78, state.rotor) : state.rotor,
@@ -2723,7 +2811,7 @@ function tick(now) {
         ? "Mission complete"
         : getSourceText($("#stage-status"));
     }
-  }
+  } else machineAudio.stop();
   requestAnimationFrame(tick);
 }
 const initialRoute = location.hash.slice(1);

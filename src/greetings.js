@@ -39,7 +39,7 @@ export function greetingMarkup() {
  </section>${personalRecordMarkup()}`;
 }
 
-export function mountGreetings(container, { onPlay, onPause, onSave, onCount = () => {}, onAnnounce = () => {}, reducedMotion = false }) {
+export function mountGreetings(container, { onPlay, onPause, onSave, onRead = () => {}, onCount = () => {}, onAnnounce = () => {}, reducedMotion = false }) {
   const find = (selector) => container.querySelector(selector),
     search = find("#greeting-search"),
     country = find("#greeting-country"),
@@ -49,6 +49,17 @@ export function mountGreetings(container, { onPlay, onPause, onSave, onCount = (
     status = find("#greeting-status");
   let disposed = false,
     selectionRevision = 0;
+  play.insertAdjacentHTML('afterend', '<button type="button" id="read-greeting">Use the written greeting</button><p class="fine">Reading counts toward your stamp; sound is optional.</p>');
+  find('#read-greeting').onclick = () => {
+    if (disposed) return;
+    audio.pause();
+    const item = greetings.find(greeting => greeting.id === selectedId);
+    onRead(item);
+    setStatus('Written greeting selected. Read its words above, then add your own greeting.');
+    const words = find('#selected-translation');
+    words.tabIndex = -1;
+    words.focus({ preventScroll: false });
+  };
   const personalRecords = mountPersonalRecords(container, {
     onPlay,
     onPause,

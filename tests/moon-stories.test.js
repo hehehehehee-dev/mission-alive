@@ -92,5 +92,6 @@ test("the original certification UI remains exactly four modules and four certif
   assert.ok(!main.includes("apollo17: {"));
   assert.ok(!main.includes("surveyor3: {"));
   assert.ok(main.includes('const JOURNEY_KEY = "mission-alive-journey-v1"'));
-  assert.ok(index.indexOf('id="location-map-slot"') < index.indexOf('id="lobby-missions"'));
+  // The four training choices precede optional map exploration in the readable lobby.
+  assert.ok(index.indexOf('id="lobby-missions"') < index.indexOf('id="location-map-slot"'));
 });
