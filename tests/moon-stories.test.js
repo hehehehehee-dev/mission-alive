@@ -13,12 +13,21 @@ test("Moon archive contains exactly two sourced, content-only stories", () => {
       const host = new URL(source).hostname;
       assert.ok(host === "www.nasa.gov" || host === "science.nasa.gov" || host === "www.jpl.nasa.gov");
     }
+    assert.ok(story.reveal.fact.length > 40);
+    assert.ok(story.reveal.credit.startsWith("Image credit: NASA"));
+    assert.ok(story.reveal.source[1].startsWith("https://science.nasa.gov/"));
+    const image = readFileSync(new URL(`../public${story.reveal.image}`, import.meta.url));
+    assert.ok(image.length > 100_000);
+    assert.deepEqual(Array.from(image.subarray(0, 3)), [255, 216, 255]);
   }
   const markup = moonPanelMarkup();
   assert.equal((markup.match(/data-moon-story=/g) || []).length, 2);
   assert.ok(markup.includes("NO STAMP"));
   assert.ok(!markup.includes("data-stamp"));
   assert.ok(!markup.includes("data-exhibit"));
+  assert.equal((markup.match(/class="moon-story-flip"/g) || []).length, 2);
+  assert.equal((markup.match(/Image credit: NASA/g) || []).length, 2);
+  assert.ok(markup.includes("television camera and soil scoop home to Earth"));
 });
 
 test("location strip routes four training machines and only two Moon stories", () => {
@@ -34,6 +43,23 @@ test("location strip routes four training machines and only two Moon stories", (
     ["apollo17", "surveyor3"],
   );
   assert.ok(markup.includes("not to scale"));
+  const moon = markup.indexOf('data-frontier="moon"');
+  const mars = markup.indexOf('data-frontier="mars"');
+  const deepSpace = markup.indexOf('data-frontier="deep-space"');
+  assert.ok(moon > -1 && moon < mars && mars < deepSpace);
+  assert.equal((markup.match(/class="earth-marker"/g) || []).length, 1);
+  const earth = markup.match(/<div class="earth-marker"[\s\S]*?<\/div>/)?.[0] || "";
+  assert.ok(earth.includes("YOU ARE HERE"));
+  assert.ok(!earth.includes("data-map-"));
+  assert.ok(!earth.includes("<button"));
+  for (const label of [
+    "≈ 384,400 km from Earth",
+    "≈ 7 months by spacecraft",
+    "Webb · ≈ 1.5 million km · Sun–Earth L2",
+    "Voyager 1 · Almost one light-day from Earth",
+  ]) assert.ok(markup.includes(label), label);
+  assert.ok(markup.includes("journey-route-line"));
+  assert.ok(markup.includes("Background: Webb's First Deep Field · NASA, ESA, CSA, STScI"));
 });
 
 test("the original certification UI remains exactly four modules and four certificate stamps", () => {

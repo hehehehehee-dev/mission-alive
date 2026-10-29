@@ -12,6 +12,13 @@ export const moonStories = Object.freeze({
       ["NASA · Apollo 17 mission details", "https://www.nasa.gov/missions/apollo/apollo-17-mission-details/"],
       ["NASA · Apollo 17 at Taurus-Littrow", "https://www.nasa.gov/history/50-years-ago-apollo-17-lands-at-taurus-littrow/"],
     ]),
+    reveal: Object.freeze({
+      fact: "NASA's Apollo 17 mission summary records 30.5 kilometers of travel by the lunar rover across the Taurus-Littrow valley.",
+      image: "/assets/moon-apollo17-lrv.jpg",
+      alt: "Apollo 17 commander Gene Cernan driving the Lunar Roving Vehicle on the Moon, with the lunar module behind him.",
+      credit: "Image credit: NASA/Harrison Schmitt",
+      source: ["NASA · Apollo 17 LRV image", "https://science.nasa.gov/resource/apollo-17-gene-cernan-in-lunar-roving-vehicle/"],
+    }),
   }),
   surveyor3: Object.freeze({
     name: "Surveyor 3",
@@ -26,14 +33,34 @@ export const moonStories = Object.freeze({
       ["NASA · Humans and machine meet on the Moon", "https://science.nasa.gov/solar-system/moon/footpads-and-footprints-humans-and-machine-meet-on-the-moon/"],
       ["NASA JPL · Surveyor 3 camera returned", "https://www.jpl.nasa.gov/blog/2012/1/surveyor-3-camera-returned-from-the-moon"],
     ]),
+    reveal: Object.freeze({
+      fact: "This was the first—and so far only—time humans met a robotic spacecraft on another world. Apollo 12 brought Surveyor 3's television camera and soil scoop home to Earth.",
+      image: "/assets/moon-surveyor3-apollo12.jpg",
+      alt: "Surveyor 3 resting inside its lunar crater, photographed by Apollo 12 astronauts in 1969.",
+      credit: "Image credit: NASA/JSC",
+      source: ["NASA · Surveyor 3 in its crater", "https://science.nasa.gov/resource/view-of-surveyor-iii-in-its-crater/"],
+    }),
   }),
 });
 
 const storyCard = (id, story) => `<article class="module-story-card moon-story-card" data-moon-story="${id}" aria-labelledby="moon-${id}-title">
-  <p class="eyebrow">${story.year}</p>
-  <h3 id="moon-${id}-title" tabindex="-1">${story.name}</h3>
-  <div class="moon-story-facts">${story.facts.map(([label, copy]) => `<p><strong>${label}</strong><span>${copy}</span></p>`).join("")}</div>
-  <p class="moon-story-sources"><strong>OFFICIAL SOURCES</strong>${story.sources.map(([label, href]) => `<a href="${href}" target="_blank" rel="noopener">${label} ↗</a>`).join("")}</p>
+  <button type="button" class="moon-story-flip" aria-expanded="false" aria-controls="moon-${id}-reveal">
+    <span class="moon-story-face moon-story-front">
+      <span class="eyebrow">${story.year}</span>
+      <span class="moon-story-title" id="moon-${id}-title" role="heading" aria-level="3" tabindex="-1">${story.name}</span>
+      <span class="moon-story-facts">${story.facts.map(([label, copy]) => `<span><strong>${label}</strong><span>${copy}</span></span>`).join("")}</span>
+      <span class="moon-reveal-prompt">Tap to reveal one more Moon fact →</span>
+    </span>
+    <span class="moon-story-face moon-story-back" id="moon-${id}-reveal" hidden>
+      <span class="eyebrow">MOON ARCHIVE REVEAL</span>
+      <span class="moon-story-title">${story.name}</span>
+      <img src="${story.reveal.image}" alt="${story.reveal.alt}" width="1800" height="1200" loading="lazy" decoding="async">
+      <span class="moon-reveal-fact">${story.reveal.fact}</span>
+      <small>${story.reveal.credit}</small>
+      <span class="moon-reveal-prompt">Tap to return to the story →</span>
+    </span>
+  </button>
+  <p class="moon-story-sources"><strong>OFFICIAL SOURCES</strong>${[...story.sources, story.reveal.source].map(([label, href]) => `<a href="${href}" target="_blank" rel="noopener">${label} ↗</a>`).join("")}</p>
 </article>`;
 
 export function moonPanelMarkup() {
@@ -49,15 +76,33 @@ export function locationMapMarkup() {
   return `<section class="location-map" aria-labelledby="location-map-title">
     <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">Six machines, three frontiers</h2></div><p>The four training machines remain the path to certification. Open two extra Moon stories without adding a stamp.</p></div>
     <div class="location-map-field" role="group" aria-label="Schematic locations of the six machines">
-      <img src="/assets/mission-location-map.svg" alt="Clean schematic showing the Moon, Mars, and deep space; not to scale." width="1200" height="420">
-      <button class="location-dot is-moon" style="--map-x:12%;--map-y:38%" data-map-moon="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon story"><i aria-hidden="true"></i><span>Apollo 17 LRV<small>MOON STORY</small></span></button>
-      <button class="location-dot is-moon" style="--map-x:23%;--map-y:65%" data-map-moon="surveyor3" aria-label="Open Surveyor 3 Moon story"><i aria-hidden="true"></i><span>Surveyor 3<small>MOON STORY</small></span></button>
-      <button class="location-dot is-mars" style="--map-x:44%;--map-y:35%" data-map-exhibit="curiosity" aria-label="Open Curiosity training module"><i aria-hidden="true"></i><span>Curiosity<small>MARS · TRAINING</small></span></button>
-      <button class="location-dot is-mars" style="--map-x:55%;--map-y:68%" data-map-exhibit="ingenuity" aria-label="Open Ingenuity training module"><i aria-hidden="true"></i><span>Ingenuity<small>MARS · TRAINING</small></span></button>
-      <button class="location-dot is-deep" style="--map-x:73%;--map-y:38%" data-map-exhibit="webb" aria-label="Open Webb training module"><i aria-hidden="true"></i><span>Webb<small>DEEP SPACE · TRAINING</small></span></button>
-      <button class="location-dot is-deep" style="--map-x:89%;--map-y:67%" data-map-exhibit="voyager" aria-label="Open Voyager training module"><i aria-hidden="true"></i><span>Voyager 1<small>INTERSTELLAR · TRAINING</small></span></button>
+      <span class="journey-route-line" aria-hidden="true"></span>
+      <div class="location-journey">
+        <div class="earth-marker" aria-label="You are here: Earth"><i aria-hidden="true"></i><span><strong>YOU ARE HERE</strong><small>EARTH · START</small></span></div>
+        <section class="frontier frontier-moon" data-frontier="moon" aria-labelledby="frontier-moon-title">
+          <div class="frontier-heading"><span id="frontier-moon-title">01 · MOON</span><a href="https://science.nasa.gov/moon/by-the-numbers/" target="_blank" rel="noopener">≈ 384,400 km from Earth · NASA ↗</a></div>
+          <div class="frontier-stops">
+            <button class="location-dot is-moon" data-map-moon="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon story"><i aria-hidden="true"></i><span>Apollo 17 LRV<small>MOON STORY</small></span></button>
+            <button class="location-dot is-moon" data-map-moon="surveyor3" aria-label="Open Surveyor 3 Moon story"><i aria-hidden="true"></i><span>Surveyor 3<small>MOON STORY</small></span></button>
+          </div>
+        </section>
+        <section class="frontier frontier-mars" data-frontier="mars" aria-labelledby="frontier-mars-title">
+          <div class="frontier-heading"><span id="frontier-mars-title">02 · MARS</span><a href="https://science.nasa.gov/wp-content/uploads/2024/03/44745_mro-arrival.pdf" target="_blank" rel="noopener">≈ 7 months by spacecraft · NASA ↗</a></div>
+          <div class="frontier-stops">
+            <button class="location-dot is-mars" data-map-exhibit="curiosity" aria-label="Open Curiosity training module"><i aria-hidden="true"></i><span>Curiosity<small>MARS · TRAINING</small></span></button>
+            <button class="location-dot is-mars" data-map-exhibit="ingenuity" aria-label="Open Ingenuity training module"><i aria-hidden="true"></i><span>Ingenuity<small>MARS · TRAINING</small></span></button>
+          </div>
+        </section>
+        <section class="frontier frontier-deep" data-frontier="deep-space" aria-labelledby="frontier-deep-title">
+          <div class="frontier-heading"><span id="frontier-deep-title">03 · DEEP SPACE</span><span class="frontier-distance-pair"><a href="https://science.nasa.gov/mission/webb/orbit/" target="_blank" rel="noopener">Webb · ≈ 1.5 million km · Sun–Earth L2 · NASA ↗</a><a href="https://science.nasa.gov/mission/voyager/voyager-1/voyager-1-what-is-a-light-day/" target="_blank" rel="noopener">Voyager 1 · Almost one light-day from Earth · NASA ↗</a></span></div>
+          <div class="frontier-stops">
+            <button class="location-dot is-deep" data-map-exhibit="webb" aria-label="Open Webb training module"><i aria-hidden="true"></i><span>Webb<small>DEEP SPACE · TRAINING</small></span></button>
+            <button class="location-dot is-deep" data-map-exhibit="voyager" aria-label="Open Voyager training module"><i aria-hidden="true"></i><span>Voyager 1<small>INTERSTELLAR · TRAINING</small></span></button>
+          </div>
+        </section>
+      </div>
     </div>
-    <p class="fine location-map-credit">Schematic: Mission Alive · not to scale.</p>
+    <p class="fine location-map-credit">Schematic: Mission Alive · not to scale. <a href="https://science.nasa.gov/mission/webb/webbs-first-images/" target="_blank" rel="noopener">Background: Webb's First Deep Field · NASA, ESA, CSA, STScI ↗</a></p>
   </section>`;
 }
 
@@ -68,6 +113,18 @@ export function mountMoonPanel(root) {
   let returnFocus = null;
   const close = () => dialog.close();
   closeButton.addEventListener("click", close);
+  for (const card of root.querySelectorAll(".moon-story-card")) {
+    const flip = card.querySelector(".moon-story-flip");
+    const front = card.querySelector(".moon-story-front");
+    const back = card.querySelector(".moon-story-back");
+    flip.addEventListener("click", () => {
+      const revealed = flip.getAttribute("aria-expanded") !== "true";
+      flip.setAttribute("aria-expanded", String(revealed));
+      card.classList.toggle("is-revealed", revealed);
+      front.hidden = revealed;
+      back.hidden = !revealed;
+    });
+  }
   dialog.addEventListener("click", (event) => { if (event.target === dialog) close(); });
   dialog.addEventListener("close", () => {
     if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
