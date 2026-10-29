@@ -29,6 +29,8 @@ import { missionHistoryMarkup } from "./mission-history.js";
 import { marsSoundsMarkup, mountMarsSounds } from "./mars-sounds.js";
 import { hiddenFactPassportMarkup, mountHiddenFacts } from "./hidden-facts.js";
 import { journeyStops, mountMoonPanel, mountLocationMap } from "./moon-stories.js";
+import { mountResourceCredits } from './resource-credits.js';
+import './resource-credits.css';
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -2527,7 +2529,14 @@ function openFieldNotes() {
     `<h3>Voyager distance</h3><p><span>${facts.distance.claim}</span> <span>${facts.distance.uncertainty}</span></p><a href="${facts.distance.source_url}" target="_blank" rel="noopener">NASA distance reference</a>`;
   $("#notes").showModal();
 }
-$("#sources").onclick = openFieldNotes;
+const resourceCreditPanel = mountResourceCredits($("#resource-credits"), {
+  facts,
+  quotes: Object.values(exhibits),
+  recordImages: { 'record-front': recordArtifacts.front.image, 'record-cover': recordArtifacts.cover.image },
+  onFieldNotes: openFieldNotes,
+});
+$("#sources").onclick = event => resourceCreditPanel.open(event.currentTarget);
+$("#credits-footer-link").onclick = event => resourceCreditPanel.open(event.currentTarget);
 $("#close-notes").onclick = () => $("#notes").close();
 $("#sound").onclick = () => {
   sound = !sound;

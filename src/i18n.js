@@ -5,10 +5,11 @@ import * as teacherCopy from "./locales/teachers.js";
 import * as supplementalCopy from "./locales/supplemental.js";
 import * as greetingCopy from "./locales/greeting-translations.js";
 import * as serviceCopy from "./locales/service-errors.js";
+import * as creditCopy from './locales/credits.js';
 
 export const LANGUAGE_STORAGE_KEY = "mission-alive-language-v1";
 const catalogs = { es: {}, vi: {} };
-const modules = [interfaceCopy, storyCopy, teacherCopy, supplementalCopy, greetingCopy, serviceCopy];
+const modules = [interfaceCopy, storyCopy, teacherCopy, supplementalCopy, greetingCopy, serviceCopy, creditCopy];
 for (const locale of ["es", "vi"]) {
   // Country names also remain searchable in their canonical English form.
   const english = new Intl.DisplayNames(["en"], { type: "region" });

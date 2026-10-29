@@ -1,5 +1,20 @@
 # Asset ledger
 
+The visitor-facing catalog is maintained in `src/resource-credits.js`, opened by **Sources & credits** in the header or footer. It records every shipped image, background, surface map, video, NASA recording, API/dataset, and the mission references used by the app. Each item includes its creator credit, source page, original download when retained, local file, use in the experience, and presentation changes. Curiosity archive images register their NASA IDs, supplied credit, image URLs, and NASA detail pages when loaded. `tests/resource-credits.test.js` checks that new public image/audio/video files cannot be shipped without catalog entries.
+
+## Journey media added October 29, 2026
+
+- `public/assets/journey-sun-sdo.jpg`: NASA SDO/AIA 171 Å observation on September 10, 2025 (PIA26681). Credit: NASA/GSFC/Solar Dynamics Observatory. Source: https://science.nasa.gov/photojournal/image-of-sun-from-nasas-solar-dynamics-observatory/ . Original: https://assets.science.nasa.gov/content/dam/science/psd/photojournal/pia/pia26/pia26681/PIA26681.jpg . Original bytes retained. The map uses a CSS soft-edge mask to blend it into space. Gold is the observation's false-color representation, not the Sun's visible-light color.
+- `public/assets/journey-webb-esa.png`: official artist's impression with transparent background. Credit: ©ESA/ATG medialab. Source: https://www.esa.int/ESA_Multimedia/Images/2021/06/Webb_spacecraft_artist_s_impression . Original: https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2021/06/webb_spacecraft_artist_s_impression/23320227-1-eng-GB/Webb_spacecraft_artist_s_impression.png . Original PNG retained; displayed smaller on the map. This is an illustration, not a photo of Webb in space. ESA Standard Licence educational use; visible credit and terms link are retained.
+- `public/assets/journey-webb-nasa.jpg`: NASA's official artist concept, included as an additional full-body reference in Sources & credits. Credit: NASA-GSFC, Adriana Gutierrez (CI Lab). Source: https://science.nasa.gov/asset/webb/james-webb-space-telescope-artist-conception/ . Original: https://assets.science.nasa.gov/content/dam/science/missions/webb/science/2022/06/STScI-01G1Q6WDRH19AMC8NXMRFSTBH6.png/jcr:content/renditions/2048x1593.jpg . NASA's published JPEG rendition is retained without content edits.
+
+## Journey planetary imagery added October 28, 2026
+
+- `public/assets/journey-earth-nasa.jpg`: Blue Marble 2002; NASA's Earth Observatory. Source: https://science.nasa.gov/resource/blue-marble-2002/ . Original: https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/1/1-bluemarble_west-1.jpg . NASA composite, displayed with a circular crop and soft shade.
+- `public/assets/journey-moon-lroc.jpg`: NASA SVS CGI Moon Kit / LRO / LROC. Source: https://svs.gsfc.nasa.gov/4720/ . Original: https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg . Rendered onto a sphere at runtime, with simulated lighting.
+- `public/assets/journey-mars-viking.jpg`: NASA/JPL/Caltech/USGS map from Viking imagery. Source: https://space.jpl.nasa.gov/tmaps/mars.html . Original: https://space.jpl.nasa.gov/tmaps/pix/mar0kuu2.jpg . Rendered onto a sphere at runtime, with simulated lighting.
+- Diameter ratios use NASA's Planetary Fact Sheet: https://nssdc.gsfc.nasa.gov/planetary/factsheet/ . Distances are compressed, landing-site positions are approximate, and spacecraft icons are enlarged.
+
 ## Voyager solar-system flyout
 
 - Local: `public/assets/solar-system-flyout.webm`

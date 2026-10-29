@@ -1,4 +1,5 @@
 import { getLanguage, t } from "./i18n.js";
+import { registerArchivePhotoCredits } from './resource-credits.js';
 
 export function localizedNasaImageTitle(item) {
   const translated = t(item.title);
@@ -59,6 +60,7 @@ function normalizeItems(payload) {
 }
 
 function drawGallery(grid, images) {
+  registerArchivePhotoCredits(images);
   grid.replaceChildren();
   images.forEach((item) => {
     const card = document.createElement("a");

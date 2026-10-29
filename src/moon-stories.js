@@ -272,25 +272,27 @@ export function locationMapMarkup() {
           <div class="scene-heading"><div><span>03 · WEBB</span><h3 id="frontier-webb-title">Sun, Earth, then L2</h3></div><a href="https://science.nasa.gov/mission/webb/orbit/" target="_blank" rel="noopener">≈ 1.5 million km from Earth · NASA ↗</a></div>
           <p class="scale-key">LOCAL INSET · SUN–EARTH L2 · NOT TO SCALE</p>
           <div class="system-canvas webb-system">
-            <span class="diagram-sun"><i></i><small>SUN</small></span>
+            <span class="diagram-sun"><i><img class="sun-observation" src="/assets/journey-sun-sdo.jpg" alt="NASA SDO observation of the Sun at 171 angstroms, shown in gold false color" width="4096" height="4096" loading="lazy" decoding="async"></i><small>SUN</small></span>
             <span class="sun-earth-line" aria-hidden="true"></span>
             <span class="diagram-body webb-earth"><img src="/assets/journey-earth-nasa.jpg" alt="" width="800" height="800" loading="lazy"><small>EARTH</small></span>
             <span class="l2-marker"><i></i><small>L2</small></span>
-            <button class="diagram-pin webb-pin" data-map-exhibit="webb" data-journey-stop="webb" data-visual-stop="webb" aria-label="Open Webb training module"><i class="webb-miniature" aria-hidden="true"><svg viewBox="0 0 76 84"><path class="webb-sunshield" d="m7 54 32-16 30 16-11 22H24z"/><g class="webb-mirror"><path d="m38 6 12 7v14l-12 7-12-7V13zM26 27l12 7v14l-12 7-12-7V34zM50 27l12 7v14l-12 7-12-7V34zM38 34l12 7v14l-12 7-12-7V41z"/></g><path d="M38 17v37M22 39l16 15 16-15" fill="none" stroke="#dce8ed" stroke-width="2"/></svg></i><span class="diagram-callout"><strong>Webb</strong><small>ORBITS L2 · TRAINING</small></span></button>
+            <button class="diagram-pin webb-pin" data-map-exhibit="webb" data-journey-stop="webb" data-visual-stop="webb" aria-label="Open Webb training module"><i class="webb-miniature" aria-hidden="true"><img src="/assets/journey-webb-esa.png" alt="" width="4096" height="4096" loading="lazy" decoding="async"></i><span class="diagram-callout"><strong>Webb</strong><small>ORBITS L2 · TRAINING</small></span></button>
             <p class="diagram-note">L2 and Webb are on the side of Earth away from the Sun.</p>
           </div>
+          <p class="planet-credit orbit-image-credits"><a href="https://science.nasa.gov/photojournal/image-of-sun-from-nasas-solar-dynamics-observatory/" target="_blank" rel="noopener">Sun: NASA/GSFC/SDO · 171 Å, false color ↗</a><a href="https://www.esa.int/ESA_Multimedia/Images/2021/06/Webb_spacecraft_artist_s_impression" target="_blank" rel="noopener">Webb: ©ESA/ATG medialab · artist's impression ↗</a></p>
         </article>
 
         <article class="journey-scene scene-voyager" data-journey-scene="voyager" data-frontier="deep-space" aria-labelledby="frontier-voyager-title">
           <div class="scene-heading"><div><span>04 · VOYAGER 1</span><h3 id="frontier-voyager-title">Beyond the Sun's protective bubble</h3></div><a href="https://science.nasa.gov/mission/voyager/voyager-1/voyager-1-what-is-a-light-day/" target="_blank" rel="noopener">Almost one light-day from Earth · NASA ↗</a></div>
           <p class="scale-key">SOLAR-SYSTEM INSET · DISTANCES COMPRESSED</p>
           <div class="system-canvas voyager-system">
-            <span class="voyager-sun"><i></i><small>SUN</small></span>
+            <span class="voyager-sun"><i><img class="sun-observation" src="/assets/journey-sun-sdo.jpg" alt="" width="4096" height="4096" loading="lazy" decoding="async"></i><small>SUN</small></span>
             <span class="solar-orbit orbit-one"></span><span class="solar-orbit orbit-two"></span><span class="solar-orbit orbit-three"></span>
             <span class="heliopause"><small>HELIOPAUSE</small></span>
             <svg class="voyager-outbound" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M250 135 C315 119 349 89 392 61"/><path class="transfer-arrow" d="m378 58 16 2-7 15"/></svg>
             <button class="diagram-pin voyager-pin" data-map-exhibit="voyager" data-journey-stop="voyager" data-visual-stop="voyager" aria-label="Open Voyager training module"><i class="voyager-miniature" aria-hidden="true"><svg viewBox="0 0 96 90"><path d="m28 50-17 27M49 46l32 31M43 34l17-25M60 9l9-5M41 49l-4 25" fill="none" stroke="#c8d6df" stroke-width="3"/><path d="m25 44 17-8 14 11-17 9z" fill="#bd944a"/><ellipse cx="37" cy="31" rx="24" ry="13" transform="rotate(-24 37 31)" fill="#f1eee2" stroke="#8696a2" stroke-width="2"/><path d="m17 38 17-25 22 8" fill="none" stroke="#9caab3" stroke-width="2"/><circle cx="34" cy="23" r="3" fill="#526c7c"/></svg></i><span class="diagram-callout"><strong>Voyager 1</strong><small>INTERSTELLAR SPACE · TRAINING</small></span></button>
           </div>
+          <p class="planet-credit"><a href="https://science.nasa.gov/photojournal/image-of-sun-from-nasas-solar-dynamics-observatory/" target="_blank" rel="noopener">Sun: NASA/GSFC/SDO · 171 Å, false color ↗</a></p>
         </article>
       </div>
       <p class="sr-only journey-progress-status" aria-live="polite"></p>
