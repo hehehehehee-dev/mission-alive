@@ -108,6 +108,14 @@ export const es = {
   "Webb · ≈ 1.5 million km · Sun–Earth L2 · NASA ↗": "Webb · ≈ 1,5 millones de km · L2 Sol–Tierra · NASA ↗",
   "Voyager 1 · Almost one light-day from Earth · NASA ↗": "Voyager 1 · Casi un día-luz de la Tierra · NASA ↗",
   "Background: Webb's First Deep Field · NASA, ESA, CSA, STScI ↗": "Fondo: primer campo profundo de Webb · NASA, ESA, CSA, STScI ↗",
+  "Academy crew ship at the current stop": "Nave de la tripulación de la academia en la parada actual",
+  "CURRENT STOP": "PARADA ACTUAL",
+  "NEXT STOP": "SIGUIENTE PARADA",
+  "Journey position updated. All stops remain open.": "Posición del viaje actualizada. Todas las paradas siguen abiertas.",
+  "VOYAGE PROLOGUE · MOON STORY ARCHIVE · NO STAMP": "PRÓLOGO DEL VIAJE · ARCHIVO DE HISTORIAS LUNARES · SIN SELLO",
+  "Your crew's voyage begins here. These are short story stops, not training modules, and your certification still has exactly four stamps.": "El viaje de tu tripulación comienza aquí. Estas son breves paradas narrativas, no módulos de entrenamiento, y tu certificación sigue teniendo exactamente cuatro sellos.",
+  "Begin with the Moon prologue": "Comenzar con el prólogo lunar",
+  "Continue at Surveyor 3": "Continuar en Surveyor 3",
 };
 export const vi = {
   "Mars Science Laboratory (Curiosity)": "Phòng thí nghiệm khoa học sao Hỏa (Curiosity)",
@@ -219,6 +227,14 @@ export const vi = {
   "Webb · ≈ 1.5 million km · Sun–Earth L2 · NASA ↗": "Webb · ≈ 1,5 triệu km · L2 Mặt Trời–Trái Đất · NASA ↗",
   "Voyager 1 · Almost one light-day from Earth · NASA ↗": "Voyager 1 · Cách Trái Đất gần một ngày ánh sáng · NASA ↗",
   "Background: Webb's First Deep Field · NASA, ESA, CSA, STScI ↗": "Nền: Trường sâu đầu tiên của Webb · NASA, ESA, CSA, STScI ↗",
+  "Academy crew ship at the current stop": "Tàu của phi hành đoàn học viện tại điểm dừng hiện tại",
+  "CURRENT STOP": "ĐIỂM HIỆN TẠI",
+  "NEXT STOP": "ĐIỂM TIẾP THEO",
+  "Journey position updated. All stops remain open.": "Vị trí hành trình đã được cập nhật. Mọi điểm dừng vẫn mở.",
+  "VOYAGE PROLOGUE · MOON STORY ARCHIVE · NO STAMP": "MỞ ĐẦU HÀNH TRÌNH · KHO TRUYỆN MẶT TRĂNG · KHÔNG CÓ DẤU",
+  "Your crew's voyage begins here. These are short story stops, not training modules, and your certification still has exactly four stamps.": "Hành trình của phi hành đoàn bắt đầu tại đây. Đây là các điểm dừng kể chuyện ngắn, không phải mô-đun huấn luyện, và chứng nhận vẫn có đúng bốn con dấu.",
+  "Begin with the Moon prologue": "Bắt đầu với phần mở đầu ở Mặt Trăng",
+  "Continue at Surveyor 3": "Tiếp tục tại Surveyor 3",
 };
 for (const [en, spanish, vietnamese] of [
   ["front", "frontal", "phía trước"], ["back", "posterior", "phía sau"],

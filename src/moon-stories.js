@@ -43,6 +43,42 @@ export const moonStories = Object.freeze({
   }),
 });
 
+export const journeyStops = Object.freeze([
+  "earth",
+  "apollo17",
+  "surveyor3",
+  "curiosity",
+  "ingenuity",
+  "webb",
+  "voyager",
+]);
+
+const shipMarkup = () => `<span class="journey-ship" role="img" aria-label="Academy crew ship at the current stop">
+  <svg viewBox="0 0 52 30" aria-hidden="true" focusable="false"><path d="M3 16 20 8 36 3l-5 10 17 3-17 3 5 9-16-6z"/><path class="ship-window" d="M21 12h8l-3 5h-8z"/><path class="ship-flame" d="m10 14-8-5 4 7-4 6 8-4z"/></svg>
+</span>`;
+
+function clampJourneyProgress(progress) {
+  const value = Number.parseInt(progress, 10);
+  return Number.isFinite(value) ? Math.max(0, Math.min(journeyStops.length - 1, value)) : 0;
+}
+
+function updateJourneyRoute(root, progress) {
+  const index = clampJourneyProgress(progress);
+  const current = journeyStops[index];
+  const next = journeyStops[index + 1] || null;
+  root.querySelectorAll("[data-journey-stop]").forEach((stop) => {
+    const isCurrent = stop.dataset.journeyStop === current;
+    const isNext = stop.dataset.journeyStop === next;
+    stop.classList.toggle("is-current-stop", isCurrent);
+    stop.classList.toggle("is-next-stop", isNext);
+    stop.querySelectorAll(":scope > .journey-ship, :scope > .route-stop-state").forEach((node) => node.remove());
+    if (isCurrent) stop.insertAdjacentHTML("beforeend", `${shipMarkup()}<span class="route-stop-state">CURRENT STOP</span>`);
+    else if (isNext) stop.insertAdjacentHTML("beforeend", '<span class="route-stop-state">NEXT STOP</span>');
+  });
+  const status = root.querySelector(".journey-progress-status");
+  if (status) status.textContent = "Journey position updated. All stops remain open.";
+}
+
 const storyCard = (id, story) => `<article class="module-story-card moon-story-card" data-moon-story="${id}" aria-labelledby="moon-${id}-title">
   <button type="button" class="moon-story-flip" aria-expanded="false" aria-controls="moon-${id}-reveal">
     <span class="moon-story-face moon-story-front">
@@ -65,9 +101,9 @@ const storyCard = (id, story) => `<article class="module-story-card moon-story-c
 
 export function moonPanelMarkup() {
   return `<dialog class="moon-panel" id="moon-panel" aria-labelledby="moon-panel-title">
-    <div class="dialog-top"><p class="eyebrow">MOON STORY ARCHIVE · NO STAMP</p><button type="button" id="moon-panel-close" aria-label="Close Moon stories">Close</button></div>
+    <div class="dialog-top"><p class="eyebrow">VOYAGE PROLOGUE · MOON STORY ARCHIVE · NO STAMP</p><button type="button" id="moon-panel-close" aria-label="Close Moon stories">Close</button></div>
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
-    <p class="moon-panel-intro">These are short stories, not training modules. Your crew certification still has exactly four stamps.</p>
+    <p class="moon-panel-intro">Your crew's voyage begins here. These are short story stops, not training modules, and your certification still has exactly four stamps.</p>
     <div class="moon-story-grid">${Object.entries(moonStories).map(([id, story]) => storyCard(id, story)).join("")}</div>
   </dialog>`;
 }
@@ -78,29 +114,30 @@ export function locationMapMarkup() {
     <div class="location-map-field" role="group" aria-label="Schematic locations of the six machines">
       <span class="journey-route-line" aria-hidden="true"></span>
       <div class="location-journey">
-        <div class="earth-marker" aria-label="You are here: Earth"><i aria-hidden="true"></i><span><strong>YOU ARE HERE</strong><small>EARTH · START</small></span></div>
+        <div class="earth-marker" data-journey-stop="earth" aria-label="You are here: Earth"><i aria-hidden="true"></i><span><strong>YOU ARE HERE</strong><small>EARTH · START</small></span></div>
         <section class="frontier frontier-moon" data-frontier="moon" aria-labelledby="frontier-moon-title">
           <div class="frontier-heading"><span id="frontier-moon-title">01 · MOON</span><a href="https://science.nasa.gov/moon/by-the-numbers/" target="_blank" rel="noopener">≈ 384,400 km from Earth · NASA ↗</a></div>
           <div class="frontier-stops">
-            <button class="location-dot is-moon" data-map-moon="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon story"><i aria-hidden="true"></i><span>Apollo 17 LRV<small>MOON STORY</small></span></button>
-            <button class="location-dot is-moon" data-map-moon="surveyor3" aria-label="Open Surveyor 3 Moon story"><i aria-hidden="true"></i><span>Surveyor 3<small>MOON STORY</small></span></button>
+            <button class="location-dot is-moon" data-map-moon="apollo17" data-journey-stop="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon story"><i aria-hidden="true"></i><span>Apollo 17 LRV<small>MOON STORY</small></span></button>
+            <button class="location-dot is-moon" data-map-moon="surveyor3" data-journey-stop="surveyor3" aria-label="Open Surveyor 3 Moon story"><i aria-hidden="true"></i><span>Surveyor 3<small>MOON STORY</small></span></button>
           </div>
         </section>
         <section class="frontier frontier-mars" data-frontier="mars" aria-labelledby="frontier-mars-title">
           <div class="frontier-heading"><span id="frontier-mars-title">02 · MARS</span><a href="https://science.nasa.gov/wp-content/uploads/2024/03/44745_mro-arrival.pdf" target="_blank" rel="noopener">≈ 7 months by spacecraft · NASA ↗</a></div>
           <div class="frontier-stops">
-            <button class="location-dot is-mars" data-map-exhibit="curiosity" aria-label="Open Curiosity training module"><i aria-hidden="true"></i><span>Curiosity<small>MARS · TRAINING</small></span></button>
-            <button class="location-dot is-mars" data-map-exhibit="ingenuity" aria-label="Open Ingenuity training module"><i aria-hidden="true"></i><span>Ingenuity<small>MARS · TRAINING</small></span></button>
+            <button class="location-dot is-mars" data-map-exhibit="curiosity" data-journey-stop="curiosity" aria-label="Open Curiosity training module"><i aria-hidden="true"></i><span>Curiosity<small>MARS · TRAINING</small></span></button>
+            <button class="location-dot is-mars" data-map-exhibit="ingenuity" data-journey-stop="ingenuity" aria-label="Open Ingenuity training module"><i aria-hidden="true"></i><span>Ingenuity<small>MARS · TRAINING</small></span></button>
           </div>
         </section>
         <section class="frontier frontier-deep" data-frontier="deep-space" aria-labelledby="frontier-deep-title">
           <div class="frontier-heading"><span id="frontier-deep-title">03 · DEEP SPACE</span><span class="frontier-distance-pair"><a href="https://science.nasa.gov/mission/webb/orbit/" target="_blank" rel="noopener">Webb · ≈ 1.5 million km · Sun–Earth L2 · NASA ↗</a><a href="https://science.nasa.gov/mission/voyager/voyager-1/voyager-1-what-is-a-light-day/" target="_blank" rel="noopener">Voyager 1 · Almost one light-day from Earth · NASA ↗</a></span></div>
           <div class="frontier-stops">
-            <button class="location-dot is-deep" data-map-exhibit="webb" aria-label="Open Webb training module"><i aria-hidden="true"></i><span>Webb<small>DEEP SPACE · TRAINING</small></span></button>
-            <button class="location-dot is-deep" data-map-exhibit="voyager" aria-label="Open Voyager training module"><i aria-hidden="true"></i><span>Voyager 1<small>INTERSTELLAR · TRAINING</small></span></button>
+            <button class="location-dot is-deep" data-map-exhibit="webb" data-journey-stop="webb" aria-label="Open Webb training module"><i aria-hidden="true"></i><span>Webb<small>DEEP SPACE · TRAINING</small></span></button>
+            <button class="location-dot is-deep" data-map-exhibit="voyager" data-journey-stop="voyager" aria-label="Open Voyager training module"><i aria-hidden="true"></i><span>Voyager 1<small>INTERSTELLAR · TRAINING</small></span></button>
           </div>
         </section>
       </div>
+      <p class="sr-only journey-progress-status" aria-live="polite"></p>
     </div>
     <p class="fine location-map-credit">Schematic: Mission Alive · not to scale. <a href="https://science.nasa.gov/mission/webb/webbs-first-images/" target="_blank" rel="noopener">Background: Webb's First Deep Field · NASA, ESA, CSA, STScI ↗</a></p>
   </section>`;
@@ -144,8 +181,9 @@ export function mountMoonPanel(root) {
   };
 }
 
-export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {} } = {}) {
+export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}, journeyProgress = 0 } = {}) {
   root.innerHTML = locationMapMarkup();
+  updateJourneyRoute(root, journeyProgress);
   const click = (event) => {
     const exhibit = event.target.closest("[data-map-exhibit]");
     if (exhibit) return onExhibit(exhibit.dataset.mapExhibit, exhibit);
@@ -153,5 +191,8 @@ export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}
     if (moon) onMoon(moon.dataset.mapMoon, moon);
   };
   root.addEventListener("click", click);
-  return { dispose() { root.removeEventListener("click", click); } };
+  return {
+    setProgress(progress) { updateJourneyRoute(root, progress); },
+    dispose() { root.removeEventListener("click", click); },
+  };
 }

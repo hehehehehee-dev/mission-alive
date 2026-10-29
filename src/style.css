@@ -597,6 +597,16 @@ main {
 .location-dot.is-mars i { background: #ef986c; box-shadow: 0 0 0 5px #ef986c22, 0 0 14px #ef986c; }
 .location-dot span { display: grid; min-width: 0; font: 700 .68rem/1.2 Arial, sans-serif; overflow-wrap: anywhere; }
 .location-dot small { margin-top: 2px; color: #aebeca; font: .5rem/1.2 monospace; letter-spacing: .05em; }
+.earth-marker.is-current-stop, .location-dot.is-current-stop { border-color: #ffe2a0; box-shadow: 0 0 0 2px #eec87538, 0 0 28px #eec8757a, 0 8px 24px #000b; }
+.location-dot.is-next-stop { border-color: #a9dfff; outline: 1px dashed #a9dfff; outline-offset: 3px; background: #102334e8; }
+.earth-marker > .route-stop-state, .location-dot > .route-stop-state { position: absolute; top: 5px; right: 7px; display: block; min-width: 0; color: #f6d997; font: 700 .47rem/1.2 monospace; letter-spacing: .09em; pointer-events: none; }
+.is-next-stop > .route-stop-state { color: #bde6ff; }
+.journey-ship { position: absolute; z-index: 5; left: calc(50% - 26px); bottom: -25px; display: block; width: 52px; height: 30px; color: #f7d98d; filter: drop-shadow(0 0 5px #f6cf74) drop-shadow(0 3px 4px #000); pointer-events: none; animation: journey-ship-hover 2.6s ease-in-out infinite; }
+.journey-ship svg { display: block; width: 100%; height: 100%; overflow: visible; fill: currentColor; stroke: #fff4d2; stroke-width: 1; }
+.journey-ship .ship-window { fill: #8be1ff; stroke: #d9f8ff; }
+.journey-ship .ship-flame { fill: #ff8b55; stroke: #ffd080; }
+@keyframes journey-ship-hover { 0%, 100% { transform: translateY(-2px) rotate(-2deg); } 50% { transform: translateY(2px) rotate(2deg); } }
+body.motion-reduced .journey-ship { animation: none; }
 .location-map-credit { margin: 10px 0 0; color: #82939e; }
 .location-map-credit a { color: #a9c6d5; }
 
@@ -3308,6 +3318,8 @@ body[data-exhibit="voyager"] {
   .frontier-heading { min-height: 0; margin-left: 39px; padding: 11px 12px 10px; }
   .frontier-stops { grid-template-columns: 1fr; gap: 9px; margin: 10px 0 0 29px; }
   .location-dot, .location-dot:hover, .location-dot:focus-visible { min-height: 62px; transform: none; }
+  .journey-ship { left: -41px; bottom: calc(50% - 15px); }
+  .earth-marker .journey-ship { left: -7px; }
   .moon-panel { width: calc(100% - 18px); max-height: 92vh; padding: 22px 16px; }
   .moon-panel .dialog-top { top: -22px; margin: -22px -16px 0; padding: 16px; }
   .moon-story-grid { grid-template-columns: 1fr; }

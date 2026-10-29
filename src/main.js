@@ -28,7 +28,7 @@ import { dsnWidgetMarkup, mountDsnWidget } from "./dsn-widget.js";
 import { missionHistoryMarkup } from "./mission-history.js";
 import { marsSoundsMarkup, mountMarsSounds } from "./mars-sounds.js";
 import { hiddenFactPassportMarkup, mountHiddenFacts } from "./hidden-facts.js";
-import { mountMoonPanel, mountLocationMap } from "./moon-stories.js";
+import { journeyStops, mountMoonPanel, mountLocationMap } from "./moon-stories.js";
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -163,6 +163,7 @@ const missionObjectives = {
 };
 const PROGRESS_KEY = "mission-alive-passport-v2";
 const MOTION_KEY = "mission-alive-reduced-motion";
+const JOURNEY_KEY = "mission-alive-journey-v1";
 function initialReducedMotion() {
   try {
     const saved = localStorage.getItem(MOTION_KEY);
@@ -179,6 +180,16 @@ function loadProgress() {
   } catch {
     return new Set();
   }
+}
+function loadJourneyProgress(stamps) {
+  try {
+    const saved = localStorage.getItem(JOURNEY_KEY);
+    const savedIndex = journeyStops.indexOf(saved);
+    if (savedIndex >= 0) return savedIndex;
+  } catch {
+    // Derive a sensible starting point from stamps when storage is blocked.
+  }
+  return Math.max(0, ...[...stamps].map((id) => journeyStops.indexOf(id)));
 }
 const $ = (s) => document.querySelector(s);
 const moonPanel = mountMoonPanel($("#moon-panel-slot"));
@@ -199,6 +210,7 @@ let current = "curiosity",
   marsSoundPlayer,
   hiddenFactCache,
   completed = loadProgress(),
+  journeyProgress = loadJourneyProgress(completed),
   sound = false,
   audioContext,
   reduce = initialReducedMotion(),
@@ -525,6 +537,48 @@ function saveProgress() {
   }
 }
 
+function advanceJourney(stop) {
+  const nextProgress = journeyStops.indexOf(stop);
+  if (nextProgress < 0 || nextProgress <= journeyProgress) {
+    locationMap?.setProgress(journeyProgress);
+    return false;
+  }
+  journeyProgress = nextProgress;
+  try {
+    localStorage.setItem(JOURNEY_KEY, journeyStops[journeyProgress]);
+  } catch {
+    /* Journey position still works for this visit if storage is unavailable. */
+  }
+  locationMap?.setProgress(journeyProgress);
+  configureJourneyStart();
+  return true;
+}
+
+function configureJourneyStart() {
+  const button = $("#start-journey");
+  if (!button) return;
+  const nextMission = Object.keys(exhibits).find((id) => !completed.has(id));
+  const moonStop = journeyProgress < 2 ? journeyStops[journeyProgress + 1] : null;
+  button.textContent = moonStop === "apollo17"
+    ? "Begin with the Moon prologue"
+    : moonStop === "surveyor3"
+      ? "Continue at Surveyor 3"
+      : completed.size
+        ? nextMission
+          ? `Continue with ${exhibits[nextMission].name}`
+          : "Visit the machines again"
+        : "Begin with Curiosity";
+  button.onclick = () => {
+    if (moonStop) {
+      const trigger = document.querySelector(`[data-map-moon="${moonStop}"]`);
+      advanceJourney(moonStop);
+      moonPanel.open(moonStop, trigger || button);
+      return;
+    }
+    navigateTo(nextMission || "curiosity");
+  };
+}
+
 function updateMissionProgress() {
   const count = completed.size;
   $("#passport").textContent = `${count} / 4 stamped`;
@@ -657,8 +711,15 @@ function renderLobby() {
   $("#mission-history-slot").innerHTML = missionHistoryMarkup();
   $("#hidden-fact-passport-slot").innerHTML = hiddenFactPassportMarkup();
   locationMap = mountLocationMap($("#location-map-slot"), {
-    onExhibit: (id) => navigateTo(id),
-    onMoon: (id, trigger) => moonPanel.open(id, trigger),
+    journeyProgress,
+    onExhibit: (id) => {
+      advanceJourney(id);
+      navigateTo(id);
+    },
+    onMoon: (id, trigger) => {
+      advanceJourney(id);
+      moonPanel.open(id, trigger);
+    },
   });
   $("#lobby-missions").innerHTML = Object.entries(exhibits)
     .map(
@@ -687,15 +748,7 @@ function renderLobby() {
         card.style.setProperty("--tilt-y", "0deg");
       };
     });
-  const nextMission = Object.keys(exhibits).find((id) => !completed.has(id));
-  $("#start-journey").textContent = completed.size
-    ? nextMission
-      ? `Continue with ${exhibits[nextMission].name}`
-      : "Visit the machines again"
-    : "Begin with Curiosity";
-  $("#start-journey").onclick = () => {
-    navigateTo(nextMission || "curiosity");
-  };
+  configureJourneyStart();
   updateMissionProgress();
   window.scrollTo({ top: 0, behavior: "instant" });
 }
@@ -2192,6 +2245,7 @@ function checkVoyager() {
 }
 async function render(id) {
   disposeOpenData();
+  advanceJourney(id);
   frictionFeedback = createFrictionFeedback();
   machineVoices.beginAttempt(id);
   if (storyDialog.open) storyDialog.close();

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { moonStories, moonPanelMarkup, locationMapMarkup } from "../src/moon-stories.js";
+import { journeyStops, moonStories, moonPanelMarkup, locationMapMarkup } from "../src/moon-stories.js";
 
 test("Moon archive contains exactly two sourced, content-only stories", () => {
   assert.deepEqual(Object.keys(moonStories), ["apollo17", "surveyor3"]);
@@ -32,6 +32,8 @@ test("Moon archive contains exactly two sourced, content-only stories", () => {
 
 test("location strip routes four training machines and only two Moon stories", () => {
   const markup = locationMapMarkup();
+  assert.deepEqual(journeyStops, ["earth", "apollo17", "surveyor3", "curiosity", "ingenuity", "webb", "voyager"]);
+  assert.equal((markup.match(/data-journey-stop=/g) || []).length, 7);
   assert.equal((markup.match(/data-map-exhibit=/g) || []).length, 4);
   assert.equal((markup.match(/data-map-moon=/g) || []).length, 2);
   assert.deepEqual(
@@ -59,6 +61,7 @@ test("location strip routes four training machines and only two Moon stories", (
     "Voyager 1 · Almost one light-day from Earth",
   ]) assert.ok(markup.includes(label), label);
   assert.ok(markup.includes("journey-route-line"));
+  assert.ok(markup.includes("journey-progress-status"));
   assert.ok(markup.includes("Background: Webb's First Deep Field · NASA, ESA, CSA, STScI"));
 });
 
@@ -73,4 +76,6 @@ test("the original certification UI remains exactly four modules and four certif
   assert.ok(!index.includes("5 / 5"));
   assert.ok(!main.includes("apollo17: {"));
   assert.ok(!main.includes("surveyor3: {"));
+  assert.ok(main.includes('const JOURNEY_KEY = "mission-alive-journey-v1"'));
+  assert.ok(index.indexOf('id="location-map-slot"') < index.indexOf('id="lobby-missions"'));
 });
