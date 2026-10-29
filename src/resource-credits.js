@@ -32,6 +32,9 @@ export const resourceCredits = [
   image('first-deep-field', 'Webb · First Deep Field · SMACS 0723', 'NASA / ESA / CSA / STScI', 'https://science.nasa.gov/asset/webb/webbs-first-deep-field-nircam-image/', '/assets/webb-first-deep-field-smacs0723.png', 'https://assets.science.nasa.gov/content/dam/science/missions/webb/science/2022/07/STScI-01G8H1K2BCNATEZSKVRN9Z69SR.png/jcr:content/renditions/1960x2000.png', ['Journey map', 'Webb'], 'Composite image', 'NASA’s published PNG rendition. Also dimmed behind the journey map.'),
   image('apollo17', 'Apollo 17 · Gene Cernan and the lunar rover', 'NASA / Harrison Schmitt', moonStories.apollo17.reveal.source[1], moonStories.apollo17.reveal.image, null, ['Moon prologue'], 'Photograph', 'Official NASA photograph. The source page is linked; the exact original download URL was not retained.'),
   image('surveyor3', 'Surveyor 3 · photographed by Apollo 12', 'NASA / JSC', moonStories.surveyor3.reveal.source[1], moonStories.surveyor3.reveal.image, null, ['Moon prologue'], 'Photograph', 'Official NASA photograph. The source page is linked; the exact original download URL was not retained.'),
+  image('apollo17-fender', 'Apollo 17 · repaired lunar rover fender', 'Apollo 17, NASA', 'https://science.nasa.gov/image-article/apod-2004-april-17-lunar-dust-and-duct-tape/', '/assets/moon-apollo17-fender-repair.jpg', 'https://assets.science.nasa.gov/content/dam/science/cds/apod/apod/2004/april/ducttape_apollo17_big.jpg', ['Moon labs'], 'Photograph', 'NASA photograph, preserved without content edits. Displayed after a successful repair simulation.'),
+  { id: 'lrv-lab-model', category: 'science', kind: 'Original simulation', title: 'Lunar rover fender lab · Mission Alive', credit: 'Mission Alive', source: 'https://science.nasa.gov/image-article/apod-2004-april-17-lunar-dust-and-duct-tape/', files: ['src/moon-lrv-game.js'], usedIn: ['Moon labs'], presentation: 'Original SVG illustrations and simplified dust-path rules. Game dimensions and pass criteria are invented for learning, not NASA measurements.' },
+  { id: 'surveyor-lab-model', category: 'science', kind: 'Original simulation', title: 'Lunar soil lab · Mission Alive', credit: 'Mission Alive', source: 'https://science.nasa.gov/mission/surveyor-3/', files: ['src/moon-surveyor-game.js'], usedIn: ['Moon labs'], presentation: 'Original SVG illustrations and a dimensionless soil model. Fictional soil patches and adjustable footpads are learning tools, not Surveyor telemetry or real Apollo landing settings.' },
   image('record-front', 'Voyager · Golden Record front', 'NASA / JPL-Caltech', 'https://science.nasa.gov/image-detail/voyager-gold-record-front/', 'src/assets/golden-record-front.jpg', 'https://science.nasa.gov/wp-content/uploads/2024/03/voyager-gold-record-front.jpg', ['Voyager 1']),
   image('record-cover', 'Voyager · Golden Record protective cover', 'NASA / JPL-Caltech', 'https://science.nasa.gov/mission/voyager/voyager-golden-record-overview/', 'src/assets/voyager-golden-record-cover.webp', null, ['Voyager 1'], 'Photograph', 'File supplied by the project owner; the official context page is linked. The original download was not retained.'),
   { id: 'voyager-film', category: 'images', kind: 'Video', title: 'Voyager · Solar System flyout', credit: "NASA's Scientific Visualization Studio / NASA / JPL-Caltech", source: 'https://svs.gsfc.nasa.gov/13544/', original: 'https://svs.gsfc.nasa.gov/vis/a010000/a013500/a013544/voyager_location_pull_out_from_solar_system_IPAD_high.webm', files: ['/assets/solar-system-flyout.webm'], usedIn: ['Voyager 1'], presentation: 'Original NASA video, played silently as an optional background.' },
@@ -46,6 +49,7 @@ export const resourceCredits = [
 for (const entry of resourceCredits) {
   if (['curiosity-panorama', 'ingenuity-aerial', 'first-deep-field'].includes(entry.id)) entry.usedIn.push('Mission view');
   if (['earth', 'moon-map', 'mars-map'].includes(entry.id)) entry.usedIn.push('Planet comparison');
+  if (entry.id === 'surveyor3') entry.usedIn.push('Moon labs');
 }
 
 const archivePhotos = new Map();
@@ -89,6 +93,9 @@ export function buildScienceCredits(facts = {}, quotes = []) {
   add('NASA · Webb partnership', 'https://science.nasa.gov/mission/webb/webb-team/', 'Webb');
   add('NASA · Curiosity habitability', 'https://science.nasa.gov/resource/the-science-of-curiosity-seeking-signs-of-past-mars-habitability/', 'Curiosity');
   add('NASA · Webb first science images', 'https://science.nasa.gov/mission/webb/webbs-first-images/', 'Webb');
+  add('NASA · Apollo 17 dust-shield repair', 'https://science.nasa.gov/image-article/apod-2004-april-17-lunar-dust-and-duct-tape/', 'Moon labs');
+  add('NASA · Surveyor 3 soil experiments', 'https://science.nasa.gov/mission/surveyor-3/', 'Moon labs');
+  add('NASA JPL · Surveyor 3 camera returned', 'https://www.jpl.nasa.gov/blog/2012/1/surveyor-3-camera-returned-from-the-moon', 'Moon labs');
   return [...groups.values()];
 }
 
@@ -116,7 +123,7 @@ export function mountResourceCredits(dialog, { facts, quotes = [], recordImages 
         ${preview ? `<a class="credit-preview" href="${escape(entry.source)}" target="_blank" rel="noopener" aria-label="Open official source"><img src="${escape(preview)}" alt="${escape(entry.title)}" loading="lazy" decoding="async"></a>` : ''}
         <div class="credit-content"><p class="eyebrow">${entry.kind}</p><h3>${escape(entry.title)}</h3><p class="credit-byline" data-i18n-skip>${escape(entry.credit)}</p><p class="credit-use"><span>Used in:</span> ${entry.usedIn.map(label => `<span>${escape(label)}</span>`).join(' · ')}</p>
         ${entry.presentation ? `<p class="credit-description">${escape(entry.presentation)}</p>` : ''}
-        <div class="credit-links"><a href="${escape(entry.source)}" target="_blank" rel="noopener">Official source ↗</a>${entry.original ? `<a href="${escape(entry.original)}" target="_blank" rel="noopener">Original file / data ↗</a>` : ''}</div>
+        <div class="credit-links"><a href="${escape(entry.source)}" target="_blank" rel="noopener">${entry.kind === 'Original simulation' ? 'Scientific context' : 'Official source'} ↗</a>${entry.original ? `<a href="${escape(entry.original)}" target="_blank" rel="noopener">Original file / data ↗</a>` : ''}</div>
         ${entry.languages ? `<details class="credit-languages"><summary>View all 55 credited languages</summary><p>${entry.languages.map(language => `<span>${escape(language)}</span>`).join(' · ')}</p></details>` : ''}</div></article>`;
     }).join('') || `<p class="credits-empty">No matching resources. Try another search.</p>`;
     dialog.querySelector('#credits-count').textContent = `${shown.length} resources`;

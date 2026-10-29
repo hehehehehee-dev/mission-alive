@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { journeyStops, moonStories, moonPanelMarkup, locationMapMarkup } from "../src/moon-stories.js";
 
-test("Moon archive contains exactly two sourced, content-only stories", () => {
+test("Moon archive keeps two sourced stories and optional labs outside certification", () => {
   assert.deepEqual(Object.keys(moonStories), ["apollo17", "surveyor3"]);
   for (const story of Object.values(moonStories)) {
     assert.equal(story.facts.length, 4);
@@ -26,8 +26,13 @@ test("Moon archive contains exactly two sourced, content-only stories", () => {
   assert.ok(!markup.includes("data-stamp"));
   assert.ok(!markup.includes("data-exhibit"));
   assert.equal((markup.match(/class="moon-story-flip"/g) || []).length, 2);
-  assert.equal((markup.match(/Image credit: NASA/g) || []).length, 2);
+  const archive = markup.slice(markup.indexOf('<div class="moon-story-grid">'));
+  assert.equal((archive.match(/Image credit: NASA/g) || []).length, 2);
   assert.ok(markup.includes("television camera and soil scoop home to Earth"));
+  assert.equal((markup.match(/data-moon-play=/g) || []).length, 2);
+  assert.ok(markup.includes('data-lrv-workshop'));
+  assert.ok(markup.includes('data-surveyor-game'));
+  assert.ok(markup.includes('Illustrated simulation · not NASA test data.'));
 });
 
 test("location strip routes four training machines and only two Moon stories", () => {

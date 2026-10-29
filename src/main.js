@@ -36,6 +36,7 @@ import './journey-experience.css';
 import { mountAccessPreferences } from './access-preferences.js';
 import { mountRoverTextMap, roverPosition, describeStar, mountRangeButtons, nextFlightCheckpoint } from './accessible-controls.js';
 import './accessible-academy.css';
+import './moon-labs.css';
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,

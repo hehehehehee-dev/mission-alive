@@ -1,4 +1,5 @@
 import { mountJourneyGlobes } from './journey-globes.js';
+import { moonLabMarkup, mountMoonLabs } from './moon-labs.js';
 
 export const moonStories = Object.freeze({
   apollo17: Object.freeze({
@@ -224,6 +225,7 @@ export function moonPanelMarkup() {
     <div class="dialog-top"><p class="eyebrow">VOYAGE PROLOGUE · MOON STORY ARCHIVE · NO STAMP</p><button type="button" id="moon-panel-close" aria-label="Close Moon stories">Close</button></div>
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
     <p class="moon-panel-intro">Your crew's voyage begins here. These are short story stops, not training modules, and your certification still has exactly four stamps.</p>
+    ${moonLabMarkup()}
     <div class="moon-story-grid">${Object.entries(moonStories).map(([id, story]) => storyCard(id, story)).join("")}</div>
   </dialog>`;
 }
@@ -305,6 +307,7 @@ export function mountMoonPanel(root) {
   root.innerHTML = moonPanelMarkup();
   const dialog = root.querySelector("#moon-panel");
   const closeButton = root.querySelector("#moon-panel-close");
+  const labs = mountMoonLabs(dialog);
   let returnFocus = null;
   const close = () => dialog.close();
   closeButton.addEventListener("click", close);
@@ -330,10 +333,10 @@ export function mountMoonPanel(root) {
     open(id, trigger) {
       if (!moonStories[id]) return false;
       returnFocus = trigger || document.activeElement;
+      labs.showArchive();
       if (!dialog.open) dialog.showModal();
-      const heading = dialog.querySelector(`#moon-${id}-title`);
-      heading?.scrollIntoView({ block: "center", behavior: "instant" });
-      heading?.focus({ preventScroll: true });
+      dialog.scrollTop = 0;
+      labs.launcher(id)?.focus({ preventScroll: true });
       return true;
     },
   };

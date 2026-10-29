@@ -1,0 +1,117 @@
+.moon-panel { width: min(1180px, calc(100% - 24px)); max-width: 1180px; max-height: 92dvh; padding: 30px; background: var(--reading-paper, #0c1923); color: #f0f3f2; }
+.moon-panel > h2 { font: 600 clamp(1.8rem, 4vw, 2.6rem)/1.2 Arial, sans-serif; margin: 22px 0; }
+.moon-panel-intro, .moon-lab-intro { max-width: 740px; font-size: 1rem; line-height: 1.7; }
+.moon-panel .dialog-top { background: var(--reading-paper, #0c1923); border-bottom: 1px solid var(--line); }
+.moon-panel .dialog-top .eyebrow { margin: 0; }
+.moon-lab-launches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 24px 0 32px; }
+.moon-lab-launches button { position: relative; display: grid; gap: 8px; padding: 22px 48px 22px 22px; text-align: left; border: 1px solid #647987; background: #102330; color: #e6edf0; }
+.moon-lab-launches button > span:first-child { font-size: .875rem; color: #c4d6df; }
+.moon-lab-launches button > strong { font-size: 1.25rem; line-height: 1.4; }
+.moon-lab-launches button > small { font-size: .875rem; color: #c0cdd4; }
+.moon-lab-launches button > span:last-child { position: absolute; top: 24px; right: 20px; font-size: 1.3rem; color: #f0c88b; }
+.moon-lab-launches button[aria-pressed="true"] { border-color: #f0c88b; background: #20323d; }
+.moon-lab-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 22px 0; border-top: 1px solid #647987; }
+.moon-lab-toolbar .eyebrow { font-size: .75rem; color: #c4d3db; }
+.moon-lab-workspace { scroll-margin-top: 76px; }
+.moon-lab-disclaimer { margin-top: 32px; padding-top: 20px; border-top: 1px solid #647987; font-size: .875rem; line-height: 1.7; color: #c5d2db; }
+.moon-game { min-width: 0; font-size: 1rem; line-height: 1.65; }
+.moon-game h3 { margin: 12px 0 20px; font: 600 clamp(1.7rem, 3vw, 2.3rem)/1.25 Arial, sans-serif; }
+.moon-game h4 { font-size: 1.125rem; line-height: 1.5; }
+.moon-game .lrv-heading { display: block; height: auto; min-height: 0; margin: 0 0 24px; padding: 0; border: 0; }
+.moon-game p { font-size: 1rem; line-height: 1.7; max-width: 78ch; }
+.moon-game a { color: #eed2a5; text-underline-offset: 4px; }
+.moon-game :is(.fine, figcaption, small) { font-size: .875rem; line-height: 1.6; color: #c1cfd8; }
+.moon-game label { font-size: 1rem; }
+.moon-game fieldset { background: #10212d; border-color: #647987; padding: 20px; }
+.moon-game button { min-height: 44px; font-size: 1rem; }
+.moon-game button[aria-pressed="true"] { border-color: #f0c88b; background: #233a48; color: #fff; }
+.moon-game :is(button, input, select):focus-visible { outline: 3px solid #a6e4ff; outline-offset: 4px; }
+.moon-game input[type="range"] { width: 100%; min-height: 44px; accent-color: #f0c88b; }
+.moon-game :is(.lrv-workbench, .surveyor-layout, .lrv-layout) { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, 1fr); gap: 28px; align-items: start; }
+.lrv-workshop-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, 1fr); gap: 28px; align-items: start; }
+.moon-game .lrv-illustration { position: sticky; top: 76px; min-width: 0; margin: 0; padding: 18px; border: 1px solid #647987; background: #09141d; border-radius: 5px; }
+.lrv-preview-label { font-size: .8125rem !important; margin: 0 0 14px; color: #d4e1e7; }
+.lrv-dust-legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 15px; }
+.lrv-dust-key { display: flex; align-items: center; gap: 8px; font-size: .875rem; }
+.lrv-dust-key::before { content: ''; width: 26px; border-top: 3px dashed #ffb267; }
+.lrv-dust-caught::before { border-top-color: #6ce0df; }
+.moon-game :is(.lrv-simulation-label, .lrv-model-dimensions, .lrv-control-help, .lrv-history-help, .surveyor-model-label, .surveyor-disclaimer) { font-size: .875rem; line-height: 1.65; color: #c7d6df; }
+.lrv-part, .lrv-attachment label { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 0; }
+.lrv-attachment { margin-bottom: 8px; }
+.lrv-control { margin: 24px 0; }
+.lrv-control > label { display: flex; justify-content: space-between; gap: 16px; font-weight: 600; }
+.lrv-control-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; font-weight: 600; }
+.lrv-control-heading output { color: #f0d4a6; font-variant-numeric: tabular-nums; }
+.lrv-range-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+.lrv-range-row .lrv-step { flex: none; width: 48px; height: 44px; padding: 0; font-size: 1.25rem; }
+.lrv-range-row input { flex: 1; min-width: 0; }
+.lrv-control-stepper { display: flex; align-items: center; gap: 12px; }
+.lrv-control-stepper button { min-width: 52px; }
+.lrv-measures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 16px 0; }
+.lrv-measures > div { padding: 18px; border: 1px solid #647987; border-radius: 5px; background: #10212d; }
+.lrv-measures > div[data-result="pass"] { border-left: 4px solid #94e4cd; }
+.lrv-measures > div[data-result="adjust"] { border-left: 4px solid #f0c88b; }
+.lrv-measures dt { font-size: .9375rem; font-weight: 600; }
+.lrv-measures dd { margin: 12px 0; font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.lrv-measures dd > span { display: block; margin-bottom: 12px; }
+.lrv-measures small { display: block; }
+.lrv-result-status { padding: 18px; border-left: 3px solid #e5c38c; background: #142733; }
+.lrv-history-scroll { max-width: 100%; overflow-x: auto; border: 1px solid #647987; border-radius: 5px; }
+.lrv-history table { width: 100%; min-width: 670px; border-collapse: collapse; font-size: .875rem; }
+.lrv-history :is(th, td) { padding: 12px; border: 1px solid #4c6371; text-align: left; vertical-align: top; }
+.lrv-trial-setting, .lrv-trial-material { display: block; margin: 4px 0; }
+.lrv-history .is-passed th { border-left: 4px solid #94e4cd; }
+.lrv-model-details { margin: 24px 0; border-block: 1px solid #647987; }
+.surveyor-investigation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.surveyor-patches, .surveyor-force-buttons, .surveyor-pad-stepper { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.surveyor-force-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.surveyor-force-buttons button { font-size: .9375rem; }
+.surveyor-pad-stepper > button { flex: 1 1 120px; }
+.surveyor-controls > button { display: block; width: 100%; margin-top: 14px; }
+.surveyor-lander { max-width: 360px; margin-inline: auto; }
+.moon-game .surveyor-ending { display: block; padding: 24px 0 0; background: none; border: 0; border-top: 1px solid #647987; border-radius: 0; box-shadow: none; }
+.surveyor-ending blockquote { margin: 20px 0; font: 400 1.5rem/1.5 var(--story-serif); }
+.moon-game :is(.lrv-figure, .surveyor-figure) { min-width: 0; margin: 0; padding: 18px; border: 1px solid #647987; border-radius: 6px; background: #09141d; }
+.moon-game svg { display: block; width: 100%; height: auto; overflow: visible; }
+.moon-game :is(.lrv-figure, .surveyor-figure) figcaption { margin-top: 14px; }
+.moon-game :is(.lrv-controls, .surveyor-controls) { min-width: 0; }
+.moon-game :is(.lrv-stepper, .surveyor-stepper, .moon-stepper) { display: flex; align-items: center; gap: 12px; margin: 10px 0 20px; }
+.moon-game :is(.lrv-stepper, .surveyor-stepper, .moon-stepper) button { min-width: 52px; }
+.moon-game :is(.lrv-readouts, .surveyor-readout) { font-variant-numeric: tabular-nums; }
+.moon-game :is(.lrv-test-actions, .surveyor-actions, .lrv-actions) { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }
+.moon-game :is(.lrv-result, .surveyor-result) { padding: 20px; border: 1px solid #8eabbc; border-left: 4px solid #f0c88b; background: #142733; margin: 24px 0; }
+.moon-game :is(.lrv-result, .surveyor-result) p { margin: 8px 0; }
+.moon-game :is(.lrv-log, .surveyor-log) { max-height: 330px; overflow-y: auto; padding: 20px; border: 1px solid #647987; border-radius: 5px; }
+.moon-game :is(.lrv-log, .surveyor-log) ol { padding-left: 24px; margin: 12px 0; }
+.moon-game :is(.lrv-log, .surveyor-log) li { margin: 10px 0; font-size: .9375rem; }
+.moon-game :is(.lrv-ending, .surveyor-ending) { border-top: 1px solid #647987; padding-top: 24px; margin-top: 30px; }
+.moon-real-history { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 28px; margin: 32px 0 0; padding-top: 26px; border-top: 1px solid #647987; }
+.moon-real-history > img { display: block; width: 100%; height: auto; border-radius: 4px; }
+.moon-real-history h4 { font: 600 1.4rem/1.3 Arial, sans-serif; margin: 0 0 14px; }
+.moon-real-history p { font-size: 1rem; line-height: 1.7; }
+.moon-real-history a { font-size: .875rem; line-height: 1.6; color: #eed2a5; }
+.moon-panel .moon-story-grid { margin-top: 36px; }
+.moon-game .moon-model-note { font-size: .875rem; color: #c4d1d9; }
+body.high-contrast :is(.moon-panel, .moon-game fieldset, .moon-lab-launches button, .moon-game .lrv-figure, .moon-game .surveyor-figure, .moon-game .lrv-result, .moon-game .surveyor-result) { background: #000; color: #fff; border-color: #d4dde3; }
+body.high-contrast .moon-game :is(p, small, figcaption) { color: #eee; }
+@media (max-width: 800px) {
+  .moon-game :is(.lrv-workbench, .surveyor-layout, .lrv-layout) { grid-template-columns: 1fr; gap: 22px; }
+  .lrv-workshop-grid, .surveyor-investigation-grid { grid-template-columns: 1fr; }
+  .moon-game .lrv-illustration { position: static; }
+}
+@media (max-width: 600px) {
+  .moon-panel { padding: 22px 16px; width: calc(100% - 16px); }
+  .moon-panel .dialog-top { margin: -22px -16px 0; padding: 14px 16px; top: -22px; gap: 16px; }
+  .moon-panel .dialog-top .eyebrow { font-size: .6875rem; }
+  .moon-panel .dialog-top button { flex: none; }
+  .moon-lab-launches { grid-template-columns: 1fr; }
+  .moon-lab-launches button { padding: 18px 42px 18px 18px; }
+  .moon-lab-toolbar { display: grid; gap: 8px; }
+  .moon-game :is(.lrv-figure, .surveyor-figure) { padding: 10px; }
+  .moon-game fieldset { padding: 15px; }
+  .lrv-measures { grid-template-columns: 1fr; }
+  .moon-real-history { grid-template-columns: 1fr; gap: 20px; }
+  .moon-game :is(.lrv-test-actions, .surveyor-actions, .lrv-actions) > button { flex: 1 1 130px; }
+}
+@media (prefers-reduced-motion: reduce) { .moon-game * { animation: none !important; transition: none !important; } }
+@media print { .moon-lab-launches, .moon-lab-workspace { display: none !important; } }
