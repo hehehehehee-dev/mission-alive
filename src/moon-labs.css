@@ -115,3 +115,18 @@ body.high-contrast .moon-game :is(p, small, figcaption) { color: #eee; }
 }
 @media (prefers-reduced-motion: reduce) { .moon-game * { animation: none !important; transition: none !important; } }
 @media print { .moon-lab-launches, .moon-lab-workspace { display: none !important; } }
+.lrv-tool-tray { display: grid; gap: .5rem; }
+.lrv-tool-tray button { min-height: 48px; text-align: left; }
+.lrv-tool-tray button[aria-pressed="true"] { border-color: #8ae4ef; background: #203c48; color: #fff; }
+[data-lrv-drag-tip] { cursor: grab; touch-action: none; }
+.lrv-workshop-svg { touch-action: pan-y; }
+.lrv-testing .lrv-wheel { transform-origin: 210px 330px; animation: moon-wheel-test 1.4s ease-out; }
+.lrv-testing .lrv-dust-path { animation: moon-dust-test 1.4s linear; }
+.surveyor-touchdown .surveyor-lander { animation: moon-landing-test 1s ease-out; }
+.moon-transmission { padding: clamp(1rem, 4vw, 2rem); border-top: 1px solid #8ca4ad; margin-top: 2rem; max-width: 66ch; }
+.moon-transmission blockquote { margin: 1rem 0; font-size: 1.15rem; line-height: 1.8; }
+@keyframes moon-wheel-test { to { transform: rotate(360deg); } }
+@keyframes moon-dust-test { from { stroke-dashoffset: 80; opacity: .2; } to { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes moon-landing-test { from { transform: translateY(-28px); opacity: .4; } to { transform: translateY(0); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .lrv-testing *, .surveyor-touchdown * { animation: none !important; } }
+body.motion-reduced .lrv-testing *, body.motion-reduced .surveyor-touchdown * { animation: none !important; }

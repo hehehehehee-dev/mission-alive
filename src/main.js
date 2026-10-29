@@ -1,4 +1,5 @@
 import "./style.css";
+import { trainingMissions, missionIds, MISSION_COUNT, restoredStamps, certificationComplete } from "./certification.js";
 import { mountLanguageSwitcher, getLanguage, getSourceText } from "./i18n.js";
 mountLanguageSwitcher();
 import facts from "./facts.json";
@@ -37,6 +38,7 @@ import { mountAccessPreferences } from './access-preferences.js';
 import { mountRoverTextMap, roverPosition, describeStar, mountRangeButtons, nextFlightCheckpoint } from './accessible-controls.js';
 import './accessible-academy.css';
 import './moon-labs.css';
+import './typography.css';
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -46,7 +48,7 @@ const exhibits = {
   curiosity: {
     name: "Curiosity",
     action: "Drive",
-    place: "01 / GALE CRATER, MARS",
+    place: "03 / GALE CRATER, MARS",
     title: "Every discovery<br>starts with a <em>choice.</em>",
     story:
       "“Since the beginning of time, humankind’s curiosity has led us to constantly seek new life…new possibilities just beyond the horizon.”",
@@ -62,7 +64,7 @@ const exhibits = {
   ingenuity: {
     name: "Ingenuity",
     action: "Fly",
-    place: "02 / JEZERO CRATER, MARS",
+    place: "04 / JEZERO CRATER, MARS",
     title: "A small leap.<br><em>A new possibility.</em>",
     story: "“Ingenuity is what allows people to accomplish amazing things.”",
     storyAttribution: "Vaneeza Rupani · Student who named Ingenuity",
@@ -75,7 +77,7 @@ const exhibits = {
   webb: {
     name: "Webb",
     action: "Unfold",
-    place: "03 / A TELESCOPE IN DEEP SPACE",
+    place: "05 / A TELESCOPE IN DEEP SPACE",
     title: "Folded for the journey.<br><em>Open to the universe.</em>",
     story:
       "“Today, we present humanity with a groundbreaking new view of the cosmos—a view the world has never seen before.”",
@@ -90,7 +92,7 @@ const exhibits = {
   voyager: {
     name: "Voyager 1",
     action: "Listen",
-    place: "04 / BEYOND THE PLANETS",
+    place: "06 / BEYOND THE PLANETS",
     title: "Far from home.<br><em>Carrying all of us.</em>",
     story:
       "“The launching of this bottle into the cosmic ocean says something very hopeful about life on this planet.”",
@@ -184,7 +186,7 @@ function initialReducedMotion() {
 function loadProgress() {
   try {
     const saved = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]");
-    return new Set(saved.filter((id) => exhibits[id]));
+    return restoredStamps(saved);
   } catch {
     return new Set();
   }
@@ -200,7 +202,21 @@ function loadJourneyProgress(stamps) {
   return Math.max(0, ...[...stamps].map((id) => journeyStops.indexOf(id)));
 }
 const $ = (s) => document.querySelector(s);
-const moonPanel = mountMoonPanel($("#moon-panel-slot"));
+const moonPanel = mountMoonPanel($("#moon-panel-slot"), {
+  isStamped: id => completed.has(id),
+  onEarned(id) {
+    if (completed.has(id)) return;
+    completed.add(id);
+    saveProgress();
+    updateMissionProgress();
+    configureJourneyStart();
+  },
+  onContinue() {
+    if (certificationComplete(completed)) { openFinale(); return; }
+    navigateTo(missionIds.find(id => !completed.has(id)) || 'lobby');
+  },
+  isComplete: () => certificationComplete(completed),
+});
 let current = "curiosity",
   state = {},
   scene,
@@ -360,6 +376,10 @@ function updateBackgroundCredit(id) {
 }
 let navigationPending = false;
 async function navigateTo(id) {
+  if (id === 'apollo17' || id === 'surveyor3') {
+    moonPanel.play(id, document.activeElement);
+    return;
+  }
   if (navigationPending) return;
   const showPerspective = !!exhibits[id] && current !== id;
   if (reduce) {
@@ -447,7 +467,7 @@ const curiosityCollisionRocks = [
   { x: 3, z: 0, radius: 0.78 },
 ];
 const nav = $(".exhibits");
-nav.innerHTML = Object.entries(exhibits)
+nav.innerHTML = Object.entries(trainingMissions)
   .map(
     ([id, e], i) =>
       `<button data-exhibit="${id}"><span class="number">0${i + 1}</span><span><span class="module-number">TRAINING MODULE ${i + 1}</span><strong>${e.name}</strong><small>${e.action} · Discover <span class="current-marker" hidden>(current)</span></small></span><span class="done" aria-label="Completed" hidden>✦</span></button>`,
@@ -483,7 +503,8 @@ function closeFinale(restoreFocus = true) {
 }
 
 function openFinale({ homecoming: playHomecoming = true } = {}) {
-  if (!$("#finale").hidden) return;
+  if (!certificationComplete(completed) || !$("#finale").hidden) return;
+  if (moonPanel.dialog.open) moonPanel.dialog.close();
   state.finaleOpened = true;
   for (const timer of completionTimers) clearTimeout(timer);
   completionTimers.clear();
@@ -522,10 +543,10 @@ $("#finale-teachers").onclick = () => {
 };
 $("#finale-close").onclick = () => closeFinale();
 $("#lobby-certificate").onclick = () => {
-  if (completed.size === 4) openFinale({ homecoming: false });
+  if (certificationComplete(completed)) openFinale({ homecoming: false });
 };
 $("#print-certificate").onclick = () => {
-  if (completed.size !== 4) return;
+  if (!certificationComplete(completed)) return;
   const name = $("#graduate-name").value.trim().replace(/\s+/g, " ");
   if (!name) {
     $("#certificate-status").textContent = "Enter a name to place on the certificate.";
@@ -578,36 +599,36 @@ function advanceJourney(stop) {
 function configureJourneyStart() {
   const button = $("#start-journey");
   if (!button) return;
-  const nextMission = Object.keys(exhibits).find((id) => !completed.has(id));
+  const nextMission = missionIds.find((id) => !completed.has(id));
   button.textContent = completed.size
         ? nextMission
-          ? `Continue with ${exhibits[nextMission].name}`
+          ? `Continue with ${trainingMissions[nextMission].name}`
           : "Visit the machines again"
-        : "Begin with Curiosity";
+        : "Begin with Apollo 17 LRV";
   button.onclick = () => navigateTo(nextMission || "curiosity");
 }
 
 function updateMissionProgress() {
   const count = completed.size;
-  $("#passport").textContent = `${count} / 4 stamped`;
+  $("#passport").textContent = `${count} / ${MISSION_COUNT} stamped`;
   $("#passport").setAttribute(
     "aria-label",
-    `Open crew certification · ${count} of 4 stamps earned`,
+    `Open crew certification · ${count} of ${MISSION_COUNT} stamps earned`,
   );
-  $("#passport").style.setProperty("--passport-progress", `${count * 25}%`);
+  $("#passport").style.setProperty("--passport-progress", `${count * 100 / MISSION_COUNT}%`);
   nav.querySelectorAll("[data-exhibit]").forEach((button) => {
     button.querySelector(".done").hidden = !completed.has(button.dataset.exhibit);
   });
   if (!$("#lobby-progress")) return;
-  $("#lobby-progress").textContent = `${count} / 4 STAMPS`;
-  $("#passport-progress-bar").style.width = `${count * 25}%`;
+  $("#lobby-progress").textContent = `${count} / ${MISSION_COUNT} STAMPS`;
+  $("#passport-progress-bar").style.width = `${count * 100 / MISSION_COUNT}%`;
   $("#passport-message").textContent =
-    count === 4
-      ? "Crew certification complete. Four machines, four training modules, one journey through space exploration."
+    count === MISSION_COUNT
+      ? "Crew certification complete. Six machines, six training modules, one journey through space exploration."
       : count
-        ? `${4 - count} mission${4 - count === 1 ? "" : "s"} remain. Choose your next machine.`
+        ? `${MISSION_COUNT - count} mission${MISSION_COUNT - count === 1 ? "" : "s"} remain. Choose your next machine.`
         : "Complete a machine’s challenge to earn its stamp.";
-  $("#lobby-certificate").hidden = count !== 4;
+  $("#lobby-certificate").hidden = count !== MISSION_COUNT;
   $("#lobby-missions")
     ?.querySelectorAll("[data-lobby-exhibit]")
     .forEach((card) => {
@@ -739,10 +760,10 @@ function renderLobby() {
       moonPanel.open(id, trigger);
     },
   });
-  $("#lobby-missions").innerHTML = Object.entries(exhibits)
+  $("#lobby-missions").innerHTML = Object.entries(trainingMissions)
     .map(
       ([id, exhibit], index) =>
-        `<button class="lobby-mission-card" data-lobby-exhibit="${id}"><span class="mission-number">0${index + 1}</span><span class="mission-name"><span class="module-number">TRAINING MODULE ${index + 1}</span><strong>${exhibit.name}</strong><small>${storyLayer[id].heading}</small></span><span class="mission-stamp">OPEN</span><span class="mission-action">Learn · ${exhibit.action} · Earn stamp →</span></button>`,
+        `<button class="lobby-mission-card" data-lobby-exhibit="${id}"><span class="mission-number">0${index + 1}</span><span class="mission-name"><span class="module-number">TRAINING MODULE ${index + 1}</span><strong>${exhibit.name}</strong><small>${storyLayer[id]?.heading || trainingMissions[id].heading}</small></span><span class="mission-stamp">OPEN</span><span class="mission-action">Learn · ${exhibit.action} · Earn stamp →</span></button>`,
     )
     .join("");
   $("#lobby-missions").onclick = (event) => {
@@ -884,7 +905,7 @@ function renderCompletion(id, fresh) {
   const hidden = fresh ? " hidden" : "";
   $("#discovery .fact h3").textContent = fresh ? "✦ MISSION STAMP EARNED" : "ALREADY STAMPED";
   $("#discovery .reflection").innerHTML =
-    `<div class="completion-panel" data-completion-phase="${fresh ? "present" : "complete"}"><p class="completion-status"><span class="completion-seal" aria-hidden="true">${verb}</span>${fresh ? "MISSION STAMP EARNED" : "Already stamped"}</p><section class="completion-story" aria-labelledby="completion-story-title"><p class="eyebrow">STILL OUT THERE</p><h3 id="completion-story-title" tabindex="-1">${exhibits[id].name}</h3><p>${story.beats[2][1]}</p></section><div class="final-transmission"${hidden}><span>FINAL TRANSMISSION</span><blockquote>${story.transmission}</blockquote><p class="mission-gift"${hidden}>${story.gift}</p>${machineVoices.has(id) ? '<button type="button" class="secondary transmission-replay" data-replay-transmission>Replay transmission</button>' : ""}</div><p class="completion-reflection"${hidden}>${exhibits[id].question}</p><button id="next"${hidden}>${completed.size === 4 ? "Open crew certification" : "Next unstamped module"}</button></div>`;
+    `<div class="completion-panel" data-completion-phase="${fresh ? "present" : "complete"}"><p class="completion-status"><span class="completion-seal" aria-hidden="true">${verb}</span>${fresh ? "MISSION STAMP EARNED" : "Already stamped"}</p><section class="completion-story" aria-labelledby="completion-story-title"><p class="eyebrow">STILL OUT THERE</p><h3 id="completion-story-title" tabindex="-1">${exhibits[id].name}</h3><p>${story.beats[2][1]}</p></section><div class="final-transmission"${hidden}><span>FINAL TRANSMISSION</span><blockquote>${story.transmission}</blockquote><p class="mission-gift"${hidden}>${story.gift}</p>${machineVoices.has(id) ? '<button type="button" class="secondary transmission-replay" data-replay-transmission>Replay transmission</button>' : ""}</div><p class="completion-reflection"${hidden}>${exhibits[id].question}</p><button id="next"${hidden}>${certificationComplete(completed) ? "Open crew certification" : "Next unstamped module"}</button></div>`;
   const replay = $("[data-replay-transmission]");
   if (replay) {
     replay.setAttribute("aria-label", `Replay ${exhibits[id].name} transmission`);
@@ -892,8 +913,8 @@ function renderCompletion(id, fresh) {
   }
   updateSoundButton();
   $("#next").onclick = () => {
-    const ids = Object.keys(exhibits);
-    if (completed.size === 4) {
+    const ids = missionIds;
+    if (certificationComplete(completed)) {
       openFinale();
       return;
     }
@@ -914,11 +935,11 @@ function renderCompletion(id, fresh) {
     playMachineTransmission(id);
     const message = `Stamp earned: ${exhibits[id].name}. ${story.transmission}`;
     announce(message, true, () => {
-      if (state !== owner || current !== id || completed.size !== 4 || state.finaleOpened) return;
+      if (state !== owner || current !== id || !certificationComplete(completed) || state.finaleOpened) return;
       // Let the mandatory present-state beat and voice be read before graduation.
       const words = `${story.beats[2][1]} ${story.transmission} ${story.gift}`.split(/\s+/).length;
       afterCompletion(Math.max(12000, words * 330), () => {
-        if (completed.size === 4 && state.stamped && !state.finaleOpened) openFinale();
+        if (certificationComplete(completed) && state.stamped && !state.finaleOpened) openFinale();
       });
     });
   });

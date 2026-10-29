@@ -36,6 +36,7 @@ export function createStampCycle({
 export function mountStampCeremony(root, {
   name,
   verb,
+  idPrefix = 'stamp',
   reducedMotion = false,
   onPress = () => {},
   onSettled = () => {},
@@ -51,7 +52,7 @@ export function mountStampCeremony(root, {
   heading.className = "stamp-ready";
   heading.textContent = "MISSION COMPLETE";
   const instruction = document.createElement("p");
-  instruction.id = "stamp-instruction";
+  instruction.id = `${idPrefix}-instruction`;
   instruction.className = "stamp-instruction";
   instruction.textContent = "Press to stamp your certification.";
 
@@ -66,7 +67,7 @@ export function mountStampCeremony(root, {
   slot.append(ink);
 
   const button = document.createElement("button");
-  button.id = "stamp-certification";
+  button.id = `${idPrefix}-certification`;
   button.className = "stamp-press";
   button.type = "button";
   button.setAttribute("aria-label", `${verb}: stamp your ${name} certification`);

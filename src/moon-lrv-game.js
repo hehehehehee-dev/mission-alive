@@ -1,10 +1,10 @@
 // Original Mission Alive model. The dimensions, dust paths, and pass criteria below
 // are teaching choices, not measurements or test results from Apollo hardware.
 export const LRV_GAME_COPY = Object.freeze({
-  eyebrow: "APOLLO 17 · OPTIONAL REPAIR WORKSHOP",
+  eyebrow: "APOLLO 17 · REPAIR TRAINING",
   title: "Keep the dust off the gear",
   introduction: "A broken rover fender let wheel-thrown dust reach the astronauts and their equipment. Apollo 17's crew made a replacement using spare maps, duct tape, and clamps.",
-  instructions: "Build a map patch, change its shape, and run a dust test. Compare your trials. More than one design can work.",
+  instructions: "Choose a tool and apply it to the wheel. Drag the patch tip to shape it, or use the buttons below. Run a dust test and compare your trials.",
   simulation: "Illustrated simulation · not NASA test data.",
   dimensions: "All dimensions below belong to this game model, not the real rover.",
   diagram: "Side-view model of a rover wheel, map fender patch, seat, and equipment. Orange dust paths reach the equipment; blue paths are caught by the patch.",
@@ -277,7 +277,7 @@ export function lrvGameMarkup() {
   return `<section class="moon-game lrv-game" data-lrv-workshop data-lrv-result="untested" aria-labelledby="${id}-title">
     <header class="lrv-heading"><p class="eyebrow">${copy.eyebrow}</p><h3 id="${id}-title">${copy.title}</h3><p>${copy.introduction}</p><p>${copy.instructions}</p></header>
     <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p>${svgMarkup(initial)}<figcaption>${copy.diagramCaption}</figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>
-    <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><label class="lrv-part"><input type="checkbox" data-lrv-part="maps">${copy.maps}</label><label class="lrv-part"><input type="checkbox" data-lrv-part="tape" disabled>${copy.tape}</label><fieldset class="lrv-attachment"><legend>${copy.attachment}</legend><label><input type="radio" name="${id}-attachment" value="tape" data-lrv-attachment checked>${copy.tapeOnly}</label><label><input type="radio" name="${id}-attachment" value="clamps" data-lrv-attachment>${copy.clamps}</label></fieldset><p class="lrv-control-help">${copy.attachmentHelp}</p></fieldset>
+    <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><div class="lrv-tool-tray" role="group" aria-label="Repair tools"><button type="button" data-lrv-tool="maps" aria-pressed="true">${copy.maps}</button><button type="button" data-lrv-tool="tape" aria-pressed="false">${copy.tape}</button><button type="button" data-lrv-tool="clamps" aria-pressed="false">${copy.clamps}</button></div><p data-lrv-tool-status role="status">Choose a tool, then apply it to the repair.</p><button type="button" data-lrv-apply>Apply selected tool to the wheel</button><p class="lrv-control-help">${copy.attachmentHelp}</p></fieldset>
     <fieldset class="lrv-geometry"><legend>${copy.geometry}</legend><p class="lrv-model-dimensions">${copy.dimensions}</p>
     ${controlMarkup(id, "length", copy.length, copy.lengthHelp, copy.decreaseLength, copy.increaseLength)}
     ${controlMarkup(id, "angle", copy.angle, copy.angleHelp, copy.decreaseAngle, copy.increaseAngle)}
@@ -319,8 +319,10 @@ export function mountLrvGame(root) {
   let trialNumber = 0;
   let disposed = false;
   const controls = Object.fromEntries(Object.keys(LRV_CONTROL_LIMITS).map((key) => [key, find(`[data-lrv-control="${key}"]`)]));
-  const maps = find('[data-lrv-part="maps"]');
-  const tape = find('[data-lrv-part="tape"]');
+  let selectedTool = 'maps';
+  let dragging = false;
+  const svg = find('.lrv-workshop-svg');
+  svg.insertAdjacentHTML('beforeend', '<circle data-lrv-drag-tip r="13" fill="#eaf8ff" stroke="#329cad" stroke-width="4" aria-hidden="true"/>');
   const dustResult = find("[data-lrv-dust-result]");
   const clearanceResult = find("[data-lrv-clearance-result]");
   const attachmentResult = find("[data-lrv-attachment-result]");
@@ -337,12 +339,13 @@ export function mountLrvGame(root) {
         button.disabled = next < LRV_CONTROL_LIMITS[key].min || next > LRV_CONTROL_LIMITS[key].max;
       });
     }
-    maps.checked = configuration.maps;
-    tape.checked = configuration.tape;
-    tape.disabled = !configuration.maps;
-    workshop.querySelectorAll("[data-lrv-attachment]").forEach((radio) => { radio.checked = radio.value === configuration.attachment; });
+    workshop.querySelectorAll('[data-lrv-tool]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.lrvTool === selectedTool)));
     find("[data-lrv-dust-paths]").innerHTML = dustMarkup(result);
     find("[data-lrv-patch]").innerHTML = patchMarkup(configuration);
+    const tip = pointOnScreen(lrvPatchGeometry(configuration).end);
+    const handle = find('[data-lrv-drag-tip]');
+    handle.setAttribute('cx', tip.x); handle.setAttribute('cy', tip.y);
+    handle.style.display = configuration.maps ? '' : 'none';
     find("[data-lrv-preview-label]").textContent = result.tested ? copy.tested : copy.preview;
     workshop.dataset.lrvResult = result.tested ? result.passed ? "passed" : "adjust" : "untested";
     find("[data-lrv-try]").hidden = !result.tested;
@@ -372,7 +375,16 @@ export function mountLrvGame(root) {
   const onClick = (event) => {
     const button = event.target?.closest?.("button");
     if (!button || !workshop.contains(button) || button.disabled) return;
-    if (button.hasAttribute("data-lrv-step")) {
+    if (button.dataset.lrvTool) {
+      selectedTool = button.dataset.lrvTool;
+      workshop.querySelectorAll('[data-lrv-tool]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    } else if (button.hasAttribute('data-lrv-apply')) {
+      const message = find('[data-lrv-tool-status]');
+      if (selectedTool === 'maps') { edit({ maps: true }); message.textContent = 'Maps fitted. Join the seams with tape.'; }
+      else if (selectedTool === 'tape' && configuration.maps) { edit({ tape: true }); message.textContent = 'Seams taped. Fit clamps to secure the repair.'; }
+      else if (selectedTool === 'clamps' && configuration.tape) { edit({ attachment: 'clamps' }); message.textContent = 'Repair secured. Shape the patch, then test it.'; }
+      else message.textContent = 'Fit the maps first, tape the seams, then add clamps.';
+    } else if (button.hasAttribute("data-lrv-step")) {
       const key = button.dataset.lrvStep;
       if (Object.hasOwn(LRV_CONTROL_LIMITS, key)) edit({ [key]: configuration[key] + Number(button.dataset.lrvDelta) });
     } else if (button.hasAttribute("data-lrv-test")) {
@@ -383,6 +395,9 @@ export function mountLrvGame(root) {
       find("[data-lrv-history-empty]").hidden = true;
       find("[data-lrv-history-wrap]").hidden = false;
       draw(result, resultMessage(result));
+      workshop.classList.remove('lrv-testing');
+      void workshop.offsetWidth;
+      workshop.classList.add('lrv-testing');
       if (result.passed) {
         const Event = workshop.ownerDocument?.defaultView?.CustomEvent || globalThis.CustomEvent;
         if (Event) workshop.dispatchEvent(new Event("lrv-repair-success", { bubbles: true, detail: { configuration: { ...configuration }, result } }));
@@ -392,6 +407,8 @@ export function mountLrvGame(root) {
       controls.length.focus();
     } else if (button.hasAttribute("data-lrv-reset")) {
       configuration = { ...LRV_DEFAULT_CONFIGURATION };
+      selectedTool = 'maps';
+      find('[data-lrv-tool-status]').textContent = 'Choose a tool, then apply it to the repair.';
       trials = [];
       trialNumber = 0;
       find("[data-lrv-history]").innerHTML = "";
@@ -403,6 +420,20 @@ export function mountLrvGame(root) {
   workshop.addEventListener("input", onInput);
   workshop.addEventListener("change", onChange);
   workshop.addEventListener("click", onClick);
+  const pointerDown = event => {
+    if (!event.target.closest('[data-lrv-drag-tip]')) return;
+    event.preventDefault(); dragging = true; svg.setPointerCapture(event.pointerId);
+  };
+  const pointerMove = event => {
+    if (!dragging) return;
+    const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(svg.getScreenCTM().inverse());
+    const world = { x: (point.x - 210) / 2.4, y: (330 - point.y) / 2.4 };
+    const start = lrvPatchGeometry(configuration).start;
+    edit({ length: Math.hypot(world.x - start.x, world.y - start.y), angle: Math.atan2(world.y - start.y, world.x - start.x) * 180 / Math.PI });
+  };
+  const pointerUp = () => { dragging = false; };
+  svg.addEventListener('pointerdown', pointerDown); svg.addEventListener('pointermove', pointerMove);
+  svg.addEventListener('pointerup', pointerUp); svg.addEventListener('pointercancel', pointerUp);
   draw(evaluateLrvRepair(configuration), copy.readyStatus);
   return {
     dispose() {
@@ -410,6 +441,8 @@ export function mountLrvGame(root) {
       workshop.removeEventListener("input", onInput);
       workshop.removeEventListener("change", onChange);
       workshop.removeEventListener("click", onClick);
+      svg.removeEventListener('pointerdown', pointerDown); svg.removeEventListener('pointermove', pointerMove);
+      svg.removeEventListener('pointerup', pointerUp); svg.removeEventListener('pointercancel', pointerUp);
     },
   };
 }

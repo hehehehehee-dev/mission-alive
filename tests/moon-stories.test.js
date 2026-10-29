@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { journeyStops, moonStories, moonPanelMarkup, locationMapMarkup } from "../src/moon-stories.js";
 
-test("Moon archive keeps two sourced stories and optional labs outside certification", () => {
+test("Moon archive keeps two sourced stories and two training labs within certification", () => {
   assert.deepEqual(Object.keys(moonStories), ["apollo17", "surveyor3"]);
   for (const story of Object.values(moonStories)) {
     assert.equal(story.facts.length, 4);
@@ -22,8 +22,8 @@ test("Moon archive keeps two sourced stories and optional labs outside certifica
   }
   const markup = moonPanelMarkup();
   assert.equal((markup.match(/data-moon-story=/g) || []).length, 2);
-  assert.ok(markup.includes("NO STAMP"));
-  assert.ok(!markup.includes("data-stamp"));
+  assert.ok(markup.includes("TWO STAMPS"));
+  assert.equal((markup.match(/data-moon-stamp=/g) || []).length, 2);
   assert.ok(!markup.includes("data-exhibit"));
   assert.equal((markup.match(/class="moon-story-flip"/g) || []).length, 2);
   const archive = markup.slice(markup.indexOf('<div class="moon-story-grid">'));
@@ -85,14 +85,14 @@ test("location strip routes four training machines and only two Moon stories", (
   assert.ok(markup.includes("Background: Webb's First Deep Field · NASA, ESA, CSA, STScI"));
 });
 
-test("the original certification UI remains exactly four modules and four certificate stamps", () => {
+test("the original certification UI remains exactly six certificate stamps", () => {
   const index = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   const main = readFileSync(new URL("../src/main.js", import.meta.url), "utf8");
   const finale = index.match(/<div class="finale-stamps"[\s\S]*?<\/div>/)?.[0] || "";
   const certificate = index.match(/<div class="certificate-stamps"[\s\S]*?<\/div>/)?.[0] || "";
-  assert.equal((finale.match(/<span>/g) || []).length, 4);
-  assert.equal((certificate.match(/<span>/g) || []).length, 4);
-  assert.ok(index.includes("4 / 4 STAMPS"));
+  assert.equal((finale.match(/<span>/g) || []).length, 6);
+  assert.equal((certificate.match(/<span>/g) || []).length, 6);
+  assert.ok(index.includes("6 / 6 STAMPS"));
   assert.ok(!index.includes("5 / 5"));
   assert.ok(!main.includes("apollo17: {"));
   assert.ok(!main.includes("surveyor3: {"));

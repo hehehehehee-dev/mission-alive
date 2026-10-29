@@ -222,9 +222,9 @@ const storyCard = (id, story) => `<article class="module-story-card moon-story-c
 
 export function moonPanelMarkup() {
   return `<dialog class="moon-panel" id="moon-panel" aria-labelledby="moon-panel-title">
-    <div class="dialog-top"><p class="eyebrow">VOYAGE PROLOGUE · MOON STORY ARCHIVE · NO STAMP</p><button type="button" id="moon-panel-close" aria-label="Close Moon stories">Close</button></div>
+    <div class="dialog-top"><p class="eyebrow">MOON TRAINING · TWO MISSIONS · TWO STAMPS</p><button type="button" id="moon-panel-close" aria-label="Close Moon stories">Close</button></div>
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
-    <p class="moon-panel-intro">Your crew's voyage begins here. These are short story stops, not training modules, and your certification still has exactly four stamps.</p>
+    <p class="moon-panel-intro">Your crew's voyage begins here. Repair a rover and investigate the ground. Earn two Moon stamps toward your six-mission certification.</p>
     ${moonLabMarkup()}
     <div class="moon-story-grid">${Object.entries(moonStories).map(([id, story]) => storyCard(id, story)).join("")}</div>
   </dialog>`;
@@ -303,11 +303,11 @@ export function locationMapMarkup() {
   </section>`;
 }
 
-export function mountMoonPanel(root) {
+export function mountMoonPanel(root, options = {}) {
   root.innerHTML = moonPanelMarkup();
   const dialog = root.querySelector("#moon-panel");
   const closeButton = root.querySelector("#moon-panel-close");
-  const labs = mountMoonLabs(dialog);
+  const labs = mountMoonLabs(dialog, options);
   let returnFocus = null;
   const close = () => dialog.close();
   closeButton.addEventListener("click", close);
@@ -330,6 +330,12 @@ export function mountMoonPanel(root) {
   });
   return {
     dialog,
+    play(id, trigger) {
+      returnFocus = trigger || document.activeElement;
+      if (!dialog.open) dialog.showModal();
+      labs.play(id);
+      return true;
+    },
     open(id, trigger) {
       if (!moonStories[id]) return false;
       returnFocus = trigger || document.activeElement;

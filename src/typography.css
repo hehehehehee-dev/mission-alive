@@ -1,0 +1,15 @@
+/* Public Sans is NASA Horizon's interface/body typeface. One family throughout. */
+@font-face {
+  font-family: 'Public Sans';
+  src: url('/fonts/PublicSans-Variable.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+:root { --font-ui: 'Public Sans', Arial, sans-serif; --story-serif: var(--font-ui); }
+body, body *, body *::before, body *::after { font-family: var(--font-ui) !important; }
+.exhibits, .lobby-missions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.finale-stamps, .certificate-stamps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 700px) { .exhibits { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lobby-missions { grid-template-columns: 1fr; } }
+@media (max-width: 450px) { .finale-stamps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media print { .certificate-stamps { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; } }

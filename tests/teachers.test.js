@@ -19,7 +19,7 @@ test("teacher page includes every classroom section and five print resources", (
     assert.match(html, new RegExp(heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 
   assert.equal((html.match(/class="print-resource"/g) || []).length, 5);
-  assert.equal((html.match(/class="exhibit-guide"/g) || []).length, 4);
+  assert.equal((html.match(/class="exhibit-guide"/g) || []).length, 6);
   assert.equal((html.match(/<details><summary>/g) || []).length, 8);
   assert.match(html, /Mission Alive Graduate certificate/);
 });

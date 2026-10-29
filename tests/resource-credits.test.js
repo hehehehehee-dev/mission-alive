@@ -15,7 +15,7 @@ test('every shipped external image, recording and film has a public source and c
     assert.match(source.hostname, /(?:^|\.)(?:nasa\.gov|esa\.int|stsci\.edu)$/);
     if (entry.original) assert.equal(new URL(entry.original).protocol, 'https:');
     for (const file of entry.files || []) {
-      const path = file.startsWith('/assets/') ? `../public${file}` : `../${file}`;
+      const path = file.startsWith('/') ? `../public${file}` : `../${file}`;
       assert.ok(existsSync(new URL(path, import.meta.url)), `${entry.id}: ${file}`);
     }
   }

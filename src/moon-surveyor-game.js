@@ -10,7 +10,7 @@ export const surveyorModel = Object.freeze({ forces: Object.freeze([1, 2, 3, 4])
 
 // Kept together so the parent app can provide its normal text-node localization.
 export const surveyorCopy = Object.freeze({
-  eyebrow: 'OPTIONAL MOON EXPERIMENT · ABOUT 3 MINUTES',
+  eyebrow: 'MOON TRAINING · ABOUT 3 MINUTES',
   title: 'Surveyor 3: test before touchdown',
   intro: 'Can your evidence support a landing recommendation? Press a probe at two different forces, inspect a trench, then test a separate fictional lander.',
   disclaimer: 'Illustrated simulation · not NASA test data.',
@@ -26,7 +26,7 @@ export const surveyorCopy = Object.freeze({
   force: 'Probe force',
   probeArea: 'The probe has contact area 1. Its pressure equals force ÷ 1.',
   press: 'Press probe and measure',
-  trench: 'Scoop and inspect a trench',
+  trench: 'Dig one scoop',
   probePrompt: 'Press at one force, then change force and press again. Compare how much the probe sinks.',
   trenchPrompt: 'No trench inspected here yet. The surface alone does not reveal the layer below.',
   trenchA: 'Trench: a thin softer cover, 0.45 units deep, sits over a firmer layer. Its thickness is even across the two test points.',
@@ -183,6 +183,7 @@ export function mountSurveyorGame(root) {
   let padWidth = 1;
   let log = [];
   let completed = false;
+  let digs = { a: 0, b: 0, c: 0 };
   let disposed = false;
 
   const announce = (text) => { find('[data-surveyor-result]').textContent = text; };
@@ -211,7 +212,7 @@ export function mountSurveyorGame(root) {
     find('[data-probe-shaft]').setAttribute('d', `M0 93V${probeY}`);
     find('[data-probe-tip]').setAttribute('d', `M-12 ${probeY}h24`);
     game.querySelectorAll('[data-surveyor-soil]').forEach((panel) => panel.querySelector('[data-soil-outline]').setAttribute('stroke-width', panel.dataset.surveyorSoil === patchId ? '6' : '2'));
-    game.querySelectorAll('[data-surveyor-trench]').forEach((trench) => trench.setAttribute('visibility', evaluateSurveyorEvidence(trench.dataset.surveyorTrench, log).trench ? 'visible' : 'hidden'));
+    game.querySelectorAll('[data-surveyor-trench]').forEach((trench) => trench.setAttribute('visibility', digs[trench.dataset.surveyorTrench] ? 'visible' : 'hidden'));
   };
   const drawLanding = (result = null) => {
     const left = Math.min(55, (result?.leftSink || 0) * 20);
@@ -252,12 +253,20 @@ export function mountSurveyorGame(root) {
       return;
     }
     const action = button.dataset.surveyorAction;
+    if (action && action !== 'touchdown') { game.dataset.surveyorOutcome = 'ready'; completed = false; }
     if (action === 'probe') {
       const result = evaluateSurveyorProbe(patchId, force);
       record(result, format(surveyorTextTemplates[7], { patch: surveyorCopy[patchCopy[patchId]], force, pressure: force, depth: number(result.depth) }));
       renderControls();
       announce(format(surveyorTextTemplates[3], { force, depth: number(result.depth) }));
+      force = force % 4 + 1;
+      game.querySelectorAll('[data-surveyor-force]').forEach(item => item.setAttribute('aria-pressed', String(Number(item.dataset.surveyorForce) === force)));
     } else if (action === 'trench') {
+      digs[patchId] = Math.min(3, digs[patchId] + 1);
+      const trench = find(`[data-surveyor-trench="${patchId}"]`);
+      trench.setAttribute('visibility', 'visible');
+      trench.style.clipPath = `inset(0 ${100 - digs[patchId] * 100 / 3}% 0 0)`;
+      if (digs[patchId] < 3) { announce('Keep digging: three scoops reveal the layers.'); return; }
       record({ type: 'trench', patchId }, format(surveyorTextTemplates[8], { patch: surveyorCopy[patchCopy[patchId]] }));
       renderControls();
       announce(surveyorCopy[trenchCopy[patchId]]);
@@ -270,6 +279,7 @@ export function mountSurveyorGame(root) {
       const outcome = surveyorCopy[result.reason === 'evidence' ? 'stable' : result.reason];
       record(result, format(surveyorTextTemplates[10], { patch: surveyorCopy[patchCopy[patchId]], width: number(padWidth), area: number(result.area), pressure: number(result.pressure), left: number(result.leftSink), right: number(result.rightSink), outcome }));
       drawLanding(result);
+      game.classList.remove('surveyor-touchdown'); void game.offsetWidth; game.classList.add('surveyor-touchdown');
       announceLines([format(surveyorTextTemplates[9], { left: number(result.leftSink), right: number(result.rightSink), difference: number(result.difference) }), outcome, ...(!result.evidence.ready ? [surveyorCopy.incomplete] : [])]);
       if (result.accepted && !completed) {
         completed = true;
@@ -279,6 +289,7 @@ export function mountSurveyorGame(root) {
       }
     } else if (action === 'restart') {
       patchId = 'a'; force = 1; padWidth = 1; log = []; completed = false;
+      digs = { a: 0, b: 0, c: 0 };
       find('[data-surveyor-log]').replaceChildren();
       find('[data-surveyor-empty-log]').hidden = false;
       find('[data-surveyor-ending]').hidden = true;

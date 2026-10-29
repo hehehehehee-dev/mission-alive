@@ -1,3 +1,4 @@
+import { trainingMissions } from './certification.js';
 const guides = [
   {
     id: "curiosity",
@@ -117,9 +118,18 @@ const guides = [
   },
 ];
 
+const moonGuides = [
+  { id: 'apollo17', name: 'Apollo 17 LRV', lesson: 'Repair, test, compare', task: 'Fit maps, tape, and clamps. Change the fender shape and test dust coverage and wheel clearance.', question: 'Why can a longer patch catch more dust but also create a wheel-clearance problem?' },
+  { id: 'surveyor3', name: 'Surveyor 3', lesson: 'Evidence and pressure', task: 'Probe at different forces, dig three scoops, and compare footpad widths on a fictional lander.', question: 'When the load stays the same, why does a wider footpad sink less? What evidence supports your recommendation?' },
+];
+const paperMissions = Object.entries(trainingMissions).map(([id, mission], index) => ({
+  number: String(index + 1).padStart(2, '0'), name: mission.name,
+  hook: guides.find(guide => guide.id === id)?.hook || moonGuides.find(guide => guide.id === id).lesson,
+}));
+
 function guideMarkup(guide) {
   return `<details class="exhibit-guide" id="teacher-${guide.id}">
-    <summary><span>${guide.number}</span><span><small>${guide.time}</small><strong>${guide.name}</strong><em>“${guide.hook}”</em></span><b aria-hidden="true">+</b></summary>
+    <summary><span>${String(Object.keys(trainingMissions).indexOf(guide.id) + 1).padStart(2, '0')}</span><span><small>${guide.time}</small><strong>${guide.name}</strong><em>“${guide.hook}”</em></span><b aria-hidden="true">+</b></summary>
     <div class="guide-body">
       <section><h3>What students do</h3><p>${guide.action}</p></section>
       <section><h3>Learning goals</h3><ol>${guide.goals.map((goal) => `<li>${goal}</li>`).join("")}</ol></section>
@@ -134,27 +144,32 @@ function guideMarkup(guide) {
 }
 
 const printableCards = [
-  ["passport", "Crew Certification", "Four stamp boxes and one reflection prompt per machine."],
-  ["kwl", "Pre-Visit KWL", "Know, Want to know, and Learned prompts for all four machines."],
-  ["exit", "Exit Tickets", "Four half-page tickets with exhibit reflection and a 3-2-1 check."],
+  ["passport", "Crew Certification", "Six stamp boxes and one reflection prompt per machine."],
+  ["kwl", "Pre-Visit KWL", "Know, Want to know, and Learned prompts for all six machines."],
+  ["exit", "Exit Tickets", "Six half-page tickets with exhibit reflection and a 3-2-1 check."],
   ["quiz", "Mission Quiz", "Ten multiple-choice questions plus a separate teacher answer key."],
   ["writing", "Write Like a Machine", "A first-person machine diary worksheet with ELA prompts."],
 ];
+
+const exitGuides = Object.keys(trainingMissions).map(id => guides.find(guide => guide.id === id) || {
+  name: trainingMissions[id].name,
+  questions: [null, null, ['After', moonGuides.find(guide => guide.id === id).question]],
+});
 
 function printableResources() {
   return `<div class="print-resource" data-resource="passport">
     <div class="print-title"><span>MISSION ALIVE</span><h1>Crew Certification</h1><p>Name ______________________________ &nbsp; Class __________ &nbsp; Date __________</p></div>
     <div class="paper-passport">
-      ${guides.map((guide) => `<section><span>${guide.number}</span><h2>${guide.name.split(" — ")[0]}</h2><blockquote>“${guide.hook}”</blockquote><div class="paper-stamp">STAMP OR CHECK</div><p>One thing this machine taught me:</p><div class="writing-lines"></div><div class="writing-lines"></div></section>`).join("")}
-    </div><footer>4 / 4 STAMPS = CERTIFIED CREW</footer>
+      ${paperMissions.map((guide) => `<section><span>${guide.number}</span><h2>${guide.name.split(" — ")[0]}</h2><blockquote>“${guide.hook}”</blockquote><div class="paper-stamp">STAMP OR CHECK</div><p>One thing this machine taught me:</p><div class="writing-lines"></div><div class="writing-lines"></div></section>`).join("")}
+    </div><footer>6 / 6 STAMPS = CERTIFIED CREW</footer>
   </div>
   <div class="print-resource" data-resource="kwl">
     <div class="print-title"><span>MISSION ALIVE</span><h1>Pre-Visit KWL</h1><p>Name ______________________________ &nbsp; Class __________ &nbsp; Date __________</p></div>
     <p>Before training, write what you already know and what you want to learn. Return afterward to complete the last column.</p>
-    <table class="kwl-table"><thead><tr><th>Machine</th><th>What I know</th><th>What I want to know</th><th>What I learned</th></tr></thead><tbody>${guides.map((guide) => `<tr><th>${guide.name.split(" — ")[0]}</th><td></td><td></td><td></td></tr>`).join("")}</tbody></table>
+    <table class="kwl-table"><thead><tr><th>Machine</th><th>What I know</th><th>What I want to know</th><th>What I learned</th></tr></thead><tbody>${paperMissions.map((guide) => `<tr><th>${guide.name.split(" — ")[0]}</th><td></td><td></td><td></td></tr>`).join("")}</tbody></table>
   </div>
   <div class="print-resource" data-resource="exit">
-    ${[0, 2].map((start) => `<div class="exit-ticket-sheet"><div class="print-title"><span>MISSION ALIVE</span><h1>Exit Tickets</h1><p>Cut into two half-page tickets. Give each learner the exhibit they explored.</p></div><div class="exit-ticket-grid">${guides.slice(start, start + 2).map((guide) => `<section><h2>${guide.name.split(" — ")[0]}</h2><p><strong>AFTER</strong> ${guide.questions[2][1]}</p><p><strong>3</strong> facts I learned</p><div class="writing-lines"></div><p><strong>2</strong> questions I still have</p><div class="writing-lines"></div><p><strong>1</strong> machine I would want to meet, and why</p><div class="writing-lines"></div></section>`).join("")}</div></div>`).join("")}
+    ${[0, 2, 4].map((start) => `<div class="exit-ticket-sheet"><div class="print-title"><span>MISSION ALIVE</span><h1>Exit Tickets</h1><p>Cut into two half-page tickets. Give each learner the exhibit they explored.</p></div><div class="exit-ticket-grid">${exitGuides.slice(start, start + 2).map((guide) => `<section><h2>${guide.name.split(" — ")[0]}</h2><p><strong>AFTER</strong> ${guide.questions[2][1]}</p><p><strong>3</strong> facts I learned</p><div class="writing-lines"></div><p><strong>2</strong> questions I still have</p><div class="writing-lines"></div><p><strong>1</strong> machine I would want to meet, and why</p><div class="writing-lines"></div></section>`).join("")}</div></div>`).join("")}
   </div>
   <div class="print-resource" data-resource="quiz">
     <div class="print-title"><span>MISSION ALIVE</span><h1>Mission Quiz</h1><p>Name ______________________________ &nbsp; Class __________ &nbsp; Date __________</p></div>
@@ -175,7 +190,7 @@ function printableResources() {
   <div class="print-resource" data-resource="writing">
     <div class="print-title"><span>MISSION ALIVE · ELA</span><h1>Write Like a Machine</h1><p>Name ______________________________ &nbsp; Class __________ &nbsp; Date __________</p></div>
     <p class="worksheet-lead">Choose one machine. Write its diary entry for the most important day of its life, in first person.</p>
-    <fieldset><legend>1 · Choose your voice</legend>${guides.map((guide) => `<label>□ ${guide.name.split(" — ")[0]}</label>`).join("")}</fieldset>
+    <fieldset><legend>1 · Choose your voice</legend>${paperMissions.map((guide) => `<label>□ ${guide.name.split(" — ")[0]}</label>`).join("")}</fieldset>
     <fieldset><legend>2 · Plan the moment</legend><p>The day I chose: __________________________________________________________________</p><p>The hardest thing was: _____________________________________________________________</p><p>I sensed or discovered: ____________________________________________________________</p><p>This mattered because: _____________________________________________________________</p></fieldset>
     <fieldset><legend>3 · Begin in first person</legend><p><strong>My name is ____________________. I am ____________________. Today, I ____________________.</strong></p></fieldset>
     <div class="diary-lines">${Array.from({ length: 10 }, () => "<i></i>").join("")}</div>
@@ -186,20 +201,20 @@ function printableResources() {
 export function teacherPageMarkup() {
   return `<div class="teachers-hero">
     <p class="eyebrow">FOR TEACHERS · CLASSROOM GUIDE</p>
-    <h1 id="teachers-title">Bring four NASA machines<br><em>into your classroom.</em></h1>
+    <h1 id="teachers-title">Bring six NASA machines<br><em>into your classroom.</em></h1>
     <p>Mission Alive is a free, browser-based interactive space academy where Curiosity, Ingenuity, Webb, and Voyager 1 tell their own stories — and your students help finish their missions.</p>
     <div class="teachers-actions"><button class="primary" data-enter-museum>Enter the academy</button><button class="secondary" data-print-resource="all">Print the teacher pack ↓</button></div>
     <ul class="teacher-trust" aria-label="At a glance"><li>Ages 10–14</li><li>Grades 5–9</li><li>Full visit ≈ one class period</li><li>No accounts</li><li>Private by default</li></ul>
   </div>
 
   <section class="teacher-section teacher-glance" aria-labelledby="glance-title"><div class="teacher-section-heading"><p class="eyebrow">60-SECOND FIT CHECK</p><h2 id="glance-title">At a glance</h2></div><dl>
-    <div><dt>Full visit</dt><dd>40–50 minutes (one class period)</dd></div><div><dt>Single exhibit</dt><dd>8–12 minutes — assign one as homework or a bell-ringer</dd></div><div><dt>Devices</dt><dd>Any modern browser. Works on school Chromebooks and tablets; also runs whole-class from one projector</dd></div><div><dt>Cost</dt><dd>Free</dd></div><div><dt>Accounts</dt><dd>None — for teachers or students</dd></div><div><dt>Student data</dt><dd>No server collection by default. Certification stamps and private greetings stay on the device. Students can explicitly submit a greeting to a classroom record; the teacher must approve it before public listening.</dd></div><div><dt>Internet</dt><dd>Needed for live Voyager distance and classroom records</dd></div><div><dt>Reading level</dt><dd>Written for ages 10–14; every exhibit opens with the machine speaking in first person</dd></div>
+    <div><dt>Full visit</dt><dd>50–60 minutes (or two shorter lessons)</dd></div><div><dt>Single exhibit</dt><dd>8–12 minutes — assign one as homework or a bell-ringer</dd></div><div><dt>Devices</dt><dd>Any modern browser. Works on school Chromebooks and tablets; also runs whole-class from one projector</dd></div><div><dt>Cost</dt><dd>Free</dd></div><div><dt>Accounts</dt><dd>None — for teachers or students</dd></div><div><dt>Student data</dt><dd>No server collection by default. Certification stamps and private greetings stay on the device. Students can explicitly submit a greeting to a classroom record; the teacher must approve it before public listening.</dd></div><div><dt>Internet</dt><dd>Needed for live Voyager distance and classroom records</dd></div><div><dt>Reading level</dt><dd>Written for ages 10–14; every exhibit opens with the machine speaking in first person</dd></div>
   </dl></section>
 
   <section class="teacher-section" aria-labelledby="modes-title"><div class="teacher-section-heading"><p class="eyebrow">FLEXIBLE BY DESIGN</p><h2 id="modes-title">Four ways to run the visit</h2></div><div class="classroom-modes">
     <article><span>MODE A · 35–45 MIN</span><h3>Whole-class guided visit</h3><p>You drive, the class decides. At each challenge — Curiosity's driving program, Ingenuity's preflight checklist, Webb's alignment, Voyager's record — take a class vote before acting. Best for introducing a new unit.</p></article>
-    <article><span>MODE B · 40–50 MIN</span><h3>Self-paced exploration</h3><p>Students explore in any order and collect all four certification stamps. You circulate with the discussion questions below. Students who finish early get the extension prompts.</p></article>
-    <article><span>MODE C · 4 × ~10 MIN</span><h3>Station rotation</h3><p>Four groups, four devices, one exhibit per station. At each rotation, the group must earn the stamp before moving on. The printable certification sheet tracks it on paper if devices are shared.</p></article>
+    <article><span>MODE B · 50–60 MIN</span><h3>Self-paced exploration</h3><p>Students explore in any order and collect all six certification stamps. You circulate with the discussion questions below. Students who finish early get the extension prompts.</p></article>
+    <article><span>MODE C · 4 × ~10 MIN</span><h3>Station rotation</h3><p>Use the four main exhibits as stations and complete both Moon missions as a shared introduction. At each rotation, the group must earn the stamp before moving on. The printable certification sheet tracks it on paper if devices are shared.</p></article>
     <article><span>MODE D · 15–20 MIN</span><h3>Flipped or homework</h3><p>Assign one exhibit plus its reflection question the night before a lesson. Start the lesson with the “After” discussion questions. Works because each exhibit is self-contained.</p></article>
   </div></section>
 
@@ -209,7 +224,7 @@ export function teacherPageMarkup() {
     <article><span>03 · 10 MIN</span><h3>After</h3><p>3-2-1 exit ticket: <strong>3</strong> facts you learned, <strong>2</strong> questions you still have, <strong>1</strong> machine you'd want to meet. Then one “After” discussion question as a whole class.</p></article>
   </div></section>
 
-  <section class="teacher-section" aria-labelledby="guides-title"><div class="teacher-section-heading"><p class="eyebrow">EXHIBIT-BY-EXHIBIT</p><h2 id="guides-title">Teaching guides</h2><p>Open a guide for its hook, goals, core science, standards, misconception checks, discussion prompts, vocabulary, and a fast-finisher task.</p></div><div class="exhibit-guides">${guides.map(guideMarkup).join("")}</div></section>
+  <section class="teacher-section" aria-labelledby="guides-title"><div class="teacher-section-heading"><p class="eyebrow">EXHIBIT-BY-EXHIBIT</p><h2 id="guides-title">Teaching guides</h2><p>Open a guide for its hook, goals, core science, standards, misconception checks, discussion prompts, vocabulary, and a fast-finisher task.</p></div><div class="exhibit-guides">${moonGuides.map(guide => `<details class="exhibit-guide" id="teacher-${guide.id}"><summary><span>MOON</span><span><small>3–5 min</small><strong>${guide.name}</strong><em>${guide.lesson}</em></span><b aria-hidden="true">+</b></summary><div class="guide-body"><h3>What students do</h3><p>${guide.task}</p><h3>Discussion prompt</h3><p>${guide.question}</p><p>Original learning model; dimensions and soil conditions are fictional, not NASA measurements.</p></div></details>`).join('')}${guides.map(guideMarkup).join("")}</div></section>
 
   <section class="teacher-section" aria-labelledby="classroom-record-title"><div class="teacher-section-heading"><p class="eyebrow">A YEAR-LONG TIME CAPSULE</p><h2 id="classroom-record-title">Make a Golden Record for your class</h2><p>In Voyager's recording studio, create a record named for your class. Give students the 12-character class code. They can add a short audio or written greeting in their home language, plus an English translation. You review each one before it appears in the public classroom gallery. Revisit the record at the end of the year and compare how far each greeting would have traveled at Voyager 1's speed.</p><p>Save your private teacher key outside the browser; the class code alone cannot approve submissions. Students need no account, and a microphone is optional. Use a class title and nicknames that do not identify students.</p><a class="primary teacher-class-link" href="/#voyager">Open Voyager's classroom studio →</a></div></section>
 
@@ -226,14 +241,14 @@ export function teacherPageMarkup() {
   <section class="teacher-section" aria-labelledby="faq-title"><div class="teacher-section-heading"><p class="eyebrow">COMMON QUESTIONS</p><h2 id="faq-title">FAQ</h2></div><div class="teacher-faq">
     <details><summary>Does it cost anything?</summary><p>No. It's free, and it stays on the open web.</p></details>
     <details><summary>Do my students need accounts?</summary><p>No. They open the page and walk in. That's deliberate — it works on locked-down school devices.</p></details>
-    <details><summary>How long is a visit?</summary><p>One class period for all four exhibits (40–50 min). A single exhibit takes 8–12 minutes and stands alone — assign one as homework or a warm-up.</p></details>
+    <details><summary>How long is a visit?</summary><p>Allow 50–60 minutes for six training missions, or split the journey across two lessons. A single exhibit takes 8–12 minutes and stands alone — assign one as homework or a warm-up.</p></details>
     <details><summary>Can I assign just one exhibit?</summary><p>Yes. Each exhibit ends with its own reflection question and stamp. Start with Curiosity for the fullest story arc, or Voyager 1 if you're teaching scale and distance.</p></details>
     <details><summary>A student lost their stamps. What now?</summary><p>Progress lives in the browser on that device. If browser data was cleared, the printable certification sheet is the backup record — or have them re-earn the stamp; each exhibit is replayable.</p></details>
-    <details><summary>Can students take something home?</summary><p>Yes. After collecting all four stamps, they can enter a name and print a one-page Mission Alive Graduate certificate. The name stays in the browser and is not uploaded.</p></details>
+    <details><summary>Can students take something home?</summary><p>Yes. After collecting all six stamps, they can enter a name and print a one-page Mission Alive Graduate certificate. The name stays in the browser and is not uploaded.</p></details>
     <details><summary>Does it work on our Chromebooks?</summary><p>Yes — it's a web page, no installs. It also runs whole-class from one computer and a projector.</p></details>
     <details><summary>Where does the science come from?</summary><p>Each exhibit cites NASA/JPL sources in its mission archive and Field notes. Voyager's distance is live from JPL's Horizons system.</p></details>
   </div></section>
-  <div class="teacher-final-cta"><p class="eyebrow">READY WHEN YOUR CLASS IS</p><h2>Four machines. One class period.</h2><div class="teachers-actions"><button class="primary" data-enter-museum>Enter the academy</button><button data-print-resource="all">Print the teacher pack ↓</button></div></div>
+  <div class="teacher-final-cta"><p class="eyebrow">READY WHEN YOUR CLASS IS</p><h2>Six machines. One shared journey.</h2><div class="teachers-actions"><button class="primary" data-enter-museum>Enter the academy</button><button data-print-resource="all">Print the teacher pack ↓</button></div></div>
   <div class="print-resources" aria-hidden="true">${printableResources()}</div>`;
 }
 

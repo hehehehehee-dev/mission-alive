@@ -125,8 +125,8 @@ test("markup provides native keyboard controls, a live result, history, and an h
   const markup = lrvGameMarkup();
   assert.equal((markup.match(/type="range"/g) || []).length, 3);
   assert.equal((markup.match(/data-lrv-step=/g) || []).length, 6);
-  assert.equal((markup.match(/type="checkbox"/g) || []).length, 2);
-  assert.equal((markup.match(/type="radio"/g) || []).length, 2);
+  assert.equal((markup.match(/type="checkbox"/g) || []).length, 0);
+  assert.equal((markup.match(/data-lrv-tool=/g) || []).length, 3);
   assert.ok(markup.includes('role="status" aria-live="polite" aria-atomic="true"'));
   assert.ok(markup.includes('data-lrv-result="untested"'));
   assert.ok(markup.includes("data-lrv-history"));
