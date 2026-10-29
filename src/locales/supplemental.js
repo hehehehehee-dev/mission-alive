@@ -116,6 +116,12 @@ export const es = {
   "Your crew's voyage begins here. These are short story stops, not training modules, and your certification still has exactly four stamps.": "El viaje de tu tripulación comienza aquí. Estas son breves paradas narrativas, no módulos de entrenamiento, y tu certificación sigue teniendo exactamente cuatro sellos.",
   "Begin with the Moon prologue": "Comenzar con el prólogo lunar",
   "Continue at Surveyor 3": "Continuar en Surveyor 3",
+  "TAURUS–LITTROW · STORY": "TAURUS–LITTROW · HISTORIA",
+  "OCEANUS PROCELLARUM · STORY": "OCEANUS PROCELLARUM · HISTORIA",
+  "GALE CRATER · TRAINING": "CRÁTER GALE · ENTRENAMIENTO",
+  "JEZERO CRATER · TRAINING": "CRÁTER JEZERO · ENTRENAMIENTO",
+  "SUN–EARTH L2 · TRAINING": "L2 SOL–TIERRA · ENTRENAMIENTO",
+  "INTERSTELLAR SPACE · TRAINING": "ESPACIO INTERESTELAR · ENTRENAMIENTO",
 };
 export const vi = {
   "Mars Science Laboratory (Curiosity)": "Phòng thí nghiệm khoa học sao Hỏa (Curiosity)",
@@ -235,6 +241,12 @@ export const vi = {
   "Your crew's voyage begins here. These are short story stops, not training modules, and your certification still has exactly four stamps.": "Hành trình của phi hành đoàn bắt đầu tại đây. Đây là các điểm dừng kể chuyện ngắn, không phải mô-đun huấn luyện, và chứng nhận vẫn có đúng bốn con dấu.",
   "Begin with the Moon prologue": "Bắt đầu với phần mở đầu ở Mặt Trăng",
   "Continue at Surveyor 3": "Tiếp tục tại Surveyor 3",
+  "TAURUS–LITTROW · STORY": "TAURUS–LITTROW · CÂU CHUYỆN",
+  "OCEANUS PROCELLARUM · STORY": "OCEANUS PROCELLARUM · CÂU CHUYỆN",
+  "GALE CRATER · TRAINING": "HỐ GALE · HUẤN LUYỆN",
+  "JEZERO CRATER · TRAINING": "HỐ JEZERO · HUẤN LUYỆN",
+  "SUN–EARTH L2 · TRAINING": "L2 MẶT TRỜI–TRÁI ĐẤT · HUẤN LUYỆN",
+  "INTERSTELLAR SPACE · TRAINING": "KHÔNG GIAN LIÊN SAO · HUẤN LUYỆN",
 };
 for (const [en, spanish, vietnamese] of [
   ["front", "frontal", "phía trước"], ["back", "posterior", "phía sau"],

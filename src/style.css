@@ -559,9 +559,10 @@ main {
     url("/assets/webb-first-deep-field-smacs0723.png") center 42% / cover no-repeat #080d14;
 }
 .location-map-field::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 80% 30%, transparent, #02070d8c 76%); pointer-events: none; }
-.location-journey { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(120px, .55fr) repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2vw, 25px); min-height: 410px; padding: 30px 24px 24px; }
+.location-map-field::after { content: ""; position: absolute; inset: 0; opacity: .35; background: radial-gradient(circle at 14% 22%, #fff 0 1px, transparent 1.8px), radial-gradient(circle at 74% 68%, #bce5ff 0 1px, transparent 1.8px), radial-gradient(circle at 44% 82%, #fff 0 1px, transparent 1.7px); background-size: 170px 130px, 230px 180px, 290px 210px; pointer-events: none; animation: map-star-drift 24s linear infinite; }
+.location-journey { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(120px, .55fr) repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2vw, 25px); min-height: 470px; padding: 30px 24px 24px; }
 .journey-route-line { position: absolute; z-index: 0; left: 6%; right: 6%; top: 48%; border-top: 2px dotted #b7cce380; filter: drop-shadow(0 0 5px #86b9e8); }
-.earth-marker { position: relative; z-index: 2; align-self: start; display: flex; align-items: center; gap: 10px; margin-top: 154px; padding: 6px 10px 6px 6px; border-radius: 24px; color: #fff; background: #06111be8; box-shadow: 0 6px 22px #0008; }
+.earth-marker { position: relative; z-index: 2; align-self: start; display: flex; align-items: center; gap: 10px; margin-top: 184px; padding: 6px 10px 6px 6px; border-radius: 24px; color: #fff; background: #06111be8; box-shadow: 0 6px 22px #0008; }
 .earth-marker i { position: relative; width: 34px; height: 34px; flex: none; border: 2px solid #d7f1ff; border-radius: 50%; background: radial-gradient(circle at 32% 34%, #89d884 0 12%, transparent 13%), radial-gradient(circle at 64% 67%, #5cbf76 0 17%, transparent 18%), radial-gradient(circle at 38% 58%, #3c8ec8 0 50%, #173f70 73%); box-shadow: 0 0 0 6px #72bde51a, 0 0 24px #72bde575; }
 .earth-marker span { display: grid; }
 .earth-marker strong { color: #ccefff; font: 700 .64rem/1.3 monospace; letter-spacing: .08em; }
@@ -572,6 +573,29 @@ main {
 .frontier-heading a { display: block; margin-top: 9px; color: #b9d6e4; font: .62rem/1.45 monospace; text-decoration: none; }
 .frontier-heading a:hover, .frontier-heading a:focus-visible { color: #fff; text-decoration: underline; }
 .frontier-distance-pair { display: grid; gap: 2px; }
+.frontier-site-map { position: relative; height: 270px; min-width: 0; }
+.planet-orb { position: absolute; z-index: 1; left: 4px; top: 61px; width: 112px; height: 112px; overflow: visible; border: 1px solid #ffffff8c; border-radius: 50%; box-shadow: inset -18px -12px 30px #000b, 0 0 36px #a9c9de24; }
+.planet-orb::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle at 67% 25%, #fff3 0 3%, transparent 4%), radial-gradient(circle at 28% 65%, #0004 0 8%, transparent 9%); animation: planet-light 7s ease-in-out infinite; }
+.moon-orb { background: radial-gradient(circle at 31% 29%, #6e7174 0 7%, transparent 8%), radial-gradient(circle at 66% 61%, #55595d 0 10%, transparent 11%), radial-gradient(circle at 69% 28%, #b9bbbc 0 4%, transparent 5%), radial-gradient(circle at 42% 70%, #838689 0 6%, transparent 7%), linear-gradient(135deg, #e1e0d9, #85888b 67%, #3c4248); }
+.mars-orb { border-color: #f5a37caa; background: radial-gradient(ellipse at 29% 68%, #8b3f2d 0 12%, transparent 13%), radial-gradient(ellipse at 68% 34%, #f0a06e 0 17%, transparent 18%), radial-gradient(circle at 47% 53%, #a74f34 0 7%, transparent 8%), linear-gradient(135deg, #db7b50, #9b432d 65%, #48241f); box-shadow: inset -18px -12px 30px #1d0909d1, 0 0 38px #e57b4d32; }
+.surface-site, .deep-site { position: absolute; z-index: 5; display: block; width: 11px; height: 11px; border: 2px solid #fff; border-radius: 50%; background: #f5d789; box-shadow: 0 0 0 5px #f5d78922, 0 0 13px #f5d789; }
+.site-apollo { left: 45px; top: 20px; }
+.site-surveyor { left: 65px; top: 71px; }
+.site-curiosity { left: 43px; top: 70px; background: #8de4ff; box-shadow: 0 0 0 5px #8de4ff22, 0 0 13px #8de4ff; }
+.site-ingenuity { left: 70px; top: 18px; background: #ffd18a; box-shadow: 0 0 0 5px #ffd18a22, 0 0 13px #ffd18a; }
+.site-connectors { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #c5deebad; stroke-width: 1.4; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; pointer-events: none; }
+.frontier-site-map .frontier-stops { position: absolute; z-index: 2; top: 26px; right: 0; bottom: 25px; left: 47%; display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.frontier-site-map .location-dot { min-height: 0; padding: 20px 8px 8px 11px; }
+.frontier-site-map .location-dot > i { display: none; }
+.deep-space-diagram { position: absolute; z-index: 1; left: 2px; top: 55px; width: 116px; height: 130px; }
+.orbit-ring { position: absolute; left: 10px; top: 13px; width: 74px; height: 74px; border: 1px solid #94c8e875; border-radius: 50%; transform: rotate(-22deg) skewX(18deg); animation: orbit-turn 12s linear infinite; }
+.tiny-earth { position: absolute; left: 42px; top: 45px; width: 18px; height: 18px; border: 2px solid #d8f4ff; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #7fd477 0 25%, transparent 27%), #347eb3; box-shadow: 0 0 15px #71c7ff8c; }
+.site-webb { left: 68px; top: 27px; background: #ffd987; }
+.site-voyager { left: 97px; top: 96px; background: #a8dfff; }
+.voyager-wave, .voyager-wave::before, .voyager-wave::after { position: absolute; border: 1px solid #9edaff6b; border-left: 0; border-radius: 0 50% 50% 0; content: ""; }
+.voyager-wave { left: 104px; top: 83px; width: 12px; height: 36px; }
+.voyager-wave::before { left: 5px; top: -7px; width: 12px; height: 48px; }
+.voyager-wave::after { left: 11px; top: -13px; width: 12px; height: 60px; }
 .frontier-stops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; align-items: center; }
 .location-dot {
   position: relative;
@@ -599,14 +623,23 @@ main {
 .location-dot small { margin-top: 2px; color: #aebeca; font: .5rem/1.2 monospace; letter-spacing: .05em; }
 .earth-marker.is-current-stop, .location-dot.is-current-stop { border-color: #ffe2a0; box-shadow: 0 0 0 2px #eec87538, 0 0 28px #eec8757a, 0 8px 24px #000b; }
 .location-dot.is-next-stop { border-color: #a9dfff; outline: 1px dashed #a9dfff; outline-offset: 3px; background: #102334e8; }
+.surface-site.is-current-site, .deep-site.is-current-site { animation: current-site-pulse 1.4s ease-in-out infinite; }
+.surface-site.is-next-site, .deep-site.is-next-site { outline: 1px dashed #b8e7ff; outline-offset: 6px; }
 .earth-marker > .route-stop-state, .location-dot > .route-stop-state { position: absolute; top: 5px; right: 7px; display: block; min-width: 0; color: #f6d997; font: 700 .47rem/1.2 monospace; letter-spacing: .09em; pointer-events: none; }
 .is-next-stop > .route-stop-state { color: #bde6ff; }
 .journey-ship { position: absolute; z-index: 5; left: calc(50% - 26px); bottom: -25px; display: block; width: 52px; height: 30px; color: #f7d98d; filter: drop-shadow(0 0 5px #f6cf74) drop-shadow(0 3px 4px #000); pointer-events: none; animation: journey-ship-hover 2.6s ease-in-out infinite; }
-.journey-ship svg { display: block; width: 100%; height: 100%; overflow: visible; fill: currentColor; stroke: #fff4d2; stroke-width: 1; }
-.journey-ship .ship-window { fill: #8be1ff; stroke: #d9f8ff; }
-.journey-ship .ship-flame { fill: #ff8b55; stroke: #ffd080; }
+.surface-site .journey-ship, .deep-site .journey-ship { left: -22px; top: -40px; bottom: auto; }
+.journey-ship.is-departing { opacity: 0; }
+.journey-flight-ship { position: absolute; z-index: 20; display: block; width: 52px; height: 30px; color: #f7d98d; filter: drop-shadow(0 0 7px #f6cf74) drop-shadow(0 4px 5px #000); pointer-events: none; }
+.journey-ship svg, .journey-flight-ship svg { display: block; width: 100%; height: 100%; overflow: visible; fill: currentColor; stroke: #fff4d2; stroke-width: 1; }
+.journey-ship .ship-window, .journey-flight-ship .ship-window { fill: #8be1ff; stroke: #d9f8ff; }
+.journey-ship .ship-flame, .journey-flight-ship .ship-flame { fill: #ff8b55; stroke: #ffd080; }
 @keyframes journey-ship-hover { 0%, 100% { transform: translateY(-2px) rotate(-2deg); } 50% { transform: translateY(2px) rotate(2deg); } }
-body.motion-reduced .journey-ship { animation: none; }
+@keyframes current-site-pulse { 0%, 100% { box-shadow: 0 0 0 4px #ffe29826, 0 0 12px #ffe298; } 50% { box-shadow: 0 0 0 9px #ffe2980a, 0 0 25px #ffe298; } }
+@keyframes planet-light { 0%, 100% { opacity: .72; } 50% { opacity: 1; } }
+@keyframes orbit-turn { to { transform: rotate(338deg) skewX(18deg); } }
+@keyframes map-star-drift { to { background-position: 170px 65px, -230px 90px, 145px -210px; } }
+body.motion-reduced .journey-ship, body.motion-reduced .surface-site, body.motion-reduced .deep-site, body.motion-reduced .planet-orb::before, body.motion-reduced .orbit-ring, body.motion-reduced .location-map-field::after { animation: none; }
 .location-map-credit { margin: 10px 0 0; color: #82939e; }
 .location-map-credit a { color: #a9c6d5; }
 
@@ -3317,6 +3350,11 @@ body[data-exhibit="voyager"] {
   .earth-marker { margin: 0; padding: 8px 10px 8px 21px; }
   .frontier-heading { min-height: 0; margin-left: 39px; padding: 11px 12px 10px; }
   .frontier-stops { grid-template-columns: 1fr; gap: 9px; margin: 10px 0 0 29px; }
+  .frontier-site-map { height: 245px; margin-left: 30px; }
+  .frontier-site-map .frontier-stops { top: 20px; right: 0; bottom: 20px; left: 47%; margin: 0; gap: 17px; }
+  .frontier-site-map .location-dot { min-height: 0; }
+  .planet-orb { top: 52px; }
+  .deep-space-diagram { top: 45px; }
   .location-dot, .location-dot:hover, .location-dot:focus-visible { min-height: 62px; transform: none; }
   .journey-ship { left: -41px; bottom: calc(50% - 15px); }
   .earth-marker .journey-ship { left: -7px; }

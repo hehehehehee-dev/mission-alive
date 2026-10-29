@@ -568,9 +568,10 @@ function configureJourneyStart() {
           ? `Continue with ${exhibits[nextMission].name}`
           : "Visit the machines again"
         : "Begin with Curiosity";
-  button.onclick = () => {
+  button.onclick = async () => {
     if (moonStop) {
       const trigger = document.querySelector(`[data-map-moon="${moonStop}"]`);
+      if (locationMap && !await locationMap.animateTo(moonStop)) return;
       advanceJourney(moonStop);
       moonPanel.open(moonStop, trigger || button);
       return;

@@ -34,6 +34,11 @@ test("location strip routes four training machines and only two Moon stories", (
   const markup = locationMapMarkup();
   assert.deepEqual(journeyStops, ["earth", "apollo17", "surveyor3", "curiosity", "ingenuity", "webb", "voyager"]);
   assert.equal((markup.match(/data-journey-stop=/g) || []).length, 7);
+  assert.equal((markup.match(/data-visual-stop=/g) || []).length, 7);
+  assert.equal((markup.match(/class="site-connectors"/g) || []).length, 3);
+  assert.ok(markup.includes('class="planet-orb moon-orb"'));
+  assert.ok(markup.includes('class="planet-orb mars-orb"'));
+  assert.ok(markup.includes('class="deep-space-diagram"'));
   assert.equal((markup.match(/data-map-exhibit=/g) || []).length, 4);
   assert.equal((markup.match(/data-map-moon=/g) || []).length, 2);
   assert.deepEqual(
@@ -62,6 +67,7 @@ test("location strip routes four training machines and only two Moon stories", (
   ]) assert.ok(markup.includes(label), label);
   assert.ok(markup.includes("journey-route-line"));
   assert.ok(markup.includes("journey-progress-status"));
+  for (const place of ["TAURUS–LITTROW", "OCEANUS PROCELLARUM", "GALE CRATER", "JEZERO CRATER", "SUN–EARTH L2", "INTERSTELLAR SPACE"]) assert.ok(markup.includes(place));
   assert.ok(markup.includes("Background: Webb's First Deep Field · NASA, ESA, CSA, STScI"));
 });
 
