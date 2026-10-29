@@ -116,6 +116,45 @@ async function animateJourneyShip(root, stop, fromProgress) {
   origin.classList.remove("is-departing");
 }
 
+async function replayJourneyFlight(root) {
+  const status = root.querySelector(".journey-progress-status");
+  if (document.body.classList.contains("motion-reduced")) {
+    if (status) status.textContent = "Route replay paused because reduced motion is on.";
+    return false;
+  }
+  const field = root.querySelector(".location-map-field");
+  const sites = journeyStops.map((stop) => root.querySelector(`[data-visual-stop="${stop}"]`)).filter(Boolean);
+  if (!field || sites.length !== journeyStops.length || typeof field.animate !== "function") return false;
+  const bounds = field.getBoundingClientRect();
+  const points = sites.map((site) => {
+    const rect = site.getBoundingClientRect();
+    return { x: rect.left + rect.width / 2 - bounds.left, y: rect.top + rect.height / 2 - bounds.top };
+  });
+  field.insertAdjacentHTML("beforeend", shipMarkup("journey-flight-ship journey-replay-ship"));
+  const flight = field.querySelector(".journey-replay-ship");
+  const origin = root.querySelector(".journey-ship");
+  flight.style.left = `${points[0].x - 26}px`;
+  flight.style.top = `${points[0].y - 15}px`;
+  origin?.classList.add("is-departing");
+  const frames = [{ transform: "translate(0, 0) rotate(-3deg)", offset: 0 }];
+  for (let index = 1; index < points.length; index += 1) {
+    const previous = points[index - 1];
+    const point = points[index];
+    const middleOffset = (index - .5) / (points.length - 1);
+    const endOffset = index / (points.length - 1);
+    const arc = Math.max(28, Math.min(72, Math.abs(point.x - previous.x) * .2));
+    frames.push({ transform: `translate(${(previous.x + point.x) / 2 - points[0].x}px, ${(previous.y + point.y) / 2 - points[0].y - arc}px) rotate(4deg) scale(1.08)`, offset: middleOffset });
+    frames.push({ transform: `translate(${point.x - points[0].x}px, ${point.y - points[0].y}px) rotate(-2deg)`, offset: endOffset });
+  }
+  const animation = flight.animate(frames, { duration: 3400, easing: "ease-in-out", fill: "forwards" });
+  if (status) status.textContent = "Replaying the academy flight from Earth to deep space.";
+  try { await animation.finished; } catch { /* The visitor can safely leave during replay. */ }
+  flight.remove();
+  origin?.classList.remove("is-departing");
+  if (status) status.textContent = "Journey position restored. All stops remain open.";
+  return true;
+}
+
 const storyCard = (id, story) => `<article class="module-story-card moon-story-card" data-moon-story="${id}" aria-labelledby="moon-${id}-title">
   <button type="button" class="moon-story-flip" aria-expanded="false" aria-controls="moon-${id}-reveal">
     <span class="moon-story-face moon-story-front">
@@ -147,7 +186,7 @@ export function moonPanelMarkup() {
 
 export function locationMapMarkup() {
   return `<section class="location-map" aria-labelledby="location-map-title">
-    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">Six machines, three frontiers</h2></div><p>The four training machines remain the path to certification. Open two extra Moon stories without adding a stamp.</p></div>
+    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">Six machines, three frontiers</h2></div><div><p>The four training machines remain the path to certification. Open two extra Moon stories without adding a stamp.</p><button type="button" class="journey-replay" data-replay-journey>Replay the flight →</button></div></div>
     <div class="location-map-field" role="group" aria-label="Schematic locations of the six machines">
       <span class="journey-route-line" aria-hidden="true"></span>
       <div class="location-journey">
@@ -245,6 +284,15 @@ export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}
     return true;
   };
   const click = async (event) => {
+    if (event.target.closest("[data-replay-journey]")) {
+      if (travelling) return;
+      travelling = true;
+      root.classList.add("is-travelling");
+      await replayJourneyFlight(root);
+      root.classList.remove("is-travelling");
+      travelling = false;
+      return;
+    }
     const exhibit = event.target.closest("[data-map-exhibit]");
     const moon = event.target.closest("[data-map-moon]");
     const stop = exhibit?.dataset.mapExhibit || moon?.dataset.mapMoon;

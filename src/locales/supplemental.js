@@ -122,6 +122,10 @@ export const es = {
   "JEZERO CRATER · TRAINING": "CRÁTER JEZERO · ENTRENAMIENTO",
   "SUN–EARTH L2 · TRAINING": "L2 SOL–TIERRA · ENTRENAMIENTO",
   "INTERSTELLAR SPACE · TRAINING": "ESPACIO INTERESTELAR · ENTRENAMIENTO",
+  "Replay the flight →": "Repetir el vuelo →",
+  "Route replay paused because reduced motion is on.": "La repetición de la ruta está pausada porque el movimiento reducido está activado.",
+  "Replaying the academy flight from Earth to deep space.": "Repitiendo el vuelo de la academia desde la Tierra hasta el espacio profundo.",
+  "Journey position restored. All stops remain open.": "Posición del viaje restaurada. Todas las paradas siguen abiertas.",
 };
 export const vi = {
   "Mars Science Laboratory (Curiosity)": "Phòng thí nghiệm khoa học sao Hỏa (Curiosity)",
@@ -247,6 +251,10 @@ export const vi = {
   "JEZERO CRATER · TRAINING": "HỐ JEZERO · HUẤN LUYỆN",
   "SUN–EARTH L2 · TRAINING": "L2 MẶT TRỜI–TRÁI ĐẤT · HUẤN LUYỆN",
   "INTERSTELLAR SPACE · TRAINING": "KHÔNG GIAN LIÊN SAO · HUẤN LUYỆN",
+  "Replay the flight →": "Phát lại chuyến bay →",
+  "Route replay paused because reduced motion is on.": "Phát lại tuyến đường đã tạm dừng vì chế độ giảm chuyển động đang bật.",
+  "Replaying the academy flight from Earth to deep space.": "Đang phát lại chuyến bay của học viện từ Trái Đất tới không gian sâu.",
+  "Journey position restored. All stops remain open.": "Đã khôi phục vị trí hành trình. Mọi điểm dừng vẫn mở.",
 };
 for (const [en, spanish, vietnamese] of [
   ["front", "frontal", "phía trước"], ["back", "posterior", "phía sau"],

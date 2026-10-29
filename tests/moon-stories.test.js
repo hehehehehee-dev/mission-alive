@@ -39,6 +39,7 @@ test("location strip routes four training machines and only two Moon stories", (
   assert.ok(markup.includes('class="planet-orb moon-orb"'));
   assert.ok(markup.includes('class="planet-orb mars-orb"'));
   assert.ok(markup.includes('class="deep-space-diagram"'));
+  assert.equal((markup.match(/data-replay-journey/g) || []).length, 1);
   assert.equal((markup.match(/data-map-exhibit=/g) || []).length, 4);
   assert.equal((markup.match(/data-map-moon=/g) || []).length, 2);
   assert.deepEqual(
