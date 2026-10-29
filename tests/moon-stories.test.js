@@ -53,13 +53,15 @@ test("location strip routes four training machines and only two Moon stories", (
     [...markup.matchAll(/data-map-moon="([^"]+)"/g)].map((match) => match[1]),
     ["apollo17", "surveyor3"],
   );
-  assert.ok(markup.includes("not to scale"));
+  assert.ok(markup.includes("Distances compressed"));
+  assert.ok(markup.includes("3,475 KM · 27% OF EARTH"));
+  assert.ok(markup.includes("6,792 KM · 53% OF EARTH"));
   const moon = markup.indexOf('data-frontier="moon"');
   const mars = markup.indexOf('data-frontier="mars"');
   const deepSpace = markup.indexOf('data-frontier="deep-space"');
   assert.ok(moon > -1 && moon < mars && mars < deepSpace);
   assert.equal((markup.match(/class="earth-origin"/g) || []).length, 1);
-  const earth = markup.match(/<div class="earth-origin"[\s\S]*?<\/div>/)?.[0] || "";
+  const earth = markup.match(/<article class="journey-scene scene-earth"[\s\S]*?<\/article>/)?.[0] || "";
   assert.ok(earth.includes("YOU ARE HERE"));
   assert.ok(!earth.includes("data-map-"));
   assert.ok(!earth.includes("<button"));
@@ -70,7 +72,7 @@ test("location strip routes four training machines and only two Moon stories", (
     "Almost one light-day from Earth",
   ]) assert.ok(markup.includes(label), label);
   assert.ok(markup.includes("journey-path-line"));
-  assert.ok(markup.includes("Earth is the origin"));
+  assert.ok(markup.includes("Earth, the Moon, and Mars share one size scale"));
   assert.ok(markup.includes("Sun, Earth, then L2"));
   assert.ok(markup.includes("L2 and Webb are on the side of Earth away from the Sun"));
   assert.ok(markup.includes("journey-progress-status"));

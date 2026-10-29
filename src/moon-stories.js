@@ -1,3 +1,5 @@
+import { mountJourneyGlobes } from './journey-globes.js';
+
 export const moonStories = Object.freeze({
   apollo17: Object.freeze({
     name: "Apollo 17 Lunar Roving Vehicle",
@@ -53,8 +55,31 @@ export const journeyStops = Object.freeze([
   "voyager",
 ]);
 
+const journeyRoutes = {
+  desktop: 'M480 180 C520 400 550 530 570 700 S120 890 220 1120 S880 1300 880 1580 S140 1810 220 2100 S790 2290 660 2590 S260 2870 420 3100 S750 3260 790 3340',
+  mobile: 'M850 180 C620 400 150 530 220 700 S290 890 230 1120 S290 1300 250 1580 S180 1810 250 2100 S310 2290 240 2590 S180 2870 300 3100 S550 3260 790 3340',
+};
+
 const shipMarkup = () => `<span class="scroll-journey-ship" role="img" aria-label="Academy crew ship following the route as you scroll">
-  <span class="scroll-ship-sprite"><svg viewBox="0 0 64 38" aria-hidden="true" focusable="false"><path class="ship-hull" d="M4 20 24 10 45 4l-7 13 22 3-22 4 7 11-21-8z"/><path class="ship-window" d="M25 14h10l-4 7H21z"/><path class="ship-wing" d="m28 24 13 10-5-12z"/><path class="ship-flame" d="m13 17-11-7 5 10-5 9 11-6z"/></svg></span>
+  <span class="scroll-ship-heading"><span class="scroll-ship-sprite">
+    <svg viewBox="0 0 144 96" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="crew-hull" x2="0" y2="1"><stop stop-color="#fffef6"/><stop offset=".48" stop-color="#e6edf1"/><stop offset="1" stop-color="#8faabc"/></linearGradient>
+        <linearGradient id="crew-glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b8faff"/><stop offset=".4" stop-color="#39badb"/><stop offset="1" stop-color="#134565"/></linearGradient>
+        <linearGradient id="crew-exhaust"><stop stop-color="#68d9ff" stop-opacity="0"/><stop offset=".55" stop-color="#8ce6ff"/><stop offset="1" stop-color="#fff5d1"/></linearGradient>
+      </defs>
+      <g class="ship-exhaust"><path d="M4 34Q14 22 34 28V38Q14 43 4 34"/><path d="M4 62Q14 53 34 58V68Q14 74 4 62"/></g>
+      <path class="ship-fin" d="M55 35 30 5 52 8 94 33M55 61 30 91 52 88 94 63"/>
+      <path class="ship-engine" d="M28 23h29l14 10-14 10H28zM28 53h29l14 10-14 10H28z"/>
+      <path class="ship-hull" d="M39 34Q76 12 112 32L137 48 112 64Q76 84 39 62L48 48z"/>
+      <path class="ship-nose" d="M111 32Q128 37 137 48L111 64 119 48z"/>
+      <path class="ship-window" d="M72 34Q91 27 108 39L111 48 104 56Q88 67 72 58L66 48z"/>
+      <path class="ship-glint" d="M76 36Q88 32 99 37M72 40l-2 7"/>
+      <path class="ship-seam" d="m58 34 5 14-5 15M49 48h15M114 43h10M114 53h10"/>
+      <path class="ship-stripe" d="m46 36 7-3 5 12-7 2zm5 14 7 2-5 12-7-3z"/>
+      <circle cx="59" cy="48" r="2" fill="#ffbd61"/>
+    </svg>
+  </span></span>
 </span>`;
 
 function clampJourneyProgress(progress) {
@@ -90,56 +115,86 @@ function mountScrollJourney(root) {
   const path = root.querySelector(".journey-path-line");
   const progressPath = root.querySelector(".journey-path-progress");
   const ship = root.querySelector(".scroll-journey-ship");
-  const sprite = root.querySelector(".scroll-ship-sprite");
+  const heading = root.querySelector(".scroll-ship-heading");
   const scenes = [...root.querySelectorAll("[data-journey-scene]")];
   if (!field || !route || !path || !ship) return { dispose() {} };
   let frame = 0;
   let lastScrollY = window.scrollY;
   let direction = 1;
-  let previousDirection = 1;
-  let turnTimer = 0;
-  const render = () => {
+  let directionTravel = 0;
+  let previousTime = 0;
+  let currentLength = null;
+  let currentAngle = null;
+  let disposed = false;
+  let length = path.getTotalLength();
+  const resizeRoute = () => {
+    const shape = innerWidth <= 680 ? journeyRoutes.mobile : journeyRoutes.desktop;
+    route.querySelectorAll('path').forEach(node => node.setAttribute('d', shape));
+    length = path.getTotalLength();
+    currentLength = null;
+    schedule();
+  };
+  const render = (time = performance.now()) => {
     frame = 0;
     const bounds = field.getBoundingClientRect();
     const routeBounds = route.getBoundingClientRect();
-    const progress = Math.max(0, Math.min(1, (innerHeight * .5 - bounds.top) / bounds.height));
-    const length = path.getTotalLength();
-    const at = length * progress;
-    const point = path.getPointAtLength(at);
-    const probe = path.getPointAtLength(Math.max(0, Math.min(length, at + 3)));
-    let angle = Math.atan2(probe.y - point.y, probe.x - point.x) * 180 / Math.PI;
+    if (disposed || !routeBounds.width || !bounds.height) return;
+    const reducedMotion = document.body.classList.contains('motion-reduced') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const dt = Math.min(40, Math.max(1, time - (previousTime || time - 16.7)));
+    previousTime = time;
+    const progress = Math.max(0, Math.min(1, (innerHeight * .54 - bounds.top) / bounds.height));
+    // Match the viewport's vertical position, even where the route bends sideways.
+    const targetY = progress * 3400;
+    let lower = 0;
+    let upper = length;
+    for (let step = 0; step < 14; step++) {
+      const middle = (lower + upper) / 2;
+      if (path.getPointAtLength(middle).y < targetY) lower = middle;
+      else upper = middle;
+    }
+    const targetLength = (lower + upper) / 2;
+    currentLength = currentLength === null || reducedMotion ? targetLength : currentLength + (targetLength - currentLength) * (1 - Math.exp(-dt / 90));
+    const point = path.getPointAtLength(currentLength);
+    const before = path.getPointAtLength(Math.max(0, currentLength - 3));
+    const after = path.getPointAtLength(Math.min(length, currentLength + 3));
+    let angle = Math.atan2((after.y - before.y) * routeBounds.height / 3400, (after.x - before.x) * routeBounds.width / 1000) * 180 / Math.PI;
     if (direction < 0) angle += 180;
+    if (currentAngle === null) currentAngle = angle;
+    const angleDelta = (((angle - currentAngle + 180) % 360) + 360) % 360 - 180;
+    currentAngle = reducedMotion ? angle : currentAngle + angleDelta * (1 - Math.exp(-dt / 175));
     const x = routeBounds.left - bounds.left + point.x / 1000 * routeBounds.width;
-    const y = routeBounds.top - bounds.top + point.y / 2600 * routeBounds.height;
-    ship.style.transform = `translate3d(${x - 32}px, ${y - 19}px, 0) rotate(${angle}deg)`;
-    progressPath?.style.setProperty("--route-progress", String(progress));
-    const sceneIndex = Math.max(0, Math.min(scenes.length - 1, Math.round(progress * (scenes.length - 1))));
+    const y = routeBounds.top - bounds.top + point.y / 3400 * routeBounds.height;
+    ship.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    heading.style.transform = `rotate(${currentAngle}deg)`;
+    ship.style.setProperty('--ship-bank', `${Math.max(-14, Math.min(14, angleDelta * .12))}deg`);
+    ship.dataset.flightDirection = direction > 0 ? 'outward' : 'homeward';
+    progressPath?.style.setProperty("--route-progress", String(currentLength / length));
+    const sceneIndex = scenes.reduce((nearest, scene, index) => Math.abs(scene.getBoundingClientRect().top + scene.offsetHeight / 2 - innerHeight * .54) < Math.abs(scenes[nearest].getBoundingClientRect().top + scenes[nearest].offsetHeight / 2 - innerHeight * .54) ? index : nearest, 0);
     scenes.forEach((scene, index) => scene.classList.toggle("is-in-view", index === sceneIndex));
+    if (!reducedMotion && (Math.abs(targetLength - currentLength) > .1 || Math.abs(angleDelta) > .1)) schedule();
   };
   const schedule = () => { if (!frame) frame = requestAnimationFrame(render); };
   const onScroll = () => {
     const delta = window.scrollY - lastScrollY;
-    if (Math.abs(delta) > 1) direction = delta > 0 ? 1 : -1;
-    if (direction !== previousDirection) {
-      previousDirection = direction;
-      sprite?.classList.remove("is-turning");
-      void sprite?.offsetWidth;
-      sprite?.classList.add("is-turning");
-      clearTimeout(turnTimer);
-      turnTimer = window.setTimeout(() => sprite?.classList.remove("is-turning"), 460);
+    if (Math.sign(delta) !== Math.sign(directionTravel)) directionTravel = 0;
+    directionTravel += delta;
+    // Small trackpad/touch jitter should not repeatedly flip the spacecraft.
+    if (Math.abs(directionTravel) > 18) {
+      direction = directionTravel > 0 ? 1 : -1;
+      directionTravel = Math.max(-80, Math.min(80, directionTravel));
     }
     lastScrollY = window.scrollY;
     schedule();
   };
   window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", schedule);
-  render();
+  window.addEventListener("resize", resizeRoute);
+  resizeRoute();
   return {
     dispose() {
+      disposed = true;
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", schedule);
+      window.removeEventListener("resize", resizeRoute);
       cancelAnimationFrame(frame);
-      clearTimeout(turnTimer);
     },
   };
 }
@@ -175,45 +230,42 @@ export function moonPanelMarkup() {
 
 export function locationMapMarkup() {
   return `<section class="location-map" aria-labelledby="location-map-title">
-    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">One route. Four honest scales.</h2></div><div><p>Earth is the origin. Each stop below is a labeled scale inset—not another planet on one continuous scale.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p></div></div>
+    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">A little ship. A very big universe.</h2></div><div><p>Earth, the Moon, and Mars share one size scale. The space between stops is compressed; the Webb orbit view changes scale.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p></div></div>
     <div class="location-map-field" role="group" aria-label="Scroll journey from Earth to the Moon, Mars, Webb, and Voyager">
-      <svg class="journey-scroll-route" viewBox="0 0 1000 2600" preserveAspectRatio="none" aria-hidden="true">
-        <path class="journey-path-glow" d="M500 100 C760 250 790 420 620 590 C430 790 220 860 340 1100 C480 1360 780 1350 650 1600 C530 1840 250 1900 360 2160 C440 2350 650 2410 770 2530"/>
-        <path class="journey-path-line" d="M500 100 C760 250 790 420 620 590 C430 790 220 860 340 1100 C480 1360 780 1350 650 1600 C530 1840 250 1900 360 2160 C440 2350 650 2410 770 2530"/>
-        <path class="journey-path-progress" pathLength="1" d="M500 100 C760 250 790 420 620 590 C430 790 220 860 340 1100 C480 1360 780 1350 650 1600 C530 1840 250 1900 360 2160 C440 2350 650 2410 770 2530"/>
+      <svg class="journey-scroll-route" viewBox="0 0 1000 3400" preserveAspectRatio="none" aria-hidden="true">
+        <path class="journey-path-glow" d="${journeyRoutes.desktop}"/>
+        <path class="journey-path-line" d="${journeyRoutes.desktop}"/>
+        <path class="journey-path-progress" pathLength="1" d="${journeyRoutes.desktop}"/>
       </svg>
       ${shipMarkup()}
       <div class="journey-scenes">
         <article class="journey-scene scene-earth" data-journey-scene="earth">
-          <div class="scene-scale"><span>START · EARTH</span><small>ORIGIN</small></div>
-          <div class="earth-origin" data-journey-stop="earth" data-visual-stop="earth" aria-label="You are here: Earth"><i aria-hidden="true"></i><span><strong>YOU ARE HERE</strong><small>EARTH · START</small></span></div>
-          <p>This is the only Earth on the route. The diagrams that follow change scale so each relationship stays readable.</p>
+          <div class="earth-origin" data-journey-stop="earth" data-visual-stop="earth" aria-label="You are here: Earth"><div class="planet-globe earth-globe"><img src="/assets/journey-earth-nasa.jpg" alt="Earth's oceans, continents, and swirling clouds in NASA's Blue Marble composite" width="800" height="800" decoding="async"></div><span class="earth-origin-label"><strong>YOU ARE HERE</strong><small>EARTH · START</small></span></div>
+          <div class="scene-copy earth-copy"><p class="eyebrow">START · EARTH</p><h3>Every journey begins at home.</h3><p class="body-diameter">12,756 km</p><p class="scale-key">DIAMETER · OUR SHARED SIZE SCALE</p><a class="planet-credit" href="https://science.nasa.gov/resource/blue-marble-2002/" target="_blank" rel="noopener">Earth image: NASA Earth Observatory ↗</a></div>
         </article>
 
         <article class="journey-scene scene-moon" data-journey-scene="moon" data-frontier="moon" aria-labelledby="frontier-moon-title">
           <div class="scene-heading"><div><span>01 · MOON</span><h3 id="frontier-moon-title">Earth and its Moon</h3></div><a href="https://science.nasa.gov/moon/by-the-numbers/" target="_blank" rel="noopener">≈ 384,400 km from Earth · NASA ↗</a></div>
-          <p class="scale-key">LOCAL INSET · EARTH–MOON SYSTEM · NOT TO SCALE</p>
+          <p class="scale-key">MOON DIAMETER · 3,475 KM · 27% OF EARTH</p>
           <div class="system-canvas moon-system">
-            <span class="diagram-body diagram-earth"><i></i><small>EARTH</small></span>
-            <span class="moon-orbit" aria-hidden="true"></span>
-            <span class="diagram-body diagram-moon"><i></i><small>MOON</small></span>
-            <svg class="diagram-leaders" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M245 88 C310 70 326 58 348 58"/><path d="M272 157 C318 177 329 187 348 187"/></svg>
+            <div class="planet-globe moon-globe"><canvas data-globe="moon" role="img" aria-label="The Moon's near side, rendered from NASA LRO surface imagery"></canvas></div>
+            <svg class="diagram-leaders" aria-hidden="true"><path data-leader="apollo17"/><path data-leader="surveyor3"/></svg>
             <button class="diagram-pin moon-apollo" data-map-moon="apollo17" data-journey-stop="apollo17" data-visual-stop="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon story"><i></i><span class="diagram-callout"><strong>Apollo 17 LRV</strong><small>TAURUS–LITTROW · STORY</small></span></button>
             <button class="diagram-pin moon-surveyor" data-map-moon="surveyor3" data-journey-stop="surveyor3" data-visual-stop="surveyor3" aria-label="Open Surveyor 3 Moon story"><i></i><span class="diagram-callout"><strong>Surveyor 3</strong><small>OCEANUS PROCELLARUM · STORY</small></span></button>
           </div>
+          <p class="planet-credit"><a href="https://svs.gsfc.nasa.gov/4720/" target="_blank" rel="noopener">Moon surface: NASA SVS / LRO ↗</a></p>
         </article>
 
         <article class="journey-scene scene-mars" data-journey-scene="mars" data-frontier="mars" aria-labelledby="frontier-mars-title">
           <div class="scene-heading"><div><span>02 · MARS</span><h3 id="frontier-mars-title">From Earth to Mars</h3></div><a href="https://science.nasa.gov/wp-content/uploads/2024/03/44745_mro-arrival.pdf" target="_blank" rel="noopener">≈ 7 months by spacecraft · NASA ↗</a></div>
-          <p class="scale-key">TRANSFER INSET · DISTANCE CHANGES AS BOTH PLANETS ORBIT</p>
+          <p class="scale-key">MARS DIAMETER · 6,792 KM · 53% OF EARTH</p>
           <div class="system-canvas mars-system">
-            <span class="diagram-body mars-earth"><i></i><small>EARTH</small></span>
-            <svg class="mars-transfer" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M86 135 C164 38 250 39 309 103"/><path class="transfer-arrow" d="m298 89 13 15-19 2"/></svg>
-            <span class="diagram-body diagram-mars"><i></i><small>MARS</small></span>
-            <svg class="diagram-leaders" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M340 83 C389 62 404 56 423 56"/><path d="M320 154 C376 178 399 188 423 188"/></svg>
+            <div class="planet-globe mars-globe"><canvas data-globe="mars" role="img" aria-label="Mars rendered from NASA Viking surface imagery"></canvas></div>
+            <svg class="diagram-leaders" aria-hidden="true"><path data-leader="curiosity"/><path data-leader="ingenuity"/></svg>
             <button class="diagram-pin mars-curiosity" data-map-exhibit="curiosity" data-journey-stop="curiosity" data-visual-stop="curiosity" aria-label="Open Curiosity training module"><i></i><span class="diagram-callout"><strong>Curiosity</strong><small>GALE CRATER · TRAINING</small></span></button>
             <button class="diagram-pin mars-ingenuity" data-map-exhibit="ingenuity" data-journey-stop="ingenuity" data-visual-stop="ingenuity" aria-label="Open Ingenuity training module"><i></i><span class="diagram-callout"><strong>Ingenuity</strong><small>JEZERO CRATER · TRAINING</small></span></button>
           </div>
+          <p class="planet-credit"><a href="https://space.jpl.nasa.gov/tmaps/mars.html" target="_blank" rel="noopener">Mars surface: NASA / JPL / USGS · Viking ↗</a></p>
         </article>
 
         <article class="journey-scene scene-webb" data-journey-scene="webb" data-frontier="deep-space" aria-labelledby="frontier-webb-title">
@@ -222,9 +274,9 @@ export function locationMapMarkup() {
           <div class="system-canvas webb-system">
             <span class="diagram-sun"><i></i><small>SUN</small></span>
             <span class="sun-earth-line" aria-hidden="true"></span>
-            <span class="diagram-body webb-earth"><i></i><small>EARTH</small></span>
+            <span class="diagram-body webb-earth"><img src="/assets/journey-earth-nasa.jpg" alt="" width="800" height="800" loading="lazy"><small>EARTH</small></span>
             <span class="l2-marker"><i></i><small>L2</small></span>
-            <button class="diagram-pin webb-pin" data-map-exhibit="webb" data-journey-stop="webb" data-visual-stop="webb" aria-label="Open Webb training module"><i></i><span class="diagram-callout"><strong>Webb</strong><small>ORBITS L2 · TRAINING</small></span></button>
+            <button class="diagram-pin webb-pin" data-map-exhibit="webb" data-journey-stop="webb" data-visual-stop="webb" aria-label="Open Webb training module"><i class="webb-miniature" aria-hidden="true"><svg viewBox="0 0 76 84"><path class="webb-sunshield" d="m7 54 32-16 30 16-11 22H24z"/><g class="webb-mirror"><path d="m38 6 12 7v14l-12 7-12-7V13zM26 27l12 7v14l-12 7-12-7V34zM50 27l12 7v14l-12 7-12-7V34zM38 34l12 7v14l-12 7-12-7V41z"/></g><path d="M38 17v37M22 39l16 15 16-15" fill="none" stroke="#dce8ed" stroke-width="2"/></svg></i><span class="diagram-callout"><strong>Webb</strong><small>ORBITS L2 · TRAINING</small></span></button>
             <p class="diagram-note">L2 and Webb are on the side of Earth away from the Sun.</p>
           </div>
         </article>
@@ -237,13 +289,13 @@ export function locationMapMarkup() {
             <span class="solar-orbit orbit-one"></span><span class="solar-orbit orbit-two"></span><span class="solar-orbit orbit-three"></span>
             <span class="heliopause"><small>HELIOPAUSE</small></span>
             <svg class="voyager-outbound" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M250 135 C315 119 349 89 392 61"/><path class="transfer-arrow" d="m378 58 16 2-7 15"/></svg>
-            <button class="diagram-pin voyager-pin" data-map-exhibit="voyager" data-journey-stop="voyager" data-visual-stop="voyager" aria-label="Open Voyager training module"><i></i><span class="diagram-callout"><strong>Voyager 1</strong><small>INTERSTELLAR SPACE · TRAINING</small></span></button>
+            <button class="diagram-pin voyager-pin" data-map-exhibit="voyager" data-journey-stop="voyager" data-visual-stop="voyager" aria-label="Open Voyager training module"><i class="voyager-miniature" aria-hidden="true"><svg viewBox="0 0 96 90"><path d="m28 50-17 27M49 46l32 31M43 34l17-25M60 9l9-5M41 49l-4 25" fill="none" stroke="#c8d6df" stroke-width="3"/><path d="m25 44 17-8 14 11-17 9z" fill="#bd944a"/><ellipse cx="37" cy="31" rx="24" ry="13" transform="rotate(-24 37 31)" fill="#f1eee2" stroke="#8696a2" stroke-width="2"/><path d="m17 38 17-25 22 8" fill="none" stroke="#9caab3" stroke-width="2"/><circle cx="34" cy="23" r="3" fill="#526c7c"/></svg></i><span class="diagram-callout"><strong>Voyager 1</strong><small>INTERSTELLAR SPACE · TRAINING</small></span></button>
           </div>
         </article>
       </div>
       <p class="sr-only journey-progress-status" aria-live="polite"></p>
     </div>
-    <p class="fine location-map-credit">Schematic: Mission Alive · not to scale. <a href="https://science.nasa.gov/mission/webb/webbs-first-images/" target="_blank" rel="noopener">Background: Webb's First Deep Field · NASA, ESA, CSA, STScI ↗</a></p>
+    <p class="fine location-map-credit"><a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">Size scale: NASA Planetary Fact Sheet ↗</a><span>Distances compressed. Landing sites are approximate. Spacecraft illustrations are enlarged.</span><a href="https://science.nasa.gov/mission/webb/webbs-first-images/" target="_blank" rel="noopener">Background: Webb's First Deep Field · NASA, ESA, CSA, STScI ↗</a></p>
   </section>`;
 }
 
@@ -290,6 +342,29 @@ export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}
   let activeProgress = clampJourneyProgress(journeyProgress);
   updateJourneyRoute(root, activeProgress);
   const scrollJourney = mountScrollJourney(root);
+  const globes = mountJourneyGlobes(root);
+  const updateLeaders = () => {
+    root.querySelectorAll('.diagram-leaders').forEach((svg) => {
+      const system = svg.parentElement;
+      const bounds = system.getBoundingClientRect();
+      svg.setAttribute('viewBox', `0 0 ${Math.max(1, bounds.width)} ${Math.max(1, bounds.height)}`);
+      svg.querySelectorAll('[data-leader]').forEach((path) => {
+        const pin = system.querySelector(`[data-visual-stop="${path.dataset.leader}"]`);
+        if (!pin) return;
+        const dot = pin.querySelector('i').getBoundingClientRect();
+        const label = pin.querySelector('.diagram-callout').getBoundingClientRect();
+        const x = dot.left + dot.width / 2 - bounds.left;
+        const y = dot.top + dot.height / 2 - bounds.top;
+        const endX = label.left - bounds.left - 10;
+        const endY = label.top + label.height / 2 - bounds.top;
+        const elbow = x + Math.max(15, (endX - x) * .42);
+        path.setAttribute('d', `M${x} ${y} L${elbow} ${endY} H${endX}`);
+      });
+    });
+  };
+  const leaderObserver = new ResizeObserver(updateLeaders);
+  root.querySelectorAll('.system-canvas, .diagram-callout').forEach(node => leaderObserver.observe(node));
+  updateLeaders();
   const animateTo = async (stop) => {
     const target = root.querySelector(`[data-visual-stop="${stop}"]`)?.closest("[data-journey-scene]");
     if (!target) return false;
@@ -315,6 +390,8 @@ export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}
     dispose() {
       root.removeEventListener("click", click);
       scrollJourney.dispose();
+      globes.dispose();
+      leaderObserver.disconnect();
     },
   };
 }
