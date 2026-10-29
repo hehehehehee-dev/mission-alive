@@ -53,8 +53,8 @@ export const journeyStops = Object.freeze([
   "voyager",
 ]);
 
-const shipMarkup = (className = "journey-ship") => `<span class="${className}" role="img" aria-label="Academy crew ship at the current stop">
-  <svg viewBox="0 0 52 30" aria-hidden="true" focusable="false"><path d="M3 16 20 8 36 3l-5 10 17 3-17 3 5 9-16-6z"/><path class="ship-window" d="M21 12h8l-3 5h-8z"/><path class="ship-flame" d="m10 14-8-5 4 7-4 6 8-4z"/></svg>
+const shipMarkup = () => `<span class="scroll-journey-ship" role="img" aria-label="Academy crew ship following the route as you scroll">
+  <span class="scroll-ship-sprite"><svg viewBox="0 0 64 38" aria-hidden="true" focusable="false"><path class="ship-hull" d="M4 20 24 10 45 4l-7 13 22 3-22 4 7 11-21-8z"/><path class="ship-window" d="M25 14h10l-4 7H21z"/><path class="ship-wing" d="m28 24 13 10-5-12z"/><path class="ship-flame" d="m13 17-11-7 5 10-5 9 11-6z"/></svg></span>
 </span>`;
 
 function clampJourneyProgress(progress) {
@@ -71,88 +71,77 @@ function updateJourneyRoute(root, progress) {
     const isNext = stop.dataset.journeyStop === next;
     stop.classList.toggle("is-current-stop", isCurrent);
     stop.classList.toggle("is-next-stop", isNext);
-    stop.querySelectorAll(":scope > .journey-ship, :scope > .route-stop-state").forEach((node) => node.remove());
-    if (isCurrent) stop.insertAdjacentHTML("beforeend", '<span class="route-stop-state">CURRENT STOP</span>');
-    else if (isNext) stop.insertAdjacentHTML("beforeend", '<span class="route-stop-state">NEXT STOP</span>');
+    stop.querySelectorAll(".route-stop-state").forEach((node) => node.remove());
+    const stateHost = stop.querySelector(".diagram-callout") || stop;
+    if (isCurrent) stateHost.insertAdjacentHTML("beforeend", '<span class="route-stop-state">CURRENT STOP</span>');
+    else if (isNext) stateHost.insertAdjacentHTML("beforeend", '<span class="route-stop-state">NEXT STOP</span>');
   });
   root.querySelectorAll("[data-visual-stop]").forEach((site) => {
     site.classList.toggle("is-current-site", site.dataset.visualStop === current);
     site.classList.toggle("is-next-site", site.dataset.visualStop === next);
-    site.querySelectorAll(":scope > .journey-ship").forEach((node) => node.remove());
   });
-  const shipAnchor = root.querySelector(`[data-visual-stop="${current}"]`) || root.querySelector(`[data-journey-stop="${current}"]`);
-  shipAnchor?.insertAdjacentHTML("beforeend", shipMarkup());
   const status = root.querySelector(".journey-progress-status");
   if (status) status.textContent = "Journey position updated. All stops remain open.";
 }
 
-async function animateJourneyShip(root, stop, fromProgress) {
-  const targetProgress = journeyStops.indexOf(stop);
-  if (targetProgress <= fromProgress || document.body.classList.contains("motion-reduced")) return;
-  const origin = root.querySelector(".journey-ship");
-  const target = root.querySelector(`[data-visual-stop="${stop}"]`) || root.querySelector(`[data-journey-stop="${stop}"]`);
+function mountScrollJourney(root) {
   const field = root.querySelector(".location-map-field");
-  if (!origin || !target || !field || typeof origin.animate !== "function") return;
-  const from = origin.getBoundingClientRect();
-  const to = target.getBoundingClientRect();
-  const bounds = field.getBoundingClientRect();
-  field.insertAdjacentHTML("beforeend", shipMarkup("journey-flight-ship"));
-  const flight = field.querySelector(".journey-flight-ship");
-  const startX = from.left + from.width / 2 - bounds.left - 26;
-  const startY = from.top + from.height / 2 - bounds.top - 15;
-  const deltaX = to.left + to.width / 2 - (from.left + from.width / 2);
-  const deltaY = to.top + to.height / 2 - (from.top + from.height / 2);
-  const arc = Math.max(38, Math.min(105, Math.abs(deltaX) * 0.22));
-  flight.style.left = `${startX}px`;
-  flight.style.top = `${startY}px`;
-  origin.classList.add("is-departing");
-  const animation = flight.animate([
-    { transform: "translate(0, 0) rotate(-4deg) scale(.95)", offset: 0 },
-    { transform: `translate(${deltaX * .5}px, ${deltaY * .5 - arc}px) rotate(3deg) scale(1.1)`, offset: .5 },
-    { transform: `translate(${deltaX}px, ${deltaY}px) rotate(-2deg) scale(.95)`, offset: 1 },
-  ], { duration: 620, easing: "cubic-bezier(.3,.8,.25,1)", fill: "forwards" });
-  try { await animation.finished; } catch { /* Navigation can safely cancel the flourish. */ }
-  flight.remove();
-  origin.classList.remove("is-departing");
-}
-
-async function replayJourneyFlight(root) {
-  const status = root.querySelector(".journey-progress-status");
-  if (document.body.classList.contains("motion-reduced")) {
-    if (status) status.textContent = "Route replay paused because reduced motion is on.";
-    return false;
-  }
-  const field = root.querySelector(".location-map-field");
-  const sites = journeyStops.map((stop) => root.querySelector(`[data-visual-stop="${stop}"]`)).filter(Boolean);
-  if (!field || sites.length !== journeyStops.length || typeof field.animate !== "function") return false;
-  const bounds = field.getBoundingClientRect();
-  const points = sites.map((site) => {
-    const rect = site.getBoundingClientRect();
-    return { x: rect.left + rect.width / 2 - bounds.left, y: rect.top + rect.height / 2 - bounds.top };
-  });
-  field.insertAdjacentHTML("beforeend", shipMarkup("journey-flight-ship journey-replay-ship"));
-  const flight = field.querySelector(".journey-replay-ship");
-  const origin = root.querySelector(".journey-ship");
-  flight.style.left = `${points[0].x - 26}px`;
-  flight.style.top = `${points[0].y - 15}px`;
-  origin?.classList.add("is-departing");
-  const frames = [{ transform: "translate(0, 0) rotate(-3deg)", offset: 0 }];
-  for (let index = 1; index < points.length; index += 1) {
-    const previous = points[index - 1];
-    const point = points[index];
-    const middleOffset = (index - .5) / (points.length - 1);
-    const endOffset = index / (points.length - 1);
-    const arc = Math.max(28, Math.min(72, Math.abs(point.x - previous.x) * .2));
-    frames.push({ transform: `translate(${(previous.x + point.x) / 2 - points[0].x}px, ${(previous.y + point.y) / 2 - points[0].y - arc}px) rotate(4deg) scale(1.08)`, offset: middleOffset });
-    frames.push({ transform: `translate(${point.x - points[0].x}px, ${point.y - points[0].y}px) rotate(-2deg)`, offset: endOffset });
-  }
-  const animation = flight.animate(frames, { duration: 3400, easing: "ease-in-out", fill: "forwards" });
-  if (status) status.textContent = "Replaying the academy flight from Earth to deep space.";
-  try { await animation.finished; } catch { /* The visitor can safely leave during replay. */ }
-  flight.remove();
-  origin?.classList.remove("is-departing");
-  if (status) status.textContent = "Journey position restored. All stops remain open.";
-  return true;
+  const route = root.querySelector(".journey-scroll-route");
+  const path = root.querySelector(".journey-path-line");
+  const progressPath = root.querySelector(".journey-path-progress");
+  const ship = root.querySelector(".scroll-journey-ship");
+  const sprite = root.querySelector(".scroll-ship-sprite");
+  const scenes = [...root.querySelectorAll("[data-journey-scene]")];
+  if (!field || !route || !path || !ship) return { dispose() {} };
+  let frame = 0;
+  let lastScrollY = window.scrollY;
+  let direction = 1;
+  let previousDirection = 1;
+  let turnTimer = 0;
+  const render = () => {
+    frame = 0;
+    const bounds = field.getBoundingClientRect();
+    const routeBounds = route.getBoundingClientRect();
+    const progress = Math.max(0, Math.min(1, (innerHeight * .5 - bounds.top) / bounds.height));
+    const length = path.getTotalLength();
+    const at = length * progress;
+    const point = path.getPointAtLength(at);
+    const probe = path.getPointAtLength(Math.max(0, Math.min(length, at + 3)));
+    let angle = Math.atan2(probe.y - point.y, probe.x - point.x) * 180 / Math.PI;
+    if (direction < 0) angle += 180;
+    const x = routeBounds.left - bounds.left + point.x / 1000 * routeBounds.width;
+    const y = routeBounds.top - bounds.top + point.y / 2600 * routeBounds.height;
+    ship.style.transform = `translate3d(${x - 32}px, ${y - 19}px, 0) rotate(${angle}deg)`;
+    progressPath?.style.setProperty("--route-progress", String(progress));
+    const sceneIndex = Math.max(0, Math.min(scenes.length - 1, Math.round(progress * (scenes.length - 1))));
+    scenes.forEach((scene, index) => scene.classList.toggle("is-in-view", index === sceneIndex));
+  };
+  const schedule = () => { if (!frame) frame = requestAnimationFrame(render); };
+  const onScroll = () => {
+    const delta = window.scrollY - lastScrollY;
+    if (Math.abs(delta) > 1) direction = delta > 0 ? 1 : -1;
+    if (direction !== previousDirection) {
+      previousDirection = direction;
+      sprite?.classList.remove("is-turning");
+      void sprite?.offsetWidth;
+      sprite?.classList.add("is-turning");
+      clearTimeout(turnTimer);
+      turnTimer = window.setTimeout(() => sprite?.classList.remove("is-turning"), 460);
+    }
+    lastScrollY = window.scrollY;
+    schedule();
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", schedule);
+  render();
+  return {
+    dispose() {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", schedule);
+      cancelAnimationFrame(frame);
+      clearTimeout(turnTimer);
+    },
+  };
 }
 
 const storyCard = (id, story) => `<article class="module-story-card moon-story-card" data-moon-story="${id}" aria-labelledby="moon-${id}-title">
@@ -186,44 +175,71 @@ export function moonPanelMarkup() {
 
 export function locationMapMarkup() {
   return `<section class="location-map" aria-labelledby="location-map-title">
-    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">Six machines, three frontiers</h2></div><div><p>The four training machines remain the path to certification. Open two extra Moon stories without adding a stamp.</p><button type="button" class="journey-replay" data-replay-journey>Replay the flight →</button></div></div>
-    <div class="location-map-field" role="group" aria-label="Schematic locations of the six machines">
-      <span class="journey-route-line" aria-hidden="true"></span>
-      <div class="location-journey">
-        <div class="earth-marker" data-journey-stop="earth" data-visual-stop="earth" aria-label="You are here: Earth"><i aria-hidden="true"></i><span><strong>YOU ARE HERE</strong><small>EARTH · START</small></span></div>
-        <section class="frontier frontier-moon" data-frontier="moon" aria-labelledby="frontier-moon-title">
-          <div class="frontier-heading"><span id="frontier-moon-title">01 · MOON</span><a href="https://science.nasa.gov/moon/by-the-numbers/" target="_blank" rel="noopener">≈ 384,400 km from Earth · NASA ↗</a></div>
-          <div class="frontier-site-map moon-site-map">
-            <div class="planet-orb moon-orb" aria-hidden="true"><span class="surface-site site-apollo" data-visual-stop="apollo17"></span><span class="surface-site site-surveyor" data-visual-stop="surveyor3"></span></div>
-            <svg class="site-connectors" viewBox="0 0 260 220" preserveAspectRatio="none" aria-hidden="true"><path d="M58 85 C88 82 94 62 122 62"/><path d="M76 134 C98 140 100 158 122 158"/></svg>
-            <div class="frontier-stops">
-              <button class="location-dot is-moon" data-map-moon="apollo17" data-journey-stop="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon story"><i aria-hidden="true"></i><span>Apollo 17 LRV<small>TAURUS–LITTROW · STORY</small></span></button>
-              <button class="location-dot is-moon" data-map-moon="surveyor3" data-journey-stop="surveyor3" aria-label="Open Surveyor 3 Moon story"><i aria-hidden="true"></i><span>Surveyor 3<small>OCEANUS PROCELLARUM · STORY</small></span></button>
-            </div>
+    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">One route. Four honest scales.</h2></div><div><p>Earth is the origin. Each stop below is a labeled scale inset—not another planet on one continuous scale.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p></div></div>
+    <div class="location-map-field" role="group" aria-label="Scroll journey from Earth to the Moon, Mars, Webb, and Voyager">
+      <svg class="journey-scroll-route" viewBox="0 0 1000 2600" preserveAspectRatio="none" aria-hidden="true">
+        <path class="journey-path-glow" d="M500 100 C760 250 790 420 620 590 C430 790 220 860 340 1100 C480 1360 780 1350 650 1600 C530 1840 250 1900 360 2160 C440 2350 650 2410 770 2530"/>
+        <path class="journey-path-line" d="M500 100 C760 250 790 420 620 590 C430 790 220 860 340 1100 C480 1360 780 1350 650 1600 C530 1840 250 1900 360 2160 C440 2350 650 2410 770 2530"/>
+        <path class="journey-path-progress" pathLength="1" d="M500 100 C760 250 790 420 620 590 C430 790 220 860 340 1100 C480 1360 780 1350 650 1600 C530 1840 250 1900 360 2160 C440 2350 650 2410 770 2530"/>
+      </svg>
+      ${shipMarkup()}
+      <div class="journey-scenes">
+        <article class="journey-scene scene-earth" data-journey-scene="earth">
+          <div class="scene-scale"><span>START · EARTH</span><small>ORIGIN</small></div>
+          <div class="earth-origin" data-journey-stop="earth" data-visual-stop="earth" aria-label="You are here: Earth"><i aria-hidden="true"></i><span><strong>YOU ARE HERE</strong><small>EARTH · START</small></span></div>
+          <p>This is the only Earth on the route. The diagrams that follow change scale so each relationship stays readable.</p>
+        </article>
+
+        <article class="journey-scene scene-moon" data-journey-scene="moon" data-frontier="moon" aria-labelledby="frontier-moon-title">
+          <div class="scene-heading"><div><span>01 · MOON</span><h3 id="frontier-moon-title">Earth and its Moon</h3></div><a href="https://science.nasa.gov/moon/by-the-numbers/" target="_blank" rel="noopener">≈ 384,400 km from Earth · NASA ↗</a></div>
+          <p class="scale-key">LOCAL INSET · EARTH–MOON SYSTEM · NOT TO SCALE</p>
+          <div class="system-canvas moon-system">
+            <span class="diagram-body diagram-earth"><i></i><small>EARTH</small></span>
+            <span class="moon-orbit" aria-hidden="true"></span>
+            <span class="diagram-body diagram-moon"><i></i><small>MOON</small></span>
+            <svg class="diagram-leaders" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M245 88 C310 70 326 58 348 58"/><path d="M272 157 C318 177 329 187 348 187"/></svg>
+            <button class="diagram-pin moon-apollo" data-map-moon="apollo17" data-journey-stop="apollo17" data-visual-stop="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon story"><i></i><span class="diagram-callout"><strong>Apollo 17 LRV</strong><small>TAURUS–LITTROW · STORY</small></span></button>
+            <button class="diagram-pin moon-surveyor" data-map-moon="surveyor3" data-journey-stop="surveyor3" data-visual-stop="surveyor3" aria-label="Open Surveyor 3 Moon story"><i></i><span class="diagram-callout"><strong>Surveyor 3</strong><small>OCEANUS PROCELLARUM · STORY</small></span></button>
           </div>
-        </section>
-        <section class="frontier frontier-mars" data-frontier="mars" aria-labelledby="frontier-mars-title">
-          <div class="frontier-heading"><span id="frontier-mars-title">02 · MARS</span><a href="https://science.nasa.gov/wp-content/uploads/2024/03/44745_mro-arrival.pdf" target="_blank" rel="noopener">≈ 7 months by spacecraft · NASA ↗</a></div>
-          <div class="frontier-site-map mars-site-map">
-            <div class="planet-orb mars-orb" aria-hidden="true"><span class="surface-site site-curiosity" data-visual-stop="curiosity"></span><span class="surface-site site-ingenuity" data-visual-stop="ingenuity"></span></div>
-            <svg class="site-connectors" viewBox="0 0 260 220" preserveAspectRatio="none" aria-hidden="true"><path d="M55 129 C87 138 96 158 122 158"/><path d="M81 78 C102 75 101 62 122 62"/></svg>
-            <div class="frontier-stops">
-              <button class="location-dot is-mars" data-map-exhibit="curiosity" data-journey-stop="curiosity" aria-label="Open Curiosity training module"><i aria-hidden="true"></i><span>Curiosity<small>GALE CRATER · TRAINING</small></span></button>
-              <button class="location-dot is-mars" data-map-exhibit="ingenuity" data-journey-stop="ingenuity" aria-label="Open Ingenuity training module"><i aria-hidden="true"></i><span>Ingenuity<small>JEZERO CRATER · TRAINING</small></span></button>
-            </div>
+        </article>
+
+        <article class="journey-scene scene-mars" data-journey-scene="mars" data-frontier="mars" aria-labelledby="frontier-mars-title">
+          <div class="scene-heading"><div><span>02 · MARS</span><h3 id="frontier-mars-title">From Earth to Mars</h3></div><a href="https://science.nasa.gov/wp-content/uploads/2024/03/44745_mro-arrival.pdf" target="_blank" rel="noopener">≈ 7 months by spacecraft · NASA ↗</a></div>
+          <p class="scale-key">TRANSFER INSET · DISTANCE CHANGES AS BOTH PLANETS ORBIT</p>
+          <div class="system-canvas mars-system">
+            <span class="diagram-body mars-earth"><i></i><small>EARTH</small></span>
+            <svg class="mars-transfer" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M86 135 C164 38 250 39 309 103"/><path class="transfer-arrow" d="m298 89 13 15-19 2"/></svg>
+            <span class="diagram-body diagram-mars"><i></i><small>MARS</small></span>
+            <svg class="diagram-leaders" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M340 83 C389 62 404 56 423 56"/><path d="M320 154 C376 178 399 188 423 188"/></svg>
+            <button class="diagram-pin mars-curiosity" data-map-exhibit="curiosity" data-journey-stop="curiosity" data-visual-stop="curiosity" aria-label="Open Curiosity training module"><i></i><span class="diagram-callout"><strong>Curiosity</strong><small>GALE CRATER · TRAINING</small></span></button>
+            <button class="diagram-pin mars-ingenuity" data-map-exhibit="ingenuity" data-journey-stop="ingenuity" data-visual-stop="ingenuity" aria-label="Open Ingenuity training module"><i></i><span class="diagram-callout"><strong>Ingenuity</strong><small>JEZERO CRATER · TRAINING</small></span></button>
           </div>
-        </section>
-        <section class="frontier frontier-deep" data-frontier="deep-space" aria-labelledby="frontier-deep-title">
-          <div class="frontier-heading"><span id="frontier-deep-title">03 · DEEP SPACE</span><span class="frontier-distance-pair"><a href="https://science.nasa.gov/mission/webb/orbit/" target="_blank" rel="noopener">Webb · ≈ 1.5 million km · Sun–Earth L2 · NASA ↗</a><a href="https://science.nasa.gov/mission/voyager/voyager-1/voyager-1-what-is-a-light-day/" target="_blank" rel="noopener">Voyager 1 · Almost one light-day from Earth · NASA ↗</a></span></div>
-          <div class="frontier-site-map deep-site-map">
-            <div class="deep-space-diagram" aria-hidden="true"><span class="orbit-ring"></span><span class="tiny-earth"></span><span class="deep-site site-webb" data-visual-stop="webb"></span><span class="deep-site site-voyager" data-visual-stop="voyager"></span><span class="voyager-wave"></span></div>
-            <svg class="site-connectors" viewBox="0 0 260 220" preserveAspectRatio="none" aria-hidden="true"><path d="M74 88 C97 84 101 62 122 62"/><path d="M103 139 C111 143 110 158 122 158"/></svg>
-            <div class="frontier-stops">
-              <button class="location-dot is-deep" data-map-exhibit="webb" data-journey-stop="webb" aria-label="Open Webb training module"><i aria-hidden="true"></i><span>Webb<small>SUN–EARTH L2 · TRAINING</small></span></button>
-              <button class="location-dot is-deep" data-map-exhibit="voyager" data-journey-stop="voyager" aria-label="Open Voyager training module"><i aria-hidden="true"></i><span>Voyager 1<small>INTERSTELLAR SPACE · TRAINING</small></span></button>
-            </div>
+        </article>
+
+        <article class="journey-scene scene-webb" data-journey-scene="webb" data-frontier="deep-space" aria-labelledby="frontier-webb-title">
+          <div class="scene-heading"><div><span>03 · WEBB</span><h3 id="frontier-webb-title">Sun, Earth, then L2</h3></div><a href="https://science.nasa.gov/mission/webb/orbit/" target="_blank" rel="noopener">≈ 1.5 million km from Earth · NASA ↗</a></div>
+          <p class="scale-key">LOCAL INSET · SUN–EARTH L2 · NOT TO SCALE</p>
+          <div class="system-canvas webb-system">
+            <span class="diagram-sun"><i></i><small>SUN</small></span>
+            <span class="sun-earth-line" aria-hidden="true"></span>
+            <span class="diagram-body webb-earth"><i></i><small>EARTH</small></span>
+            <span class="l2-marker"><i></i><small>L2</small></span>
+            <button class="diagram-pin webb-pin" data-map-exhibit="webb" data-journey-stop="webb" data-visual-stop="webb" aria-label="Open Webb training module"><i></i><span class="diagram-callout"><strong>Webb</strong><small>ORBITS L2 · TRAINING</small></span></button>
+            <p class="diagram-note">L2 and Webb are on the side of Earth away from the Sun.</p>
           </div>
-        </section>
+        </article>
+
+        <article class="journey-scene scene-voyager" data-journey-scene="voyager" data-frontier="deep-space" aria-labelledby="frontier-voyager-title">
+          <div class="scene-heading"><div><span>04 · VOYAGER 1</span><h3 id="frontier-voyager-title">Beyond the Sun's protective bubble</h3></div><a href="https://science.nasa.gov/mission/voyager/voyager-1/voyager-1-what-is-a-light-day/" target="_blank" rel="noopener">Almost one light-day from Earth · NASA ↗</a></div>
+          <p class="scale-key">SOLAR-SYSTEM INSET · DISTANCES COMPRESSED</p>
+          <div class="system-canvas voyager-system">
+            <span class="voyager-sun"><i></i><small>SUN</small></span>
+            <span class="solar-orbit orbit-one"></span><span class="solar-orbit orbit-two"></span><span class="solar-orbit orbit-three"></span>
+            <span class="heliopause"><small>HELIOPAUSE</small></span>
+            <svg class="voyager-outbound" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M250 135 C315 119 349 89 392 61"/><path class="transfer-arrow" d="m378 58 16 2-7 15"/></svg>
+            <button class="diagram-pin voyager-pin" data-map-exhibit="voyager" data-journey-stop="voyager" data-visual-stop="voyager" aria-label="Open Voyager training module"><i></i><span class="diagram-callout"><strong>Voyager 1</strong><small>INTERSTELLAR SPACE · TRAINING</small></span></button>
+          </div>
+        </article>
       </div>
       <p class="sr-only journey-progress-status" aria-live="polite"></p>
     </div>
@@ -272,32 +288,20 @@ export function mountMoonPanel(root) {
 export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}, journeyProgress = 0 } = {}) {
   root.innerHTML = locationMapMarkup();
   let activeProgress = clampJourneyProgress(journeyProgress);
-  let travelling = false;
   updateJourneyRoute(root, activeProgress);
+  const scrollJourney = mountScrollJourney(root);
   const animateTo = async (stop) => {
-    if (travelling) return false;
-    travelling = true;
-    root.classList.add("is-travelling");
-    await animateJourneyShip(root, stop, activeProgress);
-    root.classList.remove("is-travelling");
-    travelling = false;
+    const target = root.querySelector(`[data-visual-stop="${stop}"]`)?.closest("[data-journey-scene]");
+    if (!target) return false;
+    target.scrollIntoView({ behavior: document.body.classList.contains("motion-reduced") ? "instant" : "smooth", block: "center" });
+    if (!document.body.classList.contains("motion-reduced")) await new Promise((resolve) => window.setTimeout(resolve, 640));
     return true;
   };
-  const click = async (event) => {
-    if (event.target.closest("[data-replay-journey]")) {
-      if (travelling) return;
-      travelling = true;
-      root.classList.add("is-travelling");
-      await replayJourneyFlight(root);
-      root.classList.remove("is-travelling");
-      travelling = false;
-      return;
-    }
+  const click = (event) => {
     const exhibit = event.target.closest("[data-map-exhibit]");
     const moon = event.target.closest("[data-map-moon]");
     const stop = exhibit?.dataset.mapExhibit || moon?.dataset.mapMoon;
     if (!stop) return;
-    if (!await animateTo(stop)) return;
     if (exhibit) onExhibit(stop, exhibit);
     else onMoon(stop, moon);
   };
@@ -308,6 +312,9 @@ export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}
       activeProgress = clampJourneyProgress(progress);
       updateJourneyRoute(root, activeProgress);
     },
-    dispose() { root.removeEventListener("click", click); },
+    dispose() {
+      root.removeEventListener("click", click);
+      scrollJourney.dispose();
+    },
   };
 }

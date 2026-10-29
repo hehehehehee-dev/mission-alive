@@ -643,6 +643,105 @@ main {
 @keyframes orbit-turn { to { transform: rotate(338deg) skewX(18deg); } }
 @keyframes map-star-drift { to { background-position: 170px 65px, -230px 90px, 145px -210px; } }
 body.motion-reduced .journey-ship, body.motion-reduced .surface-site, body.motion-reduced .deep-site, body.motion-reduced .planet-orb::before, body.motion-reduced .orbit-ring, body.motion-reduced .location-map-field::after { animation: none; }
+
+/* Continuous outward journey — every panel is an explicitly labeled scale inset. */
+.location-map-field { min-height: 2800px; overflow: clip; }
+.journey-scroll-route { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.journey-path-glow, .journey-path-line, .journey-path-progress { fill: none; vector-effect: non-scaling-stroke; }
+.journey-path-glow { stroke: #68bce23b; stroke-width: 16; filter: blur(7px); }
+.journey-path-line { stroke: #b9dbe899; stroke-width: 2; stroke-dasharray: 5 9; }
+.journey-path-progress { --route-progress: 0; stroke: #f4cf82; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--route-progress)); filter: drop-shadow(0 0 6px #eecb78); }
+.scroll-journey-ship { position: absolute; z-index: 8; left: 0; top: 0; display: block; width: 64px; height: 38px; color: #f5d185; pointer-events: none; transform-origin: 32px 19px; transition: transform 95ms linear; will-change: transform; }
+.scroll-ship-sprite { display: block; width: 100%; height: 100%; filter: drop-shadow(0 0 6px #f0ca6c) drop-shadow(0 4px 5px #000); animation: scroll-ship-idle 2.2s ease-in-out infinite; transform-origin: center; }
+.scroll-journey-ship svg { width: 100%; height: 100%; overflow: visible; fill: currentColor; stroke: #fff0c9; stroke-width: 1; }
+.scroll-journey-ship .ship-window { fill: #8de3ff; stroke: #e2f9ff; }
+.scroll-journey-ship .ship-wing { fill: #b98c4f; }
+.scroll-journey-ship .ship-flame { fill: #ff8752; stroke: #ffd38c; }
+.scroll-ship-sprite.is-turning { animation: scroll-ship-turn .46s cubic-bezier(.2,.8,.2,1); }
+@keyframes scroll-ship-idle { 0%, 100% { translate: 0 -2px; } 50% { translate: 0 2px; } }
+@keyframes scroll-ship-turn { 0% { transform: rotateY(0) scale(1); } 45% { transform: rotateY(88deg) scale(.78); } 55% { transform: rotateY(92deg) scale(.78); } 100% { transform: rotateY(180deg) scale(1); } }
+
+.journey-scenes { position: relative; z-index: 2; display: grid; grid-template-rows: repeat(5, minmax(500px, 1fr)); gap: 32px; min-height: 2800px; padding: 70px clamp(34px, 6vw, 78px); }
+.journey-scene { position: relative; align-self: center; width: min(540px, 65%); min-height: 410px; padding: clamp(22px, 3vw, 34px); border: 1px solid #9fc1d33d; border-radius: 18px; color: #eaf1f4; background: linear-gradient(145deg, #0b1722f2, #071019e8); box-shadow: 0 25px 75px #000a, inset 0 1px #ffffff0d; backdrop-filter: blur(12px); transition: border-color .35s ease, box-shadow .35s ease, transform .35s ease; }
+.journey-scene:nth-child(even) { justify-self: end; }
+.journey-scene:nth-child(odd) { justify-self: start; }
+.journey-scene.is-in-view { border-color: #e8ce8b8c; box-shadow: 0 30px 90px #000c, 0 0 45px #e9ca6d18, inset 0 1px #fff2; transform: translateY(-4px); }
+.scene-scale, .scene-heading { display: flex; justify-content: space-between; gap: 18px; align-items: start; }
+.scene-scale span, .scene-heading > div > span { color: #e5c579; font: 700 .63rem/1.3 monospace; letter-spacing: .12em; }
+.scene-scale small { color: #87acc0; font: 600 .57rem/1.3 monospace; letter-spacing: .08em; }
+.scene-heading h3 { margin: 7px 0 0; color: #f2eee5; font: 400 clamp(1.45rem, 2.2vw, 2rem)/1.05 var(--story-serif); }
+.scene-heading > a { max-width: 190px; color: #a8d2e6; font: .59rem/1.45 monospace; text-align: right; }
+.scale-key { margin: 16px 0 5px; color: #7898aa; font: 600 .53rem/1.4 monospace; letter-spacing: .08em; }
+.scene-earth { min-height: 285px; }
+.scene-earth > p { max-width: 410px; margin: 26px 0 0; color: #aebdc5; font-size: .78rem; line-height: 1.65; }
+.earth-origin { position: relative; display: inline-flex; align-items: center; gap: 12px; margin-top: 28px; padding: 9px 14px 9px 9px; border: 1px solid #9adfff75; border-radius: 40px; background: #06131dee; }
+.earth-origin > i { width: 54px; height: 54px; border: 2px solid #d8f5ff; border-radius: 50%; background: radial-gradient(circle at 32% 34%, #83d47d 0 12%, transparent 13%), radial-gradient(circle at 65% 66%, #4fb875 0 18%, transparent 19%), radial-gradient(circle at 40% 58%, #3c8fc8 0 52%, #173f70 74%); box-shadow: 0 0 0 8px #72bde51a, 0 0 30px #72bde56b; }
+.earth-origin > span { display: grid; }
+.earth-origin strong { color: #d4f2ff; font: 700 .68rem/1.3 monospace; letter-spacing: .08em; }
+.earth-origin small { margin-top: 4px; color: #92b6c8; font: .55rem/1.3 monospace; }
+
+.system-canvas { position: relative; height: 250px; overflow: visible; border-top: 1px solid #ffffff12; background: radial-gradient(ellipse at center, #17314842, transparent 68%); }
+.diagram-body, .diagram-sun, .voyager-sun { position: absolute; display: grid; place-items: center; border-radius: 50%; }
+.diagram-body > i, .diagram-sun > i, .voyager-sun > i { position: absolute; inset: 0; border-radius: inherit; }
+.diagram-body > small, .diagram-sun > small, .voyager-sun > small { position: absolute; top: calc(100% + 7px); color: #abc2cf; font: 700 .51rem/1.2 monospace; letter-spacing: .08em; }
+.moon-system .diagram-earth { left: 24px; top: 98px; width: 48px; height: 48px; }
+.diagram-earth > i, .mars-earth > i, .webb-earth > i { border: 1px solid #d8f5ff; background: radial-gradient(circle at 38% 35%, #72ca76 0 20%, transparent 22%), #367eb1; box-shadow: 0 0 18px #69c9ff74; }
+.moon-orbit { position: absolute; left: 43px; top: 66px; width: 185px; height: 115px; border: 1px solid #8fbcd45c; border-radius: 50%; transform: rotate(-10deg); }
+.moon-system .diagram-moon { left: 150px; top: 43px; width: 156px; height: 156px; }
+.diagram-moon > i { border: 1px solid #e8e8df91; background: radial-gradient(circle at 31% 29%, #696d70 0 7%, transparent 8%), radial-gradient(circle at 67% 62%, #565a5d 0 10%, transparent 11%), radial-gradient(circle at 44% 73%, #85888a 0 6%, transparent 7%), linear-gradient(135deg, #deddd6, #85888b 68%, #3d4247); box-shadow: inset -22px -14px 32px #000b, 0 0 27px #dce6eb22; }
+.diagram-leaders, .mars-transfer, .voyager-outbound { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #b9d7e6a1; stroke-width: 1.4; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; pointer-events: none; }
+.mars-transfer { stroke: #eaa27699; stroke-dasharray: 6 6; }
+.transfer-arrow { fill: none; stroke-dasharray: 0; }
+.diagram-pin { position: absolute; z-index: 4; width: 15px; height: 15px; margin: 0; padding: 0; overflow: visible; border: 0; border-radius: 50%; color: inherit; background: transparent; }
+.diagram-pin > i { position: absolute; inset: 0; border: 2px solid #fff; border-radius: 50%; background: #f5d78a; box-shadow: 0 0 0 6px #f5d78a20, 0 0 15px #f5d78a; }
+.diagram-pin:hover > i, .diagram-pin:focus-visible > i { transform: scale(1.25); background: #fff; }
+.diagram-pin:focus-visible { outline: none; }
+.diagram-callout { position: absolute; display: grid; width: 158px; padding: 12px 13px; border: 1px solid #9eb9c76b; border-radius: 9px; background: #07131ded; box-shadow: 0 10px 30px #0009; text-align: left; backdrop-filter: blur(8px); }
+.diagram-callout strong { color: #f4eee2; font: 700 .71rem/1.25 Arial, sans-serif; }
+.diagram-callout small { margin-top: 4px; color: #91adbb; font: .51rem/1.35 monospace; letter-spacing: .04em; }
+.diagram-callout .route-stop-state { position: static; margin-top: 7px; color: #f2cf80; font: 700 .48rem/1.2 monospace; letter-spacing: .08em; }
+.diagram-pin.is-next-stop .diagram-callout { border-style: dashed; border-color: #a6dcf5; }
+.diagram-pin.is-current-stop .diagram-callout { border-color: #ebcd82; box-shadow: 0 0 28px #edc97124, 0 10px 30px #0009; }
+.diagram-pin.is-current-site > i { animation: current-site-pulse 1.4s ease-in-out infinite; }
+.diagram-pin.is-next-site > i { outline: 1px dashed #b8e7ff; outline-offset: 6px; }
+.moon-apollo { left: 236px; top: 79px; }
+.moon-apollo .diagram-callout { left: 111px; top: -38px; }
+.moon-surveyor { left: 264px; top: 151px; }
+.moon-surveyor .diagram-callout { left: 83px; top: -18px; }
+
+.mars-earth { left: 28px; top: 111px; width: 45px; height: 45px; }
+.diagram-mars { left: 242px; top: 48px; width: 150px; height: 150px; }
+.diagram-mars > i { border: 1px solid #f3a47e; background: radial-gradient(ellipse at 28% 68%, #843d2c 0 12%, transparent 13%), radial-gradient(ellipse at 67% 33%, #e99a69 0 17%, transparent 18%), radial-gradient(circle at 47% 52%, #a44e34 0 7%, transparent 8%), linear-gradient(135deg, #d9774e, #96402c 66%, #48231e); box-shadow: inset -22px -14px 34px #190707cc, 0 0 30px #e5784930; }
+.mars-ingenuity { left: 325px; top: 76px; }
+.mars-ingenuity .diagram-callout { left: 98px; top: -37px; }
+.mars-curiosity { left: 304px; top: 147px; }
+.mars-curiosity .diagram-callout { left: 119px; top: -13px; }
+
+.diagram-sun { left: 17px; top: 77px; width: 92px; height: 92px; }
+.diagram-sun > i, .voyager-sun > i { background: radial-gradient(circle at 42% 38%, #fff8c6, #ffd25a 27%, #e99127 64%, #9e3f18); box-shadow: 0 0 18px #ffd65c, 0 0 48px #eea33f6b; }
+.sun-earth-line { position: absolute; left: 105px; right: 89px; top: 122px; border-top: 1px dashed #f1d48871; }
+.webb-earth { left: 232px; top: 104px; width: 42px; height: 42px; }
+.l2-marker { position: absolute; left: 327px; top: 111px; display: grid; place-items: center; }
+.l2-marker > i { width: 16px; height: 16px; border: 1px solid #c9efff; border-radius: 50%; box-shadow: 0 0 15px #9edfff; }
+.l2-marker > small { position: absolute; top: 22px; color: #a7c7d6; font: 700 .5rem monospace; }
+.webb-pin { left: 368px; top: 114px; }
+.webb-pin > i { background: #f4ce67; transform: rotate(45deg); border-radius: 2px; }
+.webb-pin .diagram-callout { left: 45px; top: -35px; }
+.diagram-note { position: absolute; left: 199px; bottom: 3px; max-width: 275px; margin: 0; color: #809eae; font: .58rem/1.45 monospace; }
+
+.voyager-sun { left: 98px; top: 100px; width: 44px; height: 44px; }
+.solar-orbit, .heliopause { position: absolute; border: 1px solid #8fb9ce4a; border-radius: 50%; }
+.orbit-one { left: 73px; top: 74px; width: 94px; height: 94px; }
+.orbit-two { left: 45px; top: 46px; width: 150px; height: 150px; }
+.orbit-three { left: 16px; top: 17px; width: 208px; height: 208px; }
+.heliopause { left: -2px; top: 0; width: 244px; height: 244px; border-color: #82c8e88a; box-shadow: 0 0 24px #65bce522; }
+.heliopause small { position: absolute; right: -50px; top: 14px; color: #75a8bf; font: 700 .48rem monospace; letter-spacing: .06em; }
+.voyager-pin { left: 394px; top: 54px; }
+.voyager-pin > i { background: #b5e5ff; box-shadow: 0 0 0 6px #b5e5ff1c, 0 0 17px #b5e5ff; }
+.voyager-pin .diagram-callout { left: 29px; top: -21px; }
+
+body.motion-reduced .scroll-journey-ship { transition: none; }
+body.motion-reduced .scroll-ship-sprite, body.motion-reduced .diagram-pin > i { animation: none; }
 .location-map-credit { margin: 10px 0 0; color: #82939e; }
 .location-map-credit a { color: #a9c6d5; }
 
@@ -3347,20 +3446,47 @@ body[data-exhibit="voyager"] {
   }
   .location-map { padding: 18px 14px; }
   .location-map-heading { grid-template-columns: 1fr; gap: 11px; }
-  .location-map-field { min-height: 0; background-position: 56% center; }
-  .location-journey { grid-template-columns: 1fr; gap: 22px; min-height: 0; padding: 22px 14px 24px; }
-  .journey-route-line { left: 54px; right: auto; top: 35px; bottom: 35px; border-top: 0; border-left: 2px dotted #b7cce380; }
-  .earth-marker { margin: 0; padding: 8px 10px 8px 21px; }
-  .frontier-heading { min-height: 0; margin-left: 39px; padding: 11px 12px 10px; }
-  .frontier-stops { grid-template-columns: 1fr; gap: 9px; margin: 10px 0 0 29px; }
-  .frontier-site-map { height: 245px; margin-left: 30px; }
-  .frontier-site-map .frontier-stops { top: 20px; right: 0; bottom: 20px; left: 47%; margin: 0; gap: 17px; }
-  .frontier-site-map .location-dot { min-height: 0; }
-  .planet-orb { top: 52px; }
-  .deep-space-diagram { top: 45px; }
-  .location-dot, .location-dot:hover, .location-dot:focus-visible { min-height: 62px; transform: none; }
-  .journey-ship { left: -41px; bottom: calc(50% - 15px); }
-  .earth-marker .journey-ship { left: -7px; }
+  .location-map-field { min-height: 3100px; background-position: 56% center; }
+  .journey-scroll-route { right: auto; width: 58px; }
+  .scroll-journey-ship { width: 52px; height: 31px; transform-origin: 26px 15px; }
+  .journey-scenes { grid-template-rows: repeat(5, minmax(560px, 1fr)); gap: 20px; min-height: 3100px; padding: 54px 9px 54px 56px; }
+  .journey-scene, .journey-scene:nth-child(even), .journey-scene:nth-child(odd) { justify-self: stretch; width: 100%; min-height: 455px; padding: 19px 14px; }
+  .scene-earth { min-height: 320px; }
+  .scene-heading { display: grid; gap: 9px; }
+  .scene-heading > a { max-width: none; text-align: left; }
+  .scene-heading h3 { font-size: 1.42rem; }
+  .system-canvas { height: 275px; }
+  .diagram-callout { width: 94px; padding: 9px 8px; }
+  .diagram-callout strong { font-size: .62rem; }
+  .diagram-callout small { font-size: .46rem; }
+  .moon-system .diagram-earth { left: 0; top: 112px; width: 38px; height: 38px; }
+  .moon-orbit { left: 16px; top: 76px; width: 112px; height: 94px; }
+  .moon-system .diagram-moon { left: 63px; top: 58px; width: 112px; height: 112px; }
+  .moon-apollo { left: 104px; top: 86px; }
+  .moon-apollo .diagram-callout { left: 47px; top: -39px; }
+  .moon-surveyor { left: 133px; top: 142px; }
+  .moon-surveyor .diagram-callout { left: 18px; top: -2px; }
+  .mars-earth { left: 0; top: 117px; width: 38px; height: 38px; }
+  .diagram-mars { left: 67px; top: 59px; width: 112px; height: 112px; }
+  .mars-ingenuity { left: 126px; top: 83px; }
+  .mars-ingenuity .diagram-callout { left: 34px; top: -40px; }
+  .mars-curiosity { left: 111px; top: 137px; }
+  .mars-curiosity .diagram-callout { left: 49px; top: 1px; }
+  .diagram-sun { left: 0; top: 92px; width: 58px; height: 58px; }
+  .sun-earth-line { left: 55px; right: 28px; top: 121px; }
+  .webb-earth { left: 88px; top: 102px; width: 38px; height: 38px; }
+  .l2-marker { left: 145px; top: 110px; }
+  .webb-pin { left: 176px; top: 114px; }
+  .webb-pin .diagram-callout { left: -89px; top: 30px; width: 79px; }
+  .diagram-note { left: 73px; bottom: 7px; max-width: 154px; font-size: .52rem; }
+  .voyager-sun { left: 45px; top: 111px; width: 36px; height: 36px; }
+  .orbit-one { left: 27px; top: 92px; width: 74px; height: 74px; }
+  .orbit-two { left: 8px; top: 73px; width: 112px; height: 112px; }
+  .orbit-three { left: -10px; top: 55px; width: 148px; height: 148px; }
+  .heliopause { left: -20px; top: 45px; width: 168px; height: 168px; }
+  .heliopause small { right: -36px; }
+  .voyager-pin { left: 174px; top: 70px; }
+  .voyager-pin .diagram-callout { left: 14px; top: -24px; width: 80px; }
   .moon-panel { width: calc(100% - 18px); max-height: 92vh; padding: 22px 16px; }
   .moon-panel .dialog-top { top: -22px; margin: -22px -16px 0; padding: 16px; }
   .moon-story-grid { grid-template-columns: 1fr; }

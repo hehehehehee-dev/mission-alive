@@ -35,11 +35,14 @@ test("location strip routes four training machines and only two Moon stories", (
   assert.deepEqual(journeyStops, ["earth", "apollo17", "surveyor3", "curiosity", "ingenuity", "webb", "voyager"]);
   assert.equal((markup.match(/data-journey-stop=/g) || []).length, 7);
   assert.equal((markup.match(/data-visual-stop=/g) || []).length, 7);
-  assert.equal((markup.match(/class="site-connectors"/g) || []).length, 3);
-  assert.ok(markup.includes('class="planet-orb moon-orb"'));
-  assert.ok(markup.includes('class="planet-orb mars-orb"'));
-  assert.ok(markup.includes('class="deep-space-diagram"'));
-  assert.equal((markup.match(/data-replay-journey/g) || []).length, 1);
+  assert.equal((markup.match(/class="journey-scene /g) || []).length, 5);
+  assert.ok(markup.includes('class="journey-scroll-route"'));
+  assert.ok(markup.includes('class="journey-path-line"'));
+  assert.ok(markup.includes('class="system-canvas moon-system"'));
+  assert.ok(markup.includes('class="system-canvas mars-system"'));
+  assert.ok(markup.includes('class="system-canvas webb-system"'));
+  assert.ok(markup.includes('class="system-canvas voyager-system"'));
+  assert.ok(!markup.includes("data-replay-journey"));
   assert.equal((markup.match(/data-map-exhibit=/g) || []).length, 4);
   assert.equal((markup.match(/data-map-moon=/g) || []).length, 2);
   assert.deepEqual(
@@ -55,18 +58,21 @@ test("location strip routes four training machines and only two Moon stories", (
   const mars = markup.indexOf('data-frontier="mars"');
   const deepSpace = markup.indexOf('data-frontier="deep-space"');
   assert.ok(moon > -1 && moon < mars && mars < deepSpace);
-  assert.equal((markup.match(/class="earth-marker"/g) || []).length, 1);
-  const earth = markup.match(/<div class="earth-marker"[\s\S]*?<\/div>/)?.[0] || "";
+  assert.equal((markup.match(/class="earth-origin"/g) || []).length, 1);
+  const earth = markup.match(/<div class="earth-origin"[\s\S]*?<\/div>/)?.[0] || "";
   assert.ok(earth.includes("YOU ARE HERE"));
   assert.ok(!earth.includes("data-map-"));
   assert.ok(!earth.includes("<button"));
   for (const label of [
     "≈ 384,400 km from Earth",
     "≈ 7 months by spacecraft",
-    "Webb · ≈ 1.5 million km · Sun–Earth L2",
-    "Voyager 1 · Almost one light-day from Earth",
+    "≈ 1.5 million km from Earth",
+    "Almost one light-day from Earth",
   ]) assert.ok(markup.includes(label), label);
-  assert.ok(markup.includes("journey-route-line"));
+  assert.ok(markup.includes("journey-path-line"));
+  assert.ok(markup.includes("Earth is the origin"));
+  assert.ok(markup.includes("Sun, Earth, then L2"));
+  assert.ok(markup.includes("L2 and Webb are on the side of Earth away from the Sun"));
   assert.ok(markup.includes("journey-progress-status"));
   for (const place of ["TAURUS–LITTROW", "OCEANUS PROCELLARUM", "GALE CRATER", "JEZERO CRATER", "SUN–EARTH L2", "INTERSTELLAR SPACE"]) assert.ok(markup.includes(place));
   assert.ok(markup.includes("Background: Webb's First Deep Field · NASA, ESA, CSA, STScI"));
