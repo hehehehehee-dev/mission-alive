@@ -48,12 +48,12 @@ test("range sentence requires a positive VGR1 range and counts stay specific to 
   assert.equal(state.observedAt, new Date(now).toISOString());
 });
 
-test("no active signal, stale feed, missing data, and old assignment-only snapshots use the exact quiet fallback", () => {
-  for (const snapshot of [null, {}, parseDsnNow(feed(`<dish name="DSS43">${target}</dish>`), config, now), parseDsnNow(feed(`<dish name="DSS43">${downSignal}${target}</dish>`, now - 180_000), config, now), {voyager1:[{station:"Canberra", observedAt:new Date(now).toISOString(), antennas:["DSS43"], rangeKm:25800000000}]}]) {
-    assert.deepEqual(voyagerContactState(snapshot, now).messages, ["No one is listening right now. I'm still talking."]);
+test("missing or stale data cannot claim that nobody is listening", () => {
+  for (const snapshot of [null, {}, { live: false, observedAt: new Date(now).toISOString(), voyager1: [] }, parseDsnNow(feed(`<dish name="DSS43">${downSignal}${target}</dish>`, now - 180_000), config, now), {voyager1:[{station:"Canberra", observedAt:new Date(now).toISOString(), antennas:["DSS43"], rangeKm:25800000000}]}]) {
+    assert.deepEqual(voyagerContactState(snapshot, now).messages, ["Live DSN contact is unavailable. Please check again later."]);
   }
   const snapshot = parseDsnNow(feed(`<dish name="DSS43">${downSignal}${target}</dish>`), config, now);
-  assert.deepEqual(voyagerContactState(snapshot, now + 180_000).messages, ["No one is listening right now. I'm still talking."]);
+  assert.deepEqual(voyagerContactState(snapshot, now + 180_000).messages, ["Live DSN contact is unavailable. Please check again later."]);
   assert.match(voyagerContactMarkup(), /Live data: NASA Deep Space Network/);
   assert.doesNotMatch(voyagerContactMarkup(), /aria-live|role="status"/);
 });
@@ -166,7 +166,7 @@ test("a failed or hanging browser request removes current contact, recovers, age
   await flush();
   assert.equal(requestSignals[1].aborted, true);
   assert.equal(timeouts.size, 0);
-  assert.equal(renderedMessage(), "No one is listening right now. I'm still talking.", "a failed refresh cannot reuse even a recent contact");
+  assert.equal(renderedMessage(), "Live DSN contact is unavailable. Please check again later.", "a failed refresh cannot reuse even a recent contact");
   assert.equal(announcements.length, 2);
 
   poll();
@@ -181,7 +181,7 @@ test("a failed or hanging browser request removes current contact, recovers, age
   currentTime += 120_001;
   poll();
   assert.equal(requestCount, 4, "polling does not overlap a pending request");
-  assert.equal(renderedMessage(), "No one is listening right now. I'm still talking.");
+  assert.equal(renderedMessage(), "Live DSN contact is unavailable. Please check again later.");
   assert.equal(announcements.length, 4);
   ui.dispose();
   await flush();

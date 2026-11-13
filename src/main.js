@@ -1040,6 +1040,7 @@ function bindControls() {
       state.programRevision += 1;
       resetRoverSimulation();
       updateRoverProgramUI();
+      if (!state.program.length) $('[data-command="move"]')?.focus();
     };
     $("#clear-program").onclick = () => {
       if (state.programRunning) return;
@@ -1047,6 +1048,7 @@ function bindControls() {
       state.programRevision += 1;
       resetRoverSimulation();
       updateRoverProgramUI();
+      $('[data-command="move"]')?.focus();
     };
     $("#free-explore").onclick = toggleFreeExplore;
     $$("[data-drive]").forEach((button) => {
@@ -1161,7 +1163,16 @@ function bindControls() {
         );
         $("#flight-computer-feedback").textContent = onboard
           ? "Correct. Upload the plan; the onboard computer can react before a radio command arrives."
-          : frictionFeedback.failure("ingenuity", "A radio reply would arrive minutes later. Try the onboard computer for second-by-second corrections.");
+          : "A radio reply would arrive minutes later. Try the onboard computer for second-by-second corrections.";
+        if (!onboard) {
+          const hint = $("#flight-computer-feedback").textContent;
+          const line = frictionFeedback.failure("ingenuity", hint);
+          if (line !== hint) {
+            const voice = document.createElement('span');
+            voice.textContent = line;
+            $("#flight-computer-feedback").prepend(voice, document.createTextNode(' '));
+          }
+        }
         $("#link-test").disabled = !onboard || !state.landingSite;
       };
     });

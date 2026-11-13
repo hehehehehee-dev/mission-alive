@@ -149,6 +149,9 @@ body.is-warping #app { filter: none; }
 .star-direction-pad [data-star-direction="down"] { grid-column: 2; grid-row: 3; }
 button[aria-disabled="true"] { opacity: .7; cursor: default; }
 .webb-star, .webb-wing-handle, .webb-focus-target, .webb-focus-field { box-shadow: none; }
+.webb-star:hover, .webb-star:active { background: radial-gradient(circle at 45% 40%, #fff 0 15%, #b7ddff 45%, #6db1e5 100%); }
+.webb-star.is-focused:hover { background: #f4d88c; }
+.webb-wing-handle:hover { background: linear-gradient(145deg, #efcf82, #a97428); }
 .webb-step-nav { flex-wrap: wrap; }
 .webb-step-nav button { white-space: normal; font-size: .875rem; }
 .curiosity-view-tabs { flex-wrap: wrap; }

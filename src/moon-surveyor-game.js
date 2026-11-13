@@ -182,7 +182,6 @@ export function mountSurveyorGame(root) {
   let force = 1;
   let padWidth = 1;
   let log = [];
-  let completed = false;
   let digs = { a: 0, b: 0, c: 0 };
   let disposed = false;
 
@@ -253,14 +252,12 @@ export function mountSurveyorGame(root) {
       return;
     }
     const action = button.dataset.surveyorAction;
-    if (action && action !== 'touchdown') { game.dataset.surveyorOutcome = 'ready'; completed = false; }
+    if (action && action !== 'touchdown') game.dataset.surveyorOutcome = 'ready';
     if (action === 'probe') {
       const result = evaluateSurveyorProbe(patchId, force);
       record(result, format(surveyorTextTemplates[7], { patch: surveyorCopy[patchCopy[patchId]], force, pressure: force, depth: number(result.depth) }));
       renderControls();
       announce(format(surveyorTextTemplates[3], { force, depth: number(result.depth) }));
-      force = force % 4 + 1;
-      game.querySelectorAll('[data-surveyor-force]').forEach(item => item.setAttribute('aria-pressed', String(Number(item.dataset.surveyorForce) === force)));
     } else if (action === 'trench') {
       digs[patchId] = Math.min(3, digs[patchId] + 1);
       const trench = find(`[data-surveyor-trench="${patchId}"]`);
@@ -281,14 +278,15 @@ export function mountSurveyorGame(root) {
       drawLanding(result);
       game.classList.remove('surveyor-touchdown'); void game.offsetWidth; game.classList.add('surveyor-touchdown');
       announceLines([format(surveyorTextTemplates[9], { left: number(result.leftSink), right: number(result.rightSink), difference: number(result.difference) }), outcome, ...(!result.evidence.ready ? [surveyorCopy.incomplete] : [])]);
-      if (result.accepted && !completed) {
-        completed = true;
+      // Re-offer completion after any successful retest. The host owns the
+      // persistent credential and prevents awarding it twice.
+      if (result.accepted) {
         find('[data-surveyor-ending]').hidden = false;
         const EventClass = game.ownerDocument.defaultView?.CustomEvent || globalThis.CustomEvent;
         if (EventClass) root.dispatchEvent(new EventClass('surveyor-soil-success', { bubbles: true }));
       }
     } else if (action === 'restart') {
-      patchId = 'a'; force = 1; padWidth = 1; log = []; completed = false;
+      patchId = 'a'; force = 1; padWidth = 1; log = [];
       digs = { a: 0, b: 0, c: 0 };
       find('[data-surveyor-log]').replaceChildren();
       find('[data-surveyor-empty-log]').hidden = false;

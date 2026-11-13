@@ -1,13 +1,14 @@
 import { getLanguage } from "./i18n.js";
 const SOURCE_LABEL = "Live data: NASA Deep Space Network";
 const NO_CONTACT = "No one is listening right now. I'm still talking.";
+const CONTACT_UNAVAILABLE = "Live DSN contact is unavailable. Please check again later.";
 const CONTACT_MAX_AGE_MS = 2 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 15_000;
 const STATIONS = new Set(["Goldstone", "Madrid", "Canberra"]);
 
 export function voyagerContactMarkup() {
   return `<aside class="voyager-contact" aria-label="Voyager 1 Deep Space Network contact">
-    <div data-voyager-contact-messages><p>${NO_CONTACT}</p></div>
+    <div data-voyager-contact-messages><p>${CONTACT_UNAVAILABLE}</p></div>
     <p class="fine voyager-contact-source" data-voyager-contact-source>${SOURCE_LABEL}</p>
   </aside>`;
 }
@@ -28,8 +29,10 @@ export function voyagerContactState(snapshot, now = Date.now()) {
     messages.push(message);
   }
   const observed = Date.parse(snapshot?.observedAt);
+  const freshFeed = snapshot?.live === true && Number.isFinite(observed)
+    && now - observed <= CONTACT_MAX_AGE_MS && now - observed >= -30_000;
   return {
-    messages: messages.length ? messages : [NO_CONTACT],
+    messages: messages.length ? messages : [freshFeed ? NO_CONTACT : CONTACT_UNAVAILABLE],
     observedAt: Number.isFinite(observed) ? new Date(observed).toISOString() : null,
   };
 }
@@ -43,7 +46,7 @@ export function mountVoyagerContact(container, { onAnnounce = () => {}, fetcher 
   let disposed = false;
   let busy = false;
   let snapshot = null;
-  let previousMessage = NO_CONTACT;
+  let previousMessage = CONTACT_UNAVAILABLE;
 
   function render() {
     if (disposed) return;

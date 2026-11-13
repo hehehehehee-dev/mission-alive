@@ -45,6 +45,10 @@ export function mountMoonLabs(dialog, { isStamped = () => false, onEarned = () =
     slot.hidden = false;
     slot.innerHTML = `<div class="moon-transmission"><p class="eyebrow">MISSION STAMP EARNED · FINAL TRANSMISSION</p><h3>${trainingMissions[id].name}</h3><blockquote>${moonTransmissions[id]}</blockquote><p class="fine">Original Mission Alive narration, based on the NASA sources below.</p><button type="button" data-moon-continue>Continue training →</button></div>`;
     slot.querySelector('[data-moon-continue]').onclick = () => { cancel(); onContinue(); };
+    const heading = slot.querySelector('h3');
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    slot.scrollIntoView({ block: 'nearest', behavior: 'instant' });
     if (fresh && isComplete()) finaleTimer = setTimeout(() => { if (dialog.open && isComplete()) onContinue(); }, 18000);
   };
   const offerStamp = id => {

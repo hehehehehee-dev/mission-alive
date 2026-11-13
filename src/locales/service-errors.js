@@ -1,5 +1,6 @@
 // Public classroom/API errors, plus browser network errors shown by the UI.
 const rows = [
+ ["Live DSN contact is unavailable. Please check again later.", "El contacto en directo con la DSN no está disponible. Vuelve a comprobarlo más tarde.", "Chưa có dữ liệu liên lạc DSN trực tiếp. Vui lòng kiểm tra lại sau."],
  ["Failed to fetch", "No se pudo conectar. Comprueba la conexión e inténtalo de nuevo.", "Không thể kết nối. Kiểm tra mạng rồi thử lại."],
  ["Load failed", "No se pudo cargar. Comprueba la conexión e inténtalo de nuevo.", "Không thể tải. Kiểm tra mạng rồi thử lại."],
  ["NetworkError when attempting to fetch resource.", "No se pudo conectar. Comprueba la conexión e inténtalo de nuevo.", "Không thể kết nối. Kiểm tra mạng rồi thử lại."],
