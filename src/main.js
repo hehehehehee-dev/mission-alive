@@ -723,7 +723,8 @@ storyDialog.addEventListener('close', () => {
 $("#story-reopen").onclick = () => openExhibitStory(current);
 $("#start-exploring").onclick = () => {
   storyDialog.close();
-  $("#begin-challenge").click();
+  // Let the dialog restore focus before starting the smooth scroll.
+  requestAnimationFrame(() => $("#begin-challenge").click());
 };
 
 function renderLobby() {
@@ -2447,7 +2448,6 @@ async function mountViewer(id, token, view = null) {
 }
 
 async function render(id) {
-  if (!reduce) $('.exhibit').animate?.([{opacity:.25}, {opacity:1}], {duration:240, easing:'ease-out'});
   $('.skip').href = '#controls';
   $('.skip').textContent = 'Skip to training controls';
   disposeOpenData();

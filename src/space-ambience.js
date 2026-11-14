@@ -184,8 +184,8 @@ export function createSpaceAmbience(canvas) {
       const previousInverse = 1 / Math.max(previousZ, 0.04);
       const previousX = centerX + star.x * projection * previousInverse;
       const previousY = centerY + star.y * projection * previousInverse;
-      const twinkle = reduced ? 0.78 : 0.68 + Math.sin(now * 0.002 + star.phase) * 0.22;
-      const proximity = Math.min(1, 0.16 + inverseZ * 0.12);
+      const twinkle = reduced ? 0.78 : 0.60 + Math.sin(now * 0.0015 + star.phase) * 0.38;
+      const proximity = Math.min(1, 0.36 + inverseZ * 0.18);
       const alpha = Math.max(0.12, twinkle * proximity);
       const color =
         star.warmth > 0.88

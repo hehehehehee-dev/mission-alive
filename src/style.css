@@ -2293,7 +2293,7 @@ body.motion-reduced .completion-seal { transform: none; }
   color: #f4ede3;
   font: italic 1.04rem/1.55 var(--story-serif);
 }
-.final-transmission .mission-gift { margin: 15px 0 0; color: #eecf98; font: 0.95rem/1.6 var(--story-serif); }
+.final-transmission .mission-gift, .moon-transmission .mission-gift { margin: 15px 0 0; color: #eecf98; font: 0.95rem/1.6 var(--story-serif); }
 .transmission-replay { margin-top: 14px; }
 footer {
   margin: 0 4vw;

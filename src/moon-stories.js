@@ -11,6 +11,7 @@ export const moonStories = Object.freeze({
       ["WHAT IT DID", "Across three moonwalks, it helped the crew survey the valley, set up experiments, and collect lunar material."],
       ["WHERE IT IS NOW", "Cernan parked it at its final spot so its television camera could show the lunar module lifting off. It is still there on the Moon."],
     ]),
+    callback: "On the same Moon, Surveyor 3 is still standing where Apollo 12 visited it.",
     sources: Object.freeze([
       ["NASA · Apollo 17 mission details", "https://www.nasa.gov/missions/apollo/apollo-17-mission-details/"],
       ["NASA · Apollo 17 at Taurus-Littrow", "https://www.nasa.gov/history/50-years-ago-apollo-17-lands-at-taurus-littrow/"],
@@ -32,6 +33,7 @@ export const moonStories = Object.freeze({
       ["WHAT IT DID", "It sent more than 6,000 pictures and used a scoop to examine lunar soil."],
       ["WHERE IT IS NOW", "Apollo 12 astronauts visited it in 1969 and brought its television camera and soil scoop to Earth for study. Most of Surveyor 3 remains on the Moon."],
     ]),
+    callback: "On the same Moon, Apollo 17's rover is still parked where its crew left it.",
     sources: Object.freeze([
       ["NASA · Humans and machine meet on the Moon", "https://science.nasa.gov/solar-system/moon/footpads-and-footprints-humans-and-machine-meet-on-the-moon/"],
       ["NASA JPL · Surveyor 3 camera returned", "https://www.jpl.nasa.gov/blog/2012/1/surveyor-3-camera-returned-from-the-moon"],
@@ -206,6 +208,7 @@ const storyCard = (id, story) => `<article class="module-story-card moon-story-c
       <span class="eyebrow">${story.year}</span>
       <span class="moon-story-title" id="moon-${id}-title" role="heading" aria-level="3" tabindex="-1">${story.name}</span>
       <span class="moon-story-facts">${story.facts.map(([label, copy]) => `<span><strong>${label}</strong><span>${copy}</span></span>`).join("")}</span>
+      <span class="moon-story-callback">${story.callback}</span>
       <span class="moon-reveal-prompt">Tap to reveal one more Moon fact →</span>
     </span>
     <span class="moon-story-face moon-story-back" id="moon-${id}-reveal" hidden>
@@ -222,7 +225,7 @@ const storyCard = (id, story) => `<article class="module-story-card moon-story-c
 
 export function moonPanelMarkup() {
   return `<dialog class="moon-panel" id="moon-panel" aria-labelledby="moon-panel-title">
-    <div class="dialog-top"><p class="eyebrow">MOON TRAINING · TWO MISSIONS · TWO STAMPS</p><button type="button" id="moon-panel-close" aria-label="Close Moon stories">Close</button></div>
+    <div class="dialog-top"><p class="eyebrow">MOON TRAINING · TWO MISSIONS · TWO STAMPS</p><button type="button" id="moon-panel-close" aria-label="Close Moon training">Close</button></div>
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
     <p class="moon-panel-intro">Your crew's voyage begins here. Repair a rover and investigate the ground. Earn two Moon stamps toward your six-mission certification.</p>
     ${moonLabMarkup()}
@@ -252,8 +255,8 @@ export function locationMapMarkup() {
           <div class="system-canvas moon-system">
             <div class="planet-globe moon-globe"><canvas data-globe="moon" role="img" aria-label="The Moon's near side, rendered from NASA LRO surface imagery"></canvas></div>
             <svg class="diagram-leaders" aria-hidden="true"><path data-leader="apollo17"/><path data-leader="surveyor3"/></svg>
-            <button class="diagram-pin moon-apollo" data-map-moon="apollo17" data-journey-stop="apollo17" data-visual-stop="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon story"><i></i><span class="diagram-callout"><strong>Apollo 17 LRV</strong><small>TAURUS–LITTROW · STORY</small></span></button>
-            <button class="diagram-pin moon-surveyor" data-map-moon="surveyor3" data-journey-stop="surveyor3" data-visual-stop="surveyor3" aria-label="Open Surveyor 3 Moon story"><i></i><span class="diagram-callout"><strong>Surveyor 3</strong><small>OCEANUS PROCELLARUM · STORY</small></span></button>
+            <button class="diagram-pin moon-apollo" data-map-moon="apollo17" data-journey-stop="apollo17" data-visual-stop="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon training"><i></i><span class="diagram-callout"><strong>Apollo 17 LRV</strong><small>TAURUS–LITTROW · TRAINING</small></span></button>
+            <button class="diagram-pin moon-surveyor" data-map-moon="surveyor3" data-journey-stop="surveyor3" data-visual-stop="surveyor3" aria-label="Open Surveyor 3 Moon training"><i></i><span class="diagram-callout"><strong>Surveyor 3</strong><small>OCEANUS PROCELLARUM · TRAINING</small></span></button>
           </div>
           <p class="planet-credit"><a href="https://svs.gsfc.nasa.gov/4720/" target="_blank" rel="noopener">Moon surface: NASA SVS / LRO ↗</a></p>
         </article>

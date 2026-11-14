@@ -8,6 +8,11 @@ export const moonTransmissions = {
   surveyor3: 'Most of me is still on the Moon. Apollo 12 came to visit me and brought my camera home. You pressed, measured, and looked beneath the surface before trusting the ground. Take that habit with you: look for evidence before you decide.',
 };
 
+export const moonGifts = {
+  apollo17: 'Apollo 17 LRV gave you resourcefulness.',
+  surveyor3: 'Surveyor 3 gave you evidence.',
+};
+
 export function moonLabMarkup() {
   return `<p class="moon-lab-intro">Two Moon missions. Build, investigate, and earn a stamp for each.</p>
     <div class="moon-lab-launches" role="group" aria-label="Moon training missions">
@@ -15,7 +20,7 @@ export function moonLabMarkup() {
       <button type="button" data-moon-play="surveyor3" aria-controls="moon-surveyor-lab" aria-pressed="false"><span>Surveyor 3</span><strong>Can this ground hold?</strong><small>Probe · compare · land</small><span aria-hidden="true">↗</span></button>
     </div>
     <section class="moon-lab-workspace" id="moon-lab-workspace" hidden>
-      <div class="moon-lab-toolbar"><button type="button" data-moon-back>← Back to Moon stories</button><p class="eyebrow">MOON TRAINING · EARN YOUR STAMP</p></div>
+      <div class="moon-lab-toolbar"><button type="button" data-moon-back>← Back to Moon training</button><p class="eyebrow">MOON TRAINING · EARN YOUR STAMP</p></div>
       <div id="moon-lrv-lab" hidden>${lrvGameMarkup()}
         <figure class="moon-real-history" id="moon-real-repair" hidden><img src="/assets/moon-apollo17-fender-repair.jpg" width="900" height="898" alt="Apollo 17 rover wheel with a replacement dust fender made from spare maps, clamps and duct tape." loading="lazy"><figcaption><h4>The real repair</h4><p>Apollo 17 astronauts made a replacement fender from spare maps, tape and clamps.</p><a href="https://science.nasa.gov/image-article/apod-2004-april-17-lunar-dust-and-duct-tape/" target="_blank" rel="noopener">Photograph: Apollo 17, NASA ↗</a></figcaption></figure>
       </div>
@@ -43,7 +48,7 @@ export function mountMoonLabs(dialog, { isStamped = () => false, onEarned = () =
   const finish = (id, fresh = false) => {
     const slot = dialog.querySelector(`[data-moon-stamp="${id}"]`);
     slot.hidden = false;
-    slot.innerHTML = `<div class="moon-transmission"><p class="eyebrow">MISSION STAMP EARNED · FINAL TRANSMISSION</p><h3>${trainingMissions[id].name}</h3><blockquote>${moonTransmissions[id]}</blockquote><p class="fine">Original Mission Alive narration, based on the NASA sources below.</p><button type="button" data-moon-continue>Continue training →</button></div>`;
+    slot.innerHTML = `<div class="moon-transmission"><p class="eyebrow">MISSION STAMP EARNED · FINAL TRANSMISSION</p><h3>${trainingMissions[id].name}</h3><blockquote>${moonTransmissions[id]}</blockquote><p class="mission-gift">${moonGifts[id]}</p><p class="fine">Original Mission Alive narration, based on the NASA sources below.</p><button type="button" data-moon-continue>Continue training →</button></div>`;
     slot.querySelector('[data-moon-continue]').onclick = () => { cancel(); onContinue(); };
     const heading = slot.querySelector('h3');
     heading.tabIndex = -1;
