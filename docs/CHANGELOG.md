@@ -4,11 +4,16 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
-### Aligned Moon machine views
+### 3D Moon challenges
 
-- Added lightweight procedural 3D reconstructions of the Apollo 17 LRV and Surveyor 3 to their dedicated mission pages, using one shared camera, lighting setup, stage size, and control pattern.
-- Added keyboard orbit/zoom/reset, reduced-motion behavior, offscreen rendering pause, WebGL fallback, and Spanish/Vietnamese interface copy.
-- Identified both models as simplified original Mission Alive reconstructions rather than NASA engineering models.
+- Moved the new 3D work into the playable Apollo 17 and Surveyor 3 challenges instead of keeping a separate decorative model viewer.
+- Apollo's controls now reshape a 3D map fender, and each dust test animates caught versus escaping particles around the rover wheel.
+- Surveyor's patch, probe, trench, footpad, and touchdown controls now update a 3D soil-and-lander simulation, including visible sinking and tilt.
+- Preserved the original SVG simulations as automatic WebGL fallbacks and kept every result available as accessible text.
+
+### Initial Moon model previews (superseded)
+
+- Added lightweight procedural previews for Apollo 17 LRV and Surveyor 3. These standalone viewers were replaced in the next change by 3D scenes inside the actual challenges, avoiding a repeated decorative step.
 
 ### Apollo 17 repair playtest fixes
 

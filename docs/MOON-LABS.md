@@ -2,11 +2,11 @@
 
 Apollo 17 LRV and Surveyor 3 have dedicated `#apollo17` and `#surveyor3` mission pages. Each page leads from a short sourced introduction through a machine view and an interactive challenge. Completing the challenge unlocks the normal stamp ceremony, so the two Moon missions contribute two of the six certification stamps.
 
-## Shared 3D machine view
+## 3D challenge layer
 
-Both Moon pages use the same procedural Three.js stage, camera framing, lighting, and ground footprint. Apollo 17 shows a simplified rover with four wheels, seats, frame, antenna, and equipment. Surveyor 3 shows a simplified lander body, tripod legs, footpads, camera, antenna, and sampler arm. These are original Mission Alive teaching reconstructions rather than NASA engineering models, and the visible caption says they are not to engineering scale.
+Both Moon challenges progressively enhance their original SVG teaching models with procedural Three.js scenes. Apollo 17's tool and geometry controls update a map fender beside a 3D rover wheel; running a dust test animates caught and escaping particles. Surveyor 3's patch, probe, digging, footpad, and touchdown controls update a 3D soil field and lander; touchdown visibly shows sinking and tilt. These are original Mission Alive teaching simulations rather than NASA engineering models.
 
-The canvas supports pointer orbiting plus keyboard turning, zoom, and reset. Slow auto-rotation stops after interaction and is disabled for reduced motion. Rendering pauses outside the viewport, pixel density is capped, and a textual fallback leaves the challenge fully playable if WebGL is unavailable.
+The canvases support pointer orbiting and keyboard turning/zoom. Native HTML controls remain the only required input, every result is repeated as text, motion is shortened when reduced motion is active, and the existing SVG models remain available automatically if WebGL cannot start or loses context.
 
 ## Apollo 17 LRV
 

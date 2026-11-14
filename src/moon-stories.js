@@ -229,10 +229,6 @@ export function moonPanelMarkup() {
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
     <p class="moon-panel-intro">Your crew's voyage begins here. Repair a rover and investigate the ground. Earn two Moon stamps toward your six-mission certification.</p>
     <div class="moon-route-summary" id="moon-route-summary" hidden><p class="eyebrow" id="moon-route-year"></p><p id="moon-route-purpose"></p><a id="moon-route-source" target="_blank" rel="noopener"></a></div>
-    <section class="moon-machine-view" aria-labelledby="moon-machine-view-title">
-      <div class="moon-machine-view-copy"><p class="eyebrow">3D MACHINE VIEW</p><h3 id="moon-machine-view-title">Meet the machine before training.</h3><p>Drag to orbit. When the model has focus, use ← → to turn, + − to zoom, or 0 to reset.</p></div>
-      <figure><div class="moon-machine-canvas" data-moon-machine-scene><div class="moon-machine-fallback" data-moon-model-fallback hidden><strong>3D view unavailable.</strong><span>The mission remains fully playable below.</span></div></div><figcaption>Original Mission Alive 3D reconstruction. Simplified for learning; not engineering scale.</figcaption></figure>
-    </section>
     ${moonLabMarkup()}
     <div class="moon-story-grid">${Object.entries(moonStories).map(([id, story]) => storyCard(id, story)).join("")}</div>
   </dialog>`;
@@ -318,37 +314,7 @@ export function mountMoonPanel(root, options = {}) {
   const labs = mountMoonLabs(dialog, options);
   let returnFocus = null;
   let routeExit = null;
-  let machineScene = null;
-  let machineSceneGeneration = 0;
-  const disposeMachineScene = () => {
-    machineSceneGeneration += 1;
-    machineScene?.dispose();
-    machineScene = null;
-    const host = dialog.querySelector('[data-moon-machine-scene]');
-    host?.classList.remove('is-fallback');
-    const fallback = host?.querySelector('[data-moon-model-fallback]');
-    if (fallback) fallback.hidden = true;
-  };
-  const mountMachineScene = async (id) => {
-    disposeMachineScene();
-    const generation = machineSceneGeneration;
-    const host = dialog.querySelector('[data-moon-machine-scene]');
-    if (!host) return;
-    try {
-      const { mountMoonMachineScene } = await import('./moon-machine-scene.js');
-      if (generation !== machineSceneGeneration || !dialog.classList.contains('is-route-page')) return;
-      machineScene = mountMoonMachineScene(host, id, {
-        reducedMotion: document.body.classList.contains('motion-reduced') || matchMedia('(prefers-reduced-motion: reduce)').matches,
-      });
-    } catch {
-      if (generation !== machineSceneGeneration) return;
-      host.classList.add('is-fallback');
-      const fallback = host.querySelector('[data-moon-model-fallback]');
-      if (fallback) fallback.hidden = false;
-    }
-  };
   const leaveRouteMode = () => {
-    disposeMachineScene();
     routeExit = null;
     dialog.classList.remove('is-route-page');
     closeButton.textContent = 'Close';
@@ -377,7 +343,6 @@ export function mountMoonPanel(root, options = {}) {
     routeExit();
   });
   dialog.addEventListener("close", () => {
-    disposeMachineScene();
     if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
     returnFocus = null;
   });
@@ -416,7 +381,6 @@ export function mountMoonPanel(root, options = {}) {
       source.textContent = `${story.sources[0][0]} ↗`;
       dialog.querySelector('#moon-route-summary').hidden = false;
       if (!dialog.open) dialog.showModal();
-      void mountMachineScene(id);
       labs.play(id);
       dialog.scrollTop = 0;
       return true;

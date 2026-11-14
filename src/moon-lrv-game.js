@@ -284,7 +284,7 @@ export function lrvGameMarkup() {
     <header class="lrv-heading"><p class="eyebrow">${copy.eyebrow}</p><h3 id="${id}-title">${copy.title}</h3><p>${copy.introduction}</p></header>
     ${quickStartMarkup('apollo17')}
     ${whyMarkup(`<p>${copy.instructions}</p><p>${copy.simulation}</p><p>${copy.dimensions}</p>`)}
-    <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p>${svgMarkup(initial)}<figcaption>${copy.diagramCaption}</figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>
+    <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p><div class="moon-challenge-canvas" data-lrv-challenge-3d></div><div class="moon-challenge-2d">${svgMarkup(initial)}</div><figcaption><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${copy.diagramCaption}</span></figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>
     <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><div class="lrv-tool-tray" role="group" aria-label="Repair tools"><button type="button" data-lrv-tool="maps" aria-pressed="false">${copy.maps}</button><button type="button" data-lrv-tool="tape" aria-pressed="false">${copy.tape}</button><button type="button" data-lrv-tool="clamps" aria-pressed="false">${copy.clamps}</button></div><p data-lrv-tool-status role="status">${copy.toolsReady}</p><p class="lrv-control-help">${copy.attachmentHelp}</p></fieldset>
     <fieldset class="lrv-geometry"><legend>${copy.geometry}</legend><p class="lrv-model-dimensions">${copy.dimensions}</p>
     ${controlMarkup(id, "length", copy.length, copy.lengthHelp, copy.decreaseLength, copy.increaseLength)}
@@ -408,6 +408,7 @@ export function mountLrvGame(root) {
   let trials = [];
   let trialNumber = 0;
   let disposed = false;
+  let challengeScene = null;
   const controls = Object.fromEntries(Object.keys(LRV_CONTROL_LIMITS).map((key) => [key, find(`[data-lrv-control="${key}"]`)]));
   let dragging = false;
   const svg = find('.lrv-workshop-svg');
@@ -417,6 +418,11 @@ export function mountLrvGame(root) {
   const attachmentResult = find("[data-lrv-attachment-result]");
   const status = find("[data-lrv-status]");
   const measures = ["dust", "clearance", "attachment"].map((key) => find(`[data-lrv-measure="${key}"]`));
+  void import('./moon-challenge-scenes.js').then(({ mountLrvChallengeScene }) => {
+    if (disposed) return;
+    challengeScene = mountLrvChallengeScene(find('[data-lrv-challenge-3d]'));
+    if (challengeScene) { workshop.classList.add('has-3d-challenge'); challengeScene.update({ configuration, result: evaluateLrvRepair(configuration) }); }
+  }).catch(() => {});
 
   const draw = (result = evaluateLrvRepair(configuration), statusText = copy.changedStatus) => {
     if (disposed) return;
@@ -450,6 +456,7 @@ export function mountLrvGame(root) {
       verdict.textContent = result.tested ? passed ? 'Pass' : 'Fail' : '';
     });
     status.textContent = statusText;
+    challengeScene?.update({ configuration, result });
   };
   const edit = (changes) => {
     configuration = normalizeLrvConfiguration({ ...configuration, ...changes });
@@ -487,6 +494,7 @@ export function mountLrvGame(root) {
       find("[data-lrv-history-empty]").hidden = true;
       find("[data-lrv-history-wrap]").hidden = false;
       draw(result, lrvRepairHint(result));
+      challengeScene?.test(result);
       workshop.classList.remove('lrv-testing');
       void workshop.offsetWidth;
       workshop.classList.add('lrv-testing');
@@ -529,6 +537,7 @@ export function mountLrvGame(root) {
   return {
     dispose() {
       disposed = true;
+      challengeScene?.dispose();
       workshop.removeEventListener("input", onInput);
       workshop.removeEventListener("change", onChange);
       workshop.removeEventListener("click", onClick);

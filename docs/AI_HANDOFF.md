@@ -7,9 +7,9 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `fix/nov14-leftover-retests` (ahead of `origin/main`; not pushed or deployed).
-- **Last change:** both dedicated Moon routes now include aligned procedural 3D machine views with shared framing, keyboard controls, reduced-motion behavior, offscreen pause, and WebGL fallback.
-- **Last verification:** `npm test` 126/126 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes.
-- **Not yet verified:** the new Apollo 17 and Surveyor 3 canvases, footer privacy dialog, and dedicated Moon pages in a real browser at desktop and about 390 px. The local browser surface and Edge headless capture were unavailable. Netlify headers need checking after a future deploy; the live site still runs an older build.
+- **Last change:** Apollo 17 and Surveyor 3 now use 3D scenes inside the challenges themselves. Apollo controls reshape the fender and animate dust; Surveyor controls drive patch selection, probing, trenching, footpad width, sinking, and tilt. The redundant standalone model viewer was removed.
+- **Last verification:** `npm test` 125/125 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes.
+- **Not yet verified:** the two new challenge canvases, footer privacy dialog, and dedicated Moon pages in a real browser at desktop and about 390 px. Netlify headers need checking after a future deploy; the live site still runs an older build.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
   - Ingenuity has five setup steps before lift-off and +10% power needs seven presses; consider fewer steps or a slider. Flight itself was not played (hidden browser pane paused animation).
@@ -208,6 +208,12 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Codex — `fix/nov14-leftover-retests`
+- **Commit:** Move Moon interactions into 3D challenge scenes
+- **Changed:** replaced the redundant standalone Moon model viewer with progressive 3D layers inside Apollo's fender/dust challenge and Surveyor's soil/landing challenge; synchronized existing controls and outcomes; retained SVG and text fallbacks, localization, keyboard orbit/zoom, and reduced-motion timing.
+- **Verified:** `npm test` 125/125; `npm run build`; `git diff --check`. Static regression confirms both challenges retain their 2D fallback and introduce no external asset.
+- **Left for next:** visually play both challenge scenes at desktop and about 390 px in EN/ES/VI; verify dust paths, probe travel, and failed/successful touchdown framing.
 
 ### 2026-11-14 — Codex — `fix/nov14-leftover-retests`
 - **Commit:** Add aligned 3D views to both Moon missions

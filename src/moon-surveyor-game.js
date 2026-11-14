@@ -158,7 +158,7 @@ export function surveyorGameMarkup() {
     ${quickStartMarkup('surveyor3')}
     ${whyMarkup(`<p>${c.intro}</p><p class="surveyor-disclaimer">${c.disclaimer}</p><p class="surveyor-model-label">${c.units}</p><p>${c.history} <a href="https://science.nasa.gov/mission/surveyor-3/" target="_blank" rel="noopener noreferrer">${c.historySource} ↗</a></p>`)}
     <fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}">${c[patchCopy[soil.id]]}</button>`).join('')}</div></fieldset>
-    <figure class="surveyor-figure">${soilIllustration(id)}<figcaption class="surveyor-model-label">${c.cutawayCaption}</figcaption></figure>
+    <figure class="surveyor-figure"><div class="moon-challenge-canvas" data-surveyor-challenge-3d></div><div class="moon-challenge-2d">${soilIllustration(id)}</div><figcaption class="surveyor-model-label"><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${c.cutawayCaption}</span></figcaption></figure>
     <div class="surveyor-investigation-grid"><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.investigate}</legend>
       <p class="surveyor-model-label">${c.force}</p><div class="surveyor-force-buttons" role="group" aria-label="${c.force}">${surveyorModel.forces.map((force) => `<button type="button" data-surveyor-force="${force}" aria-pressed="${force === 1}">${format(surveyorTextTemplates[1], { force })}</button>`).join('')}</div>
       <p class="surveyor-model-label">${c.probeArea}</p><button type="button" data-surveyor-action="probe">${c.press}</button><button type="button" data-surveyor-action="trench">${c.trench}</button>
@@ -186,6 +186,12 @@ export function mountSurveyorGame(root) {
   let log = [];
   let digs = { a: 0, b: 0, c: 0 };
   let disposed = false;
+  let challengeScene = null;
+  void import('./moon-challenge-scenes.js').then(({ mountSurveyorChallengeScene }) => {
+    if (disposed) return;
+    challengeScene = mountSurveyorChallengeScene(find('[data-surveyor-challenge-3d]'));
+    if (challengeScene) { game.classList.add('has-3d-challenge'); challengeScene.update({ patchId, padWidth, digs }); }
+  }).catch(() => {});
 
   const announce = (text) => { find('[data-surveyor-result]').textContent = text; };
   const announceLines = (lines) => {
@@ -214,6 +220,7 @@ export function mountSurveyorGame(root) {
     find('[data-probe-tip]').setAttribute('d', `M-12 ${probeY}h24`);
     game.querySelectorAll('[data-surveyor-soil]').forEach((panel) => panel.querySelector('[data-soil-outline]').setAttribute('stroke-width', panel.dataset.surveyorSoil === patchId ? '6' : '2'));
     game.querySelectorAll('[data-surveyor-trench]').forEach((trench) => trench.setAttribute('visibility', digs[trench.dataset.surveyorTrench] ? 'visible' : 'hidden'));
+    challengeScene?.update({ patchId, padWidth, digs });
   };
   const drawLanding = (result = null) => {
     const left = Math.min(55, (result?.leftSink || 0) * 20);
@@ -259,12 +266,14 @@ export function mountSurveyorGame(root) {
       const result = evaluateSurveyorProbe(patchId, force);
       record(result, format(surveyorTextTemplates[7], { patch: surveyorCopy[patchCopy[patchId]], force, pressure: force, depth: number(result.depth) }));
       renderControls();
+      challengeScene?.probe(result);
       announce(format(surveyorTextTemplates[3], { force, depth: number(result.depth) }));
     } else if (action === 'trench') {
       digs[patchId] = Math.min(3, digs[patchId] + 1);
       const trench = find(`[data-surveyor-trench="${patchId}"]`);
       trench.setAttribute('visibility', 'visible');
       trench.style.clipPath = `inset(0 ${100 - digs[patchId] * 100 / 3}% 0 0)`;
+      challengeScene?.trench(patchId, digs[patchId]);
       if (digs[patchId] < 3) { announce('Keep digging: three scoops reveal the layers.'); return; }
       record({ type: 'trench', patchId }, format(surveyorTextTemplates[8], { patch: surveyorCopy[patchCopy[patchId]] }));
       renderControls();
@@ -278,6 +287,7 @@ export function mountSurveyorGame(root) {
       const outcome = surveyorCopy[result.reason === 'evidence' ? 'stable' : result.reason];
       record(result, format(surveyorTextTemplates[10], { patch: surveyorCopy[patchCopy[patchId]], width: number(padWidth), area: number(result.area), pressure: number(result.pressure), left: number(result.leftSink), right: number(result.rightSink), outcome }));
       drawLanding(result);
+      challengeScene?.touchdown(result);
       game.classList.remove('surveyor-touchdown'); void game.offsetWidth; game.classList.add('surveyor-touchdown');
       announceLines([format(surveyorTextTemplates[9], { left: number(result.leftSink), right: number(result.rightSink), difference: number(result.difference) }), outcome, ...(!result.evidence.ready ? [surveyorCopy.incomplete] : [])]);
       // Re-offer completion after any successful retest. The host owns the
@@ -294,9 +304,10 @@ export function mountSurveyorGame(root) {
       find('[data-surveyor-empty-log]').hidden = false;
       find('[data-surveyor-ending]').hidden = true;
       renderControls(); drawLanding(); announce(surveyorCopy.reset);
+      challengeScene?.reset();
     }
   };
   game.addEventListener('click', onClick);
   renderControls(); drawLanding();
-  return { dispose() { disposed = true; game.removeEventListener('click', onClick); } };
+  return { dispose() { disposed = true; challengeScene?.dispose(); game.removeEventListener('click', onClick); } };
 }
