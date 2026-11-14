@@ -228,6 +228,7 @@ export function moonPanelMarkup() {
     <div class="dialog-top"><p class="eyebrow">MOON TRAINING · TWO MISSIONS · TWO STAMPS</p><button type="button" id="moon-panel-close" aria-label="Close Moon training">Close</button></div>
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
     <p class="moon-panel-intro">Your crew's voyage begins here. Repair a rover and investigate the ground. Earn two Moon stamps toward your six-mission certification.</p>
+    <div class="moon-route-summary" id="moon-route-summary" hidden><p class="eyebrow" id="moon-route-year"></p><p id="moon-route-purpose"></p><a id="moon-route-source" target="_blank" rel="noopener"></a></div>
     ${moonLabMarkup()}
     <div class="moon-story-grid">${Object.entries(moonStories).map(([id, story]) => storyCard(id, story)).join("")}</div>
   </dialog>`;
@@ -312,7 +313,15 @@ export function mountMoonPanel(root, options = {}) {
   const closeButton = root.querySelector("#moon-panel-close");
   const labs = mountMoonLabs(dialog, options);
   let returnFocus = null;
-  const close = () => dialog.close();
+  let routeExit = null;
+  const leaveRouteMode = () => {
+    routeExit = null;
+    dialog.classList.remove('is-route-page');
+    closeButton.textContent = 'Close';
+    dialog.querySelector('#moon-panel-title').textContent = 'Two machines still on the Moon';
+    dialog.querySelector('#moon-route-summary').hidden = true;
+  };
+  const close = () => routeExit ? routeExit() : dialog.close();
   closeButton.addEventListener("click", close);
   for (const card of root.querySelectorAll(".moon-story-card")) {
     const flip = card.querySelector(".moon-story-flip");
@@ -327,6 +336,11 @@ export function mountMoonPanel(root, options = {}) {
     });
   }
   dialog.addEventListener("click", (event) => { if (event.target === dialog) close(); });
+  dialog.addEventListener('cancel', (event) => {
+    if (!routeExit) return;
+    event.preventDefault();
+    routeExit();
+  });
   dialog.addEventListener("close", () => {
     if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
     returnFocus = null;
@@ -334,6 +348,7 @@ export function mountMoonPanel(root, options = {}) {
   return {
     dialog,
     play(id, trigger) {
+      leaveRouteMode();
       returnFocus = trigger || document.activeElement;
       if (!dialog.open) dialog.showModal();
       labs.play(id);
@@ -341,11 +356,31 @@ export function mountMoonPanel(root, options = {}) {
     },
     open(id, trigger) {
       if (!moonStories[id]) return false;
+      leaveRouteMode();
       returnFocus = trigger || document.activeElement;
       labs.showArchive();
       if (!dialog.open) dialog.showModal();
       dialog.scrollTop = 0;
       labs.launcher(id)?.focus({ preventScroll: true });
+      return true;
+    },
+    openRoute(id, onExit) {
+      const story = moonStories[id];
+      if (!story) return false;
+      routeExit = onExit;
+      returnFocus = null;
+      dialog.classList.add('is-route-page');
+      closeButton.textContent = '← Back to academy';
+      dialog.querySelector('#moon-panel-title').textContent = story.name;
+      dialog.querySelector('#moon-route-year').textContent = story.year;
+      dialog.querySelector('#moon-route-purpose').textContent = story.facts[1][1];
+      const source = dialog.querySelector('#moon-route-source');
+      source.href = story.sources[0][1];
+      source.textContent = `${story.sources[0][0]} ↗`;
+      dialog.querySelector('#moon-route-summary').hidden = false;
+      if (!dialog.open) dialog.showModal();
+      labs.play(id);
+      dialog.scrollTop = 0;
       return true;
     },
   };

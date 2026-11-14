@@ -390,10 +390,6 @@ let navigationPending = false;
 let queuedNavigation = null;
 async function navigateTo(id) {
   if (navigationPending) { queuedNavigation = id; return; }
-  if (id === 'apollo17' || id === 'surveyor3') {
-    moonPanel.play(id, document.activeElement);
-    return;
-  }
   const showPerspective = !!exhibits[id] && current !== id;
   if (reduce) {
     setRoute(id);
@@ -425,11 +421,19 @@ function setRoute(id) {
   }
   const target = `/#${id}`;
   if (`${location.pathname}${location.hash}` === target) {
-    id === "lobby" ? renderLobby() : render(id);
+    id === "lobby" ? renderLobby() : missionIds.slice(0, 2).includes(id) ? renderMoonRoute(id) : render(id);
     return;
   }
   history.pushState({ route: id }, "", target);
-  id === "lobby" ? renderLobby() : render(exhibits[id] ? id : "curiosity");
+  id === "lobby" ? renderLobby() : missionIds.slice(0, 2).includes(id) ? renderMoonRoute(id) : render(exhibits[id] ? id : "curiosity");
+}
+
+function renderMoonRoute(id) {
+  renderLobby();
+  current = id;
+  advanceJourney(id);
+  document.body.dataset.exhibit = id;
+  moonPanel.openRoute(id, () => navigateTo('lobby'));
 }
 const machineAudio = createMachineAudio();
 const machineVoices = createMachineVoices();
@@ -782,9 +786,9 @@ function renderLobby() {
       advanceJourney(id);
       navigateTo(id);
     },
-    onMoon: (id, trigger) => {
+    onMoon: (id) => {
       advanceJourney(id);
-      moonPanel.open(id, trigger);
+      navigateTo(id);
     },
   });
   $("#lobby-missions").innerHTML = Object.entries(trainingMissions)
@@ -2834,6 +2838,7 @@ window.addEventListener("hashchange", () => {
     requestAnimationFrame(() => $(".mission-passport").scrollIntoView({ block: "start" }));
   }
   else if (route === "teachers") renderTeachers();
+  else if (missionIds.slice(0, 2).includes(route)) renderMoonRoute(route);
   else render(exhibits[route] ? route : "curiosity");
 });
 window.addEventListener("popstate", () => {
@@ -2845,6 +2850,7 @@ window.addEventListener("popstate", () => {
       if (current !== "lobby") renderLobby();
       requestAnimationFrame(() => $(".mission-passport").scrollIntoView({ block: "start" }));
     }
+    else if (missionIds.slice(0, 2).includes(route)) renderMoonRoute(route);
     else render(exhibits[route] ? route : "curiosity");
   }
 });
@@ -2926,5 +2932,6 @@ const initialRoute = location.hash.slice(1);
 if (location.pathname === "/teachers") renderTeachers();
 else if (!initialRoute || initialRoute === "lobby") renderLobby();
 else if (initialRoute === "teachers") setRoute("teachers");
+else if (missionIds.slice(0, 2).includes(initialRoute)) renderMoonRoute(initialRoute);
 else render(exhibits[initialRoute] ? initialRoute : "curiosity");
 requestAnimationFrame(tick);
