@@ -1,4 +1,5 @@
 import { getLanguage } from "./i18n.js";
+import { ONE_LIGHT_DAY_TARGET_MS } from "./voyager-countdown.js";
 
 const sameOriginMissionApi =
   typeof location !== "undefined" && location.protocol === "https:" ? "/api" : "";
@@ -9,21 +10,21 @@ const missionApi = (
 )
   .trim()
   .replace(/\/$/, "");
-const LIGHT_SPEED_KM_S = 299792.458;
+
+// Ties the live number to the countdown card beneath it. The switch uses NASA's
+// published milestone date (the same one the countdown uses), not the Horizons
+// estimate, so the two cards can never disagree about whether it has happened.
+export const LIGHT_DAY_LINK_BEFORE = "When this number passes one light-day (about 25.9 billion km), a message from Voyager will take a full day to reach us.";
+export const LIGHT_DAY_LINK_AFTER = "Voyager 1 is past one light-day: a message from it now takes more than a full day to reach us.";
+export const VOYAGER_ESTIMATE_LIVE = "Estimate from NASA/JPL Horizons, not a signal from the spacecraft · updates every second";
+export const VOYAGER_ESTIMATE_STATIC = "Estimate from NASA/JPL Horizons, not a signal from the spacecraft · press Read current distance to update";
+
+export function lightDayLink(now = Date.now()) {
+  return now >= ONE_LIGHT_DAY_TARGET_MS ? LIGHT_DAY_LINK_AFTER : LIGHT_DAY_LINK_BEFORE;
+}
 
 export function formatVoyagerDistanceKm(distanceKm) {
   return `${new Intl.NumberFormat(getLanguage(), { maximumFractionDigits: 0 }).format(distanceKm)} km`;
-}
-
-function formatUtc(value) {
-  return new Intl.DateTimeFormat(getLanguage(), {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "UTC",
-    timeZoneName: "short",
-  }).format(value);
 }
 
 export function mountVoyagerDistance(container, {
@@ -49,7 +50,7 @@ export function mountVoyagerDistance(container, {
     const distanceKm = anchor.distanceKm + anchor.rangeRateKmS * seconds;
     distance.textContent = formatVoyagerDistanceKm(distanceKm);
     distance.dataset.distanceKm = String(distanceKm);
-    lightTime.textContent = `${(distanceKm / LIGHT_SPEED_KM_S / 3600).toFixed(2)} hours one way at light speed`;
+    lightTime.textContent = lightDayLink(currentTime);
     distance.setAttribute("aria-label", `Voyager 1 estimated distance from Earth: ${distance.textContent}`);
   }
 
@@ -62,9 +63,7 @@ export function mountVoyagerDistance(container, {
   }
 
   function updateStatus() {
-    status.textContent = reduced
-      ? `JPL Horizons ephemeris anchored ${formatUtc(new Date(anchor.observedAt))} · static distance · press Read current distance to update`
-      : `JPL Horizons ephemeris anchored ${formatUtc(new Date(anchor.observedAt))} · counter updates every second · refreshed by the server hourly`;
+    status.textContent = reduced ? VOYAGER_ESTIMATE_STATIC : VOYAGER_ESTIMATE_LIVE;
   }
 
   function refreshLanguage() {
@@ -76,7 +75,7 @@ export function mountVoyagerDistance(container, {
   async function load() {
     if (!apiUrl) {
       distance.textContent = "Live estimate unavailable";
-      lightTime.textContent = "The NASA milestone below remains available.";
+      lightTime.textContent = lightDayLink(now());
       status.textContent =
         "No current Horizons anchor is available here.";
       return;

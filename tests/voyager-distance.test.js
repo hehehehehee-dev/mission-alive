@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { formatVoyagerDistanceKm, mountVoyagerDistance } from "../src/voyager-distance.js";
+import { formatVoyagerDistanceKm, mountVoyagerDistance, lightDayLink, LIGHT_DAY_LINK_BEFORE, LIGHT_DAY_LINK_AFTER, VOYAGER_ESTIMATE_LIVE, VOYAGER_ESTIMATE_STATIC } from "../src/voyager-distance.js";
 
 const observedAt = Date.parse("2026-10-21T12:00:00Z");
 const anchor = { observedAt: new Date(observedAt).toISOString(), distanceKm: 25_827_000_000.25, rangeRateKmS: 17.01 };
@@ -60,8 +60,9 @@ test("the live counter advances each second from the actual Horizons anchor and 
   callback();
   assert.equal(ui.distance.textContent, "25,827,000,187 km");
   assert.equal(Number(ui.distance.dataset.distanceKm), anchor.distanceKm + anchor.rangeRateKmS * 11);
-  assert.match(ui.lightTime.textContent, /hours one way at light speed$/);
-  assert.match(ui.status.textContent, /JPL Horizons ephemeris anchored .*counter updates every second/);
+  assert.equal(ui.lightTime.textContent, lightDayLink(now));
+  assert.doesNotMatch(ui.lightTime.textContent, /\d+\.\d+ hours/, "no rounded light-time that looks like it contradicts the countdown");
+  assert.match(ui.status.textContent, /^Estimate from NASA\/JPL Horizons, not a signal from the spacecraft · updates every second$/);
   assert.notEqual(ui.distance.attributes.get("aria-label"), firstAccessibleLabel, "accessible wording follows the visible value without a live announcement");
   assert.equal(ui.distance.attributes.get("aria-label"), `Voyager 1 estimated distance from Earth: ${ui.distance.textContent}`);
   assert.equal(ui.distance.attributes.has("aria-live"), false, "the counter creates no per-second live announcements");
@@ -91,7 +92,7 @@ test("reduced motion freezes the distance until explicitly refreshed and can res
   assert.equal(ui.distance.textContent, frozen);
   mounted.refresh();
   assert.equal(ui.distance.textContent, '25,827,000,170 km');
-  assert.match(ui.status.textContent, /static distance/);
+  assert.match(ui.status.textContent, /not a signal from the spacecraft · press Read current distance to update/);
   mounted.setReduced(true);
   assert.equal(ui.intervals.size, 0);
   mounted.setReduced(false);
@@ -145,4 +146,14 @@ test("leaving Voyager aborts a pending request and ignores a response that arriv
   assert.equal(ui.distance.textContent, "Awaiting mission data…");
   assert.equal(ui.distance.dataset.distanceKm, undefined);
   assert.equal(ui.intervals.size, 0);
+});
+
+test("the live card names the same light-day milestone as the countdown, switching on NASA's date", async () => {
+  const { ONE_LIGHT_DAY_TARGET_MS } = await import("../src/voyager-countdown.js");
+  const { es, vi } = await import("../src/locales/nov14.js");
+  assert.equal(lightDayLink(ONE_LIGHT_DAY_TARGET_MS - 1), LIGHT_DAY_LINK_BEFORE);
+  assert.equal(lightDayLink(ONE_LIGHT_DAY_TARGET_MS), LIGHT_DAY_LINK_AFTER);
+  for (const line of [LIGHT_DAY_LINK_BEFORE, LIGHT_DAY_LINK_AFTER, VOYAGER_ESTIMATE_LIVE, VOYAGER_ESTIMATE_STATIC, "How this estimate works ↗"]) {
+    assert.ok(es[line] && vi[line], `missing translation: ${line}`);
+  }
 });

@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** Apollo 17 and Surveyor 3 now use 3D scenes inside the challenges themselves. Apollo controls reshape the fender and animate dust; Surveyor controls drive patch selection, probing, trenching, footpad width, sinking, and tilt. The redundant standalone model viewer was removed. The rebuilt public repository history was reconciled without force-pushing.
-- **Last verification:** `npm test` 125/125 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes.
+- **Last change:** Voyager live-distance card: removed the rounded “23.99 hours one way” line that looked like it contradicted the light-day countdown; replaced it with a sentence linking the number to the one-light-day milestone (switches on NASA's date) and a plain “estimate, not a signal” status (`src/voyager-distance.js`, `src/main.js`, `src/locales/nov14.js`, `tests/voyager-distance.test.js`).
+- **Last verification:** `npm test` 126/126 pass; `npm run build` passes; local browser check of the Voyager card in English, Spanish and Vietnamese.
 - **Not yet verified:** the two new challenge canvases, footer privacy dialog, and dedicated Moon pages in a real browser at desktop and about 390 px. Netlify headers need checking after a future deploy; the live site still runs an older build.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -208,6 +208,12 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Claude — `main`
+- **Commit:** Replace confusing Voyager light-time with the light-day milestone
+- **Changed:** `src/voyager-distance.js` (`lightDayLink()`, plain status strings, removed `formatUtc`), `src/main.js` (initial card text, link label), 5 rows in `src/locales/nov14.js`, `tests/voyager-distance.test.js`.
+- **Verified:** `npm test` 126/126; `npm run build`; local browser check EN/ES/VI.
+- **Left for next:** NASA's milestone (Nov 18 10:16:07 UTC) is about 13 h earlier than a straight-line extrapolation of the current Horizons range rate; not investigated. Uncommitted Codex edits to `index.html`, `src/scene.js`, `src/style.css` were left out of this commit.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Adopt direct main deployment workflow

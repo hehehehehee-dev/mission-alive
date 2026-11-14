@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Voyager distance card without the confusing light-time
+
+- Removed “23.99 hours one way at light speed”. Rounded beside the light-day countdown, it looked like a contradiction (the real gap was about 31 light-seconds, which Voyager needs days to cover).
+- The live card now says what the number is heading for: one light-day (about 25.9 billion km), when a message takes a full day to reach us. It switches to past tense on NASA’s milestone date, the same instant the countdown uses.
+- Replaced the adult status line with “Estimate from NASA/JPL Horizons, not a signal from the spacecraft”. Spanish and Vietnamese copy added.
+
 ### Direct main deployment workflow
 
 - Updated the shared Codex and Claude instructions to commit and push validated changes directly to `main`, which is connected to Netlify auto-deploy.
