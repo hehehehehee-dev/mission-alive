@@ -8,7 +8,7 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Last change:** Webb now shows exactly one challenge panel, automatically advancing on wing deployment and star alignment. Moon challenges use `src/challenge-steps.js`: Apollo assembly → shape/test; Surveyor choose → investigate → land. Secondary adjustments, histories and Webb reference images are collapsed disclosures. Original controls/state/stamp rules are retained.
-- **Last verification:** 135 Node tests and production build pass, including step gating, one-visible-panel state, retained control identity/values and reset. Production Webb button play verified deploy hidden/focus visible/infrared hidden after opening both wings. Browser inspection also found the static NASA gallery outside its disclosure with intrinsic image heights; the follow-up wraps the entire gallery and sets responsive image height.
+- **Last verification:** 135 Node tests and production build pass. Production keyboard play confirmed Webb deploy → focus → infrared with exactly one panel visible; Apollo assembly → shape/test after clamps; Surveyor choose → investigate → land after two probe forces and three scoops. At 390px all three routes fit without horizontal overflow; both Moon routes expose one active panel. Webb alignment controls measured 899px after collapsing the whole reference gallery, down from 6202px with the intrinsic-height images.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Record production challenge step verification
+- **Changed:** recorded successful production keyboard transitions for Webb, Apollo and Surveyor and narrow-screen layout results.
+- **Verified:** actual wing buttons and star arrow keys advanced Webb to infrared; map/tape/clamps advanced Apollo; two probe forces plus three scoops advanced Surveyor to landing; 390px routes have no horizontal overflow. Browser initially timed out during some software-rendered navigation, then completed all focused checks.
+- **Left for next:** physical-device usability sessions and a full six-stamp replay were not part of this focused layout verification.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Fold the complete Webb reference gallery into optional notes
