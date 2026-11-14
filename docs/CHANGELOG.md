@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Curiosity gallery images restored in production
+
+- The Content-Security-Policy added earlier allowed images and requests only from the site itself, so the Curiosity gallery's NASA images were blocked on Netlify. The policy now also allows `https://images-assets.nasa.gov` for images and `https://images-api.nasa.gov` for the gallery search. Nothing else was loosened.
+- A test now fails if the gallery uses a host the policy does not allow, or if any other external host is added to the policy.
+
 ### One challenge step at a time
 
 - Webb now replaces the completed deployment panel with alignment, then replaces alignment with infrared. The step bar reopens unlocked earlier steps without losing progress.

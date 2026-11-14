@@ -15,5 +15,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Frame-Options = "DENY"
     Permissions-Policy = "camera=(), geolocation=(), microphone=(self), payment=(), usb=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    # The Curiosity gallery searches images-api.nasa.gov and shows images from
+    # images-assets.nasa.gov. Every other request stays same-origin.
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images-assets.nasa.gov; media-src 'self' blob:; connect-src 'self' https://images-api.nasa.gov; font-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
     Strict-Transport-Security = "max-age=31536000"

@@ -62,6 +62,20 @@ test('the public privacy notice matches classroom publication and removal behavi
   assert.match(netlify, /microphone=\(self\)/);
 });
 
+test('the deployment policy lets the Curiosity gallery reach NASA and nothing else external', async () => {
+  const netlify = await readFile(new URL('../netlify.toml', import.meta.url), 'utf8');
+  const gallery = await readFile(new URL('../src/curiosity-gallery.js', import.meta.url), 'utf8');
+  const policy = netlify.match(/Content-Security-Policy = "([^"]+)"/)[1];
+  const directive = (name) => policy.split(';').map((part) => part.trim()).find((part) => part.startsWith(`${name} `));
+  // Every host the gallery uses must be allowed, or its images silently disappear in production.
+  for (const url of gallery.match(/https:\/\/images-assets\.nasa\.gov/g)) assert.ok(directive('img-src').includes(url));
+  assert.match(gallery, /https:\/\/images-api\.nasa\.gov\/search/);
+  assert.ok(directive('connect-src').includes('https://images-api.nasa.gov'));
+  const external = [...policy.matchAll(/https:\/\/[^\s;]+/g)].map((match) => match[0]);
+  assert.deepEqual([...new Set(external)].sort(), ['https://images-api.nasa.gov', 'https://images-assets.nasa.gov']);
+  assert.match(directive('script-src'), /^script-src 'self'$/);
+});
+
 test('the Moon route back button has a matching accessible name in every language', async () => {
   const moon = await readFile(new URL('../src/moon-stories.js', import.meta.url), 'utf8');
   const nov14 = await import('../src/locales/nov14.js');

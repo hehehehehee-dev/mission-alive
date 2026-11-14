@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** Webb now shows exactly one challenge panel, automatically advancing on wing deployment and star alignment. Moon challenges use `src/challenge-steps.js`: Apollo assembly → shape/test; Surveyor choose → investigate → land. Secondary adjustments, histories and Webb reference images are collapsed disclosures. Original controls/state/stamp rules are retained.
-- **Last verification:** 135 Node tests and production build pass. Production keyboard play confirmed Webb deploy → focus → infrared with exactly one panel visible; Apollo assembly → shape/test after clamps; Surveyor choose → investigate → land after two probe forces and three scoops. At 390px all three routes fit without horizontal overflow; both Moon routes expose one active panel. Webb alignment controls measured 899px after collapsing the whole reference gallery, down from 6202px with the intrinsic-height images.
+- **Last change:** production CSP in `netlify.toml` now allows `https://images-assets.nasa.gov` (img-src) and `https://images-api.nasa.gov` (connect-src) so the Curiosity gallery works on Netlify again; guarded by a test in `tests/project-copy.test.js`.
+- **Last verification:** `npm test` 136/136 pass. CSP only applies on Netlify, so the gallery must be checked on the live site after deploy.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,20 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Claude — `main`
+- **Commit:** Let the Curiosity gallery load NASA images under the CSP
+- **Changed:** `netlify.toml` (two NASA hosts added to the policy), `tests/project-copy.test.js`.
+- **Verified:** `npm test` 136/136; live-site check after deploy recorded in the session.
+- **Left for next (design review of the live site, child audience, 2026-11-14):**
+  - Bug: browser Back from `#apollo17`/`#surveyor3` to another mission leaves the Moon dialog open over the page (`hashchange`/`popstate` render the mission without closing `.moon-panel`).
+  - Bug: a tab left open across a deploy gets a 404 for the lazy `scene-*.js` chunk and silently falls back to the 2D view until reload.
+  - DSN widget's direct `eyes.nasa.gov` fallback is blocked by `connect-src`; production uses the `/api/dsn-now` relay, so this was left as is.
+  - Text too small for ages 10–14: lobby card tagline 8.6 px, “Open mission →” 9 px, “TRAINING MODULE” 9.3 px, opening labels 10.4 px, “Earth is here” 9.9 px; about two thirds of lobby text is 13 px or smaller on a phone.
+  - On a 390 px phone the first challenge control is about two screens down and the six-module nav takes 290 px on every mission page.
+  - Stamped lobby cards look the same as open ones apart from a 9.9 px “STAMPED ✓”; progress bar is 5 px tall; “1 mission remain.” needs a plural fix.
+  - Three stacked headings before play (“YOUR MISSION”, “MISSION CHALLENGE · Now take control.”, “YOUR MISSION · …”).
+  - Reading level estimates (English): lobby about grade 10, Voyager about grade 11; target is grade 5–7.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Record production challenge step verification
