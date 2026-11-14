@@ -163,17 +163,17 @@ Project requirements, supplied voice assets, feedback and publication decisions 
 
 - Creator / credit: NASA / Harrison Schmitt
 - Official source: https://science.nasa.gov/resource/apollo-17-gene-cernan-in-lunar-roving-vehicle/
-- Used in: Moon prologue
+- Used in: Moon prologue, Apollo 17 training page
 - Local files: /assets/moon-apollo17-lrv.jpg
-- Usage / modifications: Official NASA photograph. The source page is linked; the exact original download URL was not retained.
+- Usage / modifications: Official NASA photograph. Also cropped and dimmed behind the Apollo 17 training page. The source page is linked; the exact original download URL was not retained.
 
 ### Surveyor 3 · photographed by Apollo 12
 
 - Creator / credit: NASA / JSC
 - Official source: https://science.nasa.gov/resource/view-of-surveyor-iii-in-its-crater/
-- Used in: Moon prologue, Moon labs
+- Used in: Moon prologue, Surveyor 3 training page, Moon labs
 - Local files: /assets/moon-surveyor3-apollo12.jpg
-- Usage / modifications: Official NASA photograph. The source page is linked; the exact original download URL was not retained.
+- Usage / modifications: Official NASA photograph. Also cropped and dimmed behind the Surveyor 3 training page. The source page is linked; the exact original download URL was not retained.
 
 ### Apollo 17 · repaired lunar rover fender
 

@@ -4,6 +4,14 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Moon model and presentation rebuild
+
+- Replaced the isolated Apollo wheel and box shapes with a full rover reconstruction; added Surveyor's triangular frame, instrument mast, legs, pads and sampler.
+- Matched the existing machine scenes' metal palette, lighting and regolith base; corrected shadow artifacts on the ground.
+- Added on-demand, visibility-aware rendering with a 30 fps interaction cap and cancellation of particle/probe animation work.
+- Shortened Moon page introductions, added credited NASA mission photography, and placed Surveyor controls beside its model on desktop.
+- The existing repair, evidence, landing and six-stamp rules remain in place.
+
 ### One Voyager distance and countdown card
 
 - The light-day countdown now sits inside the live distance card, under the sentence that explains it, instead of in a second card.

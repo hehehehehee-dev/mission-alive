@@ -229,6 +229,7 @@ export function moonPanelMarkup() {
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
     <p class="moon-panel-intro">Your crew's voyage begins here. Repair a rover and investigate the ground. Earn two Moon stamps toward your six-mission certification.</p>
     <div class="moon-route-summary" id="moon-route-summary" hidden><p class="eyebrow" id="moon-route-year"></p><p id="moon-route-purpose"></p><a id="moon-route-source" target="_blank" rel="noopener"></a></div>
+    <figure class="moon-route-photo" hidden><img alt="" decoding="async"><figcaption><a target="_blank" rel="noopener"></a></figcaption></figure>
     ${moonLabMarkup()}
     <div class="moon-story-grid">${Object.entries(moonStories).map(([id, story]) => storyCard(id, story)).join("")}</div>
   </dialog>`;
@@ -321,6 +322,7 @@ export function mountMoonPanel(root, options = {}) {
     closeButton.setAttribute('aria-label', 'Close Moon training');
     dialog.querySelector('#moon-panel-title').textContent = 'Two machines still on the Moon';
     dialog.querySelector('#moon-route-summary').hidden = true;
+    dialog.querySelector('.moon-route-photo').hidden = true;
   };
   const close = () => routeExit ? routeExit() : dialog.close();
   closeButton.addEventListener("click", close);
@@ -371,6 +373,7 @@ export function mountMoonPanel(root, options = {}) {
       routeExit = onExit;
       returnFocus = null;
       dialog.classList.add('is-route-page');
+      dialog.style.setProperty('--moon-photo', `url("${story.reveal.image}")`);
       closeButton.textContent = '← Back to academy';
       closeButton.setAttribute('aria-label', 'Back to academy');
       dialog.querySelector('#moon-panel-title').textContent = story.name;
@@ -380,6 +383,12 @@ export function mountMoonPanel(root, options = {}) {
       source.href = story.sources[0][1];
       source.textContent = `${story.sources[0][0]} ↗`;
       dialog.querySelector('#moon-route-summary').hidden = false;
+      const photo = dialog.querySelector('.moon-route-photo');
+      photo.hidden = false;
+      photo.querySelector('img').src = story.reveal.image;
+      photo.querySelector('img').alt = story.reveal.alt;
+      photo.querySelector('a').textContent = `${story.reveal.credit} ↗`;
+      photo.querySelector('a').href = story.reveal.source[1];
       if (!dialog.open) dialog.showModal();
       labs.play(id);
       dialog.scrollTop = 0;

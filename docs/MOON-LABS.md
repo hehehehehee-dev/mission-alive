@@ -4,7 +4,11 @@ Apollo 17 LRV and Surveyor 3 have dedicated `#apollo17` and `#surveyor3` mission
 
 ## 3D challenge layer
 
-Both Moon challenges progressively enhance their original SVG teaching models with procedural Three.js scenes. Apollo 17's tool and geometry controls update a map fender beside a 3D rover wheel; running a dust test animates caught and escaping particles. Surveyor 3's patch, probe, digging, footpad, and touchdown controls update a 3D soil field and lander; touchdown visibly shows sinking and tilt. These are original Mission Alive teaching simulations rather than NASA engineering models.
+Both Moon challenges progressively enhance their original SVG teaching models with procedural Three.js scenes. Apollo 17 now shows a complete four-wheel rover with seats, suspension, equipment deck, camera and antenna; the repair controls update the printed map fender on its near wheel. Surveyor shows a triangular strut frame, three landing legs and pads, instrument boxes, camera mast, solar panel and sampling arm. Its patch, probe, digging, footpad and touchdown controls update the same teaching model. These are original Mission Alive reconstructions, not NASA engineering models or exact dimensions.
+
+The shared silver/gold/white materials, filmic lighting and circular regolith stage follow the established four machines. Bias-corrected 512px shadows remove the old striped ground artifacts. Rendering is on demand, capped near 30 fps during interaction, and stops for offscreen or hidden stages. Terrain stones share an instanced mesh. Probe, dust and touchdown animation handles are cancelled on reset/disposal where applicable. These limits reduce rendering work; perceived smoothness still depends on the learner's device.
+
+Moon routes now have a shorter introduction and a real NASA photograph with its visible credit, reused as a dimmed background. Surveyor uses the same side-by-side study/control arrangement as Apollo, with a sticky model on desktop and a single column on mobile.
 
 The canvases support pointer orbiting and keyboard turning/zoom. Native HTML controls remain the only required input, every result is repeated as text, motion is shortened when reduced motion is active, and the existing SVG models remain available automatically if WebGL cannot start or loses context.
 

@@ -157,7 +157,7 @@ export function surveyorGameMarkup() {
     <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3>
     ${quickStartMarkup('surveyor3')}
     ${whyMarkup(`<p>${c.intro}</p><p class="surveyor-disclaimer">${c.disclaimer}</p><p class="surveyor-model-label">${c.units}</p><p>${c.history} <a href="https://science.nasa.gov/mission/surveyor-3/" target="_blank" rel="noopener noreferrer">${c.historySource} ↗</a></p>`)}
-    <fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}">${c[patchCopy[soil.id]]}</button>`).join('')}</div></fieldset>
+    <div class="surveyor-study-layout"><fieldset class="surveyor-controls surveyor-site-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}">${c[patchCopy[soil.id]]}</button>`).join('')}</div></fieldset>
     <figure class="surveyor-figure"><div class="moon-challenge-canvas" data-surveyor-challenge-3d></div><div class="moon-challenge-2d">${soilIllustration(id)}</div><figcaption class="surveyor-model-label"><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${c.cutawayCaption}</span></figcaption></figure>
     <div class="surveyor-investigation-grid"><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.investigate}</legend>
       <p class="surveyor-model-label">${c.force}</p><div class="surveyor-force-buttons" role="group" aria-label="${c.force}">${surveyorModel.forces.map((force) => `<button type="button" data-surveyor-force="${force}" aria-pressed="${force === 1}">${format(surveyorTextTemplates[1], { force })}</button>`).join('')}</div>
@@ -166,7 +166,7 @@ export function surveyorGameMarkup() {
     </fieldset><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.landing}</legend><p>${c.separation}</p>
       ${landerIllustration()}<p class="surveyor-model-label">${c.width}</p><div class="surveyor-pad-stepper"><button type="button" data-surveyor-action="narrower">${c.narrower}</button><button type="button" data-surveyor-action="wider">${c.wider}</button></div>
       <p class="surveyor-readout" data-surveyor-pad-readout></p><p class="surveyor-model-label">${c.load}</p><p class="surveyor-model-label">${c.limits}</p><button type="button" data-surveyor-action="touchdown">${c.touchdown}</button>
-    </fieldset></div>
+    </fieldset></div></div>
     <div class="surveyor-result" role="status" aria-live="polite" aria-atomic="true" data-surveyor-result>${c.landingPrompt}</div>
     <section class="surveyor-log" aria-labelledby="${id}-log" tabindex="0"><h4 id="${id}-log">${c.logTitle}</h4><p data-surveyor-empty-log>${c.emptyLog}</p><ol data-surveyor-log></ol></section>
     <aside class="surveyor-ending" data-surveyor-ending hidden><p class="eyebrow">${c.endingLabel}</p><blockquote>${c.ending}</blockquote><p>${c.home}</p><a href="https://www.jpl.nasa.gov/blog/2012/1/surveyor-3-camera-returned-from-the-moon" target="_blank" rel="noopener noreferrer">${c.homeSource} ↗</a></aside>

@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** merged the Voyager live-distance card and the light-day countdown into one card (`src/main.js` inserts the countdown after `#voyager-live-light-time`; `src/exhibit-layout.js` no longer moves it out; inner-card styles in `src/style.css`). Stale “one-way light-time is shown below” line replaced.
-- **Last verification:** `npm test` 129/129 pass; `npm run build` passes; local browser check of the merged card at desktop and 390 px (no overflow).
+- **Last change:** rebuilt both Moon challenge models through `src/moon-model-detail.js`, matching the existing scenes' material/lighting palette; added visibility-aware demand rendering, corrected shadows, compact photograph-backed route introductions and side-by-side Surveyor study controls.
+- **Last verification:** `npm test` 129/129 and production build pass. Rendered production inspection of the new Moon models follows auto-deploy; do not treat automated tests as visual or device-performance proof.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Rebuild Moon machines and unify their study presentation
+- **Changed:** full rover and Surveyor teaching reconstructions, consistent materials and lunar stage, corrected shadows, offscreen render pause and frame cap, shorter route intro with existing credited NASA photography, Surveyor study/control columns.
+- **Verified:** 129 Node tests and production build pass; production visual inspection follows deployment.
+- **Left for next:** inspect both models at desktop and 390 px, verify actual orbit and scene framing, and assess smoothness on a physical low-powered device.
 
 Newest first. One entry per commit, written in the same commit. Keep each entry short; `docs/CHANGELOG.md` holds the product-facing detail and `git show` holds the diff.
 
