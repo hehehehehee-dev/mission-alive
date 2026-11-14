@@ -62,7 +62,8 @@ test("the live counter advances each second from the actual Horizons anchor and 
   assert.equal(Number(ui.distance.dataset.distanceKm), anchor.distanceKm + anchor.rangeRateKmS * 11);
   assert.match(ui.lightTime.textContent, /hours one way at light speed$/);
   assert.match(ui.status.textContent, /JPL Horizons ephemeris anchored .*counter updates every second/);
-  assert.equal(ui.distance.attributes.get("aria-label"), firstAccessibleLabel, "accessible wording is not rewritten each second");
+  assert.notEqual(ui.distance.attributes.get("aria-label"), firstAccessibleLabel, "accessible wording follows the visible value without a live announcement");
+  assert.equal(ui.distance.attributes.get("aria-label"), `Voyager 1 estimated distance from Earth: ${ui.distance.textContent}`);
   assert.equal(ui.distance.attributes.has("aria-live"), false, "the counter creates no per-second live announcements");
   now += 29_000;
   callback();
@@ -75,7 +76,7 @@ test("the live counter advances each second from the actual Horizons anchor and 
   assert.equal(ui.distance.textContent, stoppedText, "an already queued tick cannot update a disposed module");
 });
 
-test("reduced motion preserves one-second textual updates and does not create extra timers", async (t) => {
+test("reduced motion freezes the distance until explicitly refreshed and can resume ticking", async (t) => {
   const ui = harness(t);
   let now = observedAt;
   const mounted = mountVoyagerDistance(ui.container, {
@@ -84,14 +85,22 @@ test("reduced motion preserves one-second textual updates and does not create ex
   });
   ui.cleanup(() => mounted.dispose());
   await flush();
+  assert.equal(ui.intervals.size, 0);
+  const frozen = ui.distance.textContent;
+  now += 10000;
+  assert.equal(ui.distance.textContent, frozen);
+  mounted.refresh();
+  assert.equal(ui.distance.textContent, '25,827,000,170 km');
+  assert.match(ui.status.textContent, /static distance/);
   mounted.setReduced(true);
+  assert.equal(ui.intervals.size, 0);
   mounted.setReduced(false);
   assert.equal(ui.intervals.size, 1);
   const [{ callback, delay }] = ui.intervals.values();
   assert.equal(delay, 1000);
   now += 1000;
   callback();
-  assert.equal(ui.distance.textContent, "25,827,000,017 km");
+  assert.equal(ui.distance.textContent, "25,827,000,187 km");
   assert.match(ui.status.textContent, /updates every second/);
 });
 

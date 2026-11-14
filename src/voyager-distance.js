@@ -30,6 +30,7 @@ export function mountVoyagerDistance(container, {
   apiUrl = missionApi,
   fetcher = fetch,
   now = Date.now,
+  reduced = false,
 } = {}) {
   const distance = container.querySelector("#voyager-live-distance");
   const lightTime = container.querySelector("#voyager-live-light-time");
@@ -37,38 +38,39 @@ export function mountVoyagerDistance(container, {
   const controller = new AbortController();
   let timer = 0;
   let anchor = null;
-  let lastAccessibleUpdate = 0;
+  let lastRenderedAt = null;
   let disposed = false;
   delete distance.dataset.distanceKm;
 
-  function renderLiveValue() {
+  function renderLiveValue(currentTime = now()) {
     if (!anchor || disposed) return;
-    const currentTime = now();
+    lastRenderedAt = currentTime;
     const seconds = (currentTime - anchor.observedAt) / 1000;
     const distanceKm = anchor.distanceKm + anchor.rangeRateKmS * seconds;
     distance.textContent = formatVoyagerDistanceKm(distanceKm);
     distance.dataset.distanceKm = String(distanceKm);
     lightTime.textContent = `${(distanceKm / LIGHT_SPEED_KM_S / 3600).toFixed(2)} hours one way at light speed`;
-    if (currentTime - lastAccessibleUpdate >= 30000) {
-      distance.setAttribute("aria-label", `Voyager 1 estimated distance from Earth: ${distance.textContent}`);
-      lastAccessibleUpdate = currentTime;
-    }
+    distance.setAttribute("aria-label", `Voyager 1 estimated distance from Earth: ${distance.textContent}`);
   }
 
   function startTimer() {
     window.clearInterval(timer);
     if (!anchor || disposed) return;
     renderLiveValue();
-    // Changing text is not motion: keep the science clock accurate in both modes.
-    timer = window.setInterval(renderLiveValue, 1000);
-    status.textContent = `JPL Horizons ephemeris anchored ${formatUtc(new Date(anchor.observedAt))} · counter updates every second · refreshed by the server hourly`;
+    if (!reduced) timer = window.setInterval(renderLiveValue, 1000);
+    updateStatus();
+  }
+
+  function updateStatus() {
+    status.textContent = reduced
+      ? `JPL Horizons ephemeris anchored ${formatUtc(new Date(anchor.observedAt))} · static distance · press Read current distance to update`
+      : `JPL Horizons ephemeris anchored ${formatUtc(new Date(anchor.observedAt))} · counter updates every second · refreshed by the server hourly`;
   }
 
   function refreshLanguage() {
     if (!anchor || disposed) return;
-    lastAccessibleUpdate = 0;
-    renderLiveValue();
-    status.textContent = `JPL Horizons ephemeris anchored ${formatUtc(new Date(anchor.observedAt))} · counter updates every second · refreshed by the server hourly`;
+    renderLiveValue(reduced ? lastRenderedAt : now());
+    updateStatus();
   }
 
   async function load() {
@@ -110,8 +112,11 @@ export function mountVoyagerDistance(container, {
   load();
   window.addEventListener?.("mission-language-change", refreshLanguage);
   return {
-    setReduced() {
-      // This counter has no animation; reduced motion does not change its cadence.
+    refresh() { renderLiveValue(); },
+    setReduced(value) {
+      if (reduced === Boolean(value)) return;
+      reduced = Boolean(value);
+      startTimer();
     },
     dispose() {
       disposed = true;

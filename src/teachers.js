@@ -1,3 +1,4 @@
+export const teacherCrewMarkup = '<section class="graduation-crew" aria-labelledby="graduation-crew-title">\n          <p class="finale-gifts">You carry patience, daring, precision, and endurance now. That is the crew.</p>\n          <h3 id="graduation-crew-title">THE CREW IS ALREADY CHANGING</h3>\n          <p>In 2021, Hayley Arceneaux flew to orbit with a titanium rod in her leg. She was the first person with a prosthesis in space.</p>\n          <p>John McFall, a Paralympian and a surgeon, is medically certified for a long mission on the space station. He is waiting for his flight.</p>\n          <p>Wanda Diaz-Merced is blind. She studies the stars by listening to them.</p>\n        </section>';
 import { trainingMissions } from './certification.js';
 const guides = [
   {
@@ -248,6 +249,7 @@ export function teacherPageMarkup() {
     <details><summary>Does it work on our Chromebooks?</summary><p>Yes — it's a web page, no installs. It also runs whole-class from one computer and a projector.</p></details>
     <details><summary>Where does the science come from?</summary><p>Each exhibit cites NASA/JPL sources in its mission archive and Field notes. Voyager's distance is live from JPL's Horizons system.</p></details>
   </div></section>
+  ${teacherCrewMarkup}
   <div class="teacher-final-cta"><p class="eyebrow">READY WHEN YOUR CLASS IS</p><h2>Six machines. One shared journey.</h2><div class="teachers-actions"><button class="primary" data-enter-museum>Enter the academy</button><button data-print-resource="all">Print the teacher pack ↓</button></div></div>
   <div class="print-resources" aria-hidden="true">${printableResources()}</div>`;
 }

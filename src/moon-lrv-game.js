@@ -289,12 +289,23 @@ export function lrvGameMarkup() {
   </section>`;
 }
 
-function resultMessage(result) {
+export function lrvRepairHint(result) {
   if (result.passed) return copy.passedStatus;
   if (!result.assembled) return copy.incompleteStatus;
-  if (!result.wheelSafe) return copy.wheelStatus;
+  if (!result.wheelSafe) return result.configuration.angle < 0
+    ? 'Angle: lift the patch tip. Clearance: raise the mount so the whole patch stays away from the wheel, then retest.'
+    : 'Clearance: raise the patch mount to give the wheel more room, then retest.';
   if (!result.attachmentHolding) return copy.attachmentStatus;
-  return copy.dustStatus;
+  const c = result.configuration;
+  const alternatives = [
+    [{length:c.length + 20}, 'Length: extend the patch farther into the flying dust, then compare another test.'],
+    [{angle:c.angle - 10}, 'Angle: lower the patch tip toward the dust paths, keeping it clear of the wheel.'],
+    [{clearance:c.clearance - 4}, 'Clearance: lower the mount toward the dust paths, keeping space above the wheel.'],
+    [{angle:c.angle + 10}, 'Angle: lift the patch tip to meet the dust paths farther from the wheel.'],
+  ].map(([change, hint]) => ({ prediction:evaluateLrvRepair({...c,...change}, {tested:true}), hint }))
+    .filter(({prediction}) => prediction.wheelSafe && prediction.dustReaching < result.dustReaching)
+    .sort((a,b) => a.prediction.dustReaching - b.prediction.dustReaching);
+  return alternatives[0]?.hint || 'Angle: lower the tip toward the dust. Length: extend the patch if paths still escape, then retest.';
 }
 
 function attachmentText(result) {
@@ -394,7 +405,7 @@ export function mountLrvGame(root) {
       find("[data-lrv-history]").innerHTML = trials.map(trialMarkup).join("");
       find("[data-lrv-history-empty]").hidden = true;
       find("[data-lrv-history-wrap]").hidden = false;
-      draw(result, resultMessage(result));
+      draw(result, lrvRepairHint(result));
       workshop.classList.remove('lrv-testing');
       void workshop.offsetWidth;
       workshop.classList.add('lrv-testing');

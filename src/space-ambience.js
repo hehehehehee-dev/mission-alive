@@ -319,10 +319,10 @@ export function createSpaceAmbience(canvas) {
     warp() {
       if (reduced) return Promise.resolve();
       warpStarted = performance.now();
-      warpDuration = 920;
+      warpDuration = 400;
       meteor = null;
       start();
-      return new Promise((resolve) => window.setTimeout(resolve, 610));
+      return new Promise((resolve) => window.setTimeout(resolve, 180));
     },
     dispose() {
       running = false;

@@ -59,7 +59,7 @@
                 <p>The machines cannot come home. So this academy does the next best thing: it trains you on them.</p>
                 <p>Complete all six training modules and you will be certified crew. Each module teaches the real job of the machine you train on.</p>
               </div>
-              <button class="primary lobby-start" id="start-journey">Begin the journey</button>
+              <div class="crew-name-field"><label for="crew-name">Your name (optional)</label><input id="crew-name" maxlength="60" autocomplete="given-name" aria-describedby="crew-name-help"><p id="crew-name-help">Used only on your certificate. It stays in this browser.</p></div><button class="primary lobby-start" id="start-journey">Begin the journey</button>
             </div>
           </div>
           <section class="mission-passport" aria-labelledby="passport-title">
@@ -128,7 +128,7 @@
           >
           <button id="credits-footer-link">Sources & credits</button>
           <button id="motion" aria-pressed="false">Reduce motion</button
-          ><button id="view-mode" aria-pressed="false">2D view</button></span
+          ><button id="view-mode" aria-pressed="false">3D view</button></span
         >
       </footer>
     </div>
@@ -136,7 +136,7 @@
       <div class="finale-confetti" id="finale-confetti" aria-hidden="true"></div>
       <button type="button" class="finale-close" id="finale-close" aria-label="Close celebration">×</button>
       <section class="finale-homecoming" aria-label="Your journey home" hidden>
-        <div class="homecoming-flight"><p class="eyebrow">BRINGING THE STORIES HOME</p><h2>The machines stay.<br>You bring their stories home.</h2><div class="homecoming-route"><svg viewBox="0 0 800 290" aria-hidden="true"><defs><clipPath id="home-earth-clip"><circle cx="65" cy="221" r="36"/></clipPath></defs><path id="homecoming-route" d="M735 55 C640 250 555 225 465 126 S220 45 65 221" fill="none" stroke="#afcad570" stroke-width="1.5" stroke-dasharray="3 10"/><image href="/assets/journey-earth-nasa.jpg" x="25" y="181" width="80" height="80" clip-path="url(#home-earth-clip)"/><circle cx="735" cy="55" r="5" fill="#a9cee7"/><circle cx="540" cy="194" r="5" fill="#e0c16b"/><circle cx="343" cy="106" r="5" fill="#dba276"/><circle cx="223" cy="120" r="5" fill="#dba276"/><g class="homecoming-craft"><path d="m-16-4-8-18 14 3L6-5M-16 4l-8 18 14-3L6 5" fill="#e99b56"/><path d="M-23-7Q-6-15 17 0-6 15-23 7z" fill="#e8f2f7" stroke="#c5d9e6"/><ellipse cx="-1" cy="0" rx="8" ry="5" fill="#6dd5ed"/><path d="m-23-4-14 4 14 4" fill="#9aebff"/><animateMotion begin="indefinite" dur="2.4s" fill="freeze" rotate="auto"><mpath href="#homecoming-route"/></animateMotion></g></svg><span class="return-stop return-voyager">Voyager 1</span><span class="return-stop return-webb">Webb</span><span class="return-stop return-ingenuity">Ingenuity</span><span class="return-stop return-curiosity">Curiosity</span><span class="return-stop return-earth">EARTH</span></div><p class="fine">Six training missions, with stories to bring home.</p></div>
+        <div class="homecoming-flight"><p class="eyebrow">BRINGING THE STORIES HOME</p><h2>The machines stay.<br>You bring their stories home.</h2><div class="homecoming-route"><svg viewBox="0 0 800 290" aria-hidden="true"><defs><clipPath id="home-earth-clip"><circle cx="65" cy="221" r="36"/></clipPath></defs><path id="homecoming-route" d="M735 55 C640 250 555 225 465 126 S220 45 65 221" fill="none" stroke="#afcad570" stroke-width="1.5" stroke-dasharray="3 10"/><image href="/assets/journey-earth-nasa.jpg" x="25" y="181" width="80" height="80" clip-path="url(#home-earth-clip)"/><circle cx="735" cy="55" r="5" fill="#a9cee7"/><circle cx="540" cy="194" r="5" fill="#e0c16b"/><circle cx="343" cy="106" r="5" fill="#dba276"/><circle cx="223" cy="120" r="5" fill="#dba276"/><circle cx="135" cy="158" r="5" fill="#d5d5cf"/><circle cx="181" cy="130" r="5" fill="#d5d5cf"/><g class="homecoming-craft"><path d="m-16-4-8-18 14 3L6-5M-16 4l-8 18 14-3L6 5" fill="#e99b56"/><path d="M-23-7Q-6-15 17 0-6 15-23 7z" fill="#e8f2f7" stroke="#c5d9e6"/><ellipse cx="-1" cy="0" rx="8" ry="5" fill="#6dd5ed"/><path d="m-23-4-14 4 14 4" fill="#9aebff"/><animateMotion begin="indefinite" dur="2.4s" fill="freeze" rotate="auto"><mpath href="#homecoming-route"/></animateMotion></g></svg><span class="return-stop return-apollo17">Apollo 17 LRV</span><span class="return-stop return-surveyor3">Surveyor 3</span><span class="return-stop return-curiosity">Curiosity</span><span class="return-stop return-ingenuity">Ingenuity</span><span class="return-stop return-webb">Webb</span><span class="return-stop return-voyager">Voyager 1</span><span class="return-stop return-earth">EARTH</span></div><ol class="homecoming-mission-order" aria-label="Your six missions, from the Moon outward"><li>Apollo 17 LRV</li><li>Surveyor 3</li><li>Curiosity</li><li>Ingenuity</li><li>Webb</li><li>Voyager 1</li></ol><p class="fine">Moon → Mars → Sun–Earth L2 → interstellar space. Distances compressed.</p></div>
         <div class="homecoming-photo"><p class="eyebrow">ONE SMALL WORLD. ALL OF US.</p><div class="pale-dot-frame"><img src="/assets/voyager-pale-blue-dot.jpg" alt="Earth as a tiny pale dot in a sunbeam in Voyager 1’s 1990 photograph, reprocessed by NASA in 2020." width="5230" height="5175"><span class="pale-dot-marker" aria-hidden="true"><i></i><span>EARTH</span></span></div><h2>Every machine you met began here.<br>So did you.</h2><p class="fine">Voyager 1 · 14 February 1990 · reprocessed in 2020</p><a href="https://science.nasa.gov/photojournal/pale-blue-dot-revisited/" target="_blank" rel="noopener">Pale Blue Dot Revisited · NASA/JPL-Caltech ↗</a></div>
         <button type="button" class="homecoming-skip" data-homecoming-skip>Go to graduation →</button>
       </section>
@@ -148,16 +148,10 @@
         <div class="finale-patch">
           <div class="finale-stamps" aria-label="All six mission stamps earned"><span>Apollo 17 LRV<small>REPAIR ✓</small></span><span>Surveyor 3<small>TEST ✓</small></span><span>Curiosity<small>DRIVE ✓</small></span><span>Ingenuity<small>FLY ✓</small></span><span>Webb<small>UNFOLD ✓</small></span><span>Voyager<small>LISTEN ✓</small></span></div>
           <p class="finale-date" id="finale-date"></p>
-          <div class="certificate-maker"><label for="graduate-name">Name on your certificate</label><div><input id="graduate-name" maxlength="60" autocomplete="name" placeholder="Your name"><button class="primary" id="print-certificate">Print certificate</button></div><p id="certificate-status" role="status">Your name stays in this browser and is not uploaded.</p></div>
+          <div class="certificate-maker"><label for="graduate-name">Name on your certificate (optional)</label><div><input id="graduate-name" maxlength="60" autocomplete="name" placeholder="Mission Alive crew member"><button class="primary" id="print-certificate">Print certificate</button></div><p id="certificate-status" role="status">Your name stays in this browser and is not uploaded.</p></div>
         </div>
         <figure class="homecoming-keepsake"><div class="pale-dot-frame"><img src="/assets/voyager-pale-blue-dot.jpg" alt="Earth as a tiny pale dot in a sunbeam in Voyager 1’s 1990 photograph, reprocessed by NASA in 2020." width="5230" height="5175" loading="lazy"><span class="pale-dot-marker" aria-hidden="true"><i></i><span>EARTH</span></span></div><figcaption><h3>One small world. All of us.</h3><p>Every machine you met began here. So did you.</p><p class="fine">Voyager 1 · 14 February 1990 · reprocessed in 2020</p><a href="https://science.nasa.gov/photojournal/pale-blue-dot-revisited/" target="_blank" rel="noopener">Pale Blue Dot Revisited · NASA/JPL-Caltech ↗</a><button type="button" data-replay-homecoming>Replay the journey home</button></figcaption></figure>
-        <section class="graduation-crew" aria-labelledby="graduation-crew-title">
-          <p class="finale-gifts">You carry patience, daring, precision, and endurance now. That is the crew.</p>
-          <h3 id="graduation-crew-title">THE CREW IS ALREADY CHANGING</h3>
-          <p>In 2021, Hayley Arceneaux flew to orbit with a titanium rod in her leg. She was the first person with a prosthesis in space.</p>
-          <p>John McFall, a Paralympian and a surgeon, is medically certified for a long mission on the space station. He is waiting for his flight.</p>
-          <p>Wanda Diaz-Merced is blind. She studies the stars by listening to them.</p>
-        </section>
+        <p class="finale-gifts finale-six-virtues">You carry resourcefulness, judgement, patience, daring, precision, and endurance now. That is the crew.</p>
         <div class="finale-actions"><button class="primary" id="finale-passport">Finish</button><button class="secondary" id="finale-teachers">For Teachers</button></div>
       </div>
     </section>
@@ -175,7 +169,7 @@
         <div class="certificate-orbit" aria-hidden="true">✦</div>
         <h1>Mission Alive Graduate</h1>
         <p class="certificate-award">This certificate celebrates</p>
-        <p class="certificate-name" id="certificate-name">Explorer</p>
+        <p class="certificate-name" id="certificate-name">Mission Alive crew member</p>
         <p class="certificate-copy">for completing six training modules and earning every stamp in the crew certification.</p>
         <div class="certificate-stamps" aria-label="Six missions completed"><span><b>01</b>Apollo 17 LRV<small>REPAIR</small></span><span><b>02</b>Surveyor 3<small>TEST</small></span><span><b>03</b>Curiosity<small>DRIVE</small></span><span><b>04</b>Ingenuity<small>FLY</small></span><span><b>05</b>Webb<small>UNFOLD</small></span><span><b>06</b>Voyager 1<small>LISTEN</small></span></div>
         <p class="certificate-finish">Six machines. Six missions. One explorer.</p>

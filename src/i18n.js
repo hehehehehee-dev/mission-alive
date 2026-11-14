@@ -10,10 +10,11 @@ import * as journeyExperienceCopy from './locales/journey-experience.js';
 import * as accessibilityCopy from './locales/accessibility.js';
 import * as moonGameCopy from './locales/moon-games.js';
 import * as sixMissionCopy from './locales/six-missions.js';
+import * as nov14Copy from './locales/nov14.js';
 
 export const LANGUAGE_STORAGE_KEY = "mission-alive-language-v1";
 const catalogs = { es: {}, vi: {} };
-const modules = [interfaceCopy, storyCopy, teacherCopy, supplementalCopy, greetingCopy, serviceCopy, creditCopy, journeyExperienceCopy, accessibilityCopy, moonGameCopy, sixMissionCopy];
+const modules = [interfaceCopy, storyCopy, teacherCopy, supplementalCopy, greetingCopy, serviceCopy, creditCopy, journeyExperienceCopy, accessibilityCopy, moonGameCopy, sixMissionCopy, nov14Copy];
 for (const locale of ["es", "vi"]) {
   // Country names also remain searchable in their canonical English form.
   const english = new Intl.DisplayNames(["en"], { type: "region" });

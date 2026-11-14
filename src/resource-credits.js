@@ -6,6 +6,7 @@ import { moonStories } from './moon-stories.js';
 import { marsSounds } from './mars-sounds.js';
 import { greetings, greetingSource } from './greetings-catalog.js';
 import { t } from './i18n.js';
+import { projectTools, siDisclosure } from './project-attribution.js';
 
 const image = (id, title, credit, source, file, original, usedIn, kind = 'Photograph', presentation = 'Original file; displayed at a smaller size.') => ({
   id, category: 'images', title, credit, source, files: [file], original,
@@ -102,7 +103,7 @@ export function buildScienceCredits(facts = {}, quotes = []) {
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, value => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[value]);
 const normalize = value => String(value).normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-const categories = [['all', 'All resources'], ['images', 'Images & film'], ['data', 'Data & APIs'], ['audio', 'Recordings'], ['science', 'Mission references']];
+const categories = [['all', 'All resources'], ['images', 'Images & film'], ['data', 'Data & APIs'], ['audio', 'Recordings'], ['science', 'Mission references'], ['tools', 'Tools & SI disclosure']];
 
 export function mountResourceCredits(dialog, { facts, quotes = [], recordImages = {}, onFieldNotes = () => {} } = {}) {
   const science = buildScienceCredits(facts, quotes);
@@ -111,11 +112,12 @@ export function mountResourceCredits(dialog, { facts, quotes = [], recordImages 
   let returnFocus;
   dialog.innerHTML = `<header class="credits-heading"><div><p class="eyebrow">THE PEOPLE AND MISSIONS BEHIND THE EXPERIENCE</p><h2 id="credits-title">Sources & credits</h2></div><button type="button" class="credits-close" aria-label="Close sources and credits">×</button></header>
     <div class="credits-intro"><p>Every image, recording, and data source has a story of its own. Explore the original work and the people who made it.</p><p class="fine">Mission Alive creates the training simulations, spacecraft models, crew ship, and first-person stories. Agency imagery and measurements are credited below. Illustrations and simulations are labeled separately from observations.</p></div>
+    <section class="credits-si" aria-labelledby="credits-si-title"><h3 id="credits-si-title">How Mission Alive was made</h3><p>${siDisclosure}</p><p><a href="/project-references.md" download>Download project references</a> · <a href="/third-party-notices.txt" target="_blank" rel="noopener">Dependency inventory & licenses</a></p></section>
     <div class="credits-tools"><label class="sr-only" for="credits-search">Search sources and credits</label><input id="credits-search" type="search" placeholder="Search NASA, Webb, Sun, audio…"><div class="credits-filters" role="group" aria-label="Filter resource types">${categories.map(([id, title]) => `<button type="button" data-credit-filter="${id}" aria-pressed="${id === 'all'}">${title}</button>`).join('')}</div><output id="credits-count" role="status"></output></div>
     <div class="credits-grid" id="credits-results"></div><div class="credits-end"><button type="button" data-credit-notes>Mission field notes →</button><p class="fine">Independent educational project. NASA, ESA, CSA, STScI, and other credited organizations do not endorse Mission Alive.</p><p class="fine">The machine voices were generated with ElevenLabs; interface sound effects are synthesized by Mission Alive. They are not NASA recordings.</p><a href="https://www.nasa.gov/nasa-brand-center/images-and-media/" target="_blank" rel="noopener">NASA media guidance ↗</a><a href="https://www.esa.int/ESA_Multimedia/Terms_and_conditions_of_use_of_images_and_videos_available_on_the_esa_website" target="_blank" rel="noopener">ESA media terms ↗</a></div>`;
   const grid = dialog.querySelector('#credits-results');
   const draw = () => {
-    const entries = [...resourceCredits, ...archivePhotos.values(), ...science];
+    const entries = [...resourceCredits, ...archivePhotos.values(), ...science, ...projectTools];
     const needle = normalize(query);
     const shown = entries.filter(entry => (category === 'all' || entry.category === category) && normalize([entry.title, t(entry.title), entry.credit, entry.kind, t(entry.kind), ...entry.usedIn, ...entry.usedIn.map(label => t(label))].join(' ')).includes(needle));
     grid.innerHTML = shown.map(entry => {

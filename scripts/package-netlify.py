@@ -24,6 +24,7 @@ SOURCE_FILES = (
     "package-lock.json",
     "netlify.toml",
     "vite.config.js",
+    "scripts/export-project-references.mjs",
     "server/voyager-horizons.mjs",
     "server/dsn-now.mjs",
 )

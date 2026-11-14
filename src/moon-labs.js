@@ -4,8 +4,8 @@ import { mountStampCeremony } from './stamp-ceremony.js';
 import { trainingMissions } from './certification.js';
 
 export const moonTransmissions = {
-  apollo17: 'I am still parked on the Moon. My crew brought maps to find their way. When my fender broke, those maps became a repair. You leave me with this: a good engineer can give an ordinary thing a new job.',
-  surveyor3: 'Most of me is still on the Moon. My camera came home with Apollo 12. You pressed, measured, and looked beneath the surface before trusting the ground. Take that habit with you: look for evidence before you decide.',
+  apollo17: 'I am still parked on the Moon, where Apollo 17 left me. My crew brought maps to find their way. When my fender broke, those maps became a repair. You leave me with this: a good engineer can give an ordinary thing a new job.',
+  surveyor3: 'Most of me is still on the Moon. Apollo 12 came to visit me and brought my camera home. You pressed, measured, and looked beneath the surface before trusting the ground. Take that habit with you: look for evidence before you decide.',
 };
 
 export function moonLabMarkup() {

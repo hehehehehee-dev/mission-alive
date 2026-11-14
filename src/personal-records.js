@@ -68,9 +68,10 @@ async function withStore(mode, operation) {
     return await new Promise((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, mode);
       const request = operation(transaction.objectStore(STORE_NAME));
-      request.onsuccess = () => resolve(request.result);
+      transaction.oncomplete = () => resolve(request.result);
       request.onerror = () => reject(request.error);
       transaction.onabort = () => reject(transaction.error);
+      transaction.onerror = () => reject(transaction.error);
     });
   } finally {
     db.close();
@@ -410,14 +411,40 @@ export function mountPersonalRecords(
         remove.type = "button";
         remove.textContent = "Delete private copy";
         const itemLabel = record.audio ? "recording" : "greeting";
+        const cancelDelete = document.createElement('button');
+        cancelDelete.type = 'button';
+        cancelDelete.textContent = 'Keep private copy';
+        cancelDelete.hidden = true;
+        let confirming = false;
+        cancelDelete.onclick = () => {
+          confirming = false;
+          cancelDelete.hidden = true;
+          remove.textContent = 'Delete private copy';
+          setStatus('Private copy kept on this device.');
+          remove.focus();
+        };
         remove.addEventListener("click", async () => {
-          if (!confirm(t(`Delete this private ${itemLabel} from this device?`))) return;
-          await deleteLocalRecord(record.id);
-          await drawLocalRecords();
-          setStatus(`Private ${itemLabel} deleted from this device.`);
-          find("#personal-record-heading").focus();
+          if (!confirming) {
+            confirming = true;
+            remove.textContent = 'Confirm delete';
+            cancelDelete.hidden = false;
+            setStatus(`Delete this private ${itemLabel} from this device?`);
+            return;
+          }
+          remove.disabled = true;
+          try {
+            await deleteLocalRecord(record.id);
+            await drawLocalRecords();
+            setStatus(`Private ${itemLabel} deleted from this device.`);
+            const heading = find('#personal-record-heading');
+            heading.tabIndex = -1;
+            heading.focus();
+          } catch {
+            remove.disabled = false;
+            setStatus('Could not delete the private copy. Please try again.');
+          }
         });
-        actions.append(remove);
+        actions.append(remove, cancelDelete);
         article.append(actions);
         localList.append(article);
         if (record.id === focusRecordId) {

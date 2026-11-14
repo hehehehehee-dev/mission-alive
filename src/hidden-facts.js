@@ -56,6 +56,7 @@ export function hiddenFactPassportMarkup(storage = localStorage) {
 export function mountHiddenFacts(root, id) {
   const facts = hiddenFacts[id] || [];
   let keys = loadHiddenFactKeys();
+  let fallbackHint = false;
   root.innerHTML = `<section class="hidden-facts" aria-labelledby="hidden-facts-title"><div class="hidden-facts-heading"><div><p class="eyebrow">OPTIONAL DISCOVERY · RESEARCH CACHE</p><h2 id="hidden-facts-title">What is this machine hiding?</h2></div><output id="hidden-facts-count"></output></div><p>Inspect the numbered parts on the 3D model. Each part can reveal a fact that the main story did not tell you.</p><div class="hidden-fact-grid"></div><p id="hidden-facts-status" class="fine" role="status"></p></section>`;
   const grid = root.querySelector(".hidden-fact-grid");
   const status = root.querySelector("#hidden-facts-status");
@@ -89,6 +90,7 @@ export function mountHiddenFacts(root, id) {
   draw();
   return {
     reveal(part) {
+      fallbackHint = false;
       const fact = facts.find((item) => item.part === part);
       if (!fact) return false;
       const key = `${id}:${part}`;
@@ -110,15 +112,21 @@ export function mountHiddenFacts(root, id) {
     },
     enableFallback() {
       root.querySelector(".hidden-facts > p").textContent = "Inspect the numbered parts below to reveal the same NASA clues in 2D mode.";
-      if (!status.textContent) status.textContent = "In 2D mode, use the buttons below to inspect the same parts.";
+      if (!status.textContent) { status.textContent = "In 2D mode, use the buttons below to inspect the same parts."; fallbackHint = true; }
       for (const [index, fact] of facts.entries()) {
         const card = grid.querySelector(`[data-secret-part="${fact.part}"]`);
-        if (!card || keys.has(`${id}:${fact.part}`)) continue;
+        if (!card || keys.has(`${id}:${fact.part}`) || card.querySelector('[data-fallback-inspect]')) continue;
         const button = document.createElement("button");
+        button.dataset.fallbackInspect = '';
         button.textContent = `Inspect part 0${index + 1}`;
         button.onclick = () => { this.reveal(fact.part); this.enableFallback(); };
         card.append(button);
       }
+    },
+    disableFallback() {
+      root.querySelector('.hidden-facts > p').textContent = 'Inspect the numbered parts on the 3D model. Each part can reveal a fact that the main story did not tell you.';
+      root.querySelectorAll('[data-fallback-inspect]').forEach(button => button.remove());
+      if (fallbackHint) { status.textContent = ''; fallbackHint = false; }
     },
   };
 }

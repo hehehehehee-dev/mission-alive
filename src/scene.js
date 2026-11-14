@@ -1,5 +1,6 @@
 import * as T from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { orientWebbMirror, webbWingAngle } from './webb-pose.js';
 import { recordArtifacts } from "./record-artifacts.js";
 import { machinePartGuide } from "./machine-parts.js";
 import {
@@ -30,6 +31,8 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
   camera.position.set(8, 5.5, 9);
   const orbit = new OrbitControls(camera, renderer.domElement);
   orbit.enableDamping = true;
+  orbit.rotateSpeed = id === 'webb' ? .28 : .55;
+  orbit.dampingFactor = .09;
   orbit.enablePan = false;
   orbit.minDistance = 5;
   orbit.maxDistance = 42;
@@ -516,6 +519,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
           if (!wing) {
             wing = new T.Group();
             wing.userData.side = Math.sign(q);
+            wing.rotation.y = webbWingAngle(Math.sign(q));
             wing.position.set(Math.sign(q) * 1.02, 1.8, 0);
             root.add(wing);
             wings.push(wing);
@@ -532,8 +536,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
           localY,
           -0.09,
         );
-        support.rotation.x = Math.PI / 2;
-        support.rotation.z = Math.PI / 6;
+        orientWebbMirror(support);
         for (const [ax, ay] of [
           [0, 0.2],
           [-0.17, -0.11],
@@ -557,8 +560,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
           localY,
           0.02,
         );
-        seg.rotation.x = Math.PI / 2;
-        seg.rotation.z = Math.PI / 6;
+        orientWebbMirror(seg);
         segments.push(seg);
       }
 
@@ -646,7 +648,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
     rod([-3.55, -0.02, 0], [3.55, -0.02, 0], 0.035, frame);
     rod([0, -0.02, -3.55], [0, -0.02, 3.6], 0.035, frame);
 
-    camera.position.set(6.8, 4.3, 10.8);
+    camera.position.set(3.7, 3.3, 12.5);
     orbit.target.set(0, 1.05, 0);
   }
   const recordTextures = {};
@@ -840,6 +842,14 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
   }
   return {
     updateViewLabel,
+    getViewState() { return { position: camera.position.toArray(), target: orbit.target.toArray() }; },
+    setViewState(view) {
+      if (![view?.position, view?.target].every(vector => Array.isArray(vector) && vector.length === 3 && vector.every(Number.isFinite))) return;
+      camera.position.fromArray(view.position);
+      orbit.target.fromArray(view.target);
+      orbit.update();
+      updateViewLabel();
+    },
     setReduced(v) {
       reduced = v;
       orbit.enableDamping = !v;
@@ -1008,7 +1018,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
             w.userData.side < 0
               ? st.webbWingProgress?.left || 0
               : st.webbWingProgress?.right || 0;
-          const target = w.userData.side * (1 - progress) * Math.PI * 0.72;
+          const target = webbWingAngle(w.userData.side, progress);
           w.rotation.y = reduced ? target : T.MathUtils.damp(w.rotation.y, target, 4.2, dt);
         });
         segments.forEach((s, i) => {

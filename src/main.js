@@ -1,6 +1,6 @@
 import "./style.css";
 import { trainingMissions, missionIds, MISSION_COUNT, restoredStamps, certificationComplete } from "./certification.js";
-import { mountLanguageSwitcher, getLanguage, getSourceText } from "./i18n.js";
+import { mountLanguageSwitcher, getLanguage, getSourceText, t } from "./i18n.js";
 mountLanguageSwitcher();
 import facts from "./facts.json";
 import { greetingMarkup, mountGreetings } from "./greetings.js";
@@ -39,6 +39,7 @@ import { mountRoverTextMap, roverPosition, describeStar, mountRangeButtons, next
 import './accessible-academy.css';
 import './moon-labs.css';
 import './typography.css';
+import './consolidated-polish.css';
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -375,12 +376,13 @@ function updateBackgroundCredit(id) {
   $("#ambient-credit").innerHTML = `<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
 }
 let navigationPending = false;
+let queuedNavigation = null;
 async function navigateTo(id) {
+  if (navigationPending) { queuedNavigation = id; return; }
   if (id === 'apollo17' || id === 'surveyor3') {
     moonPanel.play(id, document.activeElement);
     return;
   }
-  if (navigationPending) return;
   const showPerspective = !!exhibits[id] && current !== id;
   if (reduce) {
     setRoute(id);
@@ -397,7 +399,10 @@ async function navigateTo(id) {
     window.setTimeout(() => {
       document.body.classList.remove("is-warping");
       navigationPending = false;
-    }, 260);
+      const queued = queuedNavigation;
+      queuedNavigation = null;
+      if (queued && queued !== current) navigateTo(queued);
+    }, 80);
   }
 }
 function setRoute(id) {
@@ -488,6 +493,18 @@ mountTeacherPage($("#teachers-page"), {
   onEnterMuseum: () => navigateTo("lobby"),
 });
 
+const CREW_NAME_KEY = 'mission-alive-crew-name-v1';
+try { $('#crew-name').value = localStorage.getItem(CREW_NAME_KEY) || ''; } catch { /* Private browsing. */ }
+const cleanCrewName = value => value.trim().replace(/\s+/g, ' ').slice(0, 60);
+function certificateName() {
+  return cleanCrewName($('#graduate-name').value) || cleanCrewName($('#crew-name').value) || t('Mission Alive crew member');
+}
+$('#crew-name').oninput = () => {
+  $('#graduate-name').value = $('#crew-name').value;
+  try { localStorage.setItem(CREW_NAME_KEY, cleanCrewName($('#crew-name').value)); } catch { /* Keep it for this visit. */ }
+};
+$('#graduate-name').oninput = () => { $('#certificate-name').textContent = certificateName(); };
+
 let finaleReturnFocus = null;
 const homecoming = mountHomecoming($('#finale'));
 const planetComparison = mountPlanetComparison($('#planet-comparison'));
@@ -509,6 +526,8 @@ function openFinale({ homecoming: playHomecoming = true } = {}) {
   for (const timer of completionTimers) clearTimeout(timer);
   completionTimers.clear();
   finaleReturnFocus = document.activeElement;
+  if (!$('#graduate-name').value.trim()) $('#graduate-name').value = $('#crew-name').value;
+  $('#certificate-name').textContent = certificateName();
   $("#finale-date").dataset.i18nDate = new Date().toISOString();
   $("#finale-date").textContent = new Intl.DateTimeFormat(getLanguage(), { dateStyle: "long" }).format(new Date());
   const confetti = $("#finale-confetti");
@@ -547,12 +566,7 @@ $("#lobby-certificate").onclick = () => {
 };
 $("#print-certificate").onclick = () => {
   if (!certificationComplete(completed)) return;
-  const name = $("#graduate-name").value.trim().replace(/\s+/g, " ");
-  if (!name) {
-    $("#certificate-status").textContent = "Enter a name to place on the certificate.";
-    $("#graduate-name").focus();
-    return;
-  }
+  const name = certificateName();
   $("#certificate-name").textContent = name;
   $("#certificate-date").dataset.i18nDate = new Date().toISOString();
   $("#certificate-date").textContent = new Intl.DateTimeFormat(getLanguage(), { dateStyle: "long" }).format(new Date());
@@ -744,6 +758,7 @@ function renderLobby() {
   $("#discovery").hidden = true;
   $("#teachers-page").hidden = true;
   $("#lobby").hidden = false;
+  updateViewModeButton();
   $("#dsn-widget-slot").innerHTML = dsnWidgetMarkup();
   dsnWidget = mountDsnWidget($("#dsn-widget-slot"));
   $("#mission-history-slot").innerHTML = missionHistoryMarkup();
@@ -823,6 +838,7 @@ function renderTeachers() {
   $("#greetings").hidden = true;
   $("#discovery").hidden = true;
   $("#teachers-page").hidden = false;
+  updateViewModeButton();
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 function meter(label, id) {
@@ -2368,7 +2384,70 @@ function checkVoyager() {
   );
   if (progress.listen && progress.greeting) success();
 }
+let viewerGeneration = 0;
+const viewerViews = new Map();
+function updateViewModeButton() {
+  const button = $('#view-mode');
+  button.hidden = ['voyager', 'lobby', 'teachers'].includes(current);
+  button.setAttribute('aria-pressed', String(force2d));
+  button.textContent = force2d ? '2D view' : '3D view';
+  button.setAttribute('aria-label', force2d ? 'Current view: 2D. Switch to 3D.' : 'Current view: 3D. Switch to 2D.');
+  $('#stage').tabIndex = force2d ? -1 : 0;
+  $('.orbit-hint').textContent = force2d ? 'Use the exhibit controls below' : 'Drag or arrow keys to orbit · Scroll or +/− to zoom · 0 resets';
+}
+async function mountViewer(id, token, view = null) {
+  const generation = ++viewerGeneration;
+  const e = exhibits[id];
+  updateViewModeButton();
+  scene?.dispose();
+  scene = null;
+  $("#stage canvas")?.remove();
+  $("#stage .fallback-card")?.remove();
+  $("#stage").classList.remove("fallback");
+
+  try {
+    if (force2d) throw Error("2D requested");
+    const { createScene } = await import("./scene.js");
+    if (state !== token || generation !== viewerGeneration) return;
+    scene = createScene(
+      $("#stage"),
+      id,
+      () => {
+        force2d = true;
+        updateViewModeButton();
+        mountViewer(id, token, view);
+      },
+      (part) => {
+        const discovered = hiddenFactCache?.reveal(part.id);
+        setStatus(`${part.label.toUpperCase()} · ${discovered ? "HIDDEN FACT UNLOCKED BELOW" : "PART INSPECTED"}`);
+        if (id === "voyager") {
+          announceVoyager(`${part.label}. ${part.description}`);
+          const face = part.id === "record" ? "front" : "cover";
+          $(`[data-record-face="${face}"]`)?.click();
+        }
+        beep(part.sound || 420, 0.12);
+      },
+      (description) => announce(description),
+    );
+    if (id === "voyager") $("#stage .part-card")?.setAttribute("aria-live", "off");
+    scene.setReduced(reduce);
+    hiddenFactCache?.disableFallback();
+    scene.setState(token);
+    if (view) scene.setViewState(view);
+    scene.render(0);
+  } catch {
+    if (state !== token || generation !== viewerGeneration) return;
+    $("#stage").classList.add("fallback");
+    $("#stage").insertAdjacentHTML(
+      "beforeend",
+      `<div class="fallback-card">${id === "voyager" ? `<img id="fallback-record-image" src="${recordArtifacts.front.image}" alt="${recordArtifacts.front.alt}" width="240" height="240">` : `<strong>${e.action}. Discover.</strong>`}<p>Use the exhibit controls to explore the same mission in this lightweight view.</p><div class="fallback-track"><i></i></div><output id="fallback-status"${id === "voyager" ? ' role="group" aria-live="off"' : ""}>Ready to explore</output></div>`,
+    );
+    hiddenFactCache?.enableFallback();
+  }
+}
+
 async function render(id) {
+  if (!reduce) $('.exhibit').animate?.([{opacity:.25}, {opacity:1}], {duration:240, easing:'ease-out'});
   $('.skip').href = '#controls';
   $('.skip').textContent = 'Skip to training controls';
   disposeOpenData();
@@ -2527,7 +2606,7 @@ async function render(id) {
   if (id === "voyager") {
     $('[data-voyager-step="listen"]').textContent = 'Play or read one Golden Record greeting';
     $('#voyager-live-distance').insertAdjacentHTML('afterend', '<button type="button" id="read-voyager-distance">Read current distance</button>');
-    $('#read-voyager-distance').onclick = () => announceVoyager(`Distance reading: ${getSourceText($('#voyager-live-distance'))}. ${getSourceText($('#voyager-live-light-time'))}.`);
+    $('#read-voyager-distance').onclick = () => { voyagerDistance?.refresh(); announceVoyager(`Distance reading: ${getSourceText($('#voyager-live-distance'))}. ${getSourceText($('#voyager-live-light-time'))}.`); };
     $("#controls .voyager-live").insertAdjacentHTML("afterend", voyagerContactMarkup() + voyagerCountdownMarkup());
   }
   if (id === "webb") {
@@ -2607,46 +2686,7 @@ async function render(id) {
   bindControls();
   updateMissionProgress();
   setStatus("YOUR DISCOVERY STARTS HERE");
-  scene?.dispose();
-  scene = null;
-  $("#stage canvas")?.remove();
-  $("#stage .fallback-card")?.remove();
-  $("#stage").classList.remove("fallback");
-  const token = state;
-  try {
-    if (force2d) throw Error("2D requested");
-    const { createScene } = await import("./scene.js");
-    if (state !== token) return;
-    scene = createScene(
-      $("#stage"),
-      id,
-      () => {
-        force2d = true;
-        render(current);
-      },
-      (part) => {
-        const discovered = hiddenFactCache?.reveal(part.id);
-        setStatus(`${part.label.toUpperCase()} · ${discovered ? "HIDDEN FACT UNLOCKED BELOW" : "PART INSPECTED"}`);
-        if (id === "voyager") {
-          announceVoyager(`${part.label}. ${part.description}`);
-          const face = part.id === "record" ? "front" : "cover";
-          $(`[data-record-face="${face}"]`)?.click();
-        }
-        beep(part.sound || 420, 0.12);
-      },
-      (description) => announce(description),
-    );
-    if (id === "voyager") $("#stage .part-card")?.setAttribute("aria-live", "off");
-    scene.setReduced(reduce);
-  } catch {
-    if (state !== token) return;
-    $("#stage").classList.add("fallback");
-    $("#stage").insertAdjacentHTML(
-      "beforeend",
-      `<div class="fallback-card">${id === "voyager" ? `<img id="fallback-record-image" src="${recordArtifacts.front.image}" alt="${recordArtifacts.front.alt}" width="240" height="240">` : `<strong>${e.action}. Discover.</strong>`}<p>Use the exhibit controls to explore the same mission in this lightweight view.</p><div class="fallback-track"><i></i></div><output id="fallback-status"${id === "voyager" ? ' role="group" aria-live="off"' : ""}>Ready to explore</output></div>`,
-    );
-    hiddenFactCache?.enableFallback();
-  }
+  await mountViewer(id, state);
 }
 function openFieldNotes() {
   $("#notes-content").innerHTML =
@@ -2706,11 +2746,10 @@ $("#motion").onclick = () => setReducedMotion(!reduce);
 const accessPreferences = mountAccessPreferences({ trigger: $('#access-settings'), dialog: $('#access-dialog'), getReduced: () => reduce, setReduced: setReducedMotion });
 $("#view-mode").onclick = () => {
   force2d = !force2d;
-  $("#view-mode").setAttribute("aria-pressed", force2d);
-  $("#view-mode").textContent = force2d ? "3D view" : "2D view";
-  if (current === "lobby") renderLobby();
-  else if (current === "teachers") renderTeachers();
-  else render(current);
+  const view = scene?.getViewState() || viewerViews.get(current);
+  if (view) viewerViews.set(current, view);
+  updateViewModeButton();
+  if (exhibits[current]) mountViewer(current, state, view);
 };
 window.addEventListener("blur", () => {
   driveKeys.clear();
