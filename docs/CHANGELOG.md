@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Direct main deployment workflow
+
+- Updated the shared Codex and Claude instructions to commit and push validated changes directly to `main`, which is connected to Netlify auto-deploy.
+- Reconciled the rebuilt public repository history with the current application history without force-pushing or changing the application tree.
+
 ### 3D Moon challenges
 
 - Moved the new 3D work into the playable Apollo 17 and Surveyor 3 challenges instead of keeping a separate decorative model viewer.

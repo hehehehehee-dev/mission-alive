@@ -6,6 +6,10 @@ Mission Alive is shared between Codex and Claude. Before editing, read `CLAUDE.m
 
 Before every commit, update section 0 of `docs/AI_HANDOFF.md` and add a section 9 log entry, in the same commit. Record the branch, commit subject, what changed, how it was verified, and what is left for the next collaborator. Claude follows the same rule, so this file is how work passes between the two.
 
+# Direct main workflow
+
+The owner has explicitly chosen a direct deployment workflow. Work on `main`; after a coherent change passes its relevant checks, commit it and push it to `origin/main` so Netlify can deploy it. Do not create a feature branch unless the owner changes this instruction. Never force-push or rewrite public history.
+
 # Netlify packaging preference
 
 The user wants only the current Netlify version and the previous distinct version retained locally. Use `scripts/package-netlify.py` after validating changes; it keeps `mission-alive-netlify-update.zip` and `mission-alive-netlify-previous.zip` in this project root. Do not create additional dated or static Netlify ZIP copies. This preference does not authorize removing hosted Netlify deployments.

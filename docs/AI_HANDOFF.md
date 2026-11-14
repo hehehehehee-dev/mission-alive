@@ -6,8 +6,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
-- **Active branch:** `fix/nov14-leftover-retests` (ahead of `origin/main`; not pushed or deployed).
-- **Last change:** Apollo 17 and Surveyor 3 now use 3D scenes inside the challenges themselves. Apollo controls reshape the fender and animate dust; Surveyor controls drive patch selection, probing, trenching, footpad width, sinking, and tilt. The redundant standalone model viewer was removed.
+- **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
+- **Last change:** Apollo 17 and Surveyor 3 now use 3D scenes inside the challenges themselves. Apollo controls reshape the fender and animate dust; Surveyor controls drive patch selection, probing, trenching, footpad width, sinking, and tilt. The redundant standalone model viewer was removed. The rebuilt public repository history was reconciled without force-pushing.
 - **Last verification:** `npm test` 125/125 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes.
 - **Not yet verified:** the two new challenge canvases, footer privacy dialog, and dedicated Moon pages in a real browser at desktop and about 390 px. Netlify headers need checking after a future deploy; the live site still runs an older build.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
@@ -15,7 +15,7 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
   - Ingenuity has five setup steps before lift-off and +10% power needs seven presses; consider fewer steps or a slider. Flight itself was not played (hidden browser pane paused animation).
 - **Next suggested steps:**
   1. Run the browser checks above, including keyboard open, Escape close, and Spanish/Vietnamese privacy copy.
-  2. After the owner requests deployment, confirm CSP, HSTS, Permissions-Policy, and the classroom gallery endpoint on Netlify.
+  2. After the next Netlify auto-deploy, confirm CSP, HSTS, Permissions-Policy, and the classroom gallery endpoint in production.
   3. Decide whether to remove the now-unused `moonPanel.play()` and `moonPanel.open()` from `src/moon-stories.js`.
 - **Open questions for the owner:** none.
 
@@ -167,10 +167,10 @@ This creates `mission-alive-netlify-update.zip`, moves the last distinct package
 - Public repository: `https://github.com/hehehehehee-dev/mission-alive`.
 - Stable branch: `main`.
 - Current release tag: `v1.0.0` at commit `0d6d1bb`.
-- Use a focused branch and commit for each coherent change.
+- Work directly on `main`; make one focused commit for each coherent, validated change and push it to `origin/main` so Netlify can auto-deploy.
 - Do not rewrite public release history or force-push `main`.
 - Do not commit `dist`, `node_modules`, `.env`, `community-data`, `output`, `tmp`, or Netlify ZIPs.
-- Do not publish a GitHub release or deploy Netlify without an explicit owner request.
+- Do not publish a GitHub release or trigger a separate manual Netlify deployment without an explicit owner request.
 
 ## 7. Documentation trust levels
 
@@ -208,6 +208,12 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Adopt direct main deployment workflow
+- **Changed:** synchronized `AGENTS.md`, `CLAUDE.md`, and this handoff so validated work is committed and pushed directly to `origin/main`; reconciled the rebuilt public repository history without force-pushing.
+- **Verified:** documentation consistency; `origin/main` is an ancestor of the reconciled local `main`; the preceding application gate remains `npm test` 125/125, `npm run build`, and `git diff --check`.
+- **Left for next:** continue on `main`, push after validation, and confirm the production Netlify headers after auto-deploy.
 
 ### 2026-11-14 — Codex — `fix/nov14-leftover-retests`
 - **Commit:** Move Moon interactions into 3D challenge scenes

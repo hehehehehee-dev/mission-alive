@@ -29,13 +29,13 @@ Do not add, remove, or silently change a stamp, finale condition, storage key, c
 ## Required workflow
 
 1. Inspect the relevant implementation and tests before proposing a change.
-2. Work on a branch. Keep `main` releasable.
+2. Work directly on `main`, per the owner's deployment workflow. After validation, commit and push to `origin/main` so Netlify can deploy it. Do not create a feature branch unless the owner asks.
 3. Preserve unrelated user changes and untracked build artifacts.
 4. Add or update tests for behavior changes.
 5. Run `npm test` and `npm run build`.
 6. For UI changes, check keyboard use, reduced motion, English/Spanish/Vietnamese, and a narrow mobile viewport near 390 px.
 7. Only after validation, run `python scripts/package-netlify.py` when a new Netlify package is requested. It intentionally retains only the current and previous ZIP.
-8. Never deploy, push, publish, or create a release unless the owner asks.
+8. Push validated commits directly to `origin/main`. Do not force-push, manually deploy Netlify, publish a GitHub release, or rewrite public history unless the owner explicitly asks.
 9. Update `docs/CHANGELOG.md` and any affected Markdown guide in the same commit as every product, code, content, data, or UX change. Documentation is part of the definition of done.
 10. Before every commit, update section 0 (“Current state”) of `docs/AI_HANDOFF.md` and add a section 9 log entry, in the same commit. Codex reads the same file through `AGENTS.md`, so this is how work passes between Claude and Codex. Start each session by reading section 0 and the newest log entry.
 
