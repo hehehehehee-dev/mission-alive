@@ -8,8 +8,8 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Last change:** the anatomy tray now sits below, rather than over, all four main 3D canvases; their study column stays visible beside long desktop controls. Ingenuity reveals one of three short setup/flight panels at a time and reaches safe rotor power with one action. A production 390 px audit then found and fixed long anatomy labels widening the study column; the tray now scrolls internally.
-- **Last verification:** `npm test` 128/128 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes. Production verified Ingenuity's choose → link → safe 75% rotor → fly transition and confirmed every anatomy dock is outside its canvas; the narrow-width containment fix is awaiting the next auto-deploy.
-- **Not yet verified:** recheck all four anatomy trays after the narrow-width follow-up deploy. All three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
+- **Last verification:** `npm test` 128/128 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes. Production verified Ingenuity's choose → link → safe 75% rotor → fly transition. At 390 px, Curiosity, Ingenuity, Webb, and Voyager all keep the anatomy tray below the canvas, contain long labels in an internal horizontal scroller, and produce no page-level horizontal overflow.
+- **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
@@ -208,6 +208,12 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Record production anatomy layout verification
+- **Changed:** updated the shared handoff with the deployed 390 px results for all four main 3D routes and the deployed Ingenuity step transition.
+- **Verified:** production DOM/layout audit: external anatomy tray, no canvas overlap, no document overflow, and internal label scrolling on Curiosity, Ingenuity, Webb, and Voyager.
+- **Left for next:** terrain-outcome and flight-pacing gameplay checks remain; the shared layout regression is complete.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Contain anatomy trays on narrow screens
