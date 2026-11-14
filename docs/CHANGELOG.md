@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Aligned Moon machine views
+
+- Added lightweight procedural 3D reconstructions of the Apollo 17 LRV and Surveyor 3 to their dedicated mission pages, using one shared camera, lighting setup, stage size, and control pattern.
+- Added keyboard orbit/zoom/reset, reduced-motion behavior, offscreen rendering pause, WebGL fallback, and Spanish/Vietnamese interface copy.
+- Identified both models as simplified original Mission Alive reconstructions rather than NASA engineering models.
+
 ### Apollo 17 repair playtest fixes
 
 - A child playtest needed six dust tests to pass; the target is two or three. The workshop now starts level and clear of the wheel (30 cm / 0° / 4 cm) but too short, so one length change after assembly passes.

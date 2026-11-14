@@ -1,6 +1,12 @@
-# Optional Moon lab prototypes
+# Apollo 17 and Surveyor 3 training missions
 
-These two labs live inside the existing Moon story dialog. Open a Moon map dot, then choose **Repair my dust shield** or **Can this ground hold?** The archive remains available through Back to Moon stories. They are not training exhibits and do not award certification stamps, write passport storage, change the certificate, or trigger graduation.
+Apollo 17 LRV and Surveyor 3 have dedicated `#apollo17` and `#surveyor3` mission pages. Each page leads from a short sourced introduction through a machine view and an interactive challenge. Completing the challenge unlocks the normal stamp ceremony, so the two Moon missions contribute two of the six certification stamps.
+
+## Shared 3D machine view
+
+Both Moon pages use the same procedural Three.js stage, camera framing, lighting, and ground footprint. Apollo 17 shows a simplified rover with four wheels, seats, frame, antenna, and equipment. Surveyor 3 shows a simplified lander body, tripod legs, footpads, camera, antenna, and sampler arm. These are original Mission Alive teaching reconstructions rather than NASA engineering models, and the visible caption says they are not to engineering scale.
+
+The canvas supports pointer orbiting plus keyboard turning, zoom, and reset. Slow auto-rotation stops after interaction and is disabled for reduced motion. Rendering pauses outside the viewport, pixel density is capped, and a textual fallback leaves the challenge fully playable if WebGL is unavailable.
 
 ## Apollo 17 LRV
 

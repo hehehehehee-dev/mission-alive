@@ -6,6 +6,20 @@
 .moon-route-summary { max-width: 780px; margin: 0 0 34px; padding-left: 20px; border-left: 3px solid #e9bd74; }
 .moon-route-summary p:not(.eyebrow) { margin: 8px 0 12px; color: #d5dee2; font-size: 1.05rem; line-height: 1.7; }
 .moon-route-summary a { color: #b9dcea; font-size: .78rem; }
+.moon-machine-view { display: none; }
+.moon-panel.is-route-page .moon-machine-view { display: grid; grid-template-columns: minmax(220px, .72fr) minmax(420px, 1.28fr); align-items: center; gap: clamp(24px, 5vw, 64px); max-width: 1180px; margin: 10px auto 54px; padding: clamp(20px, 4vw, 42px); border-block: 1px solid #70869478; background: radial-gradient(circle at 75% 42%, #6ea3c21c, transparent 34%); }
+.moon-machine-view-copy h3 { margin: 8px 0 15px; color: #f0f3f2; font: 600 clamp(1.5rem, 3vw, 2.4rem)/1.16 Arial, sans-serif; }
+.moon-machine-view-copy p:last-child { margin: 0; color: #c2d0d7; font-size: .9rem; line-height: 1.7; }
+.moon-machine-view figure { min-width: 0; margin: 0; }
+.moon-machine-canvas { position: relative; width: 100%; min-height: 330px; overflow: hidden; border: 1px solid #8198a66e; border-radius: 7px; background: radial-gradient(circle at 50% 45%, #1e3747, #081018 68%); box-shadow: inset 0 0 80px #0008, 0 22px 55px #0007; }
+.moon-machine-canvas canvas { display: block; width: 100%; height: 100%; min-height: 330px; cursor: grab; touch-action: pan-y; }
+.moon-machine-canvas canvas:active { cursor: grabbing; }
+.moon-machine-canvas canvas:focus-visible { outline: 3px solid #a6e4ff; outline-offset: -5px; }
+.moon-machine-view figcaption { margin-top: 10px; color: #9fb0ba; font-size: .72rem; line-height: 1.55; }
+.moon-machine-fallback { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px; padding: 28px; text-align: center; color: #d8e2e7; }
+.moon-machine-fallback[hidden] { display: none; }
+.moon-machine-fallback strong { color: #f0d09a; font-size: 1.05rem; }
+.moon-machine-fallback span { color: #b8c7cf; font-size: .86rem; }
 .moon-panel.is-route-page .moon-panel-intro,
 .moon-panel.is-route-page .moon-lab-intro,
 .moon-panel.is-route-page .moon-lab-launches,
@@ -109,6 +123,7 @@
 body.high-contrast :is(.moon-panel, .moon-game fieldset, .moon-lab-launches button, .moon-game .lrv-figure, .moon-game .surveyor-figure, .moon-game .lrv-result, .moon-game .surveyor-result) { background: #000; color: #fff; border-color: #d4dde3; }
 body.high-contrast .moon-game :is(p, small, figcaption) { color: #eee; }
 @media (max-width: 800px) {
+  .moon-panel.is-route-page .moon-machine-view { grid-template-columns: 1fr; gap: 20px; }
   .moon-game :is(.lrv-workbench, .surveyor-layout, .lrv-layout) { grid-template-columns: 1fr; gap: 22px; }
   .lrv-workshop-grid, .surveyor-investigation-grid { grid-template-columns: 1fr; }
   .moon-game .lrv-illustration { position: static; }
@@ -119,6 +134,8 @@ body.high-contrast .moon-game :is(p, small, figcaption) { color: #eee; }
   .moon-panel.is-route-page .dialog-top { top: -20px; margin: -20px -16px 0; padding: 12px 16px; }
   .moon-panel.is-route-page > h2 { margin-top: 28px; font-size: clamp(2.3rem, 13vw, 4rem); }
   .moon-route-summary { margin-bottom: 24px; }
+  .moon-panel.is-route-page .moon-machine-view { margin: 6px 0 38px; padding: 20px 0; background: none; }
+  .moon-machine-canvas, .moon-machine-canvas canvas { min-height: 270px; }
   .moon-panel .dialog-top { margin: -22px -16px 0; padding: 14px 16px; top: -22px; gap: 16px; }
   .moon-panel .dialog-top .eyebrow { font-size: .6875rem; }
   .moon-panel .dialog-top button { flex: none; }

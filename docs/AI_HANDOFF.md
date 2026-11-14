@@ -7,9 +7,9 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `fix/nov14-leftover-retests` (ahead of `origin/main`; not pushed or deployed).
-- **Last change:** Apollo 17 repair made passable in two or three tests after a child playtest: new default shape, one-control hints with “a little”/“a lot”, one-tap tools, and “Touching the wheel” instead of negative gaps (`src/moon-lrv-game.js`, `src/locales/nov14.js`, tests).
-- **Last verification:** `npm test` 126/126 pass (includes Codex's in-progress Moon scene test); `npm run build` passes.
-- **Not yet verified:** the footer privacy dialog and dedicated Moon pages in a real browser at about 390 px. Netlify response headers also need checking after a future deploy. The live Netlify site still runs an older build.
+- **Last change:** both dedicated Moon routes now include aligned procedural 3D machine views with shared framing, keyboard controls, reduced-motion behavior, offscreen pause, and WebGL fallback.
+- **Last verification:** `npm test` 126/126 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes.
+- **Not yet verified:** the new Apollo 17 and Surveyor 3 canvases, footer privacy dialog, and dedicated Moon pages in a real browser at desktop and about 390 px. The local browser surface and Edge headless capture were unavailable. Netlify headers need checking after a future deploy; the live site still runs an older build.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
   - Ingenuity has five setup steps before lift-off and +10% power needs seven presses; consider fewer steps or a slider. Flight itself was not played (hidden browser pane paused animation).
@@ -208,6 +208,12 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Codex — `fix/nov14-leftover-retests`
+- **Commit:** Add aligned 3D views to both Moon missions
+- **Changed:** added shared procedural 3D reconstructions for Apollo 17 LRV and Surveyor 3 with consistent framing, pointer and keyboard orbit, zoom/reset, reduced-motion response, offscreen pause, responsive layout, fallback, localized copy, and updated Moon documentation.
+- **Verified:** `npm test` 126/126; `npm run build`; `git diff --check`. Automated tests confirm the shared stage and no new external asset. Local browser surfaces could not capture localhost, so visual QA remains.
+- **Left for next:** render both Moon routes in EN/ES/VI at desktop and about 390 px; verify no model is clipped and controls do not overlap the challenge.
 
 ### 2026-11-14 — Claude — `fix/nov14-leftover-retests`
 - **Commit:** Make the Apollo 17 repair passable in two or three tests
