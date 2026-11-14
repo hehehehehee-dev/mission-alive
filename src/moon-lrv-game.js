@@ -6,7 +6,7 @@ export const LRV_GAME_COPY = Object.freeze({
   eyebrow: "APOLLO 17 · REPAIR TRAINING",
   title: "Keep the dust off the gear",
   introduction: "A broken rover fender let wheel-thrown dust reach the astronauts and their equipment. Apollo 17's crew made a replacement using spare maps, duct tape, and clamps.",
-  instructions: "Choose a tool and apply it to the wheel. Drag the patch tip to shape it, or use the buttons below. Run a dust test and compare your trials.",
+  instructions: "Tap maps, then tape, then clamps. Drag the patch tip to shape it, or use the buttons below. Run a dust test and compare your trials.",
   simulation: "Illustrated simulation · not NASA test data.",
   dimensions: "All dimensions below belong to this game model, not the real rover.",
   diagram: "Side-view model of a rover wheel, map fender patch, seat, and equipment. Orange dust paths reach the equipment; blue paths are caught by the patch.",
@@ -51,6 +51,8 @@ export const LRV_GAME_COPY = Object.freeze({
   attachmentGoal: "Goal: a taped map patch held by clamps",
   notTested: "Not tested",
   holding: "Holding",
+  touching: "Touching the wheel",
+  toolsReady: "Tap maps, then tape, then clamps.",
   slipped: "Slipped in the model",
   incomplete: "Patch incomplete",
   passed: "Passed",
@@ -78,10 +80,12 @@ export const LRV_GAME_COPY = Object.freeze({
   source: "NASA · Lunar Dust and Duct Tape ↗",
 });
 
+// Start level and clear of the wheel, but too short to catch dust. One informed
+// change (length) after assembling the patch is enough to pass.
 export const LRV_DEFAULT_CONFIGURATION = Object.freeze({
-  length: 22,
-  angle: -20,
-  clearance: 2,
+  length: 30,
+  angle: 0,
+  clearance: 4,
   maps: false,
   tape: false,
   attachment: "tape",
@@ -281,7 +285,7 @@ export function lrvGameMarkup() {
     ${quickStartMarkup('apollo17')}
     ${whyMarkup(`<p>${copy.instructions}</p><p>${copy.simulation}</p><p>${copy.dimensions}</p>`)}
     <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p>${svgMarkup(initial)}<figcaption>${copy.diagramCaption}</figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>
-    <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><div class="lrv-tool-tray" role="group" aria-label="Repair tools"><button type="button" data-lrv-tool="maps" aria-pressed="true">${copy.maps}</button><button type="button" data-lrv-tool="tape" aria-pressed="false">${copy.tape}</button><button type="button" data-lrv-tool="clamps" aria-pressed="false">${copy.clamps}</button></div><p data-lrv-tool-status role="status">Choose a tool, then apply it to the repair.</p><button type="button" data-lrv-apply>Apply selected tool to the wheel</button><p class="lrv-control-help">${copy.attachmentHelp}</p></fieldset>
+    <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><div class="lrv-tool-tray" role="group" aria-label="Repair tools"><button type="button" data-lrv-tool="maps" aria-pressed="false">${copy.maps}</button><button type="button" data-lrv-tool="tape" aria-pressed="false">${copy.tape}</button><button type="button" data-lrv-tool="clamps" aria-pressed="false">${copy.clamps}</button></div><p data-lrv-tool-status role="status">${copy.toolsReady}</p><p class="lrv-control-help">${copy.attachmentHelp}</p></fieldset>
     <fieldset class="lrv-geometry"><legend>${copy.geometry}</legend><p class="lrv-model-dimensions">${copy.dimensions}</p>
     ${controlMarkup(id, "length", copy.length, copy.lengthHelp, copy.decreaseLength, copy.increaseLength)}
     ${controlMarkup(id, "angle", copy.angle, copy.angleHelp, copy.decreaseAngle, copy.increaseAngle)}
@@ -293,23 +297,94 @@ export function lrvGameMarkup() {
   </section>`;
 }
 
+// One change per hint. The amount is a word ("a little", "more", "a lot"), never
+// a winning number, so the learner still has to test and read the result.
+export const LRV_HINTS = Object.freeze({
+  length: Object.freeze({
+    up: Object.freeze({ small: "Length: make the patch a little longer, then test again.", medium: "Length: make the patch longer, then test again.", large: "Length: make the patch a lot longer — keep pressing +, then test again." }),
+    down: Object.freeze({ small: "Length: make the patch a little shorter, then test again.", medium: "Length: make the patch shorter, then test again.", large: "Length: make the patch a lot shorter, then test again." }),
+  }),
+  angle: Object.freeze({
+    up: Object.freeze({ small: "Angle: lift the patch tip a little, then test again.", medium: "Angle: lift the patch tip, then test again.", large: "Angle: lift the patch tip a lot, then test again." }),
+    down: Object.freeze({ small: "Angle: lower the patch tip a little, then test again.", medium: "Angle: lower the patch tip, then test again.", large: "Angle: lower the patch tip a lot, then test again." }),
+  }),
+  clearance: Object.freeze({
+    up: Object.freeze({ small: "Clearance: raise the mount a little, then test again.", medium: "Clearance: raise the mount, then test again.", large: "Clearance: raise the mount a lot, then test again." }),
+    down: Object.freeze({ small: "Clearance: lower the mount a little, then test again.", medium: "Clearance: lower the mount, then test again.", large: "Clearance: lower the mount a lot, then test again." }),
+  }),
+});
+
+const hintSize = (steps) => steps <= 2 ? "small" : steps <= 5 ? "medium" : "large";
+
+/** Find the smallest single-control change that makes real progress, and name only that. */
+export function lrvNextChange(result) {
+  const c = result.configuration;
+  // Fix the visible problem first: a patch touching the wheel must be moved clear,
+  // even if that lets some dust through for one test.
+  const better = (prediction) => !result.wheelSafe
+    ? prediction.wheelSafe
+    : prediction.wheelSafe && prediction.dustReaching < result.dustReaching;
+  let best = null;
+  const consider = (key, direction, steps, passes, penalty = 0) => {
+    // Prefer a change that passes, then a forgiving one, then the fewest presses.
+    const score = (passes ? 0 : 1000) + penalty + steps;
+    if (!best || score < best.score) best = { key, direction: direction > 0 ? "up" : "down", steps, score };
+  };
+  for (const [key, { min, max, step }] of Object.entries(LRV_CONTROL_LIMITS)) {
+    for (const direction of [1, -1]) {
+      let improved = false;
+      for (let steps = 1; ; steps++) {
+        const value = c[key] + direction * steps * step;
+        if (value < min || value > max) break;
+        const prediction = evaluateLrvRepair({ ...c, [key]: value }, { tested: true });
+        if (!better(prediction)) continue;
+        if (prediction.dustSafe && prediction.wheelSafe) {
+          // Children overshoot. Prefer a change that still passes one or two presses past it.
+          const overshoot = [1, 2].every((extra) => {
+            const next = value + direction * extra * step;
+            if (next < min || next > max) return true;
+            const check = evaluateLrvRepair({ ...c, [key]: next }, { tested: true });
+            return check.dustSafe && check.wheelSafe;
+          });
+          consider(key, direction, steps, true, overshoot ? 0 : 50);
+          break;
+        }
+        if (!improved) {
+          // An improvement that one extra press would undo invites a back-and-forth loop.
+          const next = value + direction * step;
+          const after = next < min || next > max ? prediction : evaluateLrvRepair({ ...c, [key]: next }, { tested: true });
+          const steady = better(after) && after.dustReaching <= prediction.dustReaching;
+          consider(key, direction, steps, false, steady ? 0 : 50);
+          improved = true;
+        }
+      }
+    }
+  }
+  if (best) return best;
+  // No single control helps on its own (for example, everything pushed to a limit).
+  // Head back toward a known working shape, one control at a time.
+  const steps = Object.entries(LRV_REFERENCE_DESIGN).map(([key, target]) => ({
+    key, delta: (target - c[key]) / LRV_CONTROL_LIMITS[key].step,
+  })).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))[0];
+  return steps && steps.delta !== 0
+    ? { key: steps.key, direction: steps.delta > 0 ? "up" : "down", steps: Math.abs(steps.delta), score: 2000 }
+    : null;
+}
+
+// A passing shape used only to point a stuck learner in a useful direction; it is never shown.
+const LRV_REFERENCE_DESIGN = Object.freeze({ length: 50, angle: 0, clearance: 6 });
+
 export function lrvRepairHint(result) {
   if (result.passed) return copy.passedStatus;
   if (!result.assembled) return copy.incompleteStatus;
-  if (!result.wheelSafe) return result.configuration.angle < 0
-    ? 'Angle: lift the patch tip. Clearance: raise the mount so the whole patch stays away from the wheel, then retest.'
-    : 'Clearance: raise the patch mount to give the wheel more room, then retest.';
   if (!result.attachmentHolding) return copy.attachmentStatus;
-  const c = result.configuration;
-  const alternatives = [
-    [{length:c.length + 20}, 'Length: extend the patch farther into the flying dust, then compare another test.'],
-    [{angle:c.angle - 10}, 'Angle: lower the patch tip toward the dust paths, keeping it clear of the wheel.'],
-    [{clearance:c.clearance - 4}, 'Clearance: lower the mount toward the dust paths, keeping space above the wheel.'],
-    [{angle:c.angle + 10}, 'Angle: lift the patch tip to meet the dust paths farther from the wheel.'],
-  ].map(([change, hint]) => ({ prediction:evaluateLrvRepair({...c,...change}, {tested:true}), hint }))
-    .filter(({prediction}) => prediction.wheelSafe && prediction.dustReaching < result.dustReaching)
-    .sort((a,b) => a.prediction.dustReaching - b.prediction.dustReaching);
-  return alternatives[0]?.hint || 'Angle: lower the tip toward the dust. Length: extend the patch if paths still escape, then retest.';
+  const change = lrvNextChange(result);
+  if (change) return LRV_HINTS[change.key][change.direction][hintSize(change.steps)];
+  return result.wheelSafe ? copy.dustStatus : copy.wheelStatus;
+}
+
+function gapText(result) {
+  return result.clearanceCm < 0 ? copy.touching : `${result.clearanceCm.toFixed(1)} cm`;
 }
 
 function attachmentText(result) {
@@ -321,7 +396,7 @@ function trialMarkup(trial) {
   const { result, number } = trial;
   const design = result.configuration;
   const material = !design.maps ? copy.noPatch : !design.tape ? copy.untaped : design.attachment === "clamps" ? copy.clamps : copy.tapeOnly;
-  return `<tr class="${result.passed ? "is-passed" : "is-adjust"}"><th scope="row">${number}</th><td><span class="lrv-trial-setting"><span>${copy.length}</span> ${design.length} cm</span><span class="lrv-trial-setting"><span>${copy.angle}</span> ${design.angle}°</span><span class="lrv-trial-setting"><span>${copy.clearance}</span> ${design.clearance} cm</span><span class="lrv-trial-material">${material}</span></td><td>${result.dustReaching} / ${result.dustTotal}</td><td>${result.clearanceCm.toFixed(1)} cm</td><td>${attachmentText(result)}</td><td>${result.passed ? copy.passed : copy.adjust}</td></tr>`;
+  return `<tr class="${result.passed ? "is-passed" : "is-adjust"}"><th scope="row">${number}</th><td><span class="lrv-trial-setting"><span>${copy.length}</span> ${design.length} cm</span><span class="lrv-trial-setting"><span>${copy.angle}</span> ${design.angle}°</span><span class="lrv-trial-setting"><span>${copy.clearance}</span> ${design.clearance} cm</span><span class="lrv-trial-material">${material}</span></td><td>${result.dustReaching} / ${result.dustTotal}</td><td>${gapText(result)}</td><td>${attachmentText(result)}</td><td>${result.passed ? copy.passed : copy.adjust}</td></tr>`;
 }
 
 /** Mount inside the host supplied by the Moon dialog. No mission or storage changes. */
@@ -334,7 +409,6 @@ export function mountLrvGame(root) {
   let trialNumber = 0;
   let disposed = false;
   const controls = Object.fromEntries(Object.keys(LRV_CONTROL_LIMITS).map((key) => [key, find(`[data-lrv-control="${key}"]`)]));
-  let selectedTool = 'maps';
   let dragging = false;
   const svg = find('.lrv-workshop-svg');
   svg.insertAdjacentHTML('beforeend', '<circle data-lrv-drag-tip r="13" fill="#eaf8ff" stroke="#329cad" stroke-width="4" aria-hidden="true"/>');
@@ -354,7 +428,8 @@ export function mountLrvGame(root) {
         button.disabled = next < LRV_CONTROL_LIMITS[key].min || next > LRV_CONTROL_LIMITS[key].max;
       });
     }
-    workshop.querySelectorAll('[data-lrv-tool]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.lrvTool === selectedTool)));
+    const applied = { maps: configuration.maps, tape: configuration.tape, clamps: configuration.tape && configuration.attachment === 'clamps' };
+    workshop.querySelectorAll('[data-lrv-tool]').forEach(button => button.setAttribute('aria-pressed', String(applied[button.dataset.lrvTool])));
     find("[data-lrv-dust-paths]").innerHTML = dustMarkup(result);
     find("[data-lrv-patch]").innerHTML = patchMarkup(configuration);
     const tip = pointOnScreen(lrvPatchGeometry(configuration).end);
@@ -366,7 +441,7 @@ export function mountLrvGame(root) {
     find("[data-lrv-try]").hidden = !result.tested;
     find("[data-lrv-narrator]").hidden = !result.passed;
     dustResult.textContent = result.tested ? `${result.dustReaching} / ${result.dustTotal}` : copy.notTested;
-    clearanceResult.textContent = result.tested ? `${result.clearanceCm.toFixed(1)} cm` : copy.notTested;
+    clearanceResult.textContent = result.tested ? gapText(result) : copy.notTested;
     attachmentResult.textContent = result.tested ? attachmentText(result) : copy.notTested;
     [result.dustSafe, result.wheelSafe, result.attachmentHolding].forEach((passed, index) => {
       measures[index].dataset.result = result.tested ? passed ? "pass" : "adjust" : "untested";
@@ -394,13 +469,12 @@ export function mountLrvGame(root) {
     const button = event.target?.closest?.("button");
     if (!button || !workshop.contains(button) || button.disabled) return;
     if (button.dataset.lrvTool) {
-      selectedTool = button.dataset.lrvTool;
-      workshop.querySelectorAll('[data-lrv-tool]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-    } else if (button.hasAttribute('data-lrv-apply')) {
+      // One tap applies a tool. Order still matters: maps, then tape, then clamps.
+      const tool = button.dataset.lrvTool;
       const message = find('[data-lrv-tool-status]');
-      if (selectedTool === 'maps') { edit({ maps: true }); message.textContent = 'Maps fitted. Join the seams with tape.'; }
-      else if (selectedTool === 'tape' && configuration.maps) { edit({ tape: true }); message.textContent = 'Seams taped. Fit clamps to secure the repair.'; }
-      else if (selectedTool === 'clamps' && configuration.tape) { edit({ attachment: 'clamps' }); message.textContent = 'Repair secured. Shape the patch, then test it.'; }
+      if (tool === 'maps') { edit({ maps: true }); message.textContent = 'Maps fitted. Join the seams with tape.'; }
+      else if (tool === 'tape' && configuration.maps) { edit({ tape: true }); message.textContent = 'Seams taped. Fit clamps to secure the repair.'; }
+      else if (tool === 'clamps' && configuration.tape) { edit({ attachment: 'clamps' }); message.textContent = 'Repair secured. Shape the patch, then test it.'; }
       else message.textContent = 'Fit the maps first, tape the seams, then add clamps.';
     } else if (button.hasAttribute("data-lrv-step")) {
       const key = button.dataset.lrvStep;
@@ -425,8 +499,7 @@ export function mountLrvGame(root) {
       controls.length.focus();
     } else if (button.hasAttribute("data-lrv-reset")) {
       configuration = { ...LRV_DEFAULT_CONFIGURATION };
-      selectedTool = 'maps';
-      find('[data-lrv-tool-status]').textContent = 'Choose a tool, then apply it to the repair.';
+      find('[data-lrv-tool-status]').textContent = copy.toolsReady;
       trials = [];
       trialNumber = 0;
       find("[data-lrv-history]").innerHTML = "";

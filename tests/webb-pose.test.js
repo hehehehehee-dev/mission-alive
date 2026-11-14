@@ -24,12 +24,12 @@ test('opening a mirror wing physically increases its visible width', () => {
   }
 });
 
-test('failed repair hints identify a useful dimension and direction without leaking a winning setting', () => {
+test('failed repair hints identify one useful dimension and direction without leaking a winning setting', () => {
   const config = { maps:true, tape:true, attachment:'clamps', length:22, angle:-20, clearance:2 };
   const hint = lrvRepairHint(evaluateLrvRepair(config,{tested:true}));
-  assert.match(hint,/Angle: lift.*Clearance: raise/);
+  assert.match(hint,/^Clearance: raise/);
   assert.doesNotMatch(hint,/\d/);
   const lengthHint = lrvRepairHint(evaluateLrvRepair({...config, angle:0, clearance:8},{tested:true}));
-  assert.match(lengthHint,/Length: extend/);
+  assert.match(lengthHint,/^Length: make the patch .*longer/);
   assert.doesNotMatch(lengthHint,/\d/);
 });

@@ -4,6 +4,14 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Apollo 17 repair playtest fixes
+
+- A child playtest needed six dust tests to pass; the target is two or three. The workshop now starts level and clear of the wheel (30 cm / 0° / 4 cm) but too short, so one length change after assembly passes.
+- Hints now name one control, a direction and a rough amount (“a little” / “a lot”) instead of two changes at once, and are chosen so they still pass if the learner presses one or two times too many. No winning number is revealed.
+- Maps, tape and clamps apply with one tap each; the separate “Apply selected tool” button is gone.
+- A negative model gap now reads “Touching the wheel” instead of a minus number.
+- Spanish and Vietnamese copy added for every new hint and label.
+
 ### Public privacy notice and deployment headers
 
 - Added a keyboard-accessible “Privacy & sharing” footer dialog explaining local-only progress, classroom submission consent, teacher moderation, public gallery fields, removal, retention, and optional AI screening.

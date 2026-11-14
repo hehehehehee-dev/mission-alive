@@ -7,9 +7,12 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `fix/nov14-leftover-retests` (ahead of `origin/main`; not pushed or deployed).
-- **Last change:** added the public classroom-sharing privacy notice, matching documentation, translations, and Netlify security headers; the existing teacher-approved classroom gallery remains the only public greeting path.
-- **Last verification:** `npm test` 120/120 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes.
-- **Not yet verified:** the footer privacy dialog and dedicated Moon pages in a real browser at about 390 px; the Codex local-browser surface was unavailable. Netlify response headers also need checking after a future deploy.
+- **Last change:** Apollo 17 repair made passable in two or three tests after a child playtest: new default shape, one-control hints with “a little”/“a lot”, one-tap tools, and “Touching the wheel” instead of negative gaps (`src/moon-lrv-game.js`, `src/locales/nov14.js`, tests).
+- **Last verification:** `npm test` 126/126 pass (includes Codex's in-progress Moon scene test); `npm run build` passes.
+- **Not yet verified:** the footer privacy dialog and dedicated Moon pages in a real browser at about 390 px. Netlify response headers also need checking after a future deploy. The live Netlify site still runs an older build.
+- **Playtest findings not yet fixed (2026-11-14, child persona):**
+  - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
+  - Ingenuity has five setup steps before lift-off and +10% power needs seven presses; consider fewer steps or a slider. Flight itself was not played (hidden browser pane paused animation).
 - **Next suggested steps:**
   1. Run the browser checks above, including keyboard open, Escape close, and Spanish/Vietnamese privacy copy.
   2. After the owner requests deployment, confirm CSP, HSTS, Permissions-Policy, and the classroom gallery endpoint on Netlify.
@@ -205,6 +208,13 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Claude — `fix/nov14-leftover-retests`
+- **Commit:** Make the Apollo 17 repair passable in two or three tests
+- **Changed:** `src/moon-lrv-game.js` (default 30/0/4, `lrvNextChange()` one-control hints with overshoot tolerance, one-tap tools, “Touching the wheel”); 21 new Spanish/Vietnamese rows in `src/locales/nov14.js`; tests in `tests/moon-lrv-game.test.js` and `tests/webb-pose.test.js`; `docs/MOON-LABS.md`.
+- **Verified:** `npm test` 124/124; `npm run build`; local browser replay (EN and VI) passed on the third test including the pre-assembly test; simulated a child who over- or under-presses from 8,463 start shapes: the default passes on the second test after assembly, about 90% of all starts pass within three tests, and none loop.
+- **Note:** Codex was adding Moon 3D machine views in the same working tree at the same time (`src/moon-machine-scene.js`, `src/moon-stories.js`, `src/moon-labs.css`, `src/locales/six-missions.js`). Those files are not part of this entry.
+- **Left for next:** real-browser replay of Apollo 17 in all three languages; other playtest findings listed in section 0.
 
 ### 2026-11-14 — Claude + Codex — `fix/nov14-leftover-retests`
 - **Commit:** Share AI handoff and clarify classroom privacy
