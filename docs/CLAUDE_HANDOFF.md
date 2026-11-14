@@ -23,7 +23,7 @@ The canonical mission registry is `src/certification.js`. `MISSION_COUNT` must b
 
 The normal flow is:
 
-1. Lobby launch bay, direct mission CTA, and outward journey map.
+1. Lobby direct mission CTA, unified visual certification deck, and outward journey map.
 2. Mission story/objective.
 3. 3D or accessible 2D machine view and anatomy hotspots.
 4. Visual Quick Start.
@@ -42,6 +42,7 @@ Important invariants:
 - Moon missions are full certification missions, not optional story cards in the current version.
 - Sound begins off. Microphone permission is never required to finish Voyager.
 - The optional learner name is requested below the mission choices and is used only for the certificate. Do not place it before the first mission CTA.
+- The visual machine picker and certification tracker are one shared deck. Do not create a second six-machine grid in the lobby.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
 - Completion must survive reload through validated stored mission IDs.
 

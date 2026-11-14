@@ -16,11 +16,17 @@ test('the lobby presents the two-line child-readable problem and solution hook',
   assert.ok(html.indexOf(hook[0]) < html.indexOf('id="passport-title"'));
 });
 
-test('the lobby offers six visual machine shortcuts before optional certificate setup', async () => {
+test('the lobby uses one visual six-mission certification deck before optional certificate setup', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  assert.equal((html.match(/data-launch-exhibit=/g) || []).length, 6);
-  assert.match(html, /class="launch-bay"/);
+  const main = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(html, /data-launch-exhibit=|class="launch-bay"/);
+  assert.match(html, /LIVE TRAINING DECK · SIX MACHINES · SIX REAL JOBS/);
+  assert.equal((main.match(/missionIconSvgs\s*=\s*\{/g) || []).length, 1);
+  for (const id of ['apollo17', 'surveyor3', 'curiosity', 'ingenuity', 'webb', 'voyager']) {
+    assert.match(main, new RegExp(`\\b${id}: '<svg`));
+  }
   assert.match(html, /class="mobile-header-menu"/);
+  assert.match(main, /route === "lobby-missions"/);
   assert.ok(html.indexOf('id="lobby-missions"') < html.indexOf('id="crew-name"'));
   assert.match(html, /Add your name for the certificate/);
 });

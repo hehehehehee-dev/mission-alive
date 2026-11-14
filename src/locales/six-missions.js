@@ -13,6 +13,8 @@ const copy = [
   ['Choose a machine', 'Elige una máquina', 'Chọn một cỗ máy'],
   ['Choose a machine ↓', 'Elige una máquina ↓', 'Chọn một cỗ máy ↓'],
   ['LIVE TRAINING DECK', 'CUBIERTA DE ENTRENAMIENTO ACTIVA', 'SÀN HUẤN LUYỆN TRỰC TUYẾN'],
+  ['LIVE TRAINING DECK · SIX MACHINES · SIX REAL JOBS', 'CUBIERTA DE ENTRENAMIENTO ACTIVA · SEIS MÁQUINAS · SEIS TRABAJOS REALES', 'SÀN HUẤN LUYỆN TRỰC TUYẾN · SÁU CỖ MÁY · SÁU CÔNG VIỆC THỰC'],
+  ['Pick a machine. Finish its real job. Earn its stamp.', 'Elige una máquina. Completa su trabajo real. Gana su sello.', 'Chọn một cỗ máy. Hoàn thành công việc thật của nó. Nhận con dấu.'],
   ['Pick your machine.', 'Elige tu máquina.', 'Chọn cỗ máy của bạn.'],
   ['Tap one to jump into its mission.', 'Toca una para entrar en su misión.', 'Chạm vào một cỗ máy để vào nhiệm vụ.'],
   ['Open mission', 'Abrir misión', 'Mở nhiệm vụ'],
