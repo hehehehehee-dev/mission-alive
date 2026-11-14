@@ -42,6 +42,7 @@ import './typography.css';
 import './consolidated-polish.css';
 import './quick-start.css';
 import { quickStartMarkup, whyMarkup } from './quick-start.js';
+import './lobby-launch.css';
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -620,7 +621,7 @@ function configureJourneyStart() {
         ? nextMission
           ? `Continue with ${trainingMissions[nextMission].name}`
           : "Visit the machines again"
-        : "Begin with Apollo 17 LRV";
+        : "Start mission 01 · Apollo 17 LRV";
   button.onclick = () => navigateTo(nextMission || "curiosity");
 }
 
@@ -652,6 +653,9 @@ function updateMissionProgress() {
       card.classList.toggle("is-complete", done);
       card.querySelector(".mission-stamp").textContent = done ? "STAMPED ✓" : "OPEN";
     });
+  $("#lobby .launch-bay")
+    ?.querySelectorAll("[data-launch-exhibit]")
+    .forEach((button) => button.classList.toggle("is-complete", completed.has(button.dataset.launchExhibit)));
 }
 
 function briefingMarkup(id) {
@@ -781,12 +785,16 @@ function renderLobby() {
   $("#lobby-missions").innerHTML = Object.entries(trainingMissions)
     .map(
       ([id, exhibit], index) =>
-        `<button class="lobby-mission-card" data-lobby-exhibit="${id}"><span class="mission-number">0${index + 1}</span><span class="mission-name"><span class="module-number">TRAINING MODULE ${index + 1}</span><strong>${exhibit.name}</strong><small>${storyLayer[id]?.heading || trainingMissions[id].heading}</small></span><span class="mission-stamp">OPEN</span><span class="mission-action">Learn · ${exhibit.action} · Earn stamp →</span></button>`,
+        `<button class="lobby-mission-card" data-lobby-exhibit="${id}"><span class="mission-number">0${index + 1}</span><span class="mission-stamp">OPEN</span><span class="mission-name"><strong>${exhibit.name}</strong><small>${storyLayer[id]?.heading || trainingMissions[id].heading}</small></span><span class="mission-verb">${exhibit.verb}</span><span class="mission-action">Open mission →</span></button>`,
     )
     .join("");
   $("#lobby-missions").onclick = (event) => {
     const card = event.target.closest("[data-lobby-exhibit]");
     if (card) navigateTo(card.dataset.lobbyExhibit);
+  };
+  $("#lobby .launch-bay").onclick = (event) => {
+    const machine = event.target.closest("[data-launch-exhibit]");
+    if (machine) navigateTo(machine.dataset.launchExhibit);
   };
   $("#lobby-missions")
     .querySelectorAll(".lobby-mission-card")
@@ -2738,6 +2746,13 @@ $("#sound").onclick = () => {
   updateSoundButton();
   if (sound) beep();
 };
+document.querySelectorAll("[data-header-proxy]").forEach((button) => {
+  button.onclick = () => {
+    const target = document.getElementById(button.dataset.headerProxy);
+    button.closest("details")?.removeAttribute("open");
+    target?.click();
+  };
+});
 function setReducedMotion(value) {
   reduce = Boolean(value);
   try { localStorage.setItem(MOTION_KEY, String(reduce)); } catch { /* Keep the choice for this visit. */ }

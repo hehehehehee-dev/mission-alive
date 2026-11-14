@@ -4,6 +4,16 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Lobby launch bay redesign
+
+- Replaced the text-heavy opening flow with an immediate mission CTA and a visual six-machine launch bay.
+- Added original code-drawn machine silhouettes with direct links to all six missions.
+- Moved the optional certificate name field below the mission choices.
+- Moved teacher and project background copy into a lower “About Mission Alive” disclosure.
+- Replaced repeated mission-card instructions with one action verb and one “Open mission” link.
+- Collapsed mobile header utilities into a keyboard-accessible Menu while keeping language and passport visible.
+- Added reduced-motion behavior and English, Spanish, and Vietnamese copy for the new controls.
+
 ### Problem framing and lobby hook
 
 - Replaced the three-paragraph lobby introduction with a two-line child-readable hook beneath the main headline.
