@@ -113,6 +113,7 @@ const rows = [
   ['Estimate from NASA/JPL Horizons, not a signal from the spacecraft · updates every second', 'Estimación de NASA/JPL Horizons, no una señal de la nave · se actualiza cada segundo', 'Ước tính từ NASA/JPL Horizons, không phải tín hiệu từ con tàu · cập nhật mỗi giây'],
   ['Estimate from NASA/JPL Horizons, not a signal from the spacecraft · press Read current distance to update', 'Estimación de NASA/JPL Horizons, no una señal de la nave · pulsa Leer la distancia actual para actualizar', 'Ước tính từ NASA/JPL Horizons, không phải tín hiệu từ con tàu · bấm Đọc khoảng cách hiện tại để cập nhật'],
   ['How this estimate works ↗', 'Cómo funciona esta estimación ↗', 'Cách tính ước tính này ↗'],
+  ['Open Signal Lab in More to explore to send a ping and time its trip.', 'Abre el Laboratorio de señales en Más para explorar, envía una señal y mide cuánto tarda.', 'Mở Phòng thử tín hiệu trong Khám phá thêm để gửi tín hiệu và đo thời gian nó bay.'],
   ['Open Apollo 17 Lunar Roving Vehicle Moon training', 'Abrir entrenamiento lunar del rover del Apolo 17', 'Mở huấn luyện Mặt Trăng của xe Apollo 17'],
   ['Open Surveyor 3 Moon training', 'Abrir entrenamiento lunar de Surveyor 3', 'Mở huấn luyện Mặt Trăng của Surveyor 3'],
   ['TAURUS–LITTROW · TRAINING', 'TAURUS–LITTROW · ENTRENAMIENTO', 'TAURUS–LITTROW · HUẤN LUYỆN'],

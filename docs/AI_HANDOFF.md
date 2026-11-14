@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** the anatomy tray now sits below, rather than over, all four main 3D canvases; their study column stays visible beside long desktop controls. Ingenuity reveals one of three short setup/flight panels at a time and reaches safe rotor power with one action. A production 390 px audit then found and fixed long anatomy labels widening the study column; the tray now scrolls internally.
-- **Last verification:** `npm test` 128/128 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes. Production verified Ingenuity's choose → link → safe 75% rotor → fly transition. At 390 px, Curiosity, Ingenuity, Webb, and Voyager all keep the anatomy tray below the canvas, contain long labels in an internal horizontal scroller, and produce no page-level horizontal overflow.
+- **Last change:** merged the Voyager live-distance card and the light-day countdown into one card (`src/main.js` inserts the countdown after `#voyager-live-light-time`; `src/exhibit-layout.js` no longer moves it out; inner-card styles in `src/style.css`). Stale “one-way light-time is shown below” line replaced.
+- **Last verification:** `npm test` 129/129 pass; `npm run build` passes; local browser check of the merged card at desktop and 390 px (no overflow).
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -208,6 +208,12 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Claude — `main`
+- **Commit:** Merge the Voyager distance and countdown into one card
+- **Changed:** `src/main.js`, `src/exhibit-layout.js`, `src/style.css`, one row in `src/locales/nov14.js`, a layout test in `tests/voyager-distance.test.js`.
+- **Verified:** `npm test` 129/129; `npm run build`; local browser at desktop and 390 px.
+- **Left for next:** check the merged card on the deployed site.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Record production anatomy layout verification

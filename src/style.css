@@ -912,6 +912,9 @@ body.motion-reduced .ship-exhaust, body.motion-reduced .diagram-pin > i { animat
 .countdown-value { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
 .countdown-value span { padding: 10px 5px; border: 1px solid #96c0d445; border-radius: 6px; text-align: center; color: #b6c9d0; font: 0.65rem/1.4 monospace; }
 .countdown-value b { display: block; color: #f1dec1; font: 400 clamp(1.5rem, 3vw, 2.2rem)/1.2 var(--story-serif); font-variant-numeric: tabular-nums; }
+/* The countdown sits inside the live distance card as its second half, not as a card of its own. */
+.voyager-live .voyager-countdown { margin: 16px 0 14px; padding: 16px 0 0; border: 0; border-top: 1px solid #eeb47740; border-radius: 0; background: none; }
+.voyager-live .voyager-countdown p { color: #e6edf0; }
 .mission-story-more { max-width: 100%; margin: 0 0 28px; }
 .mission-story-more > summary { width: fit-content; padding: 14px 0; color: var(--accent); cursor: pointer; font-size: 0.85rem; }
 .mission-story-more .machine-story-section { padding-top: 28px; }

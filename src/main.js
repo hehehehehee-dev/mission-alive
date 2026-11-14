@@ -2662,7 +2662,9 @@ async function render(id) {
     $('[data-voyager-step="listen"]').textContent = 'Play or read one Golden Record greeting';
     $('#voyager-live-distance').insertAdjacentHTML('afterend', '<button type="button" id="read-voyager-distance">Read current distance</button>');
     $('#read-voyager-distance').onclick = () => { voyagerDistance?.refresh(); announceVoyager(`Distance reading: ${getSourceText($('#voyager-live-distance'))}. ${getSourceText($('#voyager-live-light-time'))}.`); };
-    $("#controls .voyager-live").insertAdjacentHTML("afterend", voyagerContactMarkup() + voyagerCountdownMarkup());
+    // One card: the live number, what it is heading for, and the countdown to it.
+    $("#voyager-live-light-time").insertAdjacentHTML("afterend", voyagerCountdownMarkup());
+    $("#controls .voyager-live").insertAdjacentHTML("afterend", voyagerContactMarkup());
   }
   if (id === "webb") {
     const deployStep = $("#webb-deploy-field").closest(".webb-step");

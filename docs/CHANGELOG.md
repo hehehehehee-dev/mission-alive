@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### One Voyager distance and countdown card
+
+- The light-day countdown now sits inside the live distance card, under the sentence that explains it, instead of in a second card.
+- Replaced the stale Signal arrival line (“Voyager's one-way light-time is shown below”) with an invitation to time a ping in Signal Lab; Spanish and Vietnamese copy added.
+
 ### Clearer 3D study and shorter Ingenuity controls
 
 - Moved the keyboard-friendly anatomy tray below the canvas for Curiosity, Ingenuity, Webb, and Voyager so part names no longer cover the machines.

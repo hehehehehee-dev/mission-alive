@@ -157,3 +157,14 @@ test("the live card names the same light-day milestone as the countdown, switchi
     assert.ok(es[line] && vi[line], `missing translation: ${line}`);
   }
 });
+
+test("the countdown lives inside the live distance card instead of a second card", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const main = await readFile(new URL("../src/main.js", import.meta.url), "utf8");
+  const layout = await readFile(new URL("../src/exhibit-layout.js", import.meta.url), "utf8");
+  const css = await readFile(new URL("../src/style.css", import.meta.url), "utf8");
+  assert.match(main, /\$\("#voyager-live-light-time"\)\.insertAdjacentHTML\("afterend", voyagerCountdownMarkup\(\)\)/);
+  assert.doesNotMatch(layout, /"#voyager-countdown"/, "layout must not pull the countdown back out of the card");
+  assert.match(css, /\.voyager-live \.voyager-countdown \{[^}]*border: 0;[^}]*background: none;/);
+  assert.doesNotMatch(layout, /one-way light-time is shown below/);
+});

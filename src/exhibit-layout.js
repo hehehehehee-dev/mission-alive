@@ -45,9 +45,9 @@ export function mountExhibitLayout(id) {
     main.append(arrival);
     revealCompletion = () => move(find("#discovery"), main, arrival);
     move(find("#signal-result"), arrival);
-    find("#signal-result").textContent = "Voyager's one-way light-time is shown below. Open Signal Lab in More to explore to send a ping.";
+    find("#signal-result").textContent = "Open Signal Lab in More to explore to send a ping and time its trip.";
     move(find(".signal-beam"), arrival);
-    for (const selector of [".voyager-live", "#voyager-countdown", ".voyager-contact"]) move(find(selector), main);
+    for (const selector of [".voyager-live", ".voyager-contact"]) move(find(selector), main);
 
     const catalog = create("section", { id: "voyager-catalog", "aria-label": "All 55 Golden Record greetings" });
     more.append(catalog);
