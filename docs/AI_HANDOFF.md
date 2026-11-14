@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** Apollo 17 and Surveyor 3 pages now open with the shared `.mission-opening` layout (photo, “Built for” = `facts[1]`, “It did” = `facts[2]`), matching the other four missions; Moon photo credits are shown verbatim (`src/moon-stories.js`, `src/moon-labs.css`).
-- **Last verification:** `npm test` 134/134 pass; `npm run build` passes; local browser check of both Moon pages at desktop and 390 px, leaving and reopening, English/Spanish/Vietnamese.
+- **Last change:** Webb now shows exactly one challenge panel, automatically advancing on wing deployment and star alignment. Moon challenges use `src/challenge-steps.js`: Apollo assembly → shape/test; Surveyor choose → investigate → land. Secondary adjustments, histories and Webb reference images are collapsed disclosures. Original controls/state/stamp rules are retained.
+- **Last verification:** 135 Node tests and production build pass, including step gating, one-visible-panel state, retained control identity/values and reset. Production browser verification follows auto-deploy.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Show one challenge step at a time
+- **Changed:** Webb stage replacement, shared Moon stage navigation, automatic assembly/evidence progression, collapsed optional controls and logs, localized labels.
+- **Verified:** 135 Node tests and production build; browser verification follows deployment.
+- **Left for next:** verify actual Webb/Moon automatic transitions, keyboard return navigation, and 390px layout on production.
 
 ### 2026-11-14 — Claude — `main`
 - **Commit:** Open the Moon pages with the shared mission opening

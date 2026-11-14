@@ -4,6 +4,14 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### One challenge step at a time
+
+- Webb now replaces the completed deployment panel with alignment, then replaces alignment with infrared. The step bar reopens unlocked earlier steps without losing progress.
+- Apollo automatically leaves assembly after maps, tape and clamps are fitted. Its next panel shows length and the dust test; angle and clearance remain in More adjustments.
+- Surveyor reveals site selection, evidence gathering and landing one at a time, advancing when evidence is complete. Its history and Apollo's trial table are initially collapsed.
+- Webb's additional arrow-button controls and real-image sequence are available in clearly labelled disclosures. Keyboard operation remains available throughout.
+- Step navigation and reset retain the existing controls, game outcomes and stamp conditions, with Spanish and Vietnamese labels.
+
 ### Moon pages open like the other four missions
 
 - Apollo 17 and Surveyor 3 pages now use the same opening as the other missions: the real NASA photograph beside “Built for” and “It did”, taken from each machine's existing sourced facts, then the challenge. The photo is no longer pinned to the right of a narrow summary.

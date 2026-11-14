@@ -13,6 +13,8 @@ import { createFrictionFeedback } from "./friction-feedback.js";
 import { mountVoyagerDistance, lightDayLink } from "./voyager-distance.js";
 import { enhanceRangePointer } from "./range-pointer.js";
 import { mountExhibitLayout } from "./exhibit-layout.js";
+import { collapseChallengeNotes } from './challenge-steps.js';
+import './challenge-steps.css';
 import { voyagerCountdownMarkup, mountVoyagerCountdown } from "./voyager-countdown.js";
 import { voyagerContactMarkup, mountVoyagerContact } from "./voyager-contact.js";
 import { webbAlignmentMarkup, mountWebbAlignment } from "./webb-alignment-story.js";
@@ -1398,6 +1400,7 @@ function bindControls() {
       const spot = state.webbSpots[state.selectedStar];
       setWebbSpot(state.selectedStar, spot.x + delta[0], spot.y + delta[1]);
     }; });
+    collapseChallengeNotes($('.star-button-controls'), 'Fine adjustment without dragging');
     $("#webb-wavelength").oninput = (event) => updateWebbInfrared(Number(event.target.value));
     const deployField = $("#webb-deploy-field");
     $$("[data-webb-step]").forEach((button) => {
@@ -2330,10 +2333,17 @@ function updateRotor() {
   );
 }
 function jumpWebbStep(step) {
+  if (step === 'focus' && state.deploy < 1 || step === 'infrared' && state.align < 1) return;
   const panel = $(`#webb-${step}-step`);
-  if (!panel || panel.hidden) return;
+  if (!panel) return;
+  state.webbVisibleStep = step;
+  for (const name of ['deploy', 'focus', 'infrared']) $(`#webb-${name}-step`).hidden = name !== step;
+  $$('[data-webb-step]').forEach(button => {
+    if (button.dataset.webbStep === step) button.setAttribute('aria-current', 'step');
+    else button.removeAttribute('aria-current');
+  });
   const control = panel.querySelector(step === "deploy" ? "[data-wing]:not(.is-open)" : step === "focus" ? "[data-star]:not(.is-focused)" : "#webb-wavelength");
-  panel.scrollIntoView({ behavior: reduce ? "instant" : "smooth", block: "start" });
+  $('.webb-step-nav').scrollIntoView({ behavior: reduce ? 'instant' : 'smooth', block: 'nearest' });
   (control || panel).focus({ preventScroll: true });
 }
 function updateWebbPointerControls() {
@@ -2353,9 +2363,9 @@ function updateWebbPointerControls() {
   $$('[data-star-direction]').forEach(button => button.setAttribute('aria-disabled', String(spot.locked)));
 }
 function updateWebb() {
+  const previousStep = state.webbUnlockedStep || 'deploy';
   const openCount = Number(state.webbWings.left) + Number(state.webbWings.right);
   state.deploy = (state.webbWingProgress.left + state.webbWingProgress.right) / 2;
-  $("#webb-focus-step").hidden = openCount !== 2;
   $$("[data-wing]").forEach((button) => {
     const wing = button.dataset.wing;
     const progress = state.webbWingProgress[wing];
@@ -2374,11 +2384,14 @@ function updateWebb() {
     button.setAttribute("aria-label", `Image ${"ABC"[index]}. ${describeStar(spot)}`);
   });
   $("#webb-focus-count").textContent = `${focused} / 3 images focused`;
-  $("#webb-infrared-step").hidden = focused !== 3 || openCount !== 2;
   const activeStep = openCount !== 2 ? "deploy" : focused !== 3 ? "focus" : "infrared";
+  state.webbUnlockedStep = activeStep;
+  const visibleStep = previousStep !== activeStep ? activeStep : state.webbVisibleStep || activeStep;
+  state.webbVisibleStep = visibleStep;
+  for (const name of ['deploy', 'focus', 'infrared']) $(`#webb-${name}-step`).hidden = name !== visibleStep;
   $$("[data-webb-step]").forEach((button) => {
     button.disabled = button.dataset.webbStep === "focus" ? openCount !== 2 : button.dataset.webbStep === "infrared" ? focused !== 3 || openCount !== 2 : false;
-    if (button.dataset.webbStep === activeStep) button.setAttribute("aria-current", "step");
+    if (button.dataset.webbStep === visibleStep) button.setAttribute("aria-current", "step");
     else button.removeAttribute("aria-current");
   });
   $("#webb-state").textContent =
@@ -2390,6 +2403,7 @@ function updateWebb() {
   setStatus($("#webb-state").textContent);
   webbAlignment?.updateProgress(state.align);
   updateWebbPointerControls();
+  if (previousStep !== activeStep) jumpWebbStep(activeStep);
 }
 function updateWebbInfrared(value) {
   if (state.deploy < 1 || state.align < 1) return;
@@ -2731,6 +2745,7 @@ async function render(id) {
     deployStep.insertAdjacentHTML("beforebegin", '<nav class="webb-step-nav" aria-label="Webb challenge steps"><button type="button" data-webb-step="deploy" aria-controls="webb-deploy-step" aria-current="step">01 · Open mirror</button><button type="button" data-webb-step="focus" aria-controls="webb-focus-step" disabled>02 · Align stars</button><button type="button" data-webb-step="infrared" aria-controls="webb-infrared-step" disabled>03 · Infrared</button></nav>');
     $("#webb-focus-step").insertAdjacentHTML("beforeend", webbAlignmentMarkup());
     webbAlignment = mountWebbAlignment($("#webb-alignment-story"));
+    collapseChallengeNotes($('#webb-alignment-story'), 'Real Webb images');
     webbAlignment.updateProgress(state.align);
   }
   if (id === "ingenuity") {

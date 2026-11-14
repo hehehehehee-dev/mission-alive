@@ -1,0 +1,15 @@
+.webb-step[hidden], .challenge-step[hidden] { display: none !important; }
+.challenge-step-nav { display: flex; gap: 6px; margin: 0 0 18px; }
+.challenge-step-nav button { flex: 1; min-width: 0; min-height: 44px; padding: 10px 8px; font-size: .875rem; }
+.challenge-step-nav button[aria-current="step"] { background: var(--accent, #f0c88b); color: #11202b; border-color: var(--accent, #f0c88b); }
+.challenge-step { min-width: 0; }
+.challenge-step > fieldset { margin: 0 0 16px; }
+.challenge-notes { margin: 16px 0; border-block: 1px solid var(--line, #647987); }
+.challenge-notes > summary { cursor: pointer; padding: 13px 4px; min-height: 44px; font-size: .875rem; font-weight: 600; color: #e9d1a7; }
+.challenge-notes > :not(summary) { margin: 12px 0; }
+.surveyor-step-controls { grid-column: 2; min-width: 0; }
+.moon-game[data-lrv-result="untested"] .lrv-results { display: none; }
+.moon-game .challenge-step .lrv-control { margin: 14px 0; }
+.moon-game .challenge-step .lrv-actions { margin-bottom: 12px; }
+body[data-exhibit="webb"] #controls .webb-step { margin-top: 0; }
+@media (max-width: 800px) { .surveyor-step-controls { grid-column: 1; } }

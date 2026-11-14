@@ -14,11 +14,15 @@ The canvases support pointer orbiting and keyboard turning/zoom. Native HTML con
 
 ## Apollo 17 LRV
 
+The compact flow shows assembly first. Fitting clamps after maps and tape automatically hides assembly and opens Shape and test. Length is the main adjustment; angle and clearance are available in More adjustments. The step bar can reopen assembly, and trial history is an optional disclosure. The original controls and values are moved rather than recreated.
+
 Players tap maps, tape and clamps (one tap each, in that order), adjust the patch length/angle/clearance, and run a dust test. The workshop starts level and clear of the wheel (30 cm / 0° / 4 cm) but too short to catch dust, so one informed length change after assembly is enough to pass. After a failed test the hint names exactly one control, a direction and a rough amount (“a little”, no word, or “a lot”) — never a winning number. `lrvNextChange()` picks the smallest single change that passes even if the learner presses one or two times too many; if no single change helps, it steers back toward a hidden working shape. A negative model gap is shown as “Touching the wheel”. The same twelve simplified paths are used across trials. A segment crossing stops a dust path; the smallest distance along the whole patch determines wheel clearance. Tape-only attachment slips under an explicitly declared game rule. A promising preview cannot pass until the player runs a test. Several geometries pass, including length/angle/clearance 50/0/8 and 60/0/8 with maps, tape and clamps. Six recent trials remain available for comparison; reset clears the trial history.
 
 The SVG illustration, dimensions, trajectories and thresholds are original teaching choices, not NASA measurements. The historical repair using spare maps, tape and clamps is sourced from [NASA's Lunar Dust and Duct Tape](https://science.nasa.gov/image-article/apod-2004-april-17-lunar-dust-and-duct-tape/). Passing reveals its real photograph, credited **Apollo 17, NASA**. Full provenance is in ASSETS.md and the public Sources & credits catalog.
 
 ## Surveyor 3
+
+The compact flow shows Choose, Investigate and Land separately. Choosing a patch advances to investigation. The existing requirement for two different probe forces and a complete trench automatically opens landing; changing to another patch requires its evidence. Reset returns to Choose. Earlier unlocked steps remain accessible through the step bar.
 
 Players investigate one of three explicitly fictional soil patches. They press a probe at different forces and inspect a trench, then test an independent fictional lander with adjustable square pads. The probe and pad tests share the same layered pressure/depth model. Pad area is width squared, pressure is fixed simulated load divided by area, and left/right sinking can cause a tilt. A supported recommendation requires at least two distinct probe forces and trench inspection on the selected patch. A wide pad without evidence is a trial, not completion. Smaller pads can fail, and different patches admit different safe footprints. Reset clears the investigation.
 

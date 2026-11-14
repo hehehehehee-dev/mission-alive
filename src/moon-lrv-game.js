@@ -435,6 +435,7 @@ export function mountLrvGame(root) {
       });
     }
     const applied = { maps: configuration.maps, tape: configuration.tape, clamps: configuration.tape && configuration.attachment === 'clamps' };
+    workshop.dataset.lrvAssembly = applied.clamps ? 'complete' : 'building';
     workshop.querySelectorAll('[data-lrv-tool]').forEach(button => button.setAttribute('aria-pressed', String(applied[button.dataset.lrvTool])));
     find("[data-lrv-dust-paths]").innerHTML = dustMarkup(result);
     find("[data-lrv-patch]").innerHTML = patchMarkup(configuration);

@@ -1,5 +1,12 @@
 import { siDisclosure } from '../project-attribution.js';
 const rows = [
+  ['Challenge steps', 'Pasos del desafío', 'Các bước thử thách'],
+  ['01 · Build', '01 · Construir', '01 · Lắp ráp'],
+  ['02 · Shape and test', '02 · Ajustar y probar', '02 · Chỉnh và thử'],
+  ['02 · Investigate', '02 · Investigar', '02 · Khảo sát'],
+  ['03 · Land', '03 · Aterrizar', '03 · Hạ cánh'],
+  ['More adjustments', 'Más ajustes', 'Điều chỉnh thêm'],
+  ['Real Webb images', 'Imágenes reales de Webb', 'Ảnh thật từ Webb'],
   ['QUICK START', 'INICIO RÁPIDO', 'BẮT ĐẦU NHANH'],
   ['See it. Try it. Fix it.', 'Míralo. Pruébalo. Mejóralo.', 'Nhìn. Thử. Sửa.'],
   ['Why this works', 'Por qué funciona', 'Vì sao cách này hiệu quả'],
