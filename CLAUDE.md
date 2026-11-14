@@ -1,6 +1,6 @@
 # Claude project instructions
 
-This file is the starting point for Claude or another AI collaborator working on Mission Alive. Read this file, then `docs/CLAUDE_HANDOFF.md`, before editing.
+This file is the starting point for Claude or another AI collaborator working on Mission Alive. Read this file, then `docs/CLAUDE_HANDOFF.md` and `docs/CHANGELOG.md`, before editing.
 
 ## Project identity
 
@@ -36,6 +36,7 @@ Do not add, remove, or silently change a stamp, finale condition, storage key, c
 6. For UI changes, check keyboard use, reduced motion, English/Spanish/Vietnamese, and a narrow mobile viewport near 390 px.
 7. Only after validation, run `python scripts/package-netlify.py` when a new Netlify package is requested. It intentionally retains only the current and previous ZIP.
 8. Never deploy, push, publish, or create a release unless the owner asks.
+9. Update `docs/CHANGELOG.md` and any affected Markdown guide in the same commit as every product, code, content, data, or UX change. Documentation is part of the definition of done.
 
 ## Non-negotiable content rules
 

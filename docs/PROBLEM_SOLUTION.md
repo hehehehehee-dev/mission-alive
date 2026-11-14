@@ -2,15 +2,11 @@
 
 ## The problem
 
-Space science already has wonder built into it, yet young learners often meet it as a collection of separate articles, images, and numbers. At ages 10 to 14, ideas such as signal delay, robotic autonomy, thin atmospheres, infrared light, and interstellar distance are difficult to grasp through explanation alone. They become meaningful when a learner can make a choice, see what happens, and revise that choice.
+Kids love space. In a 2019 survey of 3,000 children aged 8 to 12, 86% said they were interested in space exploration. But only 11% wanted to be an astronaut, while 29% wanted to be a YouTuber. [Source: The LEGO Group / The Harris Poll](https://www.lego.com/en-at/aboutus/news/2019/july/lego-group-kicks-off-global-program-to-inspire-the-next-generation-of-space-explorers-as-nasa-celebrates-50-years-of-moon-landing)
 
-Recent education data gives this challenge added urgency. The average science score for United States eighth-grade students in 2024 was four points lower than in 2019. Earth and Space Sciences also fell by four points, with declines across all five reported performance percentiles. These results do not identify a single cause, but they do show a need for more engaging ways to practise scientific thinking. [Source: 2024 NAEP Grade 8 Science, National Trends](https://www.nationsreportcard.gov/reports/science/2024/national-trends/)
+Interest in science often falls away between ages 11 and 14. [Source: Institution of Mechanical Engineers, *When STEM? A Question of Age*](https://www.imeche.org/policy-and-press/reports/detail/when-stem-a-question-of-age)
 
-Access is part of the same problem. The World Health Organization estimates that 1.3 billion people, about 16 percent of the global population, experience significant disability. A learning experience that depends on sound, color, precise dragging, long passages of text, or a working 3D renderer can exclude students before the science begins. [Source: World Health Organization, Disability](https://www.who.int/en/news-room/fact-sheets/detail/disability-and-health)
-
-NASA missions provide remarkable stories, but their lessons are spread across mission pages, archives, datasets, photographs, and technical reports. Ingenuity, for example, was designed for no more than five test flights in 30 days. It completed 72 flights over nearly three years. That is a memorable lesson about testing, adaptation, and engineering courage, especially when a learner gets to experience the cycle instead of only reading the final number. [Source: NASA/JPL-Caltech, The Legacy of Ingenuity](https://science.nasa.gov/resource/the-legacy-of-ingenuity-the-frontier-of-extraterrestrial-flight/)
-
-The challenge is therefore not a lack of information. The challenge is turning trustworthy space science into an experience that children can understand, control, remember, and access in different ways.
+We took on NASA's “Abandoned but not Forgotten” challenge with that gap in mind. Six NASA machines were left on the Moon, on Mars, and in deep space. They cannot come home. So we built Mission Alive, a training academy where a child finishes their missions: repair the Apollo 17 rover, test the ground for Surveyor 3's landing, drive Curiosity, fly Ingenuity, unfold Webb, and send a greeting to Voyager 1. Each mission teaches one quality: resourcefulness, evidence, patience, daring, precision, endurance.
 
 ## The solution
 

@@ -5,3 +5,7 @@ The user wants only the current Netlify version and the previous distinct versio
 # Sources and attribution
 
 Every NASA or other astronomy/space-organization resource used in the app, including every image, background, surface map, illustration, video, recording, dataset, API, and factual source, must appear in the visible Sources & credits section. Keep the central catalog in `src/resource-credits.js` current and retain credit near the resource where practical. For each media asset record its title, exact organization/creator credit, official source page, original download URL, local file, where it is used, and any presentation changes. Distinguish photographs/observations, composites, texture-based renders, official artist concepts, and original Mission Alive simulations. New dynamically loaded archive images must register their NASA ID, original source and supplied credit. Do not describe illustrations or simulations as photographs, or imply agency endorsement.
+
+# Documentation sync
+
+Every product, code, content, data, or UX change must update `docs/CHANGELOG.md` and any affected Markdown guide in the same commit. Claude and other collaborators rely on these files to understand the current project. A change is not complete while its documentation describes an older state.

@@ -14,6 +14,11 @@ const image = (id, title, credit, source, file, original, usedIn, kind = 'Photog
 });
 
 // Public catalog: add every external asset here before using it in the app.
+export const educationResearch = [
+  { id: 'lego-space-survey-2019', category: 'science', kind: 'Survey', title: 'Children and space exploration survey · 2019', credit: 'The LEGO Group / The Harris Poll', source: 'https://www.lego.com/en-at/aboutus/news/2019/july/lego-group-kicks-off-global-program-to-inspire-the-next-generation-of-space-explorers-as-nasa-celebrates-50-years-of-moon-landing', usedIn: ['Project problem statement'], presentation: 'Online survey of 3,000 children aged 8 to 12 in China, the United States, and the United Kingdom, conducted from 30 May to 8 June 2019.' },
+  { id: 'when-stem-age', category: 'science', kind: 'Research report', title: 'When STEM? A Question of Age · 2010', credit: 'Institution of Mechanical Engineers', source: 'https://www.imeche.org/policy-and-press/reports/detail/when-stem-a-question-of-age', usedIn: ['Project problem statement'], presentation: 'Research review and expert consultation identifying ages 11 to 14 as a period when interest in STEM often falls away.' },
+];
+
 export const resourceCredits = [
   { id: 'public-sans', category: 'science', kind: 'Typography', title: 'Public Sans · interface typography', credit: 'The Public Sans Project Authors · SIL Open Font License 1.1', source: 'https://www.nasa.gov/nasa-brand-center/brand-guidelines/', original: 'https://raw.githubusercontent.com/google/fonts/main/ofl/publicsans/PublicSans%5Bwght%5D.ttf', files: ['/fonts/PublicSans-Variable.ttf', '/fonts/PublicSans-OFL.txt'], usedIn: ['Entire academy', 'Certificate'], presentation: "Self-hosted variable font. NASA Horizon uses Public Sans for body text and interfaces. Mission Alive uses one font family throughout; this does not imply NASA endorsement." },
   image('earth', 'Earth · Blue Marble 2002', "NASA's Earth Observatory", 'https://science.nasa.gov/resource/blue-marble-2002/', '/assets/journey-earth-nasa.jpg', 'https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/1/1-bluemarble_west-1.jpg', ['Lobby', 'Journey map'], 'Composite image', 'NASA composite; circular crop and a soft shadow in the map.'),
@@ -117,7 +122,7 @@ export function mountResourceCredits(dialog, { facts, quotes = [], recordImages 
     <div class="credits-grid" id="credits-results"></div><div class="credits-end"><button type="button" data-credit-notes>Mission field notes →</button><p class="fine">Independent educational project. NASA, ESA, CSA, STScI, and other credited organizations do not endorse Mission Alive.</p><p class="fine">The machine voices were generated with ElevenLabs; interface sound effects are synthesized by Mission Alive. They are not NASA recordings.</p><a href="https://www.nasa.gov/nasa-brand-center/images-and-media/" target="_blank" rel="noopener">NASA media guidance ↗</a><a href="https://www.esa.int/ESA_Multimedia/Terms_and_conditions_of_use_of_images_and_videos_available_on_the_esa_website" target="_blank" rel="noopener">ESA media terms ↗</a></div>`;
   const grid = dialog.querySelector('#credits-results');
   const draw = () => {
-    const entries = [...resourceCredits, ...archivePhotos.values(), ...science, ...projectTools];
+    const entries = [...resourceCredits, ...educationResearch, ...archivePhotos.values(), ...science, ...projectTools];
     const needle = normalize(query);
     const shown = entries.filter(entry => (category === 'all' || entry.category === category) && normalize([entry.title, t(entry.title), entry.credit, entry.kind, t(entry.kind), ...entry.usedIn, ...entry.usedIn.map(label => t(label))].join(' ')).includes(needle));
     grid.innerHTML = shown.map(entry => {
