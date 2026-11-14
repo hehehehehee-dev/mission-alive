@@ -1,0 +1,102 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { journeyStops, moonStories, moonPanelMarkup, locationMapMarkup } from "../src/moon-stories.js";
+
+test("Moon archive keeps two sourced stories and two training labs within certification", () => {
+  assert.deepEqual(Object.keys(moonStories), ["apollo17", "surveyor3"]);
+  for (const story of Object.values(moonStories)) {
+    assert.equal(story.facts.length, 4);
+    assert.deepEqual(story.facts.map(([label]) => label), ["WHAT IT IS", "WHY IT WENT", "WHAT IT DID", "WHERE IT IS NOW"]);
+    assert.ok(story.sources.length >= 1);
+    for (const [, source] of story.sources) {
+      const host = new URL(source).hostname;
+      assert.ok(host === "www.nasa.gov" || host === "science.nasa.gov" || host === "www.jpl.nasa.gov");
+    }
+    assert.ok(story.reveal.fact.length > 40);
+    assert.ok(story.reveal.credit.startsWith("Image credit: NASA"));
+    assert.ok(story.reveal.source[1].startsWith("https://science.nasa.gov/"));
+    const image = readFileSync(new URL(`../public${story.reveal.image}`, import.meta.url));
+    assert.ok(image.length > 100_000);
+    assert.deepEqual(Array.from(image.subarray(0, 3)), [255, 216, 255]);
+  }
+  const markup = moonPanelMarkup();
+  assert.equal((markup.match(/data-moon-story=/g) || []).length, 2);
+  assert.ok(markup.includes("TWO STAMPS"));
+  assert.equal((markup.match(/data-moon-stamp=/g) || []).length, 2);
+  assert.ok(!markup.includes("data-exhibit"));
+  assert.equal((markup.match(/class="moon-story-flip"/g) || []).length, 2);
+  const archive = markup.slice(markup.indexOf('<div class="moon-story-grid">'));
+  assert.equal((archive.match(/Image credit: NASA/g) || []).length, 2);
+  assert.ok(markup.includes("television camera and soil scoop home to Earth"));
+  assert.equal((markup.match(/data-moon-play=/g) || []).length, 2);
+  assert.ok(markup.includes('data-lrv-workshop'));
+  assert.ok(markup.includes('data-surveyor-game'));
+  assert.ok(markup.includes('Illustrated simulation · not NASA test data.'));
+});
+
+test("location strip routes four training machines and only two Moon stories", () => {
+  const markup = locationMapMarkup();
+  assert.deepEqual(journeyStops, ["earth", "apollo17", "surveyor3", "curiosity", "ingenuity", "webb", "voyager"]);
+  assert.equal((markup.match(/data-journey-stop=/g) || []).length, 7);
+  assert.equal((markup.match(/data-visual-stop=/g) || []).length, 7);
+  assert.equal((markup.match(/class="journey-scene /g) || []).length, 5);
+  assert.ok(markup.includes('class="journey-scroll-route"'));
+  assert.ok(markup.includes('class="journey-path-line"'));
+  assert.ok(markup.includes('class="system-canvas moon-system"'));
+  assert.ok(markup.includes('class="system-canvas mars-system"'));
+  assert.ok(markup.includes('class="system-canvas webb-system"'));
+  assert.ok(markup.includes('class="system-canvas voyager-system"'));
+  assert.ok(!markup.includes("data-replay-journey"));
+  assert.equal((markup.match(/data-map-exhibit=/g) || []).length, 4);
+  assert.equal((markup.match(/data-map-moon=/g) || []).length, 2);
+  assert.deepEqual(
+    [...markup.matchAll(/data-map-exhibit="([^"]+)"/g)].map((match) => match[1]),
+    ["curiosity", "ingenuity", "webb", "voyager"],
+  );
+  assert.deepEqual(
+    [...markup.matchAll(/data-map-moon="([^"]+)"/g)].map((match) => match[1]),
+    ["apollo17", "surveyor3"],
+  );
+  assert.ok(markup.includes("Distances compressed"));
+  assert.ok(markup.includes("3,475 KM · 27% OF EARTH"));
+  assert.ok(markup.includes("6,792 KM · 53% OF EARTH"));
+  const moon = markup.indexOf('data-frontier="moon"');
+  const mars = markup.indexOf('data-frontier="mars"');
+  const deepSpace = markup.indexOf('data-frontier="deep-space"');
+  assert.ok(moon > -1 && moon < mars && mars < deepSpace);
+  assert.equal((markup.match(/class="earth-origin"/g) || []).length, 1);
+  const earth = markup.match(/<article class="journey-scene scene-earth"[\s\S]*?<\/article>/)?.[0] || "";
+  assert.ok(earth.includes("YOU ARE HERE"));
+  assert.ok(!earth.includes("data-map-"));
+  assert.ok(!earth.includes("<button"));
+  for (const label of [
+    "≈ 384,400 km from Earth",
+    "≈ 7 months by spacecraft",
+    "≈ 1.5 million km from Earth",
+    "Almost one light-day from Earth",
+  ]) assert.ok(markup.includes(label), label);
+  assert.ok(markup.includes("journey-path-line"));
+  assert.ok(markup.includes("Earth, the Moon, and Mars share one size scale"));
+  assert.ok(markup.includes("Sun, Earth, then L2"));
+  assert.ok(markup.includes("L2 and Webb are on the side of Earth away from the Sun"));
+  assert.ok(markup.includes("journey-progress-status"));
+  for (const place of ["TAURUS–LITTROW", "OCEANUS PROCELLARUM", "GALE CRATER", "JEZERO CRATER", "SUN–EARTH L2", "INTERSTELLAR SPACE"]) assert.ok(markup.includes(place));
+  assert.ok(markup.includes("Background: Webb's First Deep Field · NASA, ESA, CSA, STScI"));
+});
+
+test("the original certification UI remains exactly six certificate stamps", () => {
+  const index = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const main = readFileSync(new URL("../src/main.js", import.meta.url), "utf8");
+  const finale = index.match(/<div class="finale-stamps"[\s\S]*?<\/div>/)?.[0] || "";
+  const certificate = index.match(/<div class="certificate-stamps"[\s\S]*?<\/div>/)?.[0] || "";
+  assert.equal((finale.match(/<span>/g) || []).length, 6);
+  assert.equal((certificate.match(/<span>/g) || []).length, 6);
+  assert.ok(index.includes("6 / 6 STAMPS"));
+  assert.ok(!index.includes("5 / 5"));
+  assert.ok(!main.includes("apollo17: {"));
+  assert.ok(!main.includes("surveyor3: {"));
+  assert.ok(main.includes('const JOURNEY_KEY = "mission-alive-journey-v1"'));
+  // The four training choices precede optional map exploration in the readable lobby.
+  assert.ok(index.indexOf('id="lobby-missions"') < index.indexOf('id="location-map-slot"'));
+});

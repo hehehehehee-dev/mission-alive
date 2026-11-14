@@ -1,0 +1,294 @@
+/* A quiet reading and control layer. Keep the NASA imagery and journey intact. */
+:root { --muted: #bdcad2; --accent: #f0c88b; --line: #52636e; --surface: #10202b; --reading-ink: #f0f3f2; --reading-paper: #0c1923; }
+html { font-size: 16px; scroll-padding-top: 24px; }
+html[data-text-size="large"] { font-size: 19px; }
+body { color: var(--reading-ink); background: #08121b; line-height: 1.6; }
+button, input, select, textarea { font-family: Arial, Helvetica, sans-serif; }
+button, select, input:not([type="range"]):not([type="checkbox"]):not([type="radio"]) { min-height: 44px; }
+button { line-height: 1.4; border-radius: 5px; }
+button:disabled { opacity: .65; }
+a { text-underline-offset: .22em; }
+:is(button, a, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid #a6e4ff; outline-offset: 4px; }
+summary { cursor: pointer; padding: 14px 0; line-height: 1.5; }
+fieldset { min-width: 0; margin: 24px 0; padding: 16px; border: 1px solid var(--line); border-radius: 5px; }
+legend { padding: 0 7px; font-size: 1rem; font-weight: 700; }
+input[type="checkbox"], input[type="radio"] { width: 24px; height: 24px; flex: none; accent-color: var(--accent); }
+.space-photo { animation: none; will-change: auto; }
+body #space-ambience { opacity: .18; }
+body[data-exhibit="lobby"] #space-ambience { opacity: .22; }
+body[data-exhibit="lobby"] .space-photo { opacity: .3; }
+.museum-lobby::before { display: none; }
+body.is-warping #app { filter: none; }
+
+/* Clear navigation and comfortable reading. */
+#app > header { min-height: 100px; height: auto; padding: 22px 0; gap: 20px; flex-wrap: wrap; }
+.brand { letter-spacing: .07em; }
+.brand small { font-size: .75rem; letter-spacing: .04em; }
+.header-actions { gap: 5px; flex-wrap: wrap; }
+.header-actions button { font-size: .875rem; padding: 10px 12px; }
+.header-actions #access-settings { border: 1px solid var(--line); }
+.language-picker, .language-picker select { font-size: .875rem; }
+.eyebrow { font: 600 .8125rem/1.5 Arial, Helvetica, sans-serif; letter-spacing: .09em; }
+:is(.intro, .lobby-hero) h1 { font-family: Arial, Helvetica, sans-serif; font-size: clamp(2.2rem, 4.5vw, 4.25rem); font-weight: 600; line-height: 1.12; letter-spacing: -.035em; text-shadow: none; }
+.intro h1 em { font-style: normal; color: #f0c88b; }
+:is(h1, h2, h3) { overflow-wrap: anywhere; }
+.intro { padding-top: 44px; padding-bottom: 26px; }
+.intro .story { font-size: 1.125rem; line-height: 1.7; }
+.exhibits button { padding: 20px 12px; gap: 12px; }
+.exhibits strong { font-size: 1rem; }
+.exhibits small, .exhibits .number { font-size: .8125rem; }
+:is(.intro, #controls, .learning-panel, .module-reading, .teachers-page, .dsn-widget, .history-card) p { font-size: 1rem; line-height: 1.7; }
+:is(.fine, .story-source, .ambient-credit, .data-sources-credit, .machine-voice, .module-mission-objective, .learning-feedback, .program-status, .orbit-hint, .stage-caption, .scene-label, .map-legend) { font-size: .875rem; line-height: 1.6; }
+:is(.fine, .ambient-credit, .data-sources-credit, .orbit-hint) { color: var(--muted); }
+.primary { color: #171c20; background: var(--accent); border-color: var(--accent); box-shadow: none; font-size: 1rem; }
+.primary:hover { background: #ffe0ad; color: #111a20; }
+.secondary { font-size: .9375rem; }
+
+/* A direct lobby path, followed by the open-space journey and optional notes. */
+.lobby-hero { display: block; min-height: 0; padding: 42px 0 48px; max-width: 920px; }
+.lobby-hero h1 { max-width: 850px; }
+.lobby-story-intro { max-width: 710px; }
+.lobby-story-intro p { font-size: 1.0625rem; line-height: 1.7; text-shadow: none; }
+.lobby-start { width: auto; margin-top: 15px; padding-inline: 24px; }
+.mission-passport { padding: 30px 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; backdrop-filter: none; box-shadow: none; }
+.passport-heading h2 { font: 600 clamp(1.4rem, 3vw, 2rem)/1.2 Arial, Helvetica, sans-serif; letter-spacing: -.02em; }
+.passport-heading .eyebrow { margin-bottom: 10px; }
+#passport-message { font-size: 1rem; }
+.lobby-missions { margin: 24px 0 30px; gap: 0; border-block: 1px solid var(--line); }
+.lobby-mission-card { min-height: 200px; border: 0; border-right: 1px solid var(--line); border-radius: 0; background: #0c1923; box-shadow: none; padding: 24px; transform: none; will-change: auto; }
+.lobby-mission-card:last-child { border-right: 0; }
+.lobby-mission-card::before { display: none; }
+.lobby-mission-card:hover { transform: none; background: #142836; border-color: var(--line); }
+.lobby-mission-card .mission-name { font-family: Arial, Helvetica, sans-serif; font-weight: 600; }
+.lobby-mission-card .mission-name strong { font: 600 1.5rem/1.3 Arial, Helvetica, sans-serif; }
+.lobby-mission-card .module-number { font: 600 .75rem/1.5 Arial; letter-spacing: .02em; }
+.lobby-mission-card :is(small, .mission-number, .mission-label, .mission-status, .mission-action) { font-size: .8125rem; }
+.secret-passport { border: 0; border-left: 2px solid #aabecb; border-radius: 0; background: transparent; margin: 26px 0 35px; }
+.secret-passport :is(p, small, strong) { font-size: .875rem; }
+.lobby-field-notes { border-top: 1px solid var(--line); margin-top: 35px; }
+.lobby-field-notes > summary { font-size: 1.125rem; }
+.lobby-notes-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 28px; padding: 20px 0; }
+.dsn-widget, .history-card { background: var(--reading-paper); box-shadow: none; backdrop-filter: none; border-radius: 5px; border-color: var(--line); }
+.dsn-widget::before, .history-card::after { display: none; }
+.dsn-station { background: #10202b; border-color: #50636f; }
+.dsn-station li { flex-wrap: wrap; }
+.dsn-station li strong { font-size: .9375rem; }
+.dsn-station li span, .dsn-widget > a { font-size: .875rem; }
+.dsn-station h3, .dsn-status { font-size: .8125rem; }
+.dsn-widget.has-live-data .dsn-pulse { animation: none; box-shadow: none; }
+.history-main { display: block; }
+.history-main a { display: inline-block; margin-top: 18px; }
+
+/* Let the planetary pictures carry the map; reduce the competing star layers. */
+.location-map-heading { margin-top: 60px; }
+.location-map-field { background: linear-gradient(#08121bf7, #08121beb 50%, #08121bf7), url('/assets/webb-first-deep-field-smacs0723.png') center / 1500px auto; }
+.location-map-field::before, .location-map-field::after { display: none; }
+.location-map .scene-heading > a, .location-map .planet-credit, .location-map-credit, .location-map .scale-key, .location-map .diagram-note { font: .875rem/1.6 Arial, Helvetica, sans-serif; color: #c3d2dc; letter-spacing: 0; }
+.location-map .scale-key { max-width: 95%; }
+.location-map .planet-credit a, .location-map-credit a { color: #c8deeb; }
+.diagram-callout { text-shadow: none; min-height: 70px; }
+.diagram-callout strong { font: 600 1rem/1.35 Arial, Helvetica, sans-serif; text-shadow: none; }
+.diagram-callout small { font: .75rem/1.5 Arial, Helvetica, sans-serif; letter-spacing: 0; color: #c4d3dc; }
+.diagram-callout .route-stop-state { font-size: .6875rem; letter-spacing: 0; }
+.diagram-pin { min-height: 30px; }
+.earth-origin-label strong, .earth-origin-label small, .diagram-body > small, .diagram-sun > small, .voyager-sun > small, .l2-marker > small { font-size: .8125rem; }
+.compare-planets-trigger { font-size: .9375rem; }
+
+/* Solid control surfaces, predictable groups, no decorative halos. */
+.challenge-layout { grid-template-columns: minmax(0, 1fr) minmax(340px, .85fr); gap: 32px; align-items: start; }
+#controls { padding: 28px; border: 1px solid var(--line); border-radius: 5px; background: var(--reading-paper); box-shadow: none; backdrop-filter: none; min-width: 0; }
+#controls h2 { font: 600 1.625rem/1.25 Arial, Helvetica, sans-serif; }
+#controls h3, .learning-panel h3 { line-height: 1.4; }
+.learning-panel, .preflight-panel { background: #10202b; box-shadow: none; border-color: var(--line); border-radius: 5px; }
+.learning-choices button { font-size: .9375rem; }
+.code-block, .program-block { box-shadow: none; font-size: .875rem; }
+.program-heading { flex-wrap: wrap; gap: 10px; font-size: .875rem; }
+.program-heading > span { font-size: .875rem; }
+.program-block { grid-template-columns: 26px minmax(0, 1fr) auto; gap: 8px; }
+.program-block-tools { display: flex; gap: 4px; }
+.program-block-tools button { width: 36px; min-height: 44px; padding: 4px; font-size: 1.1rem; }
+.program-block strong { overflow-wrap: anywhere; }
+.rover-cell:is(.is-start, .is-sample, .is-goal, .is-rock)::before { content: none; }
+.rover-cell.is-start::after { content: '●'; color: #c6d6e0; font: 1rem Arial; }
+.rover-cell.is-sample::after { content: '◇'; color: #a4f0f5; font: bold 1.4rem Arial; }
+.rover-cell.is-goal::after { content: '◎'; color: #f6d398; font: bold 1.4rem Arial; }
+.rover-cell.is-rock::after { content: '×'; color: #fff; font: bold 1.2rem Arial; }
+.rover-cell .rover-marker { z-index: 2; }
+.map-legend { flex-wrap: wrap; gap: 14px; }
+.map-legend i { display: inline-grid; place-items: center; width: 22px; height: 22px; font: normal bold 1rem Arial; }
+.legend-sample::after { content: '◇'; color: #052730; }
+.legend-goal::after { content: '◎'; color: #2d2408; }
+.legend-rock::after { content: '×'; color: #fff; }
+.rover-text-map { margin: 14px 0 22px; border-block: 1px solid var(--line); }
+.rover-text-map > summary { font-weight: 600; }
+.rover-table-scroll { overflow-x: auto; margin: 20px 0; }
+.rover-text-map table { width: 100%; min-width: 430px; border-collapse: collapse; font-size: .875rem; }
+.rover-text-map caption { text-align: left; padding: 10px 0; }
+.rover-text-map th, .rover-text-map td { padding: 8px; border: 1px solid #647987; text-align: center; }
+.rover-text-map td span { display: block; }
+.rover-text-map th { font-weight: 600; }
+.rover-text-map .has-rover { border: 2px solid var(--accent); background: #263746; font-weight: 700; }
+.rover-text-map #rover-position { font-weight: 600; }
+.flight-pacing label { display: flex; align-items: center; gap: 12px; min-height: 48px; }
+.flight-pacing #flight-next { width: 100%; background: var(--accent); color: #171c20; }
+.trim-target-label, .wind-cue { font-size: .9375rem; line-height: 1.6; }
+.trim-ticks { font-size: .8125rem; }
+.range-stepper { display: flex; align-items: center; gap: 16px; margin: 12px 0 18px; }
+.range-stepper button { min-width: 64px; min-height: 44px; font-size: 1rem; }
+.range-stepper output { min-width: 4ch; text-align: center; font-variant-numeric: tabular-nums; }
+.wing-button-controls, .star-choices { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.wing-button-controls button { flex: 1 1 130px; }
+.star-choices button { flex: 1 1 70px; }
+.star-choices button[aria-pressed="true"] { color: #121c22; background: var(--accent); border-color: var(--accent); }
+.star-button-controls p { font-variant-numeric: tabular-nums; }
+.star-direction-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.star-direction-pad button { min-height: 48px; font-size: 1rem; }
+.star-direction-pad [data-star-direction="up"] { grid-column: 2; }
+.star-direction-pad [data-star-direction="left"] { grid-column: 1; grid-row: 2; }
+.star-direction-pad [data-star-direction="right"] { grid-column: 3; grid-row: 2; }
+.star-direction-pad [data-star-direction="down"] { grid-column: 2; grid-row: 3; }
+button[aria-disabled="true"] { opacity: .7; cursor: default; }
+.webb-star, .webb-wing-handle, .webb-focus-target, .webb-focus-field { box-shadow: none; }
+.webb-star:hover, .webb-star:active { background: radial-gradient(circle at 45% 40%, #fff 0 15%, #b7ddff 45%, #6db1e5 100%); }
+.webb-star.is-focused:hover { background: #f4d88c; }
+.webb-wing-handle:hover { background: linear-gradient(145deg, #efcf82, #a97428); }
+.webb-step-nav { flex-wrap: wrap; }
+.webb-step-nav button { white-space: normal; font-size: .875rem; }
+.curiosity-view-tabs { flex-wrap: wrap; }
+.curiosity-view-tabs button { font-size: .875rem; }
+.landing-choices { flex-wrap: wrap; }
+.landing-choices small { font-size: .8125rem; }
+.part-marker { width: 44px; height: 44px; min-height: 44px; display: grid; place-items: center; border: 0; background: transparent; box-shadow: none; }
+.part-marker::after { display: none; }
+.part-marker span { display: grid; place-items: center; width: 26px; height: 26px; border: 1px solid #f8d39c; border-radius: 50%; color: #15212a; background: #f0c88b; font: 600 .8125rem/1 Arial; }
+.part-marker:hover, .part-marker.is-active { background: transparent; box-shadow: none; }
+.part-marker:is(:hover, .is-active, :focus-visible) span { color: #fff; background: #172d3b; border-color: #a6e4ff; }
+.part-marker small { font: .875rem/1.5 Arial; background: var(--reading-paper); box-shadow: none; }
+.part-dock { bottom: 85px; overflow-x: auto; background: var(--reading-paper); box-shadow: none; backdrop-filter: none; }
+.part-dock button { flex: 0 0 auto; max-width: none; min-height: 44px; font-size: .875rem; overflow: visible; text-overflow: clip; }
+.part-card { background: var(--reading-paper); box-shadow: none; backdrop-filter: none; }
+.part-card .part-description { font-size: 1rem; line-height: 1.7; }
+.part-card a, .parts-hint { font: .8125rem/1.5 Arial; letter-spacing: 0; }
+.part-card-close { width: 44px; height: 44px; min-height: 44px; }
+.part-card h3 { margin-right: 40px; }
+.stage-caption { display: grid; justify-content: start; gap: 3px; line-height: 1.4; }
+.stage-caption > span:first-child { display: none; }
+.stage-caption .orbit-hint { display: block; font: .875rem/1.5 Arial; color: #cbd7df; opacity: 1; }
+
+/* A shorter story entrance, with the full story a deliberate read away. */
+.mission-view-content { padding: 90px 4vw 50px; width: 46%; background: #0b1721f5; }
+.mission-view-photo::after { background: linear-gradient(90deg, #02070b00 25%, #02070b33 50%, #0b1721e6 75%); }
+.mission-view-content .mission-view-voice { font: 400 1.25rem/1.65 Arial, Helvetica, sans-serif; color: #dae3e8; margin: 24px 0; }
+.mission-view-content h2 { font: 400 clamp(2rem, 3.1vw, 3rem)/1.18 var(--story-serif); margin: 24px 0; }
+.mission-view-notes { border-block: 1px solid #657883; margin: 28px 0; }
+.mission-view-content .exhibit-story-beats dd { font-size: 1rem; line-height: 1.7; }
+.mission-view-content .exhibit-story-beats dt, .mission-view-content .story-meanwhile, .mission-view-content > a { font-size: .875rem; line-height: 1.65; }
+.mission-view-photo-label .eyebrow, .mission-view-photo-label > span:last-child { font: .875rem/1.6 Arial; letter-spacing: 0; }
+.mission-view-photo-label { padding: 15px 18px; background: #07131ce8; text-shadow: none; }
+.mission-view-photo-label p { margin: 8px 0; font: 400 1.25rem/1.4 var(--story-serif); }
+.mission-view-close { min-width: 44px; border-radius: 5px; }
+.comparison-source, .comparison-worlds figcaption strong, .comparison-worlds figcaption small { font-size: .8125rem; }
+.comparison-intro, .comparison-explanation { font-size: 1rem; }
+.moon-story-card { background: var(--reading-paper); border-color: var(--line); box-shadow: none; }
+.moon-story-facts span, .moon-reveal-fact { font: 1rem/1.7 Arial; }
+.moon-story-facts strong, .moon-story-sources a, .moon-story-back small, .moon-reveal-prompt { font-size: .875rem; }
+.homecoming-photo > a, .homecoming-photo > .fine, .homecoming-keepsake a, .homecoming-keepsake figcaption > .fine { font: .875rem/1.6 Arial; }
+.homecoming-keepsake figcaption > p { font: 1rem/1.7 Arial; }
+.finale-card { background: var(--reading-paper); box-shadow: none; }
+.finale-card .certificate-maker :is(label, p) { font-size: .875rem; }
+
+/* Preferences are standard HTML controls, available before starting a mission. */
+.access-dialog { width: min(600px, calc(100% - 24px)); max-height: 90dvh; overflow-y: auto; padding: 30px; border: 1px solid var(--line); border-radius: 6px; color: var(--reading-ink); background: var(--reading-paper); }
+.access-dialog::backdrop { background: #030a12d9; }
+.access-heading { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
+.access-heading h2 { margin: 8px 0 18px; font: 600 1.8rem/1.2 Arial; }
+.access-heading .eyebrow { margin: 0; color: var(--muted); }
+.access-close { width: 44px; height: 44px; flex: none; padding: 0; font-size: 1.5rem; }
+.access-choice { display: flex; align-items: center; justify-content: space-between; gap: 22px; padding: 22px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.access-choice strong, .access-choice small { display: block; }
+.access-choice small { font-size: .875rem; color: var(--muted); margin-top: 5px; }
+.access-help { margin: 28px 0; }
+.access-help h3 { font-size: 1.1rem; }
+.access-help p { font-size: .9375rem; }
+.access-done { width: 100%; }
+
+body.high-contrast { --reading-paper: #000; --reading-ink: #fff; --surface: #000; --muted: #e0e0e0; --line: #c7d1d9; --accent: #ffe099; background: #000; color: #fff; }
+body.high-contrast :is(.space-photo, .mission-film, #space-ambience, .space-scrim) { display: none; }
+body.high-contrast :is(#controls, .learning-panel, .preflight-panel, .lobby-mission-card, .dsn-widget, .history-card, .access-dialog, .finale-card, .planet-comparison, .moon-story-card, .mission-view-content) { background: #000; color: #fff; border-color: #c7d1d9; }
+body.high-contrast .location-map-field { background: #000; }
+body.high-contrast :is(.fine, .scale-key, .diagram-note, .planet-credit, .location-map-credit, .orbit-hint, .stage-caption, .scene-label, .access-choice small) { color: #e0e0e0; }
+body.high-contrast .rover-text-map .has-rover { background: #202020; }
+body.high-contrast .mission-view-photo-label { background: #000; }
+
+@media (max-width: 1020px) { .challenge-layout { grid-template-columns: 1fr; gap: 24px; } #stage { min-height: 400px; } .lobby-notes-grid { grid-template-columns: 1fr; } }
+@media (max-width: 680px) {
+  #app > header { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px 6px; margin: 0 20px; padding: 18px 0; }
+  #app > header .header-actions { display: contents; }
+  #app > header .brand { grid-column: 1 / 5; grid-row: 1; font-size: .875rem; gap: 10px; }
+  #app > header .brand small { display: none; }
+  #app > header .language-picker { grid-column: 5 / 7; grid-row: 1; }
+  #app > header .language-picker select { width: 100%; font-size: .875rem; }
+  #app > header button { font-size: .8125rem; padding: 8px 5px; min-height: 44px; overflow-wrap: normal; margin: 0; }
+  #app > header #sources { grid-column: 1 / 3; grid-row: 2; }
+  #app > header #teachers-link { grid-column: 3 / 5; grid-row: 2; }
+  #app > header #access-settings { grid-column: 5 / 7; grid-row: 2; }
+  #app > header #sound { grid-column: 1 / 4; grid-row: 3; }
+  #app > header #passport { grid-column: 4 / 7; grid-row: 3; border: 1px solid var(--line); }
+  main { padding-inline: 20px; }
+  .museum-lobby { padding-top: 12px; }
+  .lobby-hero { padding-top: 25px; padding-bottom: 30px; }
+  .lobby-hero h1 { font-size: 2.2rem; }
+  .lobby-story-intro p { font-size: 1rem; }
+  .lobby-start { width: 100%; min-width: 0; }
+  .passport-heading { gap: 18px; align-items: start; }
+  .lobby-missions { grid-template-columns: 1fr; }
+  .lobby-mission-card { min-height: 165px; border-right: 0; border-bottom: 1px solid var(--line); padding: 22px; }
+  .lobby-mission-card:last-child { border-bottom: 0; }
+  .exhibits { grid-template-columns: repeat(2, 1fr); }
+  .exhibits button { padding: 15px 7px; }
+  .exhibits .number { display: none; }
+  #controls { padding: 20px 16px; }
+  #stage { min-height: 390px; }
+  .stage-caption { gap: 10px; }
+  .scene-label span:last-child { display: none; }
+  .program-block { grid-template-columns: 20px minmax(0, 1fr); }
+  .program-block-tools { grid-column: 2; }
+  .program-block-tools button { width: 44px; }
+  .landing-choices { display: grid; grid-template-columns: 1fr; }
+  .flight-pacing { padding: 12px; }
+  .location-map .scene-heading > a { font-size: .8125rem; }
+  .location-map .scale-key { font-size: .8125rem; }
+  .diagram-callout { width: 145px; }
+  .location-map .planet-credit { font-size: .8125rem; margin-top: 36px; }
+  .location-map .diagram-note { font-size: .8125rem; max-width: 280px; bottom: -50px; }
+  .scene-webb .planet-credit { margin-top: 70px; }
+  .location-map-credit { font-size: .8125rem; gap: 16px; }
+  .mission-view-content { width: 100%; margin-top: 45dvh; padding: 28px 24px 35px; min-height: 55dvh; background: var(--reading-paper); }
+  .mission-view-photo { height: 46dvh; }
+  .mission-view-photo::after { background: linear-gradient(0deg, #0c1923 0, transparent 45%); }
+  .mission-view-photo-label { top: 62px; bottom: auto; left: 16px; max-width: 78%; padding: 10px 12px; }
+  .mission-view-photo-label .eyebrow, .mission-view-photo-label > span:last-child { font-size: .75rem; }
+  .mission-view-photo-label p { font-size: 1.1rem; }
+  .mission-view-content .mission-view-voice { font-size: 1.125rem; }
+  .mission-view-content h2 { font-size: 2rem; }
+  .mission-view-content #start-exploring { width: 100%; }
+  .access-dialog { padding: 22px; }
+  .access-heading h2 { font-size: 1.5rem; }
+  .homecoming-photo > .fine { max-width: 100%; font-size: .8125rem; }
+  .finale-card .certificate-maker > div { flex-direction: column; }
+}
+/* At narrow widths, rem-sized tracks also respond to enlarged browser text. */
+@media (max-width: 380px) {
+  #app > header { display: flex; align-items: stretch; flex-direction: column; }
+  #app > header .header-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.25rem), 1fr)); gap: 8px; width: 100%; }
+  #app > header :is(#sources, #teachers-link, #access-settings, #sound, #passport, .language-picker) { grid-column: auto; grid-row: auto; width: 100%; }
+  #app > header .language-picker select { width: 100%; }
+  #app > header .brand { align-self: start; }
+}
+@media (forced-colors: active) {
+  :is(button, input, select, textarea, .rover-text-map .has-rover) { border: 1px solid ButtonText; }
+  :is(button, a, input, select, summary, [tabindex]):focus-visible { outline: 3px solid Highlight; }
+  .rover-marker, .diagram-pin > i { forced-color-adjust: none; }
+  .star-choices button[aria-pressed="true"] { outline: 3px solid Highlight; }
+}
+@media print { #access-dialog, .wing-button-controls, .star-button-controls, .range-stepper { display: none !important; } }

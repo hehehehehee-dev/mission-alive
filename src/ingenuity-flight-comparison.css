@@ -1,0 +1,21 @@
+.flight-comparison {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #8ba0b53b;
+  overflow-wrap: anywhere;
+}
+
+.flight-comparison[hidden] {
+  display: none;
+}
+
+.flight-comparison .flight-comparison-text {
+  margin: 0 0 8px;
+  color: #e8f2f4;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+.flight-comparison .fine {
+  margin-bottom: 0;
+}

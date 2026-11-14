@@ -1,0 +1,688 @@
+{
+  "source": {
+    "title": "NASA Ingenuity flight log",
+    "url": "https://science.nasa.gov/wp-content/uploads/2024/06/ingenuity-helicopter-flight-log.pdf",
+    "published": "2024-06-21",
+    "retrieved_utc": "2026-10-21T08:31:46+00:00",
+    "pdf_sha256": "dcf0b9e59eb8cb805e484c17f9cab8d56b5a03ca92f2facf708be59c45bf4e11",
+    "note": "All 72 rows extracted from NASA's final published PDF table; SI values and Pacific-time flight dates are retained as published. Distances are the table's horizontal distance, not recomputed navigation ground-track lengths. Flight 61 is a pop-up flight: 0 m horizontal distance, 24 m max altitude, 129.5 s duration. Do not substitute the preview's planned 129.69 s.",
+    "spot_checks": [
+      {
+        "flight": 1,
+        "date": "2021-04-19",
+        "duration_s": 39.1,
+        "max_altitude_m": 3
+      },
+      {
+        "flight": 25,
+        "date": "2022-04-08",
+        "duration_s": 161.3,
+        "distance_m": 704
+      },
+      {
+        "flight": 61,
+        "date": "2023-10-05",
+        "sol": 933,
+        "duration_s": 129.5,
+        "max_altitude_m": 24,
+        "distance_m": 0
+      },
+      {
+        "flight": 72,
+        "date": "2024-01-18",
+        "duration_s": 32,
+        "max_altitude_m": 12
+      }
+    ]
+  },
+  "flights": [
+    {
+      "flight": 1,
+      "date": "2021-04-19",
+      "sol": 58,
+      "duration_s": 39.1,
+      "max_altitude_m": 3.0,
+      "distance_m": 0.0,
+      "max_groundspeed_mps": 0.0
+    },
+    {
+      "flight": 2,
+      "date": "2021-04-22",
+      "sol": 61,
+      "duration_s": 51.9,
+      "max_altitude_m": 5.0,
+      "distance_m": 4.0,
+      "max_groundspeed_mps": 0.5
+    },
+    {
+      "flight": 3,
+      "date": "2021-04-25",
+      "sol": 64,
+      "duration_s": 80.3,
+      "max_altitude_m": 5.0,
+      "distance_m": 100.0,
+      "max_groundspeed_mps": 2.0
+    },
+    {
+      "flight": 4,
+      "date": "2021-04-30",
+      "sol": 69,
+      "duration_s": 116.9,
+      "max_altitude_m": 5.0,
+      "distance_m": 266.0,
+      "max_groundspeed_mps": 3.5
+    },
+    {
+      "flight": 5,
+      "date": "2021-05-07",
+      "sol": 76,
+      "duration_s": 108.2,
+      "max_altitude_m": 10.0,
+      "distance_m": 129.0,
+      "max_groundspeed_mps": 2.0
+    },
+    {
+      "flight": 6,
+      "date": "2021-05-22",
+      "sol": 91,
+      "duration_s": 139.9,
+      "max_altitude_m": 10.0,
+      "distance_m": 215.0,
+      "max_groundspeed_mps": 4.0
+    },
+    {
+      "flight": 7,
+      "date": "2021-06-08",
+      "sol": 107,
+      "duration_s": 62.8,
+      "max_altitude_m": 10.0,
+      "distance_m": 106.0,
+      "max_groundspeed_mps": 4.0
+    },
+    {
+      "flight": 8,
+      "date": "2021-06-21",
+      "sol": 120,
+      "duration_s": 77.4,
+      "max_altitude_m": 10.0,
+      "distance_m": 160.0,
+      "max_groundspeed_mps": 4.0
+    },
+    {
+      "flight": 9,
+      "date": "2021-07-05",
+      "sol": 133,
+      "duration_s": 166.4,
+      "max_altitude_m": 10.0,
+      "distance_m": 625.0,
+      "max_groundspeed_mps": 5.0
+    },
+    {
+      "flight": 10,
+      "date": "2021-07-24",
+      "sol": 152,
+      "duration_s": 165.4,
+      "max_altitude_m": 12.0,
+      "distance_m": 233.0,
+      "max_groundspeed_mps": 5.0
+    },
+    {
+      "flight": 11,
+      "date": "2021-08-04",
+      "sol": 163,
+      "duration_s": 130.9,
+      "max_altitude_m": 12.0,
+      "distance_m": 383.0,
+      "max_groundspeed_mps": 5.0
+    },
+    {
+      "flight": 12,
+      "date": "2021-08-16",
+      "sol": 174,
+      "duration_s": 169.5,
+      "max_altitude_m": 10.0,
+      "distance_m": 450.0,
+      "max_groundspeed_mps": 4.3
+    },
+    {
+      "flight": 13,
+      "date": "2021-09-04",
+      "sol": 193,
+      "duration_s": 160.5,
+      "max_altitude_m": 8.0,
+      "distance_m": 210.0,
+      "max_groundspeed_mps": 3.3
+    },
+    {
+      "flight": 14,
+      "date": "2021-10-24",
+      "sol": 241,
+      "duration_s": 23.0,
+      "max_altitude_m": 5.0,
+      "distance_m": 2.0,
+      "max_groundspeed_mps": 0.5
+    },
+    {
+      "flight": 15,
+      "date": "2021-11-06",
+      "sol": 254,
+      "duration_s": 128.8,
+      "max_altitude_m": 12.0,
+      "distance_m": 407.0,
+      "max_groundspeed_mps": 5.0
+    },
+    {
+      "flight": 16,
+      "date": "2021-11-20",
+      "sol": 268,
+      "duration_s": 107.9,
+      "max_altitude_m": 10.0,
+      "distance_m": 116.0,
+      "max_groundspeed_mps": 1.5
+    },
+    {
+      "flight": 17,
+      "date": "2021-12-05",
+      "sol": 282,
+      "duration_s": 116.8,
+      "max_altitude_m": 10.0,
+      "distance_m": 187.0,
+      "max_groundspeed_mps": 2.5
+    },
+    {
+      "flight": 18,
+      "date": "2021-12-15",
+      "sol": 292,
+      "duration_s": 124.3,
+      "max_altitude_m": 10.0,
+      "distance_m": 230.0,
+      "max_groundspeed_mps": 2.5
+    },
+    {
+      "flight": 19,
+      "date": "2022-02-07",
+      "sol": 345,
+      "duration_s": 99.8,
+      "max_altitude_m": 10.0,
+      "distance_m": 63.0,
+      "max_groundspeed_mps": 1.0
+    },
+    {
+      "flight": 20,
+      "date": "2022-02-25",
+      "sol": 362,
+      "duration_s": 130.3,
+      "max_altitude_m": 10.0,
+      "distance_m": 391.0,
+      "max_groundspeed_mps": 4.4
+    },
+    {
+      "flight": 21,
+      "date": "2022-03-10",
+      "sol": 375,
+      "duration_s": 129.2,
+      "max_altitude_m": 10.0,
+      "distance_m": 370.0,
+      "max_groundspeed_mps": 3.85
+    },
+    {
+      "flight": 22,
+      "date": "2022-03-19",
+      "sol": 384,
+      "duration_s": 101.4,
+      "max_altitude_m": 10.0,
+      "distance_m": 68.0,
+      "max_groundspeed_mps": 1.0
+    },
+    {
+      "flight": 23,
+      "date": "2022-03-23",
+      "sol": 388,
+      "duration_s": 129.1,
+      "max_altitude_m": 10.0,
+      "distance_m": 358.0,
+      "max_groundspeed_mps": 4.0
+    },
+    {
+      "flight": 24,
+      "date": "2022-04-03",
+      "sol": 398,
+      "duration_s": 69.5,
+      "max_altitude_m": 10.0,
+      "distance_m": 47.0,
+      "max_groundspeed_mps": 1.45
+    },
+    {
+      "flight": 25,
+      "date": "2022-04-08",
+      "sol": 403,
+      "duration_s": 161.3,
+      "max_altitude_m": 10.0,
+      "distance_m": 704.0,
+      "max_groundspeed_mps": 5.5
+    },
+    {
+      "flight": 26,
+      "date": "2022-04-19",
+      "sol": 414,
+      "duration_s": 159.0,
+      "max_altitude_m": 8.0,
+      "distance_m": 360.0,
+      "max_groundspeed_mps": 3.8
+    },
+    {
+      "flight": 27,
+      "date": "2022-04-23",
+      "sol": 418,
+      "duration_s": 152.9,
+      "max_altitude_m": 10.0,
+      "distance_m": 307.0,
+      "max_groundspeed_mps": 3.0
+    },
+    {
+      "flight": 28,
+      "date": "2022-04-29",
+      "sol": 423,
+      "duration_s": 152.4,
+      "max_altitude_m": 10.0,
+      "distance_m": 418.0,
+      "max_groundspeed_mps": 3.6
+    },
+    {
+      "flight": 29,
+      "date": "2022-06-11",
+      "sol": 465,
+      "duration_s": 66.6,
+      "max_altitude_m": 10.0,
+      "distance_m": 179.0,
+      "max_groundspeed_mps": 5.5
+    },
+    {
+      "flight": 30,
+      "date": "2022-08-20",
+      "sol": 533,
+      "duration_s": 33.3,
+      "max_altitude_m": 5.0,
+      "distance_m": 2.0,
+      "max_groundspeed_mps": 0.5
+    },
+    {
+      "flight": 31,
+      "date": "2022-09-06",
+      "sol": 550,
+      "duration_s": 55.6,
+      "max_altitude_m": 10.0,
+      "distance_m": 97.0,
+      "max_groundspeed_mps": 4.75
+    },
+    {
+      "flight": 32,
+      "date": "2022-09-17",
+      "sol": 561,
+      "duration_s": 55.3,
+      "max_altitude_m": 10.0,
+      "distance_m": 94.0,
+      "max_groundspeed_mps": 4.75
+    },
+    {
+      "flight": 33,
+      "date": "2022-09-24",
+      "sol": 567,
+      "duration_s": 55.2,
+      "max_altitude_m": 10.0,
+      "distance_m": 111.0,
+      "max_groundspeed_mps": 4.75
+    },
+    {
+      "flight": 34,
+      "date": "2022-11-22",
+      "sol": 625,
+      "duration_s": 18.3,
+      "max_altitude_m": 5.0,
+      "distance_m": 0.0,
+      "max_groundspeed_mps": 0.0
+    },
+    {
+      "flight": 35,
+      "date": "2022-12-03",
+      "sol": 635,
+      "duration_s": 52.0,
+      "max_altitude_m": 14.0,
+      "distance_m": 15.0,
+      "max_groundspeed_mps": 3.0
+    },
+    {
+      "flight": 36,
+      "date": "2022-12-10",
+      "sol": 642,
+      "duration_s": 60.5,
+      "max_altitude_m": 10.0,
+      "distance_m": 110.0,
+      "max_groundspeed_mps": 5.5
+    },
+    {
+      "flight": 37,
+      "date": "2022-12-17",
+      "sol": 649,
+      "duration_s": 55.2,
+      "max_altitude_m": 10.0,
+      "distance_m": 62.0,
+      "max_groundspeed_mps": 3.0
+    },
+    {
+      "flight": 38,
+      "date": "2023-01-04",
+      "sol": 667,
+      "duration_s": 74.3,
+      "max_altitude_m": 10.0,
+      "distance_m": 111.0,
+      "max_groundspeed_mps": 3.5
+    },
+    {
+      "flight": 39,
+      "date": "2023-01-11",
+      "sol": 673,
+      "duration_s": 78.7,
+      "max_altitude_m": 10.0,
+      "distance_m": 140.0,
+      "max_groundspeed_mps": 4.0
+    },
+    {
+      "flight": 40,
+      "date": "2023-01-19",
+      "sol": 681,
+      "duration_s": 91.6,
+      "max_altitude_m": 10.0,
+      "distance_m": 178.0,
+      "max_groundspeed_mps": 3.2
+    },
+    {
+      "flight": 41,
+      "date": "2023-01-27",
+      "sol": 689,
+      "duration_s": 109.1,
+      "max_altitude_m": 10.0,
+      "distance_m": 183.0,
+      "max_groundspeed_mps": 3.0
+    },
+    {
+      "flight": 42,
+      "date": "2023-02-04",
+      "sol": 697,
+      "duration_s": 137.2,
+      "max_altitude_m": 10.0,
+      "distance_m": 248.0,
+      "max_groundspeed_mps": 3.0
+    },
+    {
+      "flight": 43,
+      "date": "2023-02-16",
+      "sol": 708,
+      "duration_s": 146.0,
+      "max_altitude_m": 12.0,
+      "distance_m": 390.0,
+      "max_groundspeed_mps": 4.0
+    },
+    {
+      "flight": 44,
+      "date": "2023-02-19",
+      "sol": 711,
+      "duration_s": 141.3,
+      "max_altitude_m": 12.0,
+      "distance_m": 334.0,
+      "max_groundspeed_mps": 3.5
+    },
+    {
+      "flight": 45,
+      "date": "2023-02-22",
+      "sol": 714,
+      "duration_s": 144.5,
+      "max_altitude_m": 12.0,
+      "distance_m": 496.0,
+      "max_groundspeed_mps": 6.0
+    },
+    {
+      "flight": 46,
+      "date": "2023-02-25",
+      "sol": 717,
+      "duration_s": 135.9,
+      "max_altitude_m": 12.0,
+      "distance_m": 445.0,
+      "max_groundspeed_mps": 5.3
+    },
+    {
+      "flight": 47,
+      "date": "2023-03-09",
+      "sol": 729,
+      "duration_s": 146.1,
+      "max_altitude_m": 12.0,
+      "distance_m": 440.0,
+      "max_groundspeed_mps": 5.3
+    },
+    {
+      "flight": 48,
+      "date": "2023-03-21",
+      "sol": 741,
+      "duration_s": 149.9,
+      "max_altitude_m": 12.0,
+      "distance_m": 398.0,
+      "max_groundspeed_mps": 4.65
+    },
+    {
+      "flight": 49,
+      "date": "2023-04-02",
+      "sol": 752,
+      "duration_s": 142.7,
+      "max_altitude_m": 16.0,
+      "distance_m": 282.0,
+      "max_groundspeed_mps": 6.5
+    },
+    {
+      "flight": 50,
+      "date": "2023-04-13",
+      "sol": 763,
+      "duration_s": 145.7,
+      "max_altitude_m": 18.0,
+      "distance_m": 322.0,
+      "max_groundspeed_mps": 4.6
+    },
+    {
+      "flight": 51,
+      "date": "2023-04-22",
+      "sol": 772,
+      "duration_s": 136.9,
+      "max_altitude_m": 12.0,
+      "distance_m": 188.0,
+      "max_groundspeed_mps": 4.0
+    },
+    {
+      "flight": 52,
+      "date": "2023-04-26",
+      "sol": 776,
+      "duration_s": 145.0,
+      "max_altitude_m": 12.0,
+      "distance_m": 363.0,
+      "max_groundspeed_mps": 3.7
+    },
+    {
+      "flight": 53,
+      "date": "2023-07-22",
+      "sol": 860,
+      "duration_s": 74.9,
+      "max_altitude_m": 5.0,
+      "distance_m": 143.0,
+      "max_groundspeed_mps": 2.5
+    },
+    {
+      "flight": 54,
+      "date": "2023-08-03",
+      "sol": 872,
+      "duration_s": 24.4,
+      "max_altitude_m": 5.0,
+      "distance_m": 0.0,
+      "max_groundspeed_mps": 0.0
+    },
+    {
+      "flight": 55,
+      "date": "2023-08-12",
+      "sol": 881,
+      "duration_s": 142.9,
+      "max_altitude_m": 10.0,
+      "distance_m": 264.0,
+      "max_groundspeed_mps": 4.7
+    },
+    {
+      "flight": 56,
+      "date": "2023-08-25",
+      "sol": 894,
+      "duration_s": 140.9,
+      "max_altitude_m": 12.0,
+      "distance_m": 410.0,
+      "max_groundspeed_mps": 5.3
+    },
+    {
+      "flight": 57,
+      "date": "2023-09-03",
+      "sol": 902,
+      "duration_s": 128.6,
+      "max_altitude_m": 10.0,
+      "distance_m": 217.0,
+      "max_groundspeed_mps": 3.0
+    },
+    {
+      "flight": 58,
+      "date": "2023-09-11",
+      "sol": 910,
+      "duration_s": 106.8,
+      "max_altitude_m": 10.0,
+      "distance_m": 174.0,
+      "max_groundspeed_mps": 3.0
+    },
+    {
+      "flight": 59,
+      "date": "2023-09-16",
+      "sol": 915,
+      "duration_s": 142.6,
+      "max_altitude_m": 20.0,
+      "distance_m": 0.0,
+      "max_groundspeed_mps": 0.0
+    },
+    {
+      "flight": 60,
+      "date": "2023-09-25",
+      "sol": 924,
+      "duration_s": 132.8,
+      "max_altitude_m": 16.0,
+      "distance_m": 340.0,
+      "max_groundspeed_mps": 8.0
+    },
+    {
+      "flight": 61,
+      "date": "2023-10-05",
+      "sol": 933,
+      "duration_s": 129.5,
+      "max_altitude_m": 24.0,
+      "distance_m": 0.0,
+      "max_groundspeed_mps": 0.0
+    },
+    {
+      "flight": 62,
+      "date": "2023-10-12",
+      "sol": 940,
+      "duration_s": 121.1,
+      "max_altitude_m": 18.0,
+      "distance_m": 268.0,
+      "max_groundspeed_mps": 10.0
+    },
+    {
+      "flight": 63,
+      "date": "2023-10-19",
+      "sol": 947,
+      "duration_s": 142.6,
+      "max_altitude_m": 12.0,
+      "distance_m": 579.0,
+      "max_groundspeed_mps": 6.3
+    },
+    {
+      "flight": 64,
+      "date": "2023-10-27",
+      "sol": 954,
+      "duration_s": 139.1,
+      "max_altitude_m": 12.0,
+      "distance_m": 411.0,
+      "max_groundspeed_mps": 5.8
+    },
+    {
+      "flight": 65,
+      "date": "2023-11-02",
+      "sol": 960,
+      "duration_s": 48.0,
+      "max_altitude_m": 10.0,
+      "distance_m": 7.0,
+      "max_groundspeed_mps": 1.0
+    },
+    {
+      "flight": 66,
+      "date": "2023-11-03",
+      "sol": 961,
+      "duration_s": 23.0,
+      "max_altitude_m": 3.0,
+      "distance_m": 1.0,
+      "max_groundspeed_mps": 1.0
+    },
+    {
+      "flight": 67,
+      "date": "2023-12-02",
+      "sol": 990,
+      "duration_s": 135.9,
+      "max_altitude_m": 12.0,
+      "distance_m": 393.0,
+      "max_groundspeed_mps": 5.3
+    },
+    {
+      "flight": 68,
+      "date": "2023-12-15",
+      "sol": 1003,
+      "duration_s": 131.1,
+      "max_altitude_m": 16.0,
+      "distance_m": 702.0,
+      "max_groundspeed_mps": 10.0
+    },
+    {
+      "flight": 69,
+      "date": "2023-12-20",
+      "sol": 1007,
+      "duration_s": 135.4,
+      "max_altitude_m": 16.0,
+      "distance_m": 705.0,
+      "max_groundspeed_mps": 10.0
+    },
+    {
+      "flight": 70,
+      "date": "2023-12-22",
+      "sol": 1009,
+      "duration_s": 132.9,
+      "max_altitude_m": 12.0,
+      "distance_m": 260.0,
+      "max_groundspeed_mps": 3.0
+    },
+    {
+      "flight": 71,
+      "date": "2024-01-06",
+      "sol": 1024,
+      "duration_s": 35.0,
+      "max_altitude_m": 12.0,
+      "distance_m": 0.0,
+      "max_groundspeed_mps": 7.0
+    },
+    {
+      "flight": 72,
+      "date": "2024-01-18",
+      "sol": 1035,
+      "duration_s": 32.0,
+      "max_altitude_m": 12.0,
+      "distance_m": 0.0,
+      "max_groundspeed_mps": 0.0
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+/* Feedback is immediate; celebrations keep their independent payoff timing. */
+button, a.primary, a.secondary { transition: background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out; }
+body.is-warping #app { opacity: .6; transform: none; filter: none; }
+body button:not(:disabled):not(.stamp-press):active, body a.primary:active, body a.secondary:active { filter: brightness(1.24); box-shadow: inset 0 0 0 2px #f4dbad; transition-duration: 0s; }
+body button:not(:disabled):not(.primary):hover { border-color: #cce6ed; box-shadow: inset 0 0 0 1px #cce6ed66; }
+button.secondary:hover, #read-voyager-distance:hover, #read-greeting:hover { background-color: #28414b; border-color: #cce6ed; }
+dialog { opacity: 0; transition: opacity 220ms ease-out, display 220ms allow-discrete, overlay 220ms allow-discrete; }
+dialog[open] { opacity: 1; animation: dialog-arrive 220ms ease-out; }
+@keyframes dialog-arrive { from { opacity: 0; } to { opacity: 1; } }
+.exhibit:not([hidden]), #lobby:not([hidden]), #teachers-page:not([hidden]), #finale:not([hidden]), .moon-lab-workspace:not([hidden]), .moon-story-grid:not([hidden]) { animation: screen-arrive 260ms ease-out; }
+@keyframes screen-arrive { from { opacity: 0; } to { opacity: 1; } }
+.moon-story-callback { display: block; margin-block: 16px; line-height: 1.65; }
+[data-lrv-verdict] { display: inline-block; margin-right: 6px; }
+.crew-name-field { display: grid; gap: 9px; max-width: 360px; margin: 24px 0; }
+.crew-name-field label { font-size: .9rem; font-weight: 600; }
+.crew-name-field input { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #7896a4; border-radius: 5px; color: var(--ink, #eef2f4); background: #10212c; }
+.crew-name-field p { font-size: .8125rem; margin: 0; color: #b6c9d2; line-height: 1.5; }
+.finale-six-virtues { max-width: 58ch; margin: 32px auto; line-height: 1.8; }
+.credits-si { padding: 18px 32px; border-block: 1px solid #7896a433; }
+.credits-si h3 { margin: 0; font-size: 1.1rem; line-height: 1.5; }
+.credits-si p { margin: 12px 0 0; padding: 0; line-height: 1.7; }
+.credits-si a { color: #efd09a; text-underline-offset: 4px; }
+.teachers-page .graduation-crew, #teachers-page .graduation-crew { max-width: 850px; margin: 60px auto; padding-block: 30px; border-top: 1px solid #7896a4; }
+.homecoming-mission-order { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); padding: 0; gap: 10px; list-style-position: inside; font-size: .8rem; line-height: 1.5; }
+.return-apollo17 { left: 7%; top: 73%; }
+.return-surveyor3 { left: 14%; top: 30%; }
+.return-curiosity { left: 27%; top: 51%; }
+body[data-exhibit="lobby"].motion-allowed .space-photo { animation: lobby-drift 60s ease-in-out infinite alternate; }
+body[data-exhibit="lobby"].motion-allowed #space-ambience { opacity: .68; }
+@keyframes lobby-drift { from { transform: scale(1.025) translate3d(-.4%,0,0); } to { transform: scale(1.06) translate3d(.4%,-.5%,0); } }
+@media (max-width: 700px) {
+  .credits-si { padding-inline: 18px; }
+  .homecoming-mission-order { grid-template-columns: repeat(3,minmax(0,1fr)); font-size: .8rem; }
+  .homecoming-route .return-stop:not(.return-earth) { display: none; }
+}
+body.motion-reduced :is(dialog[open], .space-photo, .exhibit, #lobby, #teachers-page, #finale, .moon-lab-workspace, .moon-story-grid) { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  body:not(.motion-allowed) :is(dialog[open], .space-photo, .exhibit, #lobby, #teachers-page, #finale, .moon-lab-workspace, .moon-story-grid) { animation: none !important; }
+}
