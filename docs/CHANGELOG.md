@@ -10,6 +10,10 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 - Kept the visual machine silhouettes while adding mission numbers, descriptions, live stamp state, and the shared progress bar to the same cards.
 - Preserved the direct mission CTA, six-stamp progress, passport, finale, and certificate behavior.
 
+### Journey map credit spacing
+
+- Anchored the Moon and Mars image credits inside their own scenes on desktop and mobile so they cannot overlap the following frontier heading or distance label.
+
 ### Lobby launch bay redesign
 
 - Replaced the text-heavy opening flow with an immediate mission CTA and a visual six-machine launch bay.
