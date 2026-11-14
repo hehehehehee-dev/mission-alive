@@ -57,6 +57,14 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
 .moon-panel.is-route-page .moon-lab-toolbar { display: none; }
 .moon-panel.is-route-page .moon-game > :is(.eyebrow, h3),
 .moon-panel.is-route-page .lrv-heading > :is(.eyebrow, h3) { display: none; }
+.moon-challenge-identity {
+  margin: 0 0 14px;
+  color: #f0c88b;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
 .moon-panel.is-route-page .lrv-heading > p:not(.eyebrow) { margin: 0 0 16px; max-width: 72ch; }
 .surveyor-study-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, 1fr); gap: 20px 28px; align-items: start; }
 .surveyor-study-layout > .surveyor-figure { grid-column: 1; grid-row: 1 / 3; position: sticky; top: 76px; }
@@ -140,6 +148,9 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
 .lrv-model-details { margin: 24px 0; border-block: 1px solid #647987; }
 .surveyor-investigation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
 .surveyor-patches, .surveyor-force-buttons, .surveyor-pad-stepper { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.surveyor-patches > button { display: grid; gap: 5px; flex: 1 1 150px; text-align: left; }
+.surveyor-patches > button strong { font-size: 1rem; }
+.surveyor-patches > button small { color: #c5d2db; font-size: .78rem; line-height: 1.35; }
 .surveyor-force-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .surveyor-force-buttons button { font-size: .9375rem; }
 .surveyor-pad-stepper > button { flex: 1 1 120px; }

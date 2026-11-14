@@ -9,6 +9,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 - Apollo 17 LRV and Surveyor 3 now show the same six-module training navigation used by Curiosity, Ingenuity, Webb, and Voyager.
 - The active Moon mission is marked as current, earned missions show their completion star, and every module remains directly reachable without returning to the lobby.
 
+### Make Moon choices explain themselves
+
+- Apollo 17 and Surveyor 3 challenge panels now keep a visible mission identity beside the controls, so the machine name remains clear while a learner scrolls.
+- Surveyor's three fictional patches now show their actual teaching difference: even shallow cover, even deep cover, or uneven cover with tilt risk. The underlying model and evidence rules remain unchanged.
+
 ### Curiosity gallery images restored in production
 
 - The Content-Security-Policy added earlier allowed images and requests only from the site itself, so the Curiosity gallery's NASA images were blocked on Netlify. The policy now also allows `https://images-assets.nasa.gov` for images and `https://images-api.nasa.gov` for the gallery search. Nothing else was loosened.

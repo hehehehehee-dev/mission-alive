@@ -4,6 +4,7 @@ import { quickStartMarkup, whyMarkup } from './quick-start.js';
 // are teaching choices, not measurements or test results from Apollo hardware.
 export const LRV_GAME_COPY = Object.freeze({
   eyebrow: "APOLLO 17 · REPAIR TRAINING",
+  missionLabel: "MISSION · APOLLO 17 LRV",
   title: "Keep the dust off the gear",
   introduction: "A broken rover fender let wheel-thrown dust reach the astronauts and their equipment. Apollo 17's crew made a replacement using spare maps, duct tape, and clamps.",
   instructions: "Tap maps, then tape, then clamps. Drag the patch tip to shape it, or use the buttons below. Run a dust test and compare your trials.",
@@ -282,6 +283,7 @@ export function lrvGameMarkup() {
   const initial = evaluateLrvRepair(LRV_DEFAULT_CONFIGURATION);
   return `<section class="moon-game lrv-game" data-lrv-workshop data-lrv-result="untested" aria-labelledby="${id}-title">
     <header class="lrv-heading"><p class="eyebrow">${copy.eyebrow}</p><h3 id="${id}-title">${copy.title}</h3><p>${copy.introduction}</p></header>
+    <p class="moon-challenge-identity">${copy.missionLabel}</p>
     ${quickStartMarkup('apollo17')}
     ${whyMarkup(`<p>${copy.instructions}</p><p>${copy.simulation}</p><p>${copy.dimensions}</p>`)}
     <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p><div class="moon-challenge-canvas" data-lrv-challenge-3d></div><div class="moon-challenge-2d">${svgMarkup(initial)}</div><figcaption><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${copy.diagramCaption}</span></figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>

@@ -13,6 +13,7 @@ export const surveyorModel = Object.freeze({ forces: Object.freeze([1, 2, 3, 4])
 // Kept together so the parent app can provide its normal text-node localization.
 export const surveyorCopy = Object.freeze({
   eyebrow: 'MOON TRAINING · ABOUT 3 MINUTES',
+  missionLabel: 'MISSION · SURVEYOR 3',
   title: 'Surveyor 3: test before touchdown',
   intro: 'Can your evidence support a landing recommendation? Press a probe at two different forces, inspect a trench, then test a separate fictional lander.',
   disclaimer: 'Illustrated simulation · not NASA test data.',
@@ -23,6 +24,9 @@ export const surveyorCopy = Object.freeze({
   patchA: 'Patch A',
   patchB: 'Patch B',
   patchC: 'Patch C',
+  patchADetail: 'Even, shallow cover',
+  patchBDetail: 'Even, deep cover',
+  patchCDetail: 'Uneven cover · tilt risk',
   cutawayCaption: 'Illustrated cutaway: the probe measures sinking. The scoop exposes layers only after you inspect a trench. Measurements also appear in the log.',
   investigate: '2. Gather evidence',
   force: 'Probe force',
@@ -154,10 +158,10 @@ export function surveyorGameMarkup() {
   const id = `surveyor-game-${++surveyorInstance}`;
   const c = surveyorCopy;
   return `<section class="moon-game surveyor-game" aria-labelledby="${id}-title" data-surveyor-game>
-    <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3>
+    <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3><p class="moon-challenge-identity">${c.missionLabel}</p>
     ${quickStartMarkup('surveyor3')}
     ${whyMarkup(`<p>${c.intro}</p><p class="surveyor-disclaimer">${c.disclaimer}</p><p class="surveyor-model-label">${c.units}</p><p>${c.history} <a href="https://science.nasa.gov/mission/surveyor-3/" target="_blank" rel="noopener noreferrer">${c.historySource} ↗</a></p>`)}
-    <div class="surveyor-study-layout"><fieldset class="surveyor-controls surveyor-site-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}">${c[patchCopy[soil.id]]}</button>`).join('')}</div></fieldset>
+    <div class="surveyor-study-layout"><fieldset class="surveyor-controls surveyor-site-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}"><strong>${c[patchCopy[soil.id]]}</strong><small>${c[`${patchCopy[soil.id]}Detail`]}</small></button>`).join('')}</div></fieldset>
     <figure class="surveyor-figure"><div class="moon-challenge-canvas" data-surveyor-challenge-3d></div><div class="moon-challenge-2d">${soilIllustration(id)}</div><figcaption class="surveyor-model-label"><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${c.cutawayCaption}</span></figcaption></figure>
     <div class="surveyor-investigation-grid"><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.investigate}</legend>
       <p class="surveyor-model-label">${c.force}</p><div class="surveyor-force-buttons" role="group" aria-label="${c.force}">${surveyorModel.forces.map((force) => `<button type="button" data-surveyor-force="${force}" aria-pressed="${force === 1}">${format(surveyorTextTemplates[1], { force })}</button>`).join('')}</div>

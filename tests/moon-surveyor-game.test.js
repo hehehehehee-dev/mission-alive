@@ -52,6 +52,13 @@ test('load divided by square pad area drives sinking and allows several valid fo
 
 test('markup keeps fictional model, real history, accessible controls, and homecoming distinct', () => {
   const markup = surveyorGameMarkup();
+  assert.match(markup, /MISSION · SURVEYOR 3/);
+  assert.equal((markup.match(/data-surveyor-patch=/g) || []).length, 3);
+  assert.match(markup, /Even, shallow cover/);
+  assert.match(markup, /Even, deep cover/);
+  assert.match(markup, /Uneven cover · tilt risk/);
+  assert.notEqual(markup.indexOf('Even, shallow cover'), markup.indexOf('Even, deep cover'));
+  assert.notEqual(markup.indexOf('Even, deep cover'), markup.indexOf('Uneven cover · tilt risk'));
   assert.match(markup, /Illustrated simulation · not NASA test data\./);
   assert.match(markup, /dimensionless simulation units/);
   assert.match(markup, /patches and their layers are invented/);
