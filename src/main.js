@@ -2745,7 +2745,8 @@ async function render(id) {
     deployStep.insertAdjacentHTML("beforebegin", '<nav class="webb-step-nav" aria-label="Webb challenge steps"><button type="button" data-webb-step="deploy" aria-controls="webb-deploy-step" aria-current="step">01 · Open mirror</button><button type="button" data-webb-step="focus" aria-controls="webb-focus-step" disabled>02 · Align stars</button><button type="button" data-webb-step="infrared" aria-controls="webb-infrared-step" disabled>03 · Infrared</button></nav>');
     $("#webb-focus-step").insertAdjacentHTML("beforeend", webbAlignmentMarkup());
     webbAlignment = mountWebbAlignment($("#webb-alignment-story"));
-    collapseChallengeNotes($('#webb-alignment-story'), 'Real Webb images');
+    const webbImageNotes = collapseChallengeNotes($('#webb-alignment-story'), 'Real Webb images');
+    webbImageNotes.append($('.webb-real-images'));
     webbAlignment.updateProgress(state.align);
   }
   if (id === "ingenuity") {

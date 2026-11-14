@@ -10,6 +10,7 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 - Apollo automatically leaves assembly after maps, tape and clamps are fitted. Its next panel shows length and the dust test; angle and clearance remain in More adjustments.
 - Surveyor reveals site selection, evidence gathering and landing one at a time, advancing when evidence is complete. Its history and Apollo's trial table are initially collapsed.
 - Webb's additional arrow-button controls and real-image sequence are available in clearly labelled disclosures. Keyboard operation remains available throughout.
+- The complete static NASA gallery is inside the image disclosure too, with responsive image heights so source dimensions cannot stretch the control panel.
 - Step navigation and reset retain the existing controls, game outcomes and stamp conditions, with Spanish and Vietnamese labels.
 
 ### Moon pages open like the other four missions
