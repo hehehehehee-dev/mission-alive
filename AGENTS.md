@@ -1,3 +1,11 @@
+# Start here
+
+Mission Alive is shared between Codex and Claude. Before editing, read `CLAUDE.md` (project rules for every AI collaborator, not only Claude), then `docs/AI_HANDOFF.md` — section 0 (“Current state”) and the newest entry in section 9 (“Handoff log”) tell you where the last collaborator stopped — then `docs/CHANGELOG.md`.
+
+# Handoff after every commit
+
+Before every commit, update section 0 of `docs/AI_HANDOFF.md` and add a section 9 log entry, in the same commit. Record the branch, commit subject, what changed, how it was verified, and what is left for the next collaborator. Claude follows the same rule, so this file is how work passes between the two.
+
 # Netlify packaging preference
 
 The user wants only the current Netlify version and the previous distinct version retained locally. Use `scripts/package-netlify.py` after validating changes; it keeps `mission-alive-netlify-update.zip` and `mission-alive-netlify-previous.zip` in this project root. Do not create additional dated or static Netlify ZIP copies. This preference does not authorize removing hosted Netlify deployments.

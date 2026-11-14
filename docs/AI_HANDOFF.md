@@ -1,4 +1,20 @@
-# Mission Alive v1.0 — Claude handoff
+# Mission Alive v1.0 — AI collaborator handoff (Claude and Codex)
+
+This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE.md`, Codex starts from `AGENTS.md`, and both continue here.
+
+## 0. Current state (update with every commit)
+
+Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
+
+- **Active branch:** `fix/nov14-leftover-retests` (ahead of `origin/main`; not pushed or deployed).
+- **Last change:** added the public classroom-sharing privacy notice, matching documentation, translations, and Netlify security headers; the existing teacher-approved classroom gallery remains the only public greeting path.
+- **Last verification:** `npm test` 120/120 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes.
+- **Not yet verified:** the footer privacy dialog and dedicated Moon pages in a real browser at about 390 px; the Codex local-browser surface was unavailable. Netlify response headers also need checking after a future deploy.
+- **Next suggested steps:**
+  1. Run the browser checks above, including keyboard open, Escape close, and Spanish/Vietnamese privacy copy.
+  2. After the owner requests deployment, confirm CSP, HSTS, Permissions-Policy, and the classroom gallery endpoint on Netlify.
+  3. Decide whether to remove the now-unused `moonPanel.play()` and `moonPanel.open()` from `src/moon-stories.js`.
+- **Open questions for the owner:** none.
 
 ## 1. What this project is
 
@@ -45,6 +61,7 @@ Important invariants:
 - The optional learner name is requested below the mission choices and is used only for the certificate. Do not place it before the first mission CTA.
 - The visual machine picker and certification tracker are one shared deck. Do not create a second six-machine grid in the lobby.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
+- The footer privacy dialog is the public source of truth for classroom sharing. Keep it synchronized with `docs/PRIVACY.md` and `netlify/functions/class-record.mjs`.
 - Completion must survive reload through validated stored mission IDs.
 
 ## 3. Technical map
@@ -157,7 +174,7 @@ This creates `mission-alive-netlify-update.zip`, moves the last distinct package
 Use in this order:
 
 1. Current source and tests.
-2. `CLAUDE.md` and this handoff.
+2. `CLAUDE.md`, `AGENTS.md`, and this handoff.
 3. `docs/CHANGELOG.md` for the latest product and content changes.
 4. Focused current docs such as `docs/ACCESSIBILITY.md`, `docs/ASSETS.md`, `docs/MOON-LABS.md`, and `docs/MACHINE_VOICES.md`.
 5. `README.md` for broad context, while checking claims against code.
@@ -174,3 +191,29 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 - Review a NASA claim against its official source and improve attribution metadata.
 
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
+
+## 9. Handoff log
+
+Newest first. One entry per commit, written in the same commit. Keep each entry short; `docs/CHANGELOG.md` holds the product-facing detail and `git show` holds the diff.
+
+Entry format:
+
+```md
+### YYYY-MM-DD — <agent> — `<branch>`
+- **Commit:** <commit subject>
+- **Changed:** <files or areas, one line>
+- **Verified:** <tests, build, browser checks>
+- **Left for next:** <unfinished work, risks, or "nothing">
+```
+
+### 2026-11-14 — Claude + Codex — `fix/nov14-leftover-retests`
+- **Commit:** Share AI handoff and clarify classroom privacy
+- **Changed:** fixed and localized the Moon route back-button name; established the shared AI handoff workflow; added a localized public privacy dialog, synchronized privacy guidance, Netlify security headers, and regression coverage without changing the teacher-approved classroom gallery flow.
+- **Verified:** `npm test` 120/120; `npm run build`; `git diff --check`. Browser surface unavailable, so responsive visual QA remains.
+- **Left for next:** browser QA in all three languages at about 390 px; production response-header verification after an owner-requested deployment; optional cleanup of unused `moonPanel.play()`/`open()`.
+
+### 2026-11-14 — Codex — `fix/nov14-leftover-retests`
+- **Commit:** Give Moon missions dedicated pages (`5e63ed7`)
+- **Changed:** `#apollo17` and `#surveyor3` routes in `src/main.js`; `openRoute()` in `src/moon-stories.js`; full-page styles in `src/moon-labs.css`.
+- **Verified:** `npm test` 118/118 (checked by Claude afterwards).
+- **Left for next:** back button had a stale aria-label and no translations (fixed in the entry above).

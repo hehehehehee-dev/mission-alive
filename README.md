@@ -112,7 +112,7 @@ netlify/functions/                  Hosted live-data and classroom endpoints
 tests/                              Behavior, content, data, and accessibility gates
 ```
 
-The full technical handoff is in [`docs/CLAUDE_HANDOFF.md`](docs/CLAUDE_HANDOFF.md).
+The full technical handoff is in [`docs/AI_HANDOFF.md`](docs/AI_HANDOFF.md).
 
 ## Verification
 
@@ -158,6 +158,6 @@ See [`docs/COMMUNITY_RECORDINGS.md`](docs/COMMUNITY_RECORDINGS.md) and [`docs/CL
 - [Machine voices](docs/MACHINE_VOICES.md)
 - [Classroom guide](docs/classroom.md)
 - [Verification notes](docs/verification.md)
-- [Claude collaboration handoff](docs/CLAUDE_HANDOFF.md)
+- [AI collaborator handoff (Claude and Codex)](docs/AI_HANDOFF.md)
 
 Mission Alive does not ask children only to remember what these machines accomplished. It gives them a smaller version of the problem that made each accomplishment matter.

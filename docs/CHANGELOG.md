@@ -4,11 +4,23 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Public privacy notice and deployment headers
+
+- Added a keyboard-accessible “Privacy & sharing” footer dialog explaining local-only progress, classroom submission consent, teacher moderation, public gallery fields, removal, retention, and optional AI screening.
+- Added Spanish and Vietnamese copy for the full notice.
+- Added CSP, HSTS, frame protection, and browser permission restrictions to the Netlify deployment while preserving same-origin microphone recording and APIs.
+
+### Shared AI handoff
+
+- Renamed `docs/CLAUDE_HANDOFF.md` to `docs/AI_HANDOFF.md` so Claude and Codex share one handoff.
+- Added a “Current state” section and a per-commit handoff log; `CLAUDE.md` and `AGENTS.md` now require both to be updated in every commit.
+
 ### Dedicated Apollo 17 and Surveyor 3 pages
 
 - Added direct `#apollo17` and `#surveyor3` routes instead of opening both missions through the shared Moon chooser.
 - Each Moon route now opens as a full-page mission with its own purpose, official source, existing interactive challenge, stamp ceremony, and return action.
 - Updated the Moon map pins, lobby cards, browser history, and direct-link loading to use the dedicated routes without changing the six-stamp finale.
+- The route-page back button now has a matching accessible name (“Back to academy”) instead of the stale “Close Moon training” label, and both its visible text and name have Spanish and Vietnamese translations.
 
 ### Unified training and certification deck
 

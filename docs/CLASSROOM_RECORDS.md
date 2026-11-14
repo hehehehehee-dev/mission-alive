@@ -22,3 +22,5 @@ Use the **source ZIP** on a logged-in Netlify project that performs the Vite bui
 - Do not promise that AI catches every harmful submission. The teacher always reviews before publication.
 
 The travel counter is an **imagined journey**, not the physical location of a new message. It multiplies elapsed time since saving by NASA's approximate Voyager 1 Sun-relative speed of 17 km/s; the greeting is not on Voyager.
+
+The public app summarizes these rules in the footer’s **Privacy & sharing** dialog. Any change to collected fields, approval behavior, publication, removal, retention, or AI screening must update that dialog and `docs/PRIVACY.md` in the same commit.

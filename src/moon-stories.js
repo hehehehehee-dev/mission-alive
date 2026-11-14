@@ -318,6 +318,7 @@ export function mountMoonPanel(root, options = {}) {
     routeExit = null;
     dialog.classList.remove('is-route-page');
     closeButton.textContent = 'Close';
+    closeButton.setAttribute('aria-label', 'Close Moon training');
     dialog.querySelector('#moon-panel-title').textContent = 'Two machines still on the Moon';
     dialog.querySelector('#moon-route-summary').hidden = true;
   };
@@ -371,6 +372,7 @@ export function mountMoonPanel(root, options = {}) {
       returnFocus = null;
       dialog.classList.add('is-route-page');
       closeButton.textContent = '← Back to academy';
+      closeButton.setAttribute('aria-label', 'Back to academy');
       dialog.querySelector('#moon-panel-title').textContent = story.name;
       dialog.querySelector('#moon-route-year').textContent = story.year;
       dialog.querySelector('#moon-route-purpose').textContent = story.facts[1][1];

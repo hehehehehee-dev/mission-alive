@@ -1,6 +1,6 @@
 # Claude project instructions
 
-This file is the starting point for Claude or another AI collaborator working on Mission Alive. Read this file, then `docs/CLAUDE_HANDOFF.md` and `docs/CHANGELOG.md`, before editing.
+This file is the starting point for Claude or another AI collaborator working on Mission Alive. Read this file, then `docs/AI_HANDOFF.md` and `docs/CHANGELOG.md`, before editing.
 
 ## Project identity
 
@@ -37,6 +37,7 @@ Do not add, remove, or silently change a stamp, finale condition, storage key, c
 7. Only after validation, run `python scripts/package-netlify.py` when a new Netlify package is requested. It intentionally retains only the current and previous ZIP.
 8. Never deploy, push, publish, or create a release unless the owner asks.
 9. Update `docs/CHANGELOG.md` and any affected Markdown guide in the same commit as every product, code, content, data, or UX change. Documentation is part of the definition of done.
+10. Before every commit, update section 0 (“Current state”) of `docs/AI_HANDOFF.md` and add a section 9 log entry, in the same commit. Codex reads the same file through `AGENTS.md`, so this is how work passes between Claude and Codex. Start each session by reading section 0 and the newest log entry.
 
 ## Non-negotiable content rules
 
@@ -75,4 +76,4 @@ npm run build
 python scripts/package-netlify.py
 ```
 
-Node.js 20.19+ or 22.12+ is expected. See `docs/CLAUDE_HANDOFF.md` for architecture, mission mechanics, data flow, verification, and safe collaboration boundaries.
+Node.js 20.19+ or 22.12+ is expected. See `docs/AI_HANDOFF.md` for architecture, mission mechanics, data flow, verification, and safe collaboration boundaries.

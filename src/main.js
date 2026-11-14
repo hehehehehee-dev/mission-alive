@@ -2732,6 +2732,12 @@ const resourceCreditPanel = mountResourceCredits($("#resource-credits"), {
 });
 $("#sources").onclick = event => resourceCreditPanel.open(event.currentTarget);
 $("#credits-footer-link").onclick = event => resourceCreditPanel.open(event.currentTarget);
+const privacyDialog = $('#privacy-dialog');
+const privacyTrigger = $('#privacy-footer-link');
+privacyTrigger.onclick = () => privacyDialog.showModal();
+$('#privacy-close').onclick = () => privacyDialog.close();
+privacyDialog.addEventListener('click', event => { if (event.target === privacyDialog) privacyDialog.close(); });
+privacyDialog.addEventListener('close', () => privacyTrigger.focus({ preventScroll: true }));
 $('.skip').onclick = event => {
   event.preventDefault();
   const target = $($('.skip').getAttribute('href'));

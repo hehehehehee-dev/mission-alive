@@ -129,6 +129,7 @@
           <button id="teachers-footer-link">For Teachers</button
           >
           <button id="credits-footer-link">Sources & credits</button>
+          <button id="privacy-footer-link" aria-haspopup="dialog" aria-controls="privacy-dialog">Privacy & sharing</button>
           <button id="motion" aria-pressed="false">Reduce motion</button
           ><button id="view-mode" aria-pressed="false">3D view</button></span
         >
@@ -164,6 +165,15 @@
     </dialog>
     <dialog class="planet-comparison" id="planet-comparison" aria-labelledby="comparison-title"></dialog>
     <dialog class="access-dialog" id="access-dialog" aria-labelledby="access-title"></dialog>
+    <dialog class="access-dialog privacy-dialog" id="privacy-dialog" aria-labelledby="privacy-title">
+      <div class="privacy-dialog-heading"><div><p class="eyebrow">PRIVACY · CLASSROOM SHARING</p><h2 id="privacy-title">What stays private. What can become public.</h2></div><button type="button" id="privacy-close" aria-label="Close privacy notice">×</button></div>
+      <p class="privacy-lead">Mission Alive works without an account. Most activity stays only in this browser.</p>
+      <section><h3>Private by default</h3><ul><li>Mission stamps, certificate names, settings, and personal Golden Record drafts stay on the device.</li><li>A microphone is optional. Recording does not publish anything by itself.</li><li>NASA live-data requests do not include a student name or greeting.</li></ul></section>
+      <section><h3>Classroom sharing</h3><ul><li>A greeting is uploaded only after the student chooses a class code and confirms the sharing statement.</li><li>The submission may contain a nickname, language, country, written greeting, translation, audio, and creation time.</li><li>The teacher reviews every submission. It is not public while it is pending.</li></ul></section>
+      <section><h3>After teacher approval</h3><p>The class title and approved greeting can appear in the public “Classroom voices from Earth” library. Anyone visiting Mission Alive may read it or play its audio. Use nicknames and class titles that do not identify students.</p></section>
+      <section><h3>Removing a greeting</h3><p>The teacher can remove a published greeting with the private teacher key. Keep that key somewhere safe. Data remains stored until the teacher removes it or the site operator deletes it; there is currently no automatic end-of-year deletion.</p></section>
+      <p class="privacy-fine">Optional AI screening may check submitted text and audio before teacher review when the site owner enables it. AI screening never publishes a greeting and does not replace teacher approval.</p>
+    </dialog>
     <div id="moon-panel-slot"></div>
     <section class="graduate-certificate" id="graduate-certificate" aria-hidden="true">
       <div class="certificate-frame">

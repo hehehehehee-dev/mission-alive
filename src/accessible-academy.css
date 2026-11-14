@@ -200,6 +200,16 @@ button[aria-disabled="true"] { opacity: .7; cursor: default; }
 /* Preferences are standard HTML controls, available before starting a mission. */
 .access-dialog { width: min(600px, calc(100% - 24px)); max-height: 90dvh; overflow-y: auto; padding: 30px; border: 1px solid var(--line); border-radius: 6px; color: var(--reading-ink); background: var(--reading-paper); }
 .access-dialog::backdrop { background: #030a12d9; }
+.privacy-dialog { width: min(760px, calc(100% - 24px)); }
+.privacy-dialog-heading { display: flex; align-items: start; justify-content: space-between; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.privacy-dialog-heading h2 { margin: 5px 0 0; font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; }
+.privacy-dialog-heading button { flex: none; width: 44px; height: 44px; padding: 0; font-size: 1.6rem; }
+.privacy-lead { margin: 24px 0; font-size: 1.05rem; line-height: 1.7; }
+.privacy-dialog section { margin: 26px 0; }
+.privacy-dialog h3 { margin: 0 0 10px; font-size: 1.05rem; }
+.privacy-dialog :is(p, li) { line-height: 1.7; }
+.privacy-dialog ul { display: grid; gap: 8px; padding-left: 22px; }
+.privacy-fine { padding: 18px; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--reading-ink), transparent 94%); font-size: .86rem; }
 .access-heading { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
 .access-heading h2 { margin: 8px 0 18px; font: 600 1.8rem/1.2 Arial; }
 .access-heading .eyebrow { margin: 0; color: var(--muted); }

@@ -61,6 +61,8 @@ const rows = [
   ["On the same Moon, Apollo 17's rover is still parked where its crew left it.", 'En esa misma Luna, el rover del Apolo 17 sigue aparcado donde lo dejó su tripulación.', 'Trên cùng Mặt Trăng ấy, xe Apollo 17 vẫn đỗ tại nơi phi hành đoàn để lại.'],
   ['← Back to Moon training', '← Volver al entrenamiento lunar', '← Trở lại huấn luyện Mặt Trăng'],
   ['Close Moon training', 'Cerrar entrenamiento lunar', 'Đóng huấn luyện Mặt Trăng'],
+  ['← Back to academy', '← Volver a la academia', '← Trở lại học viện'],
+  ['Back to academy', 'Volver a la academia', 'Trở lại học viện'],
   ['Open Apollo 17 Lunar Roving Vehicle Moon training', 'Abrir entrenamiento lunar del rover del Apolo 17', 'Mở huấn luyện Mặt Trăng của xe Apollo 17'],
   ['Open Surveyor 3 Moon training', 'Abrir entrenamiento lunar de Surveyor 3', 'Mở huấn luyện Mặt Trăng của Surveyor 3'],
   ['TAURUS–LITTROW · TRAINING', 'TAURUS–LITTROW · ENTRENAMIENTO', 'TAURUS–LITTROW · HUẤN LUYỆN'],

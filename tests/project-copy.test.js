@@ -49,6 +49,30 @@ test('both Moon missions have dedicated routes instead of a shared chooser step'
   assert.doesNotMatch(main, /moonPanel\.play\(id, document\.activeElement\)/);
 });
 
+test('the public privacy notice matches classroom publication and removal behavior', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const policy = await readFile(new URL('../docs/PRIVACY.md', import.meta.url), 'utf8');
+  const netlify = await readFile(new URL('../netlify.toml', import.meta.url), 'utf8');
+  assert.match(html, /id="privacy-footer-link"/);
+  assert.match(html, /id="privacy-dialog"/);
+  assert.match(html, /Anyone visiting Mission Alive may read it or play its audio/);
+  assert.match(html, /there is currently no automatic end-of-year deletion/);
+  assert.match(policy, /Every submission remains pending until the teacher reviews it/);
+  assert.match(netlify, /Content-Security-Policy/);
+  assert.match(netlify, /microphone=\(self\)/);
+});
+
+test('the Moon route back button has a matching accessible name in every language', async () => {
+  const moon = await readFile(new URL('../src/moon-stories.js', import.meta.url), 'utf8');
+  const nov14 = await import('../src/locales/nov14.js');
+  assert.match(moon, /textContent = '← Back to academy';\s*closeButton\.setAttribute\('aria-label', 'Back to academy'\)/);
+  assert.match(moon, /textContent = 'Close';\s*closeButton\.setAttribute\('aria-label', 'Close Moon training'\)/);
+  for (const line of ['← Back to academy', 'Back to academy']) {
+    assert.ok(nov14.es[line], `Missing Spanish: ${line}`);
+    assert.ok(nov14.vi[line], `Missing Vietnamese: ${line}`);
+  }
+});
+
 test('the lobby hook is complete in Spanish and Vietnamese', () => {
   for (const line of hook) {
     assert.ok(es[line], `Missing Spanish: ${line}`);
