@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** production CSP in `netlify.toml` now allows `https://images-assets.nasa.gov` (img-src) and `https://images-api.nasa.gov` (connect-src) so the Curiosity gallery works on Netlify again; guarded by a test in `tests/project-copy.test.js`.
-- **Last verification:** `npm test` 136/136 pass. CSP only applies on Netlify, so the gallery must be checked on the live site after deploy.
+- **Last change:** the Apollo 17 and Surveyor 3 route pages now include the same six-module navigation as the other four missions, including current and completed states and direct switching between all missions.
+- **Last verification:** `npm test` 136/136 pass; `npm run build` passes with the existing chunk-size advisory; the route markup test confirms all six destinations. Production desktop and 390 px visual verification follows Netlify deployment.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Restore the six-module navigation on Moon missions
+- **Changed:** added the shared six-mission navigation pattern to Apollo 17 and Surveyor 3 route pages, with current/completed states and direct routing; updated Moon styles, regression coverage, and product docs.
+- **Verified:** `npm test` 136/136; `npm run build`; `git diff --check`.
+- **Left for next:** verify the auto-deployed navigation visually at desktop and about 390 px; the unrelated production/CSP and Ingenuity checks remain open.
 
 ### 2026-11-14 — Claude — `main`
 - **Commit:** Let the Curiosity gallery load NASA images under the CSP

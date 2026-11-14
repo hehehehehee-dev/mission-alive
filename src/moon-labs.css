@@ -25,6 +25,11 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
   margin: -24px calc(-1 * var(--moon-page-gutter)) 0;
   padding: 18px var(--moon-page-gutter);
 }
+.moon-panel.is-route-page .moon-route-modules {
+  width: 100%;
+  margin: 18px 0 30px;
+  border-top: 1px solid var(--line);
+}
 .moon-panel.is-route-page > h2 {
   position: relative;
   z-index: 1;
@@ -68,6 +73,7 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
   .surveyor-study-layout > .surveyor-figure { grid-column: 1; grid-row: auto; position: static; }
   .surveyor-study-layout > :is(.surveyor-site-controls, .surveyor-investigation-grid) { grid-column: 1; }
   .moon-panel.is-route-page > h2 { width: 100%; }
+  .moon-panel.is-route-page .moon-route-modules { margin: 12px 0 24px; }
 }
 .moon-panel > h2 { font: 600 clamp(1.8rem, 4vw, 2.6rem)/1.2 Arial, sans-serif; margin: 22px 0; }
 .moon-panel-intro, .moon-lab-intro { max-width: 740px; font-size: 1rem; line-height: 1.7; }

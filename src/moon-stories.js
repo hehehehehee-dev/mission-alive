@@ -1,5 +1,12 @@
 import { mountJourneyGlobes } from './journey-globes.js';
 import { moonLabMarkup, mountMoonLabs } from './moon-labs.js';
+import { trainingMissions } from './certification.js';
+
+function routeMissionNavigationMarkup() {
+  return `<nav class="exhibits moon-route-modules" aria-label="Choose a training module" hidden>${Object.entries(trainingMissions)
+    .map(([id, mission], index) => `<button type="button" data-route-mission="${id}"><span class="number">0${index + 1}</span><span><span class="module-number">TRAINING MODULE ${index + 1}</span><strong>${mission.name}</strong><small>${mission.action} · Discover <span class="current-marker" hidden>(current)</span></small></span><span class="done" aria-label="Completed" hidden>✦</span></button>`)
+    .join('')}</nav>`;
+}
 
 export const moonStories = Object.freeze({
   apollo17: Object.freeze({
@@ -226,6 +233,7 @@ const storyCard = (id, story) => `<article class="module-story-card moon-story-c
 export function moonPanelMarkup() {
   return `<dialog class="moon-panel" id="moon-panel" aria-labelledby="moon-panel-title">
     <div class="dialog-top"><p class="eyebrow">MOON TRAINING · TWO MISSIONS · TWO STAMPS</p><button type="button" id="moon-panel-close" aria-label="Close Moon training">Close</button></div>
+    ${routeMissionNavigationMarkup()}
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
     <p class="moon-panel-intro">Your crew's voyage begins here. Repair a rover and investigate the ground. Earn two Moon stamps toward your six-mission certification.</p>
     <div class="moon-route-summary" id="moon-route-summary" hidden><p class="eyebrow" id="moon-route-year"></p><section class="mission-opening moon-route-opening" aria-labelledby="moon-panel-title"><figure class="moon-route-photo mission-opening-view"><div class="mission-opening-photo"><img alt="" decoding="async"></div><figcaption><a target="_blank" rel="noopener"></a></figcaption></figure><div><dl class="mission-opening-beats"><div><dt>Built for</dt><dd id="moon-route-purpose"></dd></div><div><dt>It did</dt><dd id="moon-route-did"></dd></div></dl><a class="moon-route-source" id="moon-route-source" target="_blank" rel="noopener"></a></div></section></div>
@@ -311,12 +319,35 @@ export function mountMoonPanel(root, options = {}) {
   root.innerHTML = moonPanelMarkup();
   const dialog = root.querySelector("#moon-panel");
   const closeButton = root.querySelector("#moon-panel-close");
-  const labs = mountMoonLabs(dialog, options);
+  const routeNavigation = dialog.querySelector('.moon-route-modules');
+  let routeId = null;
+  const refreshRouteNavigation = () => {
+    routeNavigation.querySelectorAll('[data-route-mission]').forEach((button) => {
+      const selected = button.dataset.routeMission === routeId;
+      button.toggleAttribute('aria-current', selected);
+      if (selected) button.setAttribute('aria-current', 'page');
+      button.querySelector('.current-marker').hidden = !selected;
+      button.querySelector('.done').hidden = !options.isStamped?.(button.dataset.routeMission);
+    });
+  };
+  const labs = mountMoonLabs(dialog, {
+    ...options,
+    onEarned(id) {
+      options.onEarned?.(id);
+      refreshRouteNavigation();
+    },
+  });
   let returnFocus = null;
   let routeExit = null;
+  routeNavigation.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-route-mission]');
+    if (button) options.onNavigate?.(button.dataset.routeMission);
+  });
   const leaveRouteMode = () => {
     routeExit = null;
+    routeId = null;
     dialog.classList.remove('is-route-page');
+    routeNavigation.hidden = true;
     closeButton.textContent = 'Close';
     closeButton.setAttribute('aria-label', 'Close Moon training');
     dialog.querySelector('#moon-panel-title').textContent = 'Two machines still on the Moon';
@@ -369,8 +400,11 @@ export function mountMoonPanel(root, options = {}) {
       const story = moonStories[id];
       if (!story) return false;
       routeExit = onExit;
+      routeId = id;
       returnFocus = null;
       dialog.classList.add('is-route-page');
+      routeNavigation.hidden = false;
+      refreshRouteNavigation();
       dialog.style.setProperty('--moon-photo', `url("${story.reveal.image}")`);
       closeButton.textContent = '← Back to academy';
       closeButton.setAttribute('aria-label', 'Back to academy');

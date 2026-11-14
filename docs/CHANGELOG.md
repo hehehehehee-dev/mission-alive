@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Six-module navigation on both Moon missions
+
+- Apollo 17 LRV and Surveyor 3 now show the same six-module training navigation used by Curiosity, Ingenuity, Webb, and Voyager.
+- The active Moon mission is marked as current, earned missions show their completion star, and every module remains directly reachable without returning to the lobby.
+
 ### Curiosity gallery images restored in production
 
 - The Content-Security-Policy added earlier allowed images and requests only from the site itself, so the Curiosity gallery's NASA images were blocked on Netlify. The policy now also allows `https://images-assets.nasa.gov` for images and `https://images-api.nasa.gov` for the gallery search. Nothing else was loosened.

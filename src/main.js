@@ -218,6 +218,7 @@ function loadJourneyProgress(stamps) {
 const $ = (s) => document.querySelector(s);
 const moonPanel = mountMoonPanel($("#moon-panel-slot"), {
   isStamped: id => completed.has(id),
+  onNavigate: id => navigateTo(id),
   onEarned(id) {
     if (completed.has(id)) return;
     completed.add(id);

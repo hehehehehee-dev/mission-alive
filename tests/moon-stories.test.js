@@ -21,6 +21,11 @@ test("Moon archive keeps two sourced stories and two training labs within certif
     assert.deepEqual(Array.from(image.subarray(0, 3)), [255, 216, 255]);
   }
   const markup = moonPanelMarkup();
+  assert.equal((markup.match(/data-route-mission=/g) || []).length, 6);
+  for (const id of ["apollo17", "surveyor3", "curiosity", "ingenuity", "webb", "voyager"]) {
+    assert.ok(markup.includes(`data-route-mission="${id}"`));
+  }
+  assert.ok(markup.includes('class="exhibits moon-route-modules"'));
   assert.equal((markup.match(/data-moon-story=/g) || []).length, 2);
   assert.ok(markup.includes("TWO STAMPS"));
   assert.equal((markup.match(/data-moon-stamp=/g) || []).length, 2);
