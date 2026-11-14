@@ -8,7 +8,7 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Last change:** rebuilt both Moon challenge models through `src/moon-model-detail.js`, matching the existing scenes' material/lighting palette; added visibility-aware demand rendering, corrected shadows, compact photograph-backed route introductions and side-by-side Surveyor study controls.
-- **Last verification:** `npm test` 129/129 and production build pass. Rendered production inspection of the new Moon models follows auto-deploy; do not treat automated tests as visual or device-performance proof.
+- **Last verification:** `npm test` 129/129 and production build pass. Production screenshots confirm both detailed models render without ground stripes at 1440px; both routes fit 390px without horizontal overflow and show loaded NASA photographs with credits. Follow-up fixes lock background scrolling and center Surveyor on its selected patch. Low-powered physical-device smoothness is not measured.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Center the lunar study and remove double scrolling
+- **Changed:** centered Surveyor's camera on the selected patch, locked underlying page scrolling while Moon training is open, and sized mobile canvases to 310px.
+- **Verified:** deployed first-pass models visually inspected at 1440px; both Moon routes have no horizontal overflow at 390px and NASA images/credits load. Automated test/build gate rerun for the camera/CSS follow-up.
+- **Left for next:** physical low-powered-device performance measurement; no measured FPS claim is made.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Rebuild Moon machines and unify their study presentation

@@ -10,6 +10,7 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 - Matched the existing machine scenes' metal palette, lighting and regolith base; corrected shadow artifacts on the ground.
 - Added on-demand, visibility-aware rendering with a 30 fps interaction cap and cancellation of particle/probe animation work.
 - Shortened Moon page introductions, added credited NASA mission photography, and placed Surveyor controls beside its model on desktop.
+- Centered Surveyor's camera on the chosen soil patch and removed the second page scrollbar while Moon training is open.
 - The existing repair, evidence, landing and six-stamp rules remain in place.
 
 ### One Voyager distance and countdown card

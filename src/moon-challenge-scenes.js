@@ -165,7 +165,7 @@ export function mountLrvChallengeScene(host) {
 }
 
 export function mountSurveyorChallengeScene(host) {
-  const stage = createStage(host, 'Interactive 3D Surveyor soil and landing simulation', [6.8, 4.8, 9.5], [0, 1.35, 0]);
+  const stage = createStage(host, 'Interactive 3D Surveyor soil and landing simulation', [5.8, 3.8, 7.8], [0, 1.35, 0]);
   if (!stage) return null;
   const { scene, material, mesh, box, cylinder, rod, invalidate } = stage;
   const soilMaterials = [material('#8e8172', 0, .95), material('#706a64', 0, .98), material('#a08b72', 0, .92)];
@@ -186,6 +186,10 @@ export function mountSurveyorChallengeScene(host) {
     patches.forEach(({ pad, trench }, index) => { pad.scale.y = index === patchIndex ? 1.25 : 1; trench.visible = Boolean(digs?.[['a', 'b', 'c'][index]]); });
     probe.position.x = patches[patchIndex].pad.position.x;
     lander.position.x = patches[patchIndex].pad.position.x;
+    const cameraShift = lander.position.x - stage.controls.target.x;
+    stage.controls.target.x = lander.position.x;
+    stage.camera.position.x += cameraShift;
+    stage.controls.update();
     lander.position.y = .25;
     lander.rotation.z = 0;
     footMeshes.forEach((foot) => { foot.scale.x = foot.scale.z = .72 + padWidth * .18; });
