@@ -1800,6 +1800,24 @@ body[data-exhibit="voyager"] #greetings { max-width: 1100px; margin: 0 auto; }
 .exhibit .intro h1 { font-size: clamp(2.1rem, 3.4vw, 3.4rem); }
 .module-mission-objective { margin: 18px 0 0; color: #e3edf2; font-size: 0.95rem; line-height: 1.6; }
 .module-mission-objective strong { display: block; margin-bottom: 4px; color: var(--accent); font: 700 0.65rem/1.4 monospace; letter-spacing: 0.12em; }
+.mission-opening { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 20px; align-items: start; margin: 22px 0 4px; pointer-events: auto; }
+.mission-opening-view { position: relative; margin: 0; overflow: hidden; border: 1px solid #ffffff1f; border-radius: 8px; background: #05090d; }
+.mission-opening-view img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.mission-opening-view figcaption { display: grid; gap: 2px; padding: 9px 11px 10px; background: #070c11e6; color: #d7e2e7; font-size: 0.78rem; line-height: 1.45; }
+.mission-opening-view small { color: #93a8b2; font-size: 0.7rem; }
+.mission-opening-view a { color: var(--accent); font: 0.68rem/1.5 monospace; text-decoration: none; }
+.mission-opening-view a:hover, .mission-opening-view a:focus-visible { text-decoration: underline; }
+.mission-opening-view[data-marker="earth"] img { object-position: center; }
+/* Earth sits at about 59.5% across and 52.5% down the cropped Pale Blue Dot frame (measured from the image). */
+.mission-opening-photo { position: relative; }
+.mission-opening-marker { position: absolute; left: 59.5%; top: 52.5%; width: 24px; height: 24px; margin: -12px 0 0 -12px; border: 2px solid #9fd6ff; border-radius: 50%; box-shadow: 0 0 0 3px #0009; color: #cfe9ff; font: 700 0.62rem/20px monospace; letter-spacing: 0.06em; text-indent: 32px; white-space: nowrap; text-shadow: 0 1px 4px #000; pointer-events: none; }
+.mission-opening-beats { display: grid; gap: 14px; margin: 0; }
+.mission-opening-beats dt { margin: 0 0 3px; color: var(--accent); font: 700 0.65rem/1.4 monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+.mission-opening-beats dd { margin: 0; color: #dfe7eb; font-size: 0.93rem; line-height: 1.6; text-shadow: 0 1px 8px #000; }
+@media (max-width: 720px) {
+  .mission-opening { grid-template-columns: 1fr; gap: 14px; }
+  .mission-opening-view img { aspect-ratio: 16 / 9; }
+}
 .exhibit > .challenge-heading { padding: 18px 0; }
 .exhibit > .challenge-heading h2 { font-size: 1.65rem; }
 .exhibit > .challenge-heading .eyebrow { margin-bottom: 5px; }

@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** rebuilt both Moon challenge models through `src/moon-model-detail.js`, matching the existing scenes' material/lighting palette; added visibility-aware demand rendering, corrected shadows, compact photograph-backed route introductions and side-by-side Surveyor study controls.
-- **Last verification:** `npm test` 129/129 and production build pass. Production screenshots confirm both detailed models render without ground stripes at 1440px; both routes fit 390px without horizontal overflow and show loaded NASA photographs with credits. Follow-up fixes lock background scrolling and center Surveyor on its selected patch. Low-powered physical-device smoothness is not measured.
+- **Last change:** story first, then play: the four deep-space/Mars missions no longer open the intro dialog on arrival; the page opens with the credited mission image, machine voice and two story beats, then the objective and challenge (`missionOpening()` in `src/main.js`, styles in `src/style.css`). Voyager's thumbnail marks Earth's measured position.
+- **Last verification:** `npm test` 132/132 pass; `npm run build` passes; local browser check of all four missions (no dialog, one opening each), 390 px without overflow, English/Spanish/Vietnamese.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -43,7 +43,7 @@ The canonical mission registry is `src/certification.js`. `MISSION_COUNT` must b
 The normal flow is:
 
 1. Lobby direct mission CTA, unified visual certification deck, and outward journey map.
-2. Mission story/objective.
+2. Mission opening on the page itself (no dialog): real mission image, machine voice, “Built for” and “It did” beats, then the objective. Built by `missionOpening()` in `src/main.js`.
 3. 3D or accessible 2D machine view and anatomy hotspots.
 4. Visual Quick Start.
 5. Interactive challenge with actionable feedback.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Claude — `main`
+- **Commit:** Tell each mission's story on the page before the challenge
+- **Changed:** `src/main.js` (no auto `openExhibitStory()` in `navigateTo()`, new `missionOpening()`), `src/style.css`, two rows in `src/locales/nov14.js`, new `tests/mission-opening.test.js`.
+- **Verified:** `npm test` 132/132; `npm run build`; local browser desktop and 390 px, EN/ES/VI; Earth marker within 2 px of the measured dot.
+- **Left for next:** Moon pages already open without a dialog but use their own summary layout; aligning them with this opening pattern is optional. Story beats are not yet woven into individual challenge steps.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Center the lunar study and remove double scrolling

@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Story first, then play, with no intro dialog
+
+- Curiosity, Ingenuity, Webb and Voyager no longer open a separate “mission view” dialog with a Start exploring button before the page. The page itself now opens with the real mission image (credited), the machine's voice, and two short beats (“Built for”, “It did”), then Your mission and the challenge directly below.
+- The dialog remains available from the existing story button; “Still out there”, the transmission and the gift still follow the stamp.
+- On the Voyager Pale Blue Dot thumbnail, Earth is a single pixel, so a ring labelled “Earth is here” marks its measured position. The photo itself is not altered.
+- Spanish and Vietnamese copy added.
+
 ### Moon model and presentation rebuild
 
 - Replaced the isolated Apollo wheel and box shapes with a full rover reconstruction; added Surveyor's triangular frame, instrument mast, legs, pads and sampler.

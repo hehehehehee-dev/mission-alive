@@ -32,7 +32,7 @@ import { hiddenFactPassportMarkup, mountHiddenFacts } from "./hidden-facts.js";
 import { journeyStops, mountMoonPanel, mountLocationMap } from "./moon-stories.js";
 import { mountResourceCredits } from './resource-credits.js';
 import './resource-credits.css';
-import { showMissionView, mountPlanetComparison, mountHomecoming } from './journey-experience.js';
+import { showMissionView, missionViews, mountPlanetComparison, mountHomecoming } from './journey-experience.js';
 import './journey-experience.css';
 import { mountAccessPreferences } from './access-preferences.js';
 import { mountRoverTextMap, roverPosition, describeStar, mountRangeButtons, nextFlightCheckpoint } from './accessible-controls.js';
@@ -390,10 +390,10 @@ let navigationPending = false;
 let queuedNavigation = null;
 async function navigateTo(id) {
   if (navigationPending) { queuedNavigation = id; return; }
-  const showPerspective = !!exhibits[id] && current !== id;
+  // The mission opening now lives at the top of the page itself, so arriving
+  // goes straight to the story and then the challenge with no extra dialog.
   if (reduce) {
     setRoute(id);
-    if (showPerspective) openExhibitStory(id);
     return;
   }
   navigationPending = true;
@@ -401,7 +401,6 @@ async function navigateTo(id) {
   try {
     await spaceAmbience.warp();
     setRoute(id);
-    if (showPerspective) openExhibitStory(id);
   } finally {
     window.setTimeout(() => {
       document.body.classList.remove("is-warping");
@@ -741,6 +740,62 @@ $("#start-exploring").onclick = () => {
   // Let the dialog restore focus before starting the smooth scroll.
   requestAnimationFrame(() => $("#begin-challenge").click());
 };
+
+/** Story first, in one glance: a real mission image and two short beats, then the challenge. */
+function missionOpening(id) {
+  const view = missionViews[id];
+  const story = storyLayer[id];
+  if (!view || !story) return null;
+  const section = document.createElement("section");
+  section.id = "mission-opening";
+  section.className = "mission-opening";
+  section.setAttribute("aria-label", `${exhibits[id].name} · mission opening`);
+  const figure = document.createElement("figure");
+  figure.className = "mission-opening-view";
+  const image = document.createElement("img");
+  image.src = view.image;
+  image.alt = view.alt;
+  image.loading = "lazy";
+  image.decoding = "async";
+  const caption = document.createElement("figcaption");
+  const captionText = document.createElement("span");
+  captionText.textContent = view.caption;
+  const kind = document.createElement("small");
+  kind.textContent = view.kind;
+  const source = document.createElement("a");
+  source.href = view.source;
+  source.target = "_blank";
+  source.rel = "noopener";
+  source.textContent = `${view.credit} ↗`;
+  source.dataset.i18nSkip = "";
+  caption.append(captionText, kind, source);
+  const frame = document.createElement("div");
+  frame.className = "mission-opening-photo";
+  frame.append(image);
+  figure.append(frame, caption);
+  if (id === "voyager") {
+    // At thumbnail size Earth is a single pixel. Mark where it is; the photo itself is unchanged.
+    figure.dataset.marker = "earth";
+    const marker = document.createElement("span");
+    marker.className = "mission-opening-marker";
+    marker.setAttribute("aria-hidden", "true");
+    marker.textContent = "Earth is here";
+    frame.append(marker);
+  }
+  const beats = document.createElement("dl");
+  beats.className = "mission-opening-beats";
+  for (const [label, copy] of story.beats.slice(0, 2)) {
+    const beat = document.createElement("div");
+    const term = document.createElement("dt");
+    const description = document.createElement("dd");
+    term.textContent = label;
+    description.textContent = copy;
+    beat.append(term, description);
+    beats.append(beat);
+  }
+  section.append(figure, beats);
+  return section;
+}
 
 function renderLobby() {
   $('.skip').href = '#lobby-missions';
@@ -2611,6 +2666,9 @@ async function render(id) {
   objectiveText.textContent = missionObjectives[id];
   objective.append(objectiveLabel, objectiveText);
   $("#machine-voice").after(objective);
+  $("#mission-opening")?.remove();
+  const opening = missionOpening(id);
+  if (opening) $("#machine-voice").after(opening);
   $("#story").textContent = e.story;
   $("#story-source").href = e.storySource;
   $("#story-source").textContent = `— ${e.storyAttribution} · NASA source ↗`;
