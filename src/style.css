@@ -1196,19 +1196,13 @@ h1 em {
   font-size: 1.2rem;
 }
 .part-dock {
-  position: absolute;
-  left: 50%;
-  bottom: 42px;
   display: flex;
-  width: min(720px, calc(100% - 32px));
-  transform: translateX(-50%);
+  width: 100%;
   border: 1px solid #36424c;
+  border-top: 0;
   border-radius: 6px;
   overflow: hidden;
-  background: #081018d6;
-  box-shadow: 0 14px 46px #0008;
-  backdrop-filter: blur(12px);
-  pointer-events: auto;
+  background: #081018;
 }
 .part-dock button {
   flex: 1 1 0;
@@ -1226,7 +1220,7 @@ h1 em {
 .part-dock button:last-child {
   border-right: 0;
 }
-.part-dock button span {
+.part-dock .part-number {
   margin-right: 6px;
   color: var(--accent);
   font-family: monospace;
@@ -1449,6 +1443,14 @@ aside {
   grid-template-columns: minmax(0, 1fr) 350px;
   gap: 0 40px;
   min-height: 660px;
+}
+.stage-column {
+  min-width: 0;
+  align-self: start;
+}
+.part-dock-slot {
+  min-height: 58px;
+  border-bottom: 1px solid var(--line);
 }
 aside h2 {
   font-size: 1.4rem;
@@ -2023,6 +2025,48 @@ body[data-exhibit="voyager"] .voyager-main .voyager-arrival { margin-top: 26px; 
   background: rgba(39, 98, 88, 0.7);
 }
 .landing-choices small { color: #a8bcbf; font-size: 0.67rem; }
+.ingenuity-step-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 16px 0;
+}
+.ingenuity-step-nav button {
+  min-height: 44px;
+  padding: 8px 6px;
+  border-color: #42545f;
+  font-size: 0.78rem;
+}
+.ingenuity-step-nav button[aria-current="step"] {
+  border-color: var(--accent);
+  color: #101820;
+  background: var(--accent);
+}
+.ingenuity-step {
+  min-width: 0;
+  padding-top: 4px;
+}
+.ingenuity-step > .eyebrow {
+  margin-bottom: 12px;
+}
+.flight-log-details {
+  margin: 16px 0;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+.flight-log-details > summary {
+  min-height: 44px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.flight-log-details[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+.flight-log-details .flight-log {
+  margin: 0;
+  border: 0;
+}
 .rotor-actions {
   display: grid;
   grid-template-columns: 1.25fr 1fr;
@@ -3254,6 +3298,12 @@ body[data-exhibit="voyager"] {
   }
   #stage {
     min-height: 435px;
+  }
+}
+@media (min-width: 1021px) {
+  .stage-column {
+    position: sticky;
+    top: 18px;
   }
 }
 @media (max-width: 900px) {

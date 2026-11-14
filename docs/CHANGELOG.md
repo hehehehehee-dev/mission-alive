@@ -4,6 +4,14 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Clearer 3D study and shorter Ingenuity controls
+
+- Moved the keyboard-friendly anatomy tray below the canvas for Curiosity, Ingenuity, Webb, and Voyager so part names no longer cover the machines.
+- Kept the 3D study column visible beside long controls on wider screens; mobile retains a normal, unobstructed document flow.
+- Reworked Ingenuity into three progressive panels: choose a site and onboard controller, power the rotors, then fly and land. Only the active panel is shown.
+- Replaced seven repeated rotor-power presses with one safe-speed action while preserving the safe band, wind trim, continuous/step-by-step flight, terrain failures, retries, stamp, and flight log.
+- Added Spanish and Vietnamese copy and regression tests for the new layout and flow.
+
 ### Voyager distance card without the confusing light-time
 
 - Removed “23.99 hours one way at light speed”. Rounded beside the light-day countdown, it looked like a contradiction (the real gap was about 31 light-seconds, which Voyager needs days to cover).

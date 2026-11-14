@@ -764,13 +764,18 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
       (part, index) =>
         `<button class="part-marker" data-part-index="${index}" aria-label="Inspect ${part.label}"><span>${index + 1}</span><small>${part.label}</small></button>`,
     )
-    .join("")}</div><article class="part-card" aria-live="polite" hidden><button class="part-card-close" aria-label="Close part information">×</button><p class="eyebrow">MACHINE ANATOMY · <span class="part-counter"></span></p><h3></h3><p class="part-description"></p><a target="_blank" rel="noopener"></a></article><div class="part-dock" aria-label="Machine parts">${partGuide.parts
+    .join("")}</div><article class="part-card" aria-live="polite" hidden><button class="part-card-close" aria-label="Close part information">×</button><p class="eyebrow">MACHINE ANATOMY · <span class="part-counter"></span></p><h3></h3><p class="part-description"></p><a target="_blank" rel="noopener"></a></article>`;
+  host.appendChild(hotspotLayer);
+  const partDock = document.createElement("div");
+  partDock.className = "part-dock";
+  partDock.setAttribute("aria-label", "Machine parts");
+  partDock.innerHTML = partGuide.parts
     .map(
       (part, index) =>
-        `<button data-part-index="${index}"><span>0${index + 1}</span>${part.label}</button>`,
+        `<button data-part-index="${index}"><span class="part-number">0${index + 1}</span><span class="part-name">${part.label}</span></button>`,
     )
-    .join("")}</div>`;
-  host.appendChild(hotspotLayer);
+    .join("");
+  (host.parentElement?.querySelector(".part-dock-slot") || host).appendChild(partDock);
   const partAnchors = partGuide.parts.map((part) => {
     const anchor = new T.Object3D();
     anchor.position.fromArray(part.position);
@@ -778,7 +783,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
     return anchor;
   });
   const markerButtons = [...hotspotLayer.querySelectorAll(".part-marker")];
-  const dockButtons = [...hotspotLayer.querySelectorAll(".part-dock button")];
+  const dockButtons = [...partDock.querySelectorAll("button")];
   const partCard = hotspotLayer.querySelector(".part-card");
   let activePart = -1;
   function inspectPart(index) {
@@ -809,6 +814,10 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
       markerButtons.forEach((marker) => marker.classList.remove("is-active"));
       dockButtons.forEach((dockButton) => dockButton.classList.remove("is-active"));
     }
+  });
+  partDock.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-part-index]");
+    if (button) inspectPart(Number(button.dataset.partIndex));
   });
   const projectedPart = new T.Vector3();
   function updateHotspots() {
@@ -1063,6 +1072,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
       });
       renderer.dispose();
       renderer.domElement.remove();
+      partDock.remove();
       hotspotLayer.remove();
     },
   };

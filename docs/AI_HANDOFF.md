@@ -7,14 +7,14 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** Voyager live-distance card: removed the rounded “23.99 hours one way” line that looked like it contradicted the light-day countdown; replaced it with a sentence linking the number to the one-light-day milestone (switches on NASA's date) and a plain “estimate, not a signal” status (`src/voyager-distance.js`, `src/main.js`, `src/locales/nov14.js`, `tests/voyager-distance.test.js`).
-- **Last verification:** `npm test` 126/126 pass; `npm run build` passes; local browser check of the Voyager card in English, Spanish and Vietnamese.
-- **Not yet verified:** the two new challenge canvases, footer privacy dialog, and dedicated Moon pages in a real browser at desktop and about 390 px. Netlify headers need checking after a future deploy; the live site still runs an older build.
+- **Last change:** the anatomy tray now sits below, rather than over, all four main 3D canvases; their study column stays visible beside long desktop controls. Ingenuity now reveals one of three short setup/flight panels at a time and reaches safe rotor power with one action while retaining trim, pace, terrain failure, retry, flight log, and stamp behavior.
+- **Last verification:** `npm test` 128/128 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes. Before the change, a live-browser audit confirmed the anatomy tray overlapped every main canvas and Ingenuity's controls were the tallest panel.
+- **Not yet verified:** the updated anatomy tray and Ingenuity progressive panels in the auto-deployed production build at desktop and about 390 px. The two Moon challenge canvases and production security headers also remain due for visual/response verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
-  - Ingenuity has five setup steps before lift-off and +10% power needs seven presses; consider fewer steps or a slider. Flight itself was not played (hidden browser pane paused animation).
+  - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
 - **Next suggested steps:**
-  1. Run the browser checks above, including keyboard open, Escape close, and Spanish/Vietnamese privacy copy.
+  1. Run the browser checks above, including all four anatomy trays, the Ingenuity three-step flow, keyboard operation, and Spanish/Vietnamese copy at about 390 px.
   2. After the next Netlify auto-deploy, confirm CSP, HSTS, Permissions-Policy, and the classroom gallery endpoint in production.
   3. Decide whether to remove the now-unused `moonPanel.play()` and `moonPanel.open()` from `src/moon-stories.js`.
 - **Open questions for the owner:** none.
@@ -208,6 +208,12 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Keep 3D models clear and simplify Ingenuity setup
+- **Changed:** moved the shared anatomy dock outside all four main canvases, made the study column sticky on desktop, and replaced Ingenuity's long setup form with three progressive panels and one-action safe rotor power; added ES/VI copy, accessibility notes, and regression tests.
+- **Verified:** live pre-change audit across Curiosity, Ingenuity, Webb, and Voyager; `npm test` 128/128; `npm run build`; `git diff --check`.
+- **Left for next:** verify the auto-deployed production UI at desktop and about 390 px, including all three Ingenuity terrain outcomes and both flight pacing modes.
 
 ### 2026-11-14 — Claude — `main`
 - **Commit:** Replace confusing Voyager light-time with the light-day milestone

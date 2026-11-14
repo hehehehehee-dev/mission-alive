@@ -14,11 +14,12 @@ This pass provides a quieter default interface and equivalent ways to perform th
 
 ## Equivalent controls
 
+- **All four 3D exhibits:** the machine-part buttons sit in a separate anatomy tray below the canvas instead of covering the model. The canvas and tray form one sticky study column on wider screens; narrow screens keep the same keyboard order without a floating obstruction.
 - **Curiosity:** a table shares the visual map's actual obstacles, sample, uplink and rover state, including analyzed samples. Row/column headings, a position description and a Read current position action supplement Step. Reordering/removing a program block retains keyboard focus. Symbols supplement the map colors. The existing mission/photo tabs support arrow keys and Home/End.
-- **Ingenuity:** continuous flight remains available. Step-by-step flight advances the same simulated flight time and wind/terrain rules only when Continue flight is activated. Players can adjust trim between stages. Unsafe terrain still fails and permits a retry. Trim has increment/decrement buttons.
+- **Ingenuity:** setup is split into three keyboard-operable panels: choose a site and controller, power the rotors, then fly. One activation sets a safe rotor value instead of requiring repeated +10/−5 presses. Continuous flight remains available. Step-by-step flight advances the same simulated flight time and wind/terrain rules only when Continue flight is activated. Players can adjust trim between stages. Unsafe terrain still fails and permits a retry. Trim has increment/decrement buttons.
 - **Webb:** buttons open each wing. Players choose image A/B/C and move it with labeled direction buttons; coordinates and the target are available in text. Keyboard and drag controls remain. Wavelength has increment/decrement buttons. All methods share the existing alignment and completion state.
 - **Voyager:** using the existing written greeting is an alternative to playing its recording. Reading a greeting and adding one's own written greeting can earn the same existing stamp without audio playback or microphone access. The live distance remains quiet until a visitor requests a reading; its numeric calculation and cadence are unchanged.
-- **Machine parts:** compact visual markers retain broader pointer targets. The part dock has readable labels and horizontal scrolling; part descriptions and credits use larger text.
+- **Machine parts:** compact visual markers retain broader pointer targets. The anatomy tray below the canvas has readable labels and horizontal scrolling; part descriptions and credits use larger text.
 
 New interface strings and state descriptions are included in English, Spanish and Vietnamese.
 

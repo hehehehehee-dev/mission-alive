@@ -1019,7 +1019,7 @@ function controls() {
   if (current === "curiosity")
     return `<p class="eyebrow">GALE CRATER SCIENCE PLAN</p><h2>Drill a Martian outcrop.</h2><p>Navigate to the cyan sedimentary outcrop (DRILL OUTCROP). Drill powdered rock for Curiosity’s SAM and CheMin laboratories, then park at the gold uplink site (UPLINK).</p>${meter("Rover integrity", "health")}<button class="secondary free-explore" id="free-explore">Enter Free Explore</button><div class="drive-pad" id="drive-pad" hidden aria-label="Free Explore driving controls"><span></span><button data-drive="forward" aria-label="Drive forward">▲</button><span></span><button data-drive="left" aria-label="Turn left">↶</button><button data-drive="reverse" aria-label="Drive backward">▼</button><button data-drive="right" aria-label="Turn right">↷</button></div><p class="fine" id="explore-help" hidden>Drive with WASD or arrow keys. Avoid rocks: every impact damages the rover.<span class="readout" id="explore-readout">0.0 m from center</span></p><section class="field-mission" id="field-mission" hidden><p class="eyebrow">FREE EXPLORE MISSIONS</p><ol><li data-field-step="0">Survey cyan outcrop (DRILL OUTCROP) with Mastcam</li><li data-field-step="1">Drill and analyze rock powder</li><li data-field-step="2">Reach gold beacon (UPLINK) and uplink data</li></ol><p id="mission-guidance">Drive to the cyan outcrop (DRILL OUTCROP).</p><button class="primary" id="mission-action" disabled>Too far from target</button></section><div id="program-workspace"><div class="rover-grid" id="rover-grid" role="img" aria-label="Five by five rover mission map"></div><div class="map-legend" aria-hidden="true"><span><i class="legend-sample"></i>Outcrop</span><span><i class="legend-rock"></i>Hazard</span><span><i class="legend-goal"></i>Uplink</span></div><div class="program-heading"><strong>COMMAND BLOCKS</strong><output id="block-count">0 / ${roverMission.maxBlocks}</output></div><div class="block-palette" aria-label="Command blocks">${Object.entries(roverCommands).map(([command, info]) => `<button class="code-block ${info.className}" data-command="${command}">${info.label}</button>`).join("")}</div><div class="program-heading"><strong>YOUR PROGRAM</strong><span>Select a block to add it</span></div><ol class="program-list" id="program-list" aria-label="Rover program"></ol><div class="program-actions"><button id="step-program">Step</button><button class="primary" id="run-program">Run science plan</button></div><div class="program-tools"><button id="undo-program">Undo</button><button id="clear-program">Clear</button></div>${meter("Energy remaining", "energy")}<p class="program-status" id="program-status" role="status">Build a science plan of up to ${roverMission.maxBlocks} blocks.</p><p class="fine">Curiosity drills powdered rock and delivers it to SAM and CheMin inside the rover. Loop blocks repeat the command directly after them.</p></div>`;
   if (current === "ingenuity")
-    return `<p class="eyebrow">YOUR MISSION</p><h2>Make the impossible lift off.</h2><p>Choose a landing site, establish the link, then fly the full route to discover whether the site was truly safe.</p><div class="preflight-panel"><strong>01 · PICK A LANDING ZONE</strong><div class="landing-choices"><button data-site="flat">Flat plain<br><small>Open ground</small></button><button data-site="crater">Crater rim<br><small>Sloped ground</small></button><button data-site="rocks">Rock field<br><small>Broken terrain</small></button></div><p class="fine" id="site-feedback">All three zones are already on the Mars field. Choose one to move Ingenuity there.</p><button class="secondary" id="link-test" disabled>02 · Test radio link</button></div>${meter("Rotor power · safe band 65–85%", "rotor")}<div class="rotor-actions"><button class="secondary" id="spin" disabled>Add rotor power +10%</button><button class="secondary" id="bleed" disabled>Release power −5%</button></div><p class="fine">Set a stable value inside the safe band. Power stays where you leave it.</p><button class="primary" id="launch" disabled>Lift off</button><div class="flight-readout"><span id="flight-phase">ON THE GROUND</span><output id="altitude-value">0.0 m</output></div><div class="meter flight-meter"><i id="altitude-bar"></i></div>${meter("Flight stability", "stability")}<label for="trim-input" class="fine">Before lift-off, use arrow keys or drag to set trim to the fixed WIND BAND target. The striped band stays still.</label><div class="trim-control" aria-label="Wind trim and target"><span class="trim-track"></span><i id="wind-target" aria-hidden="true"></i><input id="trim-input" type="range" min="0" max="100" value="50" disabled aria-label="Flight stability trim" aria-valuetext="Trim 50, outside wind band; target 65"></div><div class="trim-ticks" aria-hidden="true"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><p class="trim-target-label" id="trim-target-label">WIND BAND — target zone: trim 65 (safe 53–77)</p><p class="wind-cue" id="wind-cue">Set trim to 65 before lift-off. The target will not move.</p><p class="fine">A controlled flight can still fail at touchdown if the terrain is unsafe.</p>`;
+    return `<p class="eyebrow">YOUR MISSION</p><h2>Make the impossible lift off.</h2><p>Choose a landing site, establish the link, then fly the full route to discover whether the site was truly safe.</p><nav class="ingenuity-step-nav" aria-label="Ingenuity challenge steps"><button type="button" data-ingenuity-step-target="plan" aria-current="step">01 · Choose</button><button type="button" data-ingenuity-step-target="power" disabled>02 · Power</button><button type="button" data-ingenuity-step-target="fly" disabled>03 · Fly</button></nav><section class="ingenuity-step" data-ingenuity-step="plan"><div class="preflight-panel"><strong>01 · PICK A LANDING ZONE</strong><div class="landing-choices"><button data-site="flat">Flat plain<br><small>Open ground</small></button><button data-site="crater">Crater rim<br><small>Sloped ground</small></button><button data-site="rocks">Rock field<br><small>Broken terrain</small></button></div><p class="fine" id="site-feedback">All three zones are already on the Mars field. Choose one to move Ingenuity there.</p><button class="primary" id="link-test" disabled>Test flight link</button></div></section><section class="ingenuity-step" data-ingenuity-step="power" hidden><p class="eyebrow">02 · POWER THE ROTORS</p>${meter("Rotor power · safe band 65–85%", "rotor")}<button class="primary" id="spin" disabled>Power rotors to safe speed</button><button id="bleed" hidden disabled>Release power</button><p class="fine" id="rotor-guidance">Mars has very thin air. Ingenuity needs fast rotors, but too much power is unsafe.</p></section><section class="ingenuity-step" data-ingenuity-step="fly" hidden><p class="eyebrow">03 · FLY AND LAND</p><button class="primary" id="launch" disabled>Lift off</button><div class="flight-readout"><span id="flight-phase">ON THE GROUND</span><output id="altitude-value">0.0 m</output></div><div class="meter flight-meter"><i id="altitude-bar"></i></div>${meter("Flight stability", "stability")}<label for="trim-input" class="fine">Move the blue control into the striped WIND BAND, then keep it there during flight.</label><div class="trim-control" aria-label="Wind trim and target"><span class="trim-track"></span><i id="wind-target" aria-hidden="true"></i><input id="trim-input" type="range" min="0" max="100" value="50" disabled aria-label="Flight stability trim" aria-valuetext="Trim 50, outside wind band; target 65"></div><div class="trim-ticks" aria-hidden="true"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><p class="trim-target-label" id="trim-target-label">WIND BAND — target zone: trim 65 (safe 53–77)</p><p class="wind-cue" id="wind-cue">Move into the striped band before lift-off.</p><p class="fine">A controlled flight can still fail at touchdown if the terrain is unsafe.</p></section>`;
   if (current === "webb")
     return `<p class="eyebrow">YOUR MISSION</p><h2>Bring the stars together.</h2><p>Drag both folded mirror wings away from the center, then align the scattered star images.</p><div class="webb-step"><strong>01 · DRAG THE MIRROR OPEN</strong><p class="fine">Pull the gold LEFT and RIGHT mirror wings toward their matching outer brackets.</p><div class="webb-deploy-field" id="webb-deploy-field" aria-label="Mirror wing deployment field"><span class="webb-deploy-rail" aria-hidden="true"></span><span class="webb-deploy-core" aria-hidden="true"></span><button class="webb-wing-handle is-left" data-wing="left" aria-label="Left mirror wing, folded. Drag left or use arrow keys"><span>⬡</span><small>LEFT</small></button><button class="webb-wing-handle is-right" data-wing="right" aria-label="Right mirror wing, folded. Drag right or use arrow keys"><span>⬡</span><small>RIGHT</small></button></div></div><div class="webb-step" id="webb-focus-step" hidden><strong>02 · ALIGN THE IMAGES</strong><p class="fine">Drag each light point into the gold target circle (CROSSHAIR) and it will snap to focus. Arrow keys now move in 5% steps.</p><div class="webb-focus-field" id="webb-focus-field" aria-label="Star alignment field"><span class="webb-focus-grid" aria-hidden="true"></span><span class="webb-focus-target" aria-hidden="true"></span><button class="webb-star" data-star="0" aria-label="Star image A. Drag to the center or use arrow keys">A</button><button class="webb-star" data-star="1" aria-label="Star image B. Drag to the center or use arrow keys">B</button><button class="webb-star" data-star="2" aria-label="Star image C. Drag to the center or use arrow keys">C</button></div><output class="webb-focus-count" id="webb-focus-count">0 / 3 images focused</output></div><p class="fine" id="webb-state" role="status">Drag the left and right mirror wings outward.</p><p class="fine">This challenge simplifies Webb’s mirror alignment. The real observatory also deployed its five-layer sunshield and other structures.</p>`;
   return `<p class="eyebrow">YOUR MISSION</p><h2>Listen to a little of Earth.</h2><p>Complete these two human actions to earn the Voyager mission stamp. No microphone is needed if you write your greeting. Turning the record and traveling outward are optional ways to explore.</p><ol class="voyager-objectives" aria-label="Voyager mission objectives"><li data-voyager-step="listen">Play one Golden Record greeting</li><li data-voyager-step="greeting">Record and save, or write your own greeting</li></ol><div class="record-views" role="group" aria-label="Choose an artifact to view"><button data-record-face="front" aria-pressed="true">Record front</button><button data-record-face="cover" aria-pressed="false">Protective cover</button></div><p class="fine" id="record-caption">${recordArtifacts.front.caption}</p><a class="record-credit" id="record-source" href="${recordArtifacts.front.source}" target="_blank" rel="noopener">Photo: ${recordCredit}</a><label for="record">Turn the Golden Record <span class="optional-label">optional</span></label><input id="record" type="range" min="0" max="360" value="0"><button class="primary" id="open-greetings">Choose a voice from Earth</button><p class="fine">Explore all 55 greetings below. Search by language or country, select a recording, then press play. After listening, record or write a greeting of your own.</p><section class="voyager-live" aria-labelledby="voyager-live-heading"><p class="eyebrow" id="voyager-live-heading">DISTANCE FROM EARTH · LIVE ESTIMATE</p><output class="readout" id="voyager-live-distance">Awaiting mission data…</output><span id="voyager-live-light-time">${lightDayLink()}</span><p class="fine" id="voyager-live-status" role="status">Checking mission data…</p><a class="fine" href="https://ssd-api.jpl.nasa.gov/doc/horizons.html" target="_blank" rel="noopener">How this estimate works ↗</a></section><label for="distance">Imagine the journey outward <span class="optional-label">optional</span></label><input id="distance" type="range" min="0" max="100" value="0"><p class="fine">Projected milestone · 18 NOV 2026<span class="readout">${facts.distance.value} billion km</span>One-way signal time: ${facts.distance.signal_hours} hours.<br>NASA projection, not live telemetry.</p>`;
@@ -1050,10 +1050,28 @@ function learningMarkup(id) {
   if (id === "curiosity")
     return `<section class="learning-panel" id="curiosity-conclusion" hidden aria-labelledby="curiosity-conclusion-title"><p class="eyebrow">SCIENCE DECISION · YOUR REPORT TO EARTH</p><h3 id="curiosity-conclusion-title">What can this rock tell us?</h3><p>Your simulated sample shows layers and minerals that can form in water. Choose the headline supported by that evidence.</p><div class="learning-choices"><button data-science-claim="life">We found life on Mars</button><button data-science-claim="habitable">Ancient Mars may have supported microbial life</button></div><p class="learning-feedback" id="curiosity-claim-feedback" role="status">Look at what the instruments measured, then decide.</p><a class="fine" href="https://science.nasa.gov/resource/the-science-of-curiosity-seeking-signs-of-past-mars-habitability/" target="_blank" rel="noopener">NASA: Curiosity studies past habitability ↗</a></section>`;
   if (id === "ingenuity")
-    return `<section class="learning-panel" id="flight-computer" aria-labelledby="flight-computer-title"><p class="eyebrow">FLIGHT COMPUTER · WHO CORRECTS A GUST?</p><h3 id="flight-computer-title">Choose the controller to upload</h3><p>Radio signals between Earth and Mars take minutes. A gust changes flight in seconds.</p><div class="learning-choices"><button data-flight-controller="earth">Pilot live from Earth</button><button data-flight-controller="onboard">Let the onboard computer correct it</button></div><p class="learning-feedback" id="flight-computer-feedback" role="status">Select a controller before testing the link.</p></section><section class="learning-panel flight-log" aria-labelledby="flight-log-title"><p class="eyebrow">TEST · LEARN · REVISE</p><h3 id="flight-log-title">Flight log</h3><ol id="flight-attempts"><li>Choose a site and fly. Your results will appear here.</li></ol><p class="fine">The trim slider lets you simulate the onboard computer responding to wind. It is not a live joystick from Earth.</p></section>`;
+    return `<section class="learning-panel" id="flight-computer" aria-labelledby="flight-computer-title"><p class="eyebrow">WHO CORRECTS A GUST?</p><h3 id="flight-computer-title">Choose the flight controller</h3><p>Earth is minutes away by radio. A gust changes flight in seconds.</p><div class="learning-choices"><button data-flight-controller="earth">Pilot live from Earth</button><button data-flight-controller="onboard">Use the onboard computer</button></div><p class="learning-feedback" id="flight-computer-feedback" role="status">Choose who reacts before testing the link.</p></section><details class="flight-log-details"><summary>Flight log</summary><section class="learning-panel flight-log" aria-labelledby="flight-log-title"><p class="eyebrow">TEST · LEARN · REVISE</p><h3 id="flight-log-title">Flight log</h3><ol id="flight-attempts"><li>Choose a site and fly. Your results will appear here.</li></ol><p class="fine">The trim control simulates the onboard computer responding to wind. It is not a live joystick from Earth.</p></section></details>`;
   if (id === "webb")
     return `<section class="webb-step learning-panel" id="webb-infrared-step" hidden aria-labelledby="webb-infrared-title"><strong>03 · REVEAL WHAT VISIBLE LIGHT MISSES</strong><h3 id="webb-infrared-title">Look through the dust</h3><p>Now that the mirror is focused, shift from visible light toward infrared. See what appears behind this illustrated dust cloud.</p><div class="webb-vision" id="webb-vision" style="--infrared:0"><span class="webb-vision-dust" aria-hidden="true"></span><span class="webb-vision-hidden" aria-hidden="true">✦</span><span class="webb-vision-label">STAR-FORMING REGION</span></div><label for="webb-wavelength" class="fine">Visible light ← wavelength → Infrared</label><input id="webb-wavelength" type="range" min="0" max="100" value="0" aria-label="Shift from visible light toward infrared"><p class="learning-feedback" id="webb-infrared-feedback" role="status">Move toward infrared to reveal the hidden glow.</p><p class="fine">Concept illustration. Infrared can pass through some dust clouds; actual Webb images use measured wavelengths and processed color.</p><a class="fine" href="https://science.nasa.gov/mission/webb/fact-sheet/" target="_blank" rel="noopener">NASA: why Webb observes infrared ↗</a></section>`;
   return `<section class="learning-panel signal-lab" aria-labelledby="signal-lab-title"><p class="eyebrow">SIGNAL LAB · OPTIONAL</p><h3 id="signal-lab-title">How long does “hello” take?</h3><p>Choose a destination, then send a radio ping. Radio travels at light speed, so even a quick reply takes time.</p><div class="learning-choices"><button data-signal-target="moon">Moon</button><button data-signal-target="au">1 AU</button><button data-signal-target="voyager">Voyager 1</button></div><button class="secondary" id="send-signal" disabled>Send a ping</button><p class="learning-feedback" id="signal-result" role="status">Choose a destination to compare.</p><div class="signal-beam" aria-hidden="true"><i id="signal-beam-fill"></i></div><p class="fine">1 AU is the approximate Sun–Earth distance. The Moon comparison uses an average distance. Voyager uses the live JPL estimate when available.</p></section>`;
+}
+function showIngenuityStep(step, focus = false) {
+  $$('[data-ingenuity-step]').forEach((panel) => {
+    panel.hidden = panel.dataset.ingenuityStep !== step;
+  });
+  $$('[data-ingenuity-step-target]').forEach((button) => {
+    if (button.dataset.ingenuityStepTarget === step) button.setAttribute('aria-current', 'step');
+    else button.removeAttribute('aria-current');
+  });
+  if (focus) {
+    const panel = $(`[data-ingenuity-step="${step}"]`);
+    const target = panel?.querySelector('button:not(:disabled), input:not(:disabled)');
+    (target || panel)?.focus({ preventScroll: true });
+  }
+}
+function unlockIngenuityStep(step) {
+  const button = $(`[data-ingenuity-step-target="${step}"]`);
+  if (button) button.disabled = false;
 }
 function bindControls() {
   if (current === "curiosity") {
@@ -1171,8 +1189,11 @@ function bindControls() {
   if (current === "ingenuity") {
     const pacing = document.createElement('fieldset');
     pacing.className = 'flight-pacing';
-    pacing.innerHTML = '<legend>Choose your flight pace</legend><label><input type="radio" name="flight-pace" value="continuous" checked> Continuous flight</label><label><input type="radio" name="flight-pace" value="stepped"> Step-by-step flight</label><p class="fine">In step-by-step flight, nothing changes until you continue. Adjust trim between stages. Both ways earn the same stamp.</p><button type="button" id="flight-next" hidden disabled>Continue flight</button>';
+    pacing.innerHTML = '<legend>Flight pace</legend><label><input type="radio" name="flight-pace" value="continuous" checked> Continuous</label><label><input type="radio" name="flight-pace" value="stepped"> Pause at each stage</label><button type="button" id="flight-next" hidden disabled>Continue flight</button>';
     $('#launch').before(pacing);
+    $$('[data-ingenuity-step-target]').forEach((button) => {
+      button.onclick = () => showIngenuityStep(button.dataset.ingenuityStepTarget, true);
+    });
     pacing.onchange = event => {
       if (state.flying || event.target.name !== 'flight-pace') return;
       state.flightPaced = event.target.value === 'stepped';
@@ -1228,17 +1249,22 @@ function bindControls() {
               ? "Crater rim selected · Ingenuity moved to the sloped landing zone."
               : "Rock field selected · Ingenuity moved among the boulders.";
         state.ready = Boolean(state.flightAttempts && state.autonomySelected);
-        $("#link-test").textContent = state.ready ? "✓ Flight plan retained for retry" : "02 · Test radio link";
+        $("#link-test").textContent = state.ready ? "✓ Flight plan retained for retry" : "Test flight link";
         $("#link-test").disabled = state.ready || !state.autonomySelected;
-        $("#spin").disabled = !state.ready;
-        $("#bleed").disabled = !state.ready;
+        $("#spin").disabled = true;
+        $("#spin").textContent = state.ready ? "✓ Rotors at safe speed" : "Power rotors to safe speed";
         $("#trim-input").disabled = !state.ready;
         $("#launch").disabled = true;
         $("#launch").textContent = "Lift off";
         $("#flight-phase").textContent = "SITE SELECTED";
-        $("#wind-cue").textContent = "Set trim to 65 before lift-off. The target will not move.";
+        $("#wind-cue").textContent = "Move into the striped band before lift-off.";
         setStatus(`${site.toUpperCase()} LANDING ZONE SELECTED`);
-        if (state.ready) updateRotor();
+        if (state.ready) {
+          unlockIngenuityStep("power");
+          unlockIngenuityStep("fly");
+          updateRotor();
+          showIngenuityStep("fly", true);
+        } else showIngenuityStep("plan");
       };
     });
     $("#link-test").onclick = () => {
@@ -1247,22 +1273,25 @@ function bindControls() {
       $("#link-test").textContent = "✓ Radio link confirmed";
       $("#link-test").disabled = true;
       $("#spin").disabled = false;
-      $("#bleed").disabled = false;
-      $("#trim-input").disabled = false;
-      $("#site-feedback").textContent = "Preflight ready · use +10% and −5% to enter the safe band.";
+      $("#site-feedback").textContent = "Link ready. Now bring the rotors to a safe flight speed.";
       machineAudio.pulse("servo", 0.5);
+      unlockIngenuityStep("power");
+      showIngenuityStep("power", true);
       updateRotor();
     };
-    const adjustRotor = (amount) => {
+    $("#spin").onclick = () => {
       if (!state.ready || state.flying) return;
-      state.rotor = Math.max(0, Math.min(100, state.rotor + amount));
+      state.rotor = 75;
       state.spinning = true;
       state.rotorPulseUntil = performance.now() + 360;
       updateRotor();
-      beep(amount > 0 ? 230 + state.rotor * 2 : 170, 0.06);
+      $("#spin").textContent = "✓ Rotors at safe speed";
+      $("#spin").disabled = true;
+      $("#trim-input").disabled = false;
+      unlockIngenuityStep("fly");
+      showIngenuityStep("fly", true);
+      beep(380, 0.12);
     };
-    $("#spin").onclick = () => adjustRotor(10);
-    $("#bleed").onclick = () => adjustRotor(-5);
     $("#trim-input").oninput = (event) => {
       state.trim = Number(event.target.value);
       updateTrimFeedback();
@@ -1286,7 +1315,6 @@ function bindControls() {
       $$("[data-site]").forEach((button) => (button.disabled = true));
       $("#link-test").disabled = true;
       $("#spin").disabled = true;
-      $("#bleed").disabled = true;
       $("#launch").disabled = true;
       $("#launch").textContent = "Flight in progress";
       $("#trim-input").disabled = false;
@@ -2179,6 +2207,8 @@ function finishFlightAttempt() {
   setMeter("rotor", 0);
   $("#trim-input").disabled = true;
   const flightLog = $("#flight-attempts");
+  const flightLogDetails = flightLog.closest(".flight-log-details");
+  if (flightLogDetails) flightLogDetails.open = true;
   if (state.flightAttempts === 1) flightLog.replaceChildren();
   const entry = document.createElement("li");
   const result = state.stability < 45
@@ -2204,9 +2234,8 @@ function finishFlightAttempt() {
   $$("[data-site]").forEach((button) => (button.disabled = false));
   state.ready = false;
   $("#spin").disabled = true;
-  $("#bleed").disabled = true;
   $("#link-test").disabled = false;
-  $("#link-test").textContent = "02 · Test radio link again";
+  $("#link-test").textContent = "Test flight link again";
   $("#launch").disabled = true;
   $("#flight-computer-feedback").textContent = frictionFeedback.failure("ingenuity", "Use the result below to revise your plan. Choosing a site again retains the onboard controller and safe rotor power for a quick retry.");
   if (terrainFailure && state.landingSite === "crater") {
@@ -2228,6 +2257,7 @@ function finishFlightAttempt() {
       "Stability fell below 45% · test the radio link and rebuild rotor power.";
     setStatus("ROUGH LANDING · FLIGHT NOT CLEARED");
   }
+  showIngenuityStep("plan");
   beep(145, 0.45);
 }
 
