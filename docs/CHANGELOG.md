@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Dedicated Apollo 17 and Surveyor 3 pages
+
+- Added direct `#apollo17` and `#surveyor3` routes instead of opening both missions through the shared Moon chooser.
+- Each Moon route now opens as a full-page mission with its own purpose, official source, existing interactive challenge, stamp ceremony, and return action.
+- Updated the Moon map pins, lobby cards, browser history, and direct-link loading to use the dedicated routes without changing the six-stamp finale.
+
 ### Unified training and certification deck
 
 - Merged the duplicate machine picker and certification grid into one six-card training deck.

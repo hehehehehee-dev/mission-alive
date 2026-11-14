@@ -40,6 +40,7 @@ Important invariants:
 - Leaving or resetting during an unfinished ceremony must not award a stamp later.
 - The finale opens only when `certificationComplete()` confirms all six mission IDs.
 - Moon missions are full certification missions, not optional story cards in the current version.
+- Apollo 17 LRV and Surveyor 3 have dedicated `#apollo17` and `#surveyor3` routes. Their challenges still reuse the shared Moon lab and stamp logic.
 - Sound begins off. Microphone permission is never required to finish Voyager.
 - The optional learner name is requested below the mission choices and is used only for the certificate. Do not place it before the first mission CTA.
 - The visual machine picker and certification tracker are one shared deck. Do not create a second six-machine grid in the lobby.

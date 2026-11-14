@@ -38,6 +38,17 @@ test('journey image credits stay inside their own desktop scenes', async () => {
   assert.match(css, /\.scene-mars > \.planet-credit \{ position: absolute; left: 0; bottom: 12px;/);
 });
 
+test('both Moon missions have dedicated routes instead of a shared chooser step', async () => {
+  const main = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
+  const moon = await readFile(new URL('../src/moon-stories.js', import.meta.url), 'utf8');
+  const css = await readFile(new URL('../src/moon-labs.css', import.meta.url), 'utf8');
+  assert.match(main, /function renderMoonRoute\(id\)/);
+  assert.match(main, /moonPanel\.openRoute\(id/);
+  assert.match(moon, /openRoute\(id, onExit\)/);
+  assert.match(css, /\.moon-panel\.is-route-page/);
+  assert.doesNotMatch(main, /moonPanel\.play\(id, document\.activeElement\)/);
+});
+
 test('the lobby hook is complete in Spanish and Vietnamese', () => {
   for (const line of hook) {
     assert.ok(es[line], `Missing Spanish: ${line}`);
