@@ -290,6 +290,20 @@ Project requirements, supplied voice assets, feedback and publication decisions 
 - Local files: /assets/mars-rover-drive.mp3
 - Usage / modifications: Mar. 7, 2021 · A 90-second edited highlight from Perseverance's drive over Martian ground.
 
+### Children and space exploration survey · 2019
+
+- Creator / credit: The LEGO Group / The Harris Poll
+- Official source: https://www.lego.com/en-at/aboutus/news/2019/july/lego-group-kicks-off-global-program-to-inspire-the-next-generation-of-space-explorers-as-nasa-celebrates-50-years-of-moon-landing
+- Used in: Project problem statement
+- Usage / modifications: Online survey of 3,000 children aged 8 to 12 in China, the United States, and the United Kingdom, conducted from 30 May to 8 June 2019.
+
+### When STEM? A Question of Age · 2010
+
+- Creator / credit: Institution of Mechanical Engineers
+- Official source: https://www.imeche.org/policy-and-press/reports/detail/when-stem-a-question-of-age
+- Used in: Project problem statement
+- Usage / modifications: Research review and expert consultation identifying ages 11 to 14 as a period when interest in STEM often falls away.
+
 ### NASA · Curiosity mission
 
 - Creator / credit: NASA

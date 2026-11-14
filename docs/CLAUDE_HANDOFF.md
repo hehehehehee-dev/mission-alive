@@ -154,9 +154,10 @@ Use in this order:
 
 1. Current source and tests.
 2. `CLAUDE.md` and this handoff.
-3. Focused current docs such as `docs/ACCESSIBILITY.md`, `docs/ASSETS.md`, `docs/MOON-LABS.md`, and `docs/MACHINE_VOICES.md`.
-4. `README.md` for broad context, while checking claims against code.
-5. Dated playtests, fix lists, and screenshots only as historical evidence.
+3. `docs/CHANGELOG.md` for the latest product and content changes.
+4. Focused current docs such as `docs/ACCESSIBILITY.md`, `docs/ASSETS.md`, `docs/MOON-LABS.md`, and `docs/MACHINE_VOICES.md`.
+5. `README.md` for broad context, while checking claims against code.
+6. Dated playtests, fix lists, and screenshots only as historical evidence.
 
 If prose conflicts with the implementation, do not guess. Report the mismatch and verify the intended current behavior before changing a protected invariant.
 
