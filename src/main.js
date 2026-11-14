@@ -40,6 +40,8 @@ import './accessible-academy.css';
 import './moon-labs.css';
 import './typography.css';
 import './consolidated-polish.css';
+import './quick-start.css';
+import { quickStartMarkup, whyMarkup } from './quick-start.js';
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -2603,6 +2605,16 @@ async function render(id) {
     : "Drag or arrow keys to orbit · Scroll or +/− to zoom · 0 resets";
   $("#controls").innerHTML =
     controls() + learningMarkup(id) + '<button class="secondary" id="reset">Reset exhibit</button>';
+  const missionHeading = $("#controls h2");
+  const missionIntro = missionHeading?.nextElementSibling?.matches("p")
+    ? missionHeading.nextElementSibling
+    : null;
+  missionHeading?.insertAdjacentHTML("afterend", quickStartMarkup(id));
+  if (missionIntro) {
+    const explanation = whyMarkup(`<p>${missionIntro.innerHTML}</p>`);
+    missionIntro.remove();
+    $("#controls .quick-start")?.insertAdjacentHTML("afterend", explanation);
+  }
   if (id === "voyager") {
     $('[data-voyager-step="listen"]').textContent = 'Play or read one Golden Record greeting';
     $('#voyager-live-distance').insertAdjacentHTML('afterend', '<button type="button" id="read-voyager-distance">Read current distance</button>');

@@ -1,3 +1,5 @@
+import { quickStartMarkup, whyMarkup } from './quick-start.js';
+
 // Original, dimensionless teaching model. These constants are invented for play;
 // they are neither Surveyor measurements nor a map of actual lunar soil.
 export const surveyorSoils = Object.freeze([
@@ -152,9 +154,9 @@ export function surveyorGameMarkup() {
   const id = `surveyor-game-${++surveyorInstance}`;
   const c = surveyorCopy;
   return `<section class="moon-game surveyor-game" aria-labelledby="${id}-title" data-surveyor-game>
-    <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3><p>${c.intro}</p>
-    <p class="surveyor-disclaimer">${c.disclaimer}</p><p class="surveyor-model-label">${c.units}</p>
-    <p>${c.history} <a href="https://science.nasa.gov/mission/surveyor-3/" target="_blank" rel="noopener noreferrer">${c.historySource} ↗</a></p>
+    <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3>
+    ${quickStartMarkup('surveyor3')}
+    ${whyMarkup(`<p>${c.intro}</p><p class="surveyor-disclaimer">${c.disclaimer}</p><p class="surveyor-model-label">${c.units}</p><p>${c.history} <a href="https://science.nasa.gov/mission/surveyor-3/" target="_blank" rel="noopener noreferrer">${c.historySource} ↗</a></p>`)}
     <fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}">${c[patchCopy[soil.id]]}</button>`).join('')}</div></fieldset>
     <figure class="surveyor-figure">${soilIllustration(id)}<figcaption class="surveyor-model-label">${c.cutawayCaption}</figcaption></figure>
     <div class="surveyor-investigation-grid"><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.investigate}</legend>

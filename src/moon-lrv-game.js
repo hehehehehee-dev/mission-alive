@@ -1,3 +1,5 @@
+import { quickStartMarkup, whyMarkup } from './quick-start.js';
+
 // Original Mission Alive model. The dimensions, dust paths, and pass criteria below
 // are teaching choices, not measurements or test results from Apollo hardware.
 export const LRV_GAME_COPY = Object.freeze({
@@ -275,7 +277,9 @@ export function lrvGameMarkup() {
   const id = `lrv-workshop-${++nextWorkshopId}`;
   const initial = evaluateLrvRepair(LRV_DEFAULT_CONFIGURATION);
   return `<section class="moon-game lrv-game" data-lrv-workshop data-lrv-result="untested" aria-labelledby="${id}-title">
-    <header class="lrv-heading"><p class="eyebrow">${copy.eyebrow}</p><h3 id="${id}-title">${copy.title}</h3><p>${copy.introduction}</p><p>${copy.instructions}</p></header>
+    <header class="lrv-heading"><p class="eyebrow">${copy.eyebrow}</p><h3 id="${id}-title">${copy.title}</h3><p>${copy.introduction}</p></header>
+    ${quickStartMarkup('apollo17')}
+    ${whyMarkup(`<p>${copy.instructions}</p><p>${copy.simulation}</p><p>${copy.dimensions}</p>`)}
     <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p>${svgMarkup(initial)}<figcaption>${copy.diagramCaption}</figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>
     <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><div class="lrv-tool-tray" role="group" aria-label="Repair tools"><button type="button" data-lrv-tool="maps" aria-pressed="true">${copy.maps}</button><button type="button" data-lrv-tool="tape" aria-pressed="false">${copy.tape}</button><button type="button" data-lrv-tool="clamps" aria-pressed="false">${copy.clamps}</button></div><p data-lrv-tool-status role="status">Choose a tool, then apply it to the repair.</p><button type="button" data-lrv-apply>Apply selected tool to the wheel</button><p class="lrv-control-help">${copy.attachmentHelp}</p></fieldset>
     <fieldset class="lrv-geometry"><legend>${copy.geometry}</legend><p class="lrv-model-dimensions">${copy.dimensions}</p>
