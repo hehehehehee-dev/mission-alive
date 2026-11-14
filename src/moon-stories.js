@@ -228,8 +228,7 @@ export function moonPanelMarkup() {
     <div class="dialog-top"><p class="eyebrow">MOON TRAINING · TWO MISSIONS · TWO STAMPS</p><button type="button" id="moon-panel-close" aria-label="Close Moon training">Close</button></div>
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
     <p class="moon-panel-intro">Your crew's voyage begins here. Repair a rover and investigate the ground. Earn two Moon stamps toward your six-mission certification.</p>
-    <div class="moon-route-summary" id="moon-route-summary" hidden><p class="eyebrow" id="moon-route-year"></p><p id="moon-route-purpose"></p><a id="moon-route-source" target="_blank" rel="noopener"></a></div>
-    <figure class="moon-route-photo" hidden><img alt="" decoding="async"><figcaption><a target="_blank" rel="noopener"></a></figcaption></figure>
+    <div class="moon-route-summary" id="moon-route-summary" hidden><p class="eyebrow" id="moon-route-year"></p><section class="mission-opening moon-route-opening" aria-labelledby="moon-panel-title"><figure class="moon-route-photo mission-opening-view"><div class="mission-opening-photo"><img alt="" decoding="async"></div><figcaption><a target="_blank" rel="noopener"></a></figcaption></figure><div><dl class="mission-opening-beats"><div><dt>Built for</dt><dd id="moon-route-purpose"></dd></div><div><dt>It did</dt><dd id="moon-route-did"></dd></div></dl><a class="moon-route-source" id="moon-route-source" target="_blank" rel="noopener"></a></div></section></div>
     ${moonLabMarkup()}
     <div class="moon-story-grid">${Object.entries(moonStories).map(([id, story]) => storyCard(id, story)).join("")}</div>
   </dialog>`;
@@ -322,7 +321,6 @@ export function mountMoonPanel(root, options = {}) {
     closeButton.setAttribute('aria-label', 'Close Moon training');
     dialog.querySelector('#moon-panel-title').textContent = 'Two machines still on the Moon';
     dialog.querySelector('#moon-route-summary').hidden = true;
-    dialog.querySelector('.moon-route-photo').hidden = true;
   };
   const close = () => routeExit ? routeExit() : dialog.close();
   closeButton.addEventListener("click", close);
@@ -378,17 +376,22 @@ export function mountMoonPanel(root, options = {}) {
       closeButton.setAttribute('aria-label', 'Back to academy');
       dialog.querySelector('#moon-panel-title').textContent = story.name;
       dialog.querySelector('#moon-route-year').textContent = story.year;
+      // Same opening as the other four missions: "Built for", then "It did".
       dialog.querySelector('#moon-route-purpose').textContent = story.facts[1][1];
+      dialog.querySelector('#moon-route-did').textContent = story.facts[2][1];
       const source = dialog.querySelector('#moon-route-source');
       source.href = story.sources[0][1];
       source.textContent = `${story.sources[0][0]} ↗`;
       dialog.querySelector('#moon-route-summary').hidden = false;
       const photo = dialog.querySelector('.moon-route-photo');
-      photo.hidden = false;
       photo.querySelector('img').src = story.reveal.image;
       photo.querySelector('img').alt = story.reveal.alt;
-      photo.querySelector('a').textContent = `${story.reveal.credit} ↗`;
-      photo.querySelector('a').href = story.reveal.source[1];
+      // Credit holder only, kept verbatim like the other four mission openings
+      // (translating "Image credit:" word by word produced mixed-language text).
+      const credit = photo.querySelector('a');
+      credit.dataset.i18nSkip = '';
+      credit.textContent = `${story.reveal.credit.replace(/^Image credit:\s*/i, '')} ↗`;
+      credit.href = story.reveal.source[1];
       if (!dialog.open) dialog.showModal();
       labs.play(id);
       dialog.scrollTop = 0;

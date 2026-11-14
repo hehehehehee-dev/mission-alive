@@ -8,7 +8,7 @@ Both Moon challenges progressively enhance their original SVG teaching models wi
 
 The shared silver/gold/white materials, filmic lighting and circular regolith stage follow the established four machines. Bias-corrected 512px shadows remove the old striped ground artifacts. Rendering is on demand, capped near 30 fps during interaction, and stops for offscreen or hidden stages. Terrain stones share an instanced mesh. Probe, dust and touchdown animation handles are cancelled on reset/disposal where applicable. These limits reduce rendering work; perceived smoothness still depends on the learner's device.
 
-Moon routes now have a shorter introduction and a real NASA photograph with its visible credit, reused as a dimmed background. Surveyor uses the same side-by-side study/control arrangement as Apollo, with a sticky model on desktop and a single column on mobile.
+Moon routes open the same way as the other four missions: the real NASA photograph (credit holder shown verbatim) beside “Built for” and “It did”, taken from the machine's sourced `WHY IT WENT` and `WHAT IT DID` facts, then the challenge. The photograph is also reused as a dimmed page background. Surveyor uses the same side-by-side study/control arrangement as Apollo, with a sticky model on desktop and a single column on mobile.
 
 The canvases support pointer orbiting and keyboard turning/zoom. Native HTML controls remain the only required input, every result is repeated as text, motion is shortened when reduced motion is active, and the existing SVG models remain available automatically if WebGL cannot start or loses context.
 

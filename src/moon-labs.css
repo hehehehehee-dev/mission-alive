@@ -28,7 +28,7 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
 .moon-panel.is-route-page > h2 {
   position: relative;
   z-index: 1;
-  width: 57%;
+  width: 100%;
   margin: 38px 0 20px;
   font-size: clamp(2.1rem, 3.8vw, 3.6rem);
   line-height: 1.15;
@@ -36,30 +36,18 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
 .moon-panel.is-route-page .moon-route-summary {
   position: relative;
   z-index: 1;
-  width: 54%;
-  min-height: 180px;
+  width: 100%;
+  max-width: 1080px;
+  min-height: 0;
   padding-left: 0;
   border: 0;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
-.moon-route-photo {
-  position: absolute;
-  top: 100px;
-  right: var(--moon-page-gutter);
-  width: 36%;
-  max-width: 520px;
-  margin: 0;
-}
-.moon-route-photo img {
-  display: block;
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 4px;
-  filter: saturate(.65);
-}
-.moon-route-photo figcaption { padding-top: 8px; font-size: .75rem; }
+/* The Moon pages use the shared .mission-opening layout from style.css. */
+.moon-route-opening { margin-top: 6px; }
+.moon-route-photo figcaption { font-size: .75rem; }
 .moon-route-photo a { color: #c5d7df; }
+.moon-route-source { display: inline-block; margin-top: 12px; color: #b9dcea; font-size: .78rem; }
 .moon-panel.is-route-page .moon-lab-workspace { max-width: none; }
 .moon-panel.is-route-page .moon-lab-toolbar { display: none; }
 .moon-panel.is-route-page .moon-game > :is(.eyebrow, h3),
@@ -79,10 +67,7 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
   .surveyor-study-layout { grid-template-columns: 1fr; }
   .surveyor-study-layout > .surveyor-figure { grid-column: 1; grid-row: auto; position: static; }
   .surveyor-study-layout > :is(.surveyor-site-controls, .surveyor-investigation-grid) { grid-column: 1; }
-  .moon-panel.is-route-page .moon-route-summary { width: 100%; min-height: 0; }
   .moon-panel.is-route-page > h2 { width: 100%; }
-  .moon-route-photo { position: static; width: 100%; max-width: none; margin-bottom: 22px; }
-  .moon-route-photo img { height: 180px; }
 }
 .moon-panel > h2 { font: 600 clamp(1.8rem, 4vw, 2.6rem)/1.2 Arial, sans-serif; margin: 22px 0; }
 .moon-panel-intro, .moon-lab-intro { max-width: 740px; font-size: 1rem; line-height: 1.7; }

@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Moon pages open like the other four missions
+
+- Apollo 17 and Surveyor 3 pages now use the same opening as the other missions: the real NASA photograph beside “Built for” and “It did”, taken from each machine's existing sourced facts, then the challenge. The photo is no longer pinned to the right of a narrow summary.
+- Moon photo credits now show the credit holder verbatim (for example “NASA/Harrison Schmitt”) instead of the half-translated “Ảnh credit:” / “Imagen credit:”.
+
 ### Story first, then play, with no intro dialog
 
 - Curiosity, Ingenuity, Webb and Voyager no longer open a separate “mission view” dialog with a Start exploring button before the page. The page itself now opens with the real mission image (credited), the machine's voice, and two short beats (“Built for”, “It did”), then Your mission and the challenge directly below.

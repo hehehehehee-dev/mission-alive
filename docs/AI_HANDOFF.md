@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** story first, then play: the four deep-space/Mars missions no longer open the intro dialog on arrival; the page opens with the credited mission image, machine voice and two story beats, then the objective and challenge (`missionOpening()` in `src/main.js`, styles in `src/style.css`). Voyager's thumbnail marks Earth's measured position.
-- **Last verification:** `npm test` 132/132 pass; `npm run build` passes; local browser check of all four missions (no dialog, one opening each), 390 px without overflow, English/Spanish/Vietnamese.
+- **Last change:** Apollo 17 and Surveyor 3 pages now open with the shared `.mission-opening` layout (photo, “Built for” = `facts[1]`, “It did” = `facts[2]`), matching the other four missions; Moon photo credits are shown verbatim (`src/moon-stories.js`, `src/moon-labs.css`).
+- **Last verification:** `npm test` 134/134 pass; `npm run build` passes; local browser check of both Moon pages at desktop and 390 px, leaving and reopening, English/Spanish/Vietnamese.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -198,10 +198,16 @@ Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, m
 ## 9. Handoff log
 
 ### 2026-11-14 — Claude — `main`
+- **Commit:** Open the Moon pages with the shared mission opening
+- **Changed:** `src/moon-stories.js` (route summary now holds a `.mission-opening` with photo, Built for, It did; no longer re-hides the photo on leave; verbatim credit), `src/moon-labs.css` (removed the absolutely positioned photo), `tests/mission-opening.test.js`.
+- **Verified:** `npm test` 134/134; `npm run build`; local browser desktop and 390 px (no horizontal scroll), back-and-reopen keeps the photo, EN/ES/VI.
+- **Note:** Codex had uncommitted edits in `src/main.js`, `src/moon-labs.js`, `src/moon-lrv-game.js`, `src/moon-surveyor-game.js` at the same time; they are not part of this commit.
+
+### 2026-11-14 — Claude — `main`
 - **Commit:** Tell each mission's story on the page before the challenge
 - **Changed:** `src/main.js` (no auto `openExhibitStory()` in `navigateTo()`, new `missionOpening()`), `src/style.css`, two rows in `src/locales/nov14.js`, new `tests/mission-opening.test.js`.
 - **Verified:** `npm test` 132/132; `npm run build`; local browser desktop and 390 px, EN/ES/VI; Earth marker within 2 px of the measured dot.
-- **Left for next:** Moon pages already open without a dialog but use their own summary layout; aligning them with this opening pattern is optional. Story beats are not yet woven into individual challenge steps.
+- **Left for next:** Story beats are not yet woven into individual challenge steps. (Moon pages aligned in the next entry.)
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Center the lunar study and remove double scrolling
