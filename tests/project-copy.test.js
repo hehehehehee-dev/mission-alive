@@ -16,8 +16,24 @@ test('the lobby presents the two-line child-readable problem and solution hook',
   assert.ok(html.indexOf(hook[0]) < html.indexOf('id="passport-title"'));
 });
 
+test('the lobby offers six visual machine shortcuts before optional certificate setup', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.equal((html.match(/data-launch-exhibit=/g) || []).length, 6);
+  assert.match(html, /class="launch-bay"/);
+  assert.match(html, /class="mobile-header-menu"/);
+  assert.ok(html.indexOf('id="lobby-missions"') < html.indexOf('id="crew-name"'));
+  assert.match(html, /Add your name for the certificate/);
+});
+
 test('the lobby hook is complete in Spanish and Vietnamese', () => {
   for (const line of hook) {
+    assert.ok(es[line], `Missing Spanish: ${line}`);
+    assert.ok(vi[line], `Missing Vietnamese: ${line}`);
+  }
+});
+
+test('new launch controls are localized in Spanish and Vietnamese', () => {
+  for (const line of ['Choose a machine ↓', 'Pick your machine.', 'Open mission →', 'Add your name for the certificate', 'About Mission Alive']) {
     assert.ok(es[line], `Missing Spanish: ${line}`);
     assert.ok(vi[line], `Missing Vietnamese: ${line}`);
   }
