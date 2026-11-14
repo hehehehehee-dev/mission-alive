@@ -7,6 +7,7 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 ### Clearer 3D study and shorter Ingenuity controls
 
 - Moved the keyboard-friendly anatomy tray below the canvas for Curiosity, Ingenuity, Webb, and Voyager so part names no longer cover the machines.
+- Constrained long part labels to a horizontally scrollable tray at narrow widths instead of allowing them to widen the page or the 3D stage.
 - Kept the 3D study column visible beside long controls on wider screens; mobile retains a normal, unobstructed document flow.
 - Reworked Ingenuity into three progressive panels: choose a site and onboard controller, power the rotors, then fly and land. Only the active panel is shown.
 - Replaced seven repeated rotor-power presses with one safe-speed action while preserving the safe band, wind trim, continuous/step-by-step flight, terrain failures, retries, stamp, and flight log.

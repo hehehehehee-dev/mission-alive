@@ -7,9 +7,9 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** the anatomy tray now sits below, rather than over, all four main 3D canvases; their study column stays visible beside long desktop controls. Ingenuity now reveals one of three short setup/flight panels at a time and reaches safe rotor power with one action while retaining trim, pace, terrain failure, retry, flight log, and stamp behavior.
-- **Last verification:** `npm test` 128/128 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes. Before the change, a live-browser audit confirmed the anatomy tray overlapped every main canvas and Ingenuity's controls were the tallest panel.
-- **Not yet verified:** the updated anatomy tray and Ingenuity progressive panels in the auto-deployed production build at desktop and about 390 px. The two Moon challenge canvases and production security headers also remain due for visual/response verification.
+- **Last change:** the anatomy tray now sits below, rather than over, all four main 3D canvases; their study column stays visible beside long desktop controls. Ingenuity reveals one of three short setup/flight panels at a time and reaches safe rotor power with one action. A production 390 px audit then found and fixed long anatomy labels widening the study column; the tray now scrolls internally.
+- **Last verification:** `npm test` 128/128 pass; `npm run build` passes (existing bundle-size advisory only); `git diff --check` passes. Production verified Ingenuity's choose → link → safe 75% rotor → fly transition and confirmed every anatomy dock is outside its canvas; the narrow-width containment fix is awaiting the next auto-deploy.
+- **Not yet verified:** recheck all four anatomy trays after the narrow-width follow-up deploy. All three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
@@ -208,6 +208,12 @@ Entry format:
 - **Verified:** <tests, build, browser checks>
 - **Left for next:** <unfinished work, risks, or "nothing">
 ```
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Contain anatomy trays on narrow screens
+- **Changed:** constrained the shared stage column and anatomy tray to the viewport so long part labels scroll inside the tray instead of widening the document or touching the canvas.
+- **Verified:** production 390 px audit identified the overflow; focused regression test, `npm test` 128/128, `npm run build`, and `git diff --check` after the fix.
+- **Left for next:** recheck all four production routes at 390 px after Netlify auto-deploy.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Keep 3D models clear and simplify Ingenuity setup

@@ -14,6 +14,8 @@ test('machine anatomy controls live outside the 3D canvas', () => {
   assert.match(scene, /partDock\.addEventListener\("click"/);
   assert.doesNotMatch(scene, /<div class="part-dock"/);
   assert.doesNotMatch(styles, /\.part-dock\s*\{[^}]*position:\s*absolute/s);
+  assert.match(styles, /\.stage-column\s*\{[^}]*width:\s*100%[^}]*overflow:\s*hidden/s);
+  assert.match(styles, /\.part-dock\s*\{[^}]*max-width:\s*100%/s);
 });
 
 test('Ingenuity uses three progressive challenge panels and one-action safe power', () => {
