@@ -738,6 +738,14 @@ body.motion-reduced .journey-ship, body.motion-reduced .surface-site, body.motio
 .mars-curiosity .diagram-callout { left: calc(var(--earth-diameter) * .381); top: 58px; }
 .scene-moon > .planet-credit { margin-left: 28%; }
 .scene-mars > .planet-credit { margin-left: 14%; }
+@media (min-width: 681px) {
+  .scene-moon > .planet-credit,
+  .scene-mars > .planet-credit {
+    position: absolute;
+    bottom: 22px;
+    margin-top: 0;
+  }
+}
 .scene-webb .scene-heading { margin-left: 28%; width: 72%; }
 .scene-webb > .scale-key { margin-left: 28%; }
 .webb-system { height: 385px; margin-top: 45px; }
@@ -3505,13 +3513,13 @@ body[data-exhibit="voyager"] {
   .moon-surveyor { left: calc(7% + var(--earth-diameter) * .080 - 15px); top: calc(82px + var(--earth-diameter) * .143 - 15px); }
   .moon-apollo .diagram-callout { left: calc(var(--earth-diameter) * .26); top: -40px; }
   .moon-surveyor .diagram-callout { left: calc(var(--earth-diameter) * .389); top: 54px; }
-  .scene-moon > .planet-credit { margin-left: 7%; font-size: .52rem; }
+  .scene-moon > .planet-credit { position: absolute; left: 7%; bottom: 12px; margin: 0; font-size: .52rem; }
   .mars-globe { left: 0; top: 75px; }
   .mars-ingenuity { left: calc(var(--earth-diameter) * .166 - 15px); top: calc(75px + var(--earth-diameter) * .181 - 15px); }
   .mars-curiosity { left: calc(var(--earth-diameter) * .425 - 15px); top: calc(75px + var(--earth-diameter) * .289 - 15px); }
   .mars-ingenuity .diagram-callout { left: calc(var(--earth-diameter) * .40); top: -62px; }
   .mars-curiosity .diagram-callout { left: calc(var(--earth-diameter) * .141); top: 65px; }
-  .scene-mars > .planet-credit { margin-left: 0; margin-top: 35px; font-size: .51rem; }
+  .scene-mars > .planet-credit { position: absolute; left: 0; bottom: 12px; margin: 0; font-size: .51rem; }
   .scene-webb > .scale-key { margin-left: 0; }
   .webb-system { height: 330px; margin-top: 35px; }
   .diagram-sun { left: -8%; top: 88px; width: 89px; height: 89px; }

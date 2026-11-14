@@ -31,6 +31,13 @@ test('the lobby uses one visual six-mission certification deck before optional c
   assert.match(html, /Add your name for the certificate/);
 });
 
+test('journey image credits stay inside their own desktop scenes', async () => {
+  const css = await readFile(new URL('../src/style.css', import.meta.url), 'utf8');
+  assert.match(css, /\.scene-moon > \.planet-credit,\s*\.scene-mars > \.planet-credit\s*\{\s*position: absolute;\s*bottom: 22px;/s);
+  assert.match(css, /\.scene-moon > \.planet-credit \{ position: absolute; left: 7%; bottom: 12px;/);
+  assert.match(css, /\.scene-mars > \.planet-credit \{ position: absolute; left: 0; bottom: 12px;/);
+});
+
 test('the lobby hook is complete in Spanish and Vietnamese', () => {
   for (const line of hook) {
     assert.ok(es[line], `Missing Spanish: ${line}`);
