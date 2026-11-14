@@ -1,5 +1,7 @@
 # Mission Alive — practice prototype
 
+Read the project framing in [Problem and solution](docs/PROBLEM_SOLUTION.md). AI collaborators should begin with [CLAUDE.md](CLAUDE.md).
+
 A static, interactive space academy for learners aged 10–14. Its crew briefing introduces four training modules: Curiosity, Ingenuity, Webb, and Voyager 1. The machines cannot come home, so they teach where they rest.
 
 **Training prototype — not the hackathon submission.** This was created before checking the final competition brief. Do not represent it as work completed during the event. Verify the official challenge, required datasets, prior-work rules, and AI disclosure requirements before adapting it for a submission.
