@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Unified training and certification deck
+
+- Merged the duplicate machine picker and certification grid into one six-card training deck.
+- Kept the visual machine silhouettes while adding mission numbers, descriptions, live stamp state, and the shared progress bar to the same cards.
+- Preserved the direct mission CTA, six-stamp progress, passport, finale, and certificate behavior.
+
 ### Lobby launch bay redesign
 
 - Replaced the text-heavy opening flow with an immediate mission CTA and a visual six-machine launch bay.

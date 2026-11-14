@@ -109,6 +109,14 @@ const exhibits = {
       "I am the farthest thing humans have ever made. When I whisper home, my voice takes almost a full day to arrive.",
   },
 };
+const missionIconSvgs = {
+  apollo17: '<svg viewBox="0 0 72 48" aria-hidden="true"><path d="M15 30h42l-5-14H25l-8 7zM27 16V9h12v7M45 16l5-8"/><circle cx="21" cy="35" r="7"/><circle cx="51" cy="35" r="7"/></svg>',
+  surveyor3: '<svg viewBox="0 0 72 48" aria-hidden="true"><path d="M36 6v11M29 7h14M25 19h22l8 12H17zM24 30 13 43M48 30l11 13M36 31v12"/><circle cx="13" cy="43" r="3"/><circle cx="59" cy="43" r="3"/></svg>',
+  curiosity: '<svg viewBox="0 0 72 48" aria-hidden="true"><path d="M16 28h40l-5-12H28l-7 7zM37 16V7h9M46 7l4 5M22 31 13 39M50 31l9 8"/><circle cx="13" cy="40" r="5"/><circle cx="29" cy="37" r="5"/><circle cx="46" cy="37" r="5"/><circle cx="60" cy="40" r="5"/></svg>',
+  ingenuity: '<svg viewBox="0 0 72 48" aria-hidden="true"><path d="M36 13v27M25 27h22l-4 12H29zM9 12h54M18 8h36M30 40l-7 6M42 40l7 6"/></svg>',
+  webb: '<svg viewBox="0 0 72 48" aria-hidden="true"><path d="m36 7 9 5v10l-9 5-9-5V12zM18 17l9-5M18 17v10l9 5M54 17l-9-5M54 17v10l-9 5M27 32l9 5 9-5M14 40h44L47 29H25z"/></svg>',
+  voyager: '<svg viewBox="0 0 72 48" aria-hidden="true"><path d="M16 9c0 16 10 26 26 26M16 9c16 0 26 10 26 26M18 11l22 22M42 35l14 9M43 20l13-9M36 29l9-15"/><circle cx="42" cy="35" r="4"/></svg>',
+};
 const briefings = {
   curiosity: {
     label: "ROVING SCIENCE LABORATORY",
@@ -653,9 +661,6 @@ function updateMissionProgress() {
       card.classList.toggle("is-complete", done);
       card.querySelector(".mission-stamp").textContent = done ? "STAMPED ✓" : "OPEN";
     });
-  $("#lobby .launch-bay")
-    ?.querySelectorAll("[data-launch-exhibit]")
-    .forEach((button) => button.classList.toggle("is-complete", completed.has(button.dataset.launchExhibit)));
 }
 
 function briefingMarkup(id) {
@@ -785,16 +790,12 @@ function renderLobby() {
   $("#lobby-missions").innerHTML = Object.entries(trainingMissions)
     .map(
       ([id, exhibit], index) =>
-        `<button class="lobby-mission-card" data-lobby-exhibit="${id}"><span class="mission-number">0${index + 1}</span><span class="mission-stamp">OPEN</span><span class="mission-name"><strong>${exhibit.name}</strong><small>${storyLayer[id]?.heading || trainingMissions[id].heading}</small></span><span class="mission-verb">${exhibit.verb}</span><span class="mission-action">Open mission →</span></button>`,
+        `<button class="lobby-mission-card" data-lobby-exhibit="${id}"><span class="mission-number">0${index + 1}</span><span class="mission-stamp">OPEN</span><span class="mission-icon">${missionIconSvgs[id]}</span><span class="mission-name"><strong>${exhibit.name}</strong><small>${storyLayer[id]?.heading || trainingMissions[id].heading}</small></span><span class="mission-verb">${exhibit.verb}</span><span class="mission-action">Open mission →</span></button>`,
     )
     .join("");
   $("#lobby-missions").onclick = (event) => {
     const card = event.target.closest("[data-lobby-exhibit]");
     if (card) navigateTo(card.dataset.lobbyExhibit);
-  };
-  $("#lobby .launch-bay").onclick = (event) => {
-    const machine = event.target.closest("[data-launch-exhibit]");
-    if (machine) navigateTo(machine.dataset.launchExhibit);
   };
   $("#lobby-missions")
     .querySelectorAll(".lobby-mission-card")
@@ -2828,6 +2829,10 @@ window.addEventListener("hashchange", () => {
   if (location.hash === "#controls" || location.hash === "#greetings") return;
   const route = location.hash.slice(1);
   if (!route || route === "lobby") renderLobby();
+  else if (route === "lobby-missions") {
+    if (current !== "lobby") renderLobby();
+    requestAnimationFrame(() => $(".mission-passport").scrollIntoView({ block: "start" }));
+  }
   else if (route === "teachers") renderTeachers();
   else render(exhibits[route] ? route : "curiosity");
 });
@@ -2836,6 +2841,10 @@ window.addEventListener("popstate", () => {
   else {
     const route = location.hash.slice(1);
     if (!route || route === "lobby") renderLobby();
+    else if (route === "lobby-missions") {
+      if (current !== "lobby") renderLobby();
+      requestAnimationFrame(() => $(".mission-passport").scrollIntoView({ block: "start" }));
+    }
     else render(exhibits[route] ? route : "curiosity");
   }
 });
