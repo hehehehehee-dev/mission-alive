@@ -8,11 +8,10 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the standing direct-main commit/push authorization remains active.
-- **Last change:** consolidated Voyager into one original/visitor listening area, one private text/audio save action, visible saved drafts and optional classroom sharing. Removed cover painting and duplicate instruction cards. Shared Quick Start/explanation and story/briefing sections are grouped. Hash and browser-history navigation dismisses the Moon page before another exhibit opens.
-- **Last verification:** `npm test` 143/143 and production build pass. Browser checks covered native original and visitor audio, keyboard collection switching, filtering/clearing, country comparisons, text saving and a settled Voyager stamp, EN/ES/VI, reduced motion, all six layouts at 390px and Moon → exhibit Back/Forward. Populated gallery playback used a temporary local memory fixture, never a production submission. The production gallery API returned HTTP 200 with zero approved greetings.
+- **Last change:** lobby defaults to a light Sun mode with dark text and one prominent start button. Sun/Moon toggle persists the lobby choice. Short child-facing copy and compact mission cards replace repeated text; the journey map and bonus discoveries open on demand. Mission appearance and certification conditions are unchanged.
+- **Last verification:** `npm test` 145/145 and production build pass. Browser checks covered EN/ES/VI, desktop and 390px, keyboard toggle and persistence, reduced motion, larger text/high contrast, expandable map rendering and lobby-to-Curiosity navigation. A conflicting high-contrast card background found during testing was corrected. The preceding Voyager library and stamp checks remain documented below.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
-  - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
 - **Next suggested steps:**
   1. Finish the outstanding gameplay checks above, particularly the Ingenuity terrain outcomes. This layout pass did not replay every challenge to completion.
@@ -65,6 +64,7 @@ Important invariants:
 - The optional learner name is requested below the mission choices and is used only for the certificate. Do not place it before the first mission CTA.
 - The visual machine picker and certification tracker are one shared deck. Do not create a second six-machine grid in the lobby.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
+- Lobby defaults to Sun mode; `src/lobby-theme.js` validates the persisted `mission-alive-lobby-theme-v1` choice and scopes the light styling to the visible lobby. The Moon option restores the darker lobby. `src/lobby-day.css` covers both modes, including high contrast. Journey map/bonus discoveries are in one native disclosure beneath the six mission choices.
 - Voyager uses one **Voices from Earth** listening area: original 1977 greetings and approved visitor greetings in keyboard tabs. One native player controls the selected NASA greeting. One private-save button handles either written or recorded replies; saved drafts remain visible, classroom setup/review is optional, and no drawing exercise is present.
 - Long story/briefing content in the four original exhibits shares one **Story & science** disclosure. Avoid adding extra instruction cards that repeat the current step's action.
 - The footer privacy dialog is the public source of truth for classroom sharing. Keep it synchronized with `docs/PRIVACY.md` and `netlify/functions/class-record.mjs`.
@@ -199,6 +199,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Brighten and simplify the academy lobby
+- **Changed:** default light lobby, persistent Sun/Moon control, short child-facing opening, compact six-mission cards, and optional journey/bonus section. Added localized copy and theme preference tests; updated the old hook assertions to use the active translation catalogs.
+- **Verified:** 145 tests and production build; browser checks in EN/ES/VI on desktop/390px, keyboard control, theme restoration, reduced motion, larger text, high contrast, map canvases after expansion and mission navigation. Fixed a high-contrast specificity conflict found during the visual pass.
+- **Left for next:** broader gameplay/finale checks remain as listed above. No new NASA assets, data services, stamp rules or recording publication behavior were introduced. Preserve unrelated notices and untracked artifacts.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Consolidate mission guidance and Voyager voices

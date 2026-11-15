@@ -40,6 +40,7 @@
           ></a
         >
         <div class="header-actions">
+          <button type="button" id="lobby-theme" class="lobby-theme-switch" aria-label="Use Moon mode" title="Use Moon mode"></button>
           <label class="language-picker"><span>Language</span><select id="ui-language" aria-label="Interface language"><option value="en" data-i18n-skip>English</option><option value="es" data-i18n-skip>Español</option><option value="vi" data-i18n-skip>Tiếng Việt</option></select></label>
           <div class="desktop-header-tools"><button id="sources">Sources & credits</button
             ><button id="teachers-link">For Teachers</button
@@ -53,25 +54,23 @@
         <section class="museum-lobby" id="lobby" aria-labelledby="lobby-title" hidden>
           <div class="lobby-hero">
             <div>
-              <p class="eyebrow">CREW BRIEFING</p>
-              <h1 id="lobby-title">SIX MACHINES. SIX STORIES STILL OUT THERE.</h1>
-              <div class="lobby-story-intro lobby-hook" aria-label="Why this academy exists">
-                <p>Kids love space but rarely see themselves in it.</p>
-                <p>Here, you finish the missions of six machines that never came home.</p>
+              <p class="eyebrow">MISSION ALIVE</p>
+              <h1 id="lobby-title">Pick a machine.<br>Take a mission.</h1>
+              <div class="lobby-story-intro lobby-hook">
+                <p>Six missions. Six stamps. Your adventure.</p>
               </div>
-              <div class="lobby-hero-actions"><button class="primary lobby-start" id="start-journey">Start mission 01</button><a href="#lobby-missions">Choose a machine ↓</a></div>
+              <div class="lobby-hero-actions"><button class="primary lobby-start" id="start-journey">Start mission 01</button></div>
             </div>
           </div>
           <section class="mission-passport" aria-labelledby="passport-title">
-            <div class="passport-heading"><div><p class="eyebrow">LIVE TRAINING DECK · SIX MACHINES · SIX REAL JOBS</p><h2 id="passport-title">CREW CERTIFICATION</h2><p>Pick a machine. Finish its real job. Earn its stamp.</p></div><output id="lobby-progress">0 / 6 STAMPS</output></div>
+            <div class="passport-heading"><div><h2 id="passport-title">Choose your mission</h2></div><output id="lobby-progress">0 / 6 STAMPS</output></div>
             <div class="passport-track" aria-hidden="true"><i id="passport-progress-bar"></i></div>
-            <p id="passport-message">Complete a machine’s challenge to earn its stamp.</p>
+            <p id="passport-message" class="sr-only">Complete a machine’s challenge to earn its stamp.</p>
             <button class="passport-certificate" id="lobby-certificate" hidden>Create your graduation certificate →</button>
             <div class="lobby-missions" id="lobby-missions" tabindex="-1"></div>
             <span class="launch-flight-path" aria-hidden="true"></span><span class="launch-ship" aria-hidden="true"></span>
             <details class="crew-name-setup"><summary>Add your name for the certificate</summary><div class="crew-name-field"><label for="crew-name">Your name (optional)</label><input id="crew-name" maxlength="60" autocomplete="given-name" aria-describedby="crew-name-help"><p id="crew-name-help">Used only on your certificate. It stays in this browser.</p></div></details>
-            <div id="hidden-fact-passport-slot"></div>
-            <div id="location-map-slot"></div>
+            <details class="lobby-bonus"><summary>Explore the journey & discoveries</summary><div id="hidden-fact-passport-slot"></div><div id="location-map-slot"></div></details>
           </section>
           <details class="lobby-field-notes"><summary>Mission notes · live links & the archive</summary><div class="lobby-notes-grid"><div id="dsn-widget-slot"></div><div id="mission-history-slot"></div></div></details>
           <details class="lobby-about"><summary>About Mission Alive</summary><div><p>Mission Alive turns six real space machines into an interactive learning journey for ages 10 to 14.</p><p>Teaching with this? <button id="lobby-teachers">Open For Teachers →</button></p><a href="https://github.com/hehehehehee-dev/mission-alive/blob/main/docs/PROBLEM_SOLUTION.md" target="_blank" rel="noopener">Read the problem and solution ↗</a></div></details>

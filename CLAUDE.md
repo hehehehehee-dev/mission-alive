@@ -50,6 +50,7 @@ Do not add, remove, or silently change a stamp, finale condition, storage key, c
 
 ## UX rules
 
+- The lobby defaults to Sun mode (light). Its Sun/Moon control affects the lobby only and stores `mission-alive-lobby-theme-v1`. Keep the launch screen brief: one start button and the six visual mission choices; the map and bonus discoveries are optional.
 - A restless child should understand the next action without reading a paragraph.
 - Put the challenge first. Keep short action and goal guidance at the active step. The shared three-step Quick Start from `src/quick-start.js` and its explanation live together in the optional **How to play** disclosure; do not add another competing instruction card. Longer mission reading lives in **Story & science**.
 - Failure should teach one actionable correction. A learner should normally succeed within two or three informed attempts.

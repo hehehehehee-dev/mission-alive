@@ -47,6 +47,9 @@ import './consolidated-polish.css';
 import './quick-start.css';
 import { quickStartMarkup, whyMarkup } from './quick-start.js';
 import './lobby-launch.css';
+import './lobby-day.css';
+import { mountLobbyTheme } from './lobby-theme.js';
+mountLobbyTheme();
 import {
   curiosityFieldSites,
   curiosityTerrainRocks,
@@ -2892,8 +2895,12 @@ $("#sound").onclick = () => {
 document.querySelectorAll("[data-header-proxy]").forEach((button) => {
   button.onclick = () => {
     const target = document.getElementById(button.dataset.headerProxy);
-    button.closest("details")?.removeAttribute("open");
+    const menu = button.closest("details");
+    menu?.removeAttribute("open");
     target?.click();
+    const dialog = document.querySelector('dialog[open]');
+    if (dialog) dialog.addEventListener('close', () => menu?.querySelector('summary').focus(), { once: true });
+    else if (target?.id === 'sound') menu?.querySelector('summary').focus();
   };
 });
 function setReducedMotion(value) {

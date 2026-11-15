@@ -1,4 +1,11 @@
 const rows = [
+  ['Pick a machine.', 'Elige una máquina.', 'Chọn một cỗ máy.'],
+  ['Take a mission.', 'Acepta una misión.', 'Nhận một nhiệm vụ.'],
+  ['Six missions. Six stamps. Your adventure.', 'Seis misiones. Seis sellos. Tu aventura.', 'Sáu nhiệm vụ. Sáu con dấu. Chuyến phiêu lưu của bạn.'],
+  ['Choose your mission', 'Elige tu misión', 'Chọn nhiệm vụ của bạn'],
+  ['Explore the journey & discoveries', 'Explora el viaje y los descubrimientos', 'Khám phá hành trình và những phát hiện'],
+  ['Use Moon mode', 'Usar modo Luna', 'Dùng chế độ Mặt Trăng'],
+  ['Use Sun mode', 'Usar modo Sol', 'Dùng chế độ Mặt Trời'],
   ['Rover damaged. Reset the exhibit to try a safer route.', 'Rover averiado. Reinicia el módulo para probar una ruta más segura.', 'Xe đã hỏng. Đặt lại nhiệm vụ để thử tuyến đường an toàn hơn.'],
   ['How to play', 'Cómo jugar', 'Cách chơi'],
   ['Story & science', 'Historia y ciencia', 'Câu chuyện và khoa học'],

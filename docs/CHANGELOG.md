@@ -4,6 +4,14 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Sunlight lobby with fewer decisions
+
+- The lobby defaults to a cream background, dark text and a clear blue start button. A keyboard-operable Sun/Moon button remembers the lobby display choice; mission scenes keep their existing appearance.
+- Replaced the adult-facing hook with two direct actions and one short line. The six mission cards retain their icons, names, action verbs and earned stamps, while repeated subtitles and open labels no longer compete for attention.
+- The journey map and bonus discoveries share an optional disclosure. Source credits, live-data notes and all six mission links remain available.
+- Secondary lobby header actions share Menu on desktop and mobile; closing a dialog opened there returns keyboard focus to Menu.
+- Added EN/ES/VI copy and preference tests. Verified desktop/390px, keyboard toggle, persistence, reduced motion, larger text, high contrast, map expansion and lobby-to-mission navigation. Validation: 145 tests and production build passed.
+
 ### Consolidate mission guidance and Voyager voices
 
 - Voyager's language/country search and selected greeting now share one listening area with one native player. Keyboard tabs switch between the original 1977 greetings and approved visitor recordings; the public gallery no longer sits inside More to explore.

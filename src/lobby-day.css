@@ -1,0 +1,68 @@
+/* A quiet launch screen. Space imagery belongs to the optional journey below. */
+.lobby-theme-switch { display: none; }
+.lobby-screen .lobby-theme-switch { display: grid; place-items: center; width: 44px; height: 44px; padding: 10px; flex: 0 0 44px; border: 1px solid var(--line); border-radius: 50%; }
+.lobby-theme-switch svg { width: 23px; height: 23px; }
+.lobby-screen .desktop-header-tools { display: none; }
+.lobby-screen .mobile-header-menu { display: block; position: relative; }
+.lobby-screen .mobile-header-menu summary { display: grid; place-items: center; min-height: 44px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; list-style: none; }
+.lobby-screen .mobile-header-menu > div { position: absolute; z-index: 40; top: calc(100% + 8px); right: 0; width: 210px; display: grid; padding: 8px; border: 1px solid #758895; border-radius: 9px; background: #0b151d; }
+.lobby-screen .mobile-header-menu button { min-height: 44px; text-align: left; }
+body.lobby-screen .lobby-hero { min-height: 0; padding: 24px 0 28px; }
+body.lobby-screen .lobby-hero h1 { font-size: clamp(2.6rem, 5vw, 4.4rem); line-height: 1.05; letter-spacing: -.035em; }
+body.lobby-screen .lobby-hook { margin: 14px 0 22px; }
+body.lobby-screen .lobby-hook p { font-size: 1.125rem; }
+body.lobby-screen .mission-passport { padding: 24px; border-radius: 18px; box-shadow: none; }
+body.lobby-screen .passport-heading h2 { font-size: 1.5rem; }
+body.lobby-screen .lobby-mission-card { min-height: 168px; grid-template-rows: auto 58px auto auto; gap: 4px 10px; padding: 14px; transform: none; }
+body.lobby-screen .mission-name small, body.lobby-screen .mission-action { display: none; }
+body.lobby-screen .mission-name strong { font-size: 1.1rem; margin: 0; }
+body.lobby-screen .mission-verb { grid-column: 1/-1; justify-self: center; font-size: .8rem; letter-spacing: .06em; }
+body.lobby-screen .mission-stamp { font-size: .7rem; }
+body.lobby-screen .lobby-missions { gap: 12px; }
+body.lobby-screen .lobby-mission-card:not(.is-complete) .mission-stamp { visibility: hidden; }
+body.lobby-screen .launch-flight-path, body.lobby-screen .launch-ship { display: none; }
+.lobby-bonus { margin-top: 20px; border-top: 1px solid var(--line); }
+.lobby-bonus > summary { padding: 18px 0; min-height: 44px; cursor: pointer; font-weight: 700; }
+body.lobby-day { --bg: #f7f5ef; --ink: #182c3a; --muted: #495e6a; --accent: #78520b; --line: #b8c6c9; background: #f7f5ef; color: #182c3a; color-scheme: light; }
+body.lobby-day :is(.space-photo, .mission-film, #space-ambience, .space-scrim) { visibility: hidden; }
+body.lobby-day #app { background: #f7f5ef; text-shadow: none; }
+body.lobby-day #app > header { border-color: #c8d0cf; }
+body.lobby-day :is(.brand, .brand small, .language-picker, .lobby-hook p, .lobby-hero h1, .passport-heading h2) { color: #182c3a; text-shadow: none; }
+body.lobby-day .eyebrow { color: #78520b; }
+body.lobby-day .header-actions :is(button, select, summary) { color: #243e4d; background: #fffefa; border-color: #a1b4bc; }
+body.lobby-day .mobile-header-menu > div { background: #fffefa; box-shadow: 0 8px 25px #253a4120; }
+body.lobby-day .lobby-start { background: #174f67; color: #fff; border-color: #174f67; box-shadow: none; }
+body.lobby-day .lobby-start:hover { background: #103c50; }
+body.lobby-day .mission-passport { background: #eeeee7; border-color: #c4cfcd; }
+body.lobby-day .lobby-mission-card { background: #fffefa; border-color: #acbec2; color: #182c3a; box-shadow: 0 2px 0 #bcc9c640; }
+body.lobby-day .lobby-mission-card:hover { background: #e4f0f1; border-color: #174f67; }
+body.lobby-day .mission-icon svg { stroke: #956414; filter: none; }
+body.lobby-day .lobby-mission-card:nth-child(2n) .mission-icon svg { stroke: #286278; }
+body.lobby-day :is(.mission-name strong, .mission-number, .mission-stamp) { color: #243e4d; }
+body.lobby-day .mission-verb { color: #78520b; }
+body.lobby-day .passport-track { background: #c9d4d2; }
+body.lobby-day .passport-track i { background: #27647a; }
+body.lobby-day :is(.crew-name-setup, .lobby-about, .lobby-field-notes) { border-color: #b8c6c9; }
+body.lobby-day :is(.crew-name-setup > summary, .lobby-about > summary, .lobby-bonus > summary, .lobby-field-notes > summary, .lobby-about > div, .crew-name-field) { color: #243e4d; }
+body.lobby-day .crew-name-field input { background: #fffefa; color: #182c3a; border-color: #8da2ac; }
+body.lobby-day #hidden-fact-passport-slot { color: #243e4d; }
+body.lobby-day .secret-passport { background: #fffefa; border-color: #a9b9be; }
+body.lobby-day .secret-passport :is(strong, small, output) { color: #243e4d; }
+body.lobby-day .lobby-notes-grid { --muted: #c3d2dc; --accent: #efc987; color: #e9eff3; }
+body.lobby-day #location-map-slot { background: #08121b; color: #e9eff3; --accent: #efc987; --muted: #c3d2dc; --line: #647987; border-radius: 12px; padding: 16px; }
+body.lobby-day #app > footer, body.lobby-day #app > footer :is(a, button, p, span) { color: #3d5563; border-color: #a9b9be; }
+body.lobby-day :is(button, a, select, summary, input):focus-visible { outline: 3px solid #164d89; outline-offset: 4px; }
+body.lobby-day #location-map-slot :is(button, a):focus-visible { outline-color: #ffe49a; }
+body.lobby-day.high-contrast #lobby .mission-passport, body.lobby-day.high-contrast #lobby .lobby-mission-card { background: #fff; border-color: #1b303a; }
+@media(max-width:680px) {
+  body.lobby-screen .lobby-hero { padding: 12px 0 22px; gap: 0; }
+  body.lobby-screen .lobby-hero h1 { font-size: 2.5rem; }
+  body.lobby-screen .lobby-hook p { font-size: 1rem; }
+  body.lobby-screen .mission-passport { padding: 18px 12px; }
+  body.lobby-screen .lobby-mission-card { min-height: 152px; padding: 10px; grid-template-rows: auto 48px auto auto; }
+  body.lobby-screen .mission-name strong { font-size: .95rem; }
+  body.lobby-screen .mission-icon svg { width: 64px; height: 46px; }
+  body.lobby-screen .passport-heading h2 { font-size: 1.25rem; }
+  body.lobby-screen .passport-heading { gap: 10px; }
+  .lobby-screen #app > header .header-actions { gap: 5px; }
+}

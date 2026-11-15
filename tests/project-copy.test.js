@@ -3,13 +3,14 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { educationResearch } from '../src/resource-credits.js';
 import { es, vi } from '../src/locales/six-missions.js';
+import { t } from '../src/i18n.js';
 
 const hook = [
-  'Kids love space but rarely see themselves in it.',
-  'Here, you finish the missions of six machines that never came home.',
+  'Pick a machine.',
+  'Take a mission.',
 ];
 
-test('the lobby presents the two-line child-readable problem and solution hook', async () => {
+test('the lobby opens with a short action addressed to the child', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   for (const line of hook) assert.match(html, new RegExp(line.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   assert.doesNotMatch(html, /Some of NASA's machines cannot be brought back/);
@@ -20,7 +21,7 @@ test('the lobby uses one visual six-mission certification deck before optional c
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const main = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
   assert.doesNotMatch(html, /data-launch-exhibit=|class="launch-bay"/);
-  assert.match(html, /LIVE TRAINING DECK · SIX MACHINES · SIX REAL JOBS/);
+  assert.match(html, /Choose your mission/);
   assert.equal((main.match(/missionIconSvgs\s*=\s*\{/g) || []).length, 1);
   for (const id of ['apollo17', 'surveyor3', 'curiosity', 'ingenuity', 'webb', 'voyager']) {
     assert.match(main, new RegExp(`\\b${id}: '<svg`));
@@ -89,8 +90,8 @@ test('the Moon route back button has a matching accessible name in every languag
 
 test('the lobby hook is complete in Spanish and Vietnamese', () => {
   for (const line of hook) {
-    assert.ok(es[line], `Missing Spanish: ${line}`);
-    assert.ok(vi[line], `Missing Vietnamese: ${line}`);
+    assert.notEqual(t(line, 'es'), line, `Missing Spanish: ${line}`);
+    assert.notEqual(t(line, 'vi'), line, `Missing Vietnamese: ${line}`);
   }
 });
 
