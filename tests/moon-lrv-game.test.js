@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import {
   LRV_DEFAULT_CONFIGURATION,
   LRV_GAME_COPY,
+  LRV_ASSEMBLY_PIECES,
   evaluateLrvRepair,
+  lrvAssemblyConfiguration,
   lrvDustTrajectories,
   lrvGameMarkup,
   lrvPatchGeometry,
@@ -136,10 +138,11 @@ test("untrusted configuration values stay within finite model limits", () => {
 test("markup provides native keyboard controls, a live result, history, and an honest source", () => {
   const markup = lrvGameMarkup();
   assert.equal((markup.match(/type="range"/g) || []).length, 3);
-  assert.equal((markup.match(/data-lrv-step=/g) || []).length, 6);
+  assert.equal((markup.match(/data-lrv-step=/g) || []).length, 4);
   assert.equal((markup.match(/type="checkbox"/g) || []).length, 0);
-  assert.equal((markup.match(/data-lrv-tool=/g) || []).length, 3);
-  assert.ok(!markup.includes("data-lrv-apply"), "each tool applies with one tap");
+  assert.equal((markup.match(/data-lrv-piece=/g) || []).length, 7);
+  assert.equal((markup.match(/data-lrv-slot=/g) || []).length, 7);
+  assert.ok(markup.includes("Drag or tap each part into the glowing spot."));
   assert.ok(markup.includes('role="status" aria-live="polite" aria-atomic="true"'));
   assert.ok(markup.includes('data-lrv-result="untested"'));
   assert.ok(markup.includes("data-lrv-history"));
@@ -198,14 +201,22 @@ test("from the default shape, following one hint passes on the next test", () =>
 
 test("every hint names one control, gives no winning number, and has translations", async () => {
   const { es, vi } = await import("../src/locales/nov14.js");
+  const { t } = await import("../src/i18n.js");
   for (const hint of allHints) {
     assert.equal((hint.match(/\b(Length|Angle|Clearance):/g) || []).length, 1, hint);
     assert.doesNotMatch(hint, /\d/);
     assert.ok(es[hint] && vi[hint], `missing translation: ${hint}`);
   }
-  for (const line of [LRV_GAME_COPY.touching, LRV_GAME_COPY.toolsReady, LRV_GAME_COPY.instructions]) {
-    assert.ok(es[line] && vi[line], `missing translation: ${line}`);
-  }
+  for (const line of [LRV_GAME_COPY.touching, LRV_GAME_COPY.toolsReady, LRV_GAME_COPY.instructions]) for (const locale of ['es', 'vi']) assert.notEqual(t(line, locale), line, `missing translation: ${line}`);
+});
+
+test("the repair is a seven-piece spatial build instead of a three-button order quiz", () => {
+  const maps = LRV_ASSEMBLY_PIECES.filter((piece) => piece.type === 'maps').map((piece) => piece.id);
+  const tape = LRV_ASSEMBLY_PIECES.filter((piece) => piece.type === 'tape').map((piece) => piece.id);
+  const clamps = LRV_ASSEMBLY_PIECES.filter((piece) => piece.type === 'clamps').map((piece) => piece.id);
+  assert.deepEqual(lrvAssemblyConfiguration(maps), { ...LRV_DEFAULT_CONFIGURATION, maps: true, tape: false, attachment: 'tape' });
+  assert.deepEqual(lrvAssemblyConfiguration([...maps, ...tape]), { ...LRV_DEFAULT_CONFIGURATION, maps: true, tape: true, attachment: 'tape' });
+  assert.deepEqual(lrvAssemblyConfiguration([...maps, ...tape, ...clamps]), { ...LRV_DEFAULT_CONFIGURATION, maps: true, tape: true, attachment: 'clamps' });
 });
 
 test("hints never loop: a child following them from any shape reaches a pass", () => {

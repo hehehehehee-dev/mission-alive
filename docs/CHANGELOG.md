@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Turn Apollo 17 repair into a spatial game
+
+- Replaced the maps → tape → clamps button sequence with a visual build board: place three map panels, cover two seams with tape, then clamp the shield to the rover. Drag, tap and keyboard activation share the same forgiving placement state.
+- Reduced the visible instructions to one problem, one action line and a live progress row. “Why maps, tape, and clamps?” is now an optional sourced explanation instead of a rule paragraph.
+- Made Shield reach the one primary shaping control, kept angle and clearance under Fine controls, hid results until a test, and kept history collapsed. The existing 3D repair, dust model, hints, stamp and six-mission flow are unchanged.
+- Added complete Spanish and Vietnamese copy plus assembly-state regression coverage. 185 tests and the production build pass; automated Chrome completed a real mouse drag and the full build → shape → passing dust-test path, with no horizontal overflow at 390 px.
+
 ### Simplify public impact metrics
 
 - Replaced before-to-after arrows and per-card methodology sentences with one after-playing average out of 5 for interest and belonging.

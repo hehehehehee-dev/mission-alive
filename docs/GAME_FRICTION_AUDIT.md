@@ -14,7 +14,7 @@ Orientation is not a pre-play gate. The landing hero and map present a help requ
 
 | Mission | First visible response | Pre-play gate | Decision |
 | --- | --- | --- | --- |
-| Apollo 17 LRV | Place the first repair material | None | Keep maps, tape and clamps because assembling the improvised fender is the challenge. The three placements are distinct build actions, not start confirmations. Its 3D preview and two-wheel side diagram use the same exposed-wheel anchor, scale and repair colors. Unsafe wheel/equipment collisions turn the design red and say FAIL before a test, so experimentation cannot look accidentally correct. |
+| Apollo 17 LRV | Drag or tap the first map panel into a glowing fender slot | None | Replaced the three-button order quiz with a seven-piece spatial repair: three map panels form the shield, two tape strips join visible seams and two clamps fix it to the rover. Each phase changes the board, accepts forgiving drag or keyboard/tap placement and explains the real material purpose. One large reach control then drives the dust experiment; fine geometry stays optional. |
 | Surveyor 3 | Choose a sample point on one continuous geology transect | None | Keep three sample points because different hidden layers are the experiment variable, but do not present them as landing zones. Surveyor remains stationary; the probe and scoop gather evidence, then a separate two-foot pressure rig tests a footprint. Probe force, excavation and foot width each produce different evidence. |
 | Curiosity | Add the first command block or enter Free Explore | None | Keep Run science plan because executing and debugging a sequence is the programming lesson. Step remains an optional recovery tool, not a prerequisite. |
 | Ingenuity | Choose a terrain patch, then use the single gold FLY NOW action | One explicit launch confirmation requested by the owner | The craft handles forward travel to the selected destination; the learner only counters wind. Removed rotor setup, controller quiz, trim setup, pause/resume and step pacing. Wind, lift and drift begin on launch with no protected animation. |
@@ -28,5 +28,5 @@ The mission page itself is the start screen. Story and science remain optional r
 ## Remaining playtest questions
 
 - Confirm on an actual touch device that Ingenuity's terrain tap does not conflict with page scrolling and that holding feels responsive at 390 px.
-- Watch a first-time learner complete Apollo's three-part assembly. If they describe the sequence as repetition rather than construction, replace it with one continuous drag-to-build gesture while retaining keyboard buttons.
+- Watch a first-time learner use Apollo's new spatial board. Confirm that the glowing targets make the map → seam → mount relationship understandable without opening the material explanation, and that the forgiving drop zone feels intentional on touch.
 - Watch whether Voyager learners understand that reading counts without playing audio. If not, clarify the selected greeting card rather than adding another confirmation.

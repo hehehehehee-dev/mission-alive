@@ -4,8 +4,9 @@ import { mergeMissionHelp } from './quick-start.js';
 // These tools send the same native actions as the existing simulation controls.
 // Pointer, touch and keyboard paths therefore share measurements and completion.
 export const missionDirections = Object.freeze({
-  apolloBuild: ['Repair the broken dust shield', 'My broken fender lets dust reach the gear. Build a replacement so I can keep exploring.', 'Choose maps, tape, then clamps. Place each on the wheel.', 'Fit all three repair parts.'],
-  apolloShape: ['Shape it. Test it. Improve it.', 'The maps are attached. Will your repair stop the flying dust?', 'Pull the white patch tip to change its length and angle. Run a dust test.', 'Catch at least 9 of 12 dust paths and keep a 3 cm wheel gap.'],
+  // Apollo renders this guidance inside its spatial board rather than as duplicate cards.
+  apolloBuild: ['Rebuild the dust shield', 'The fender broke, so every wheel turn throws dust at the crew and equipment.', 'Drag or tap the map panels into the glow. Tape the seams. Clamp the shield to the rover.', 'Build all seven repair pieces.'],
+  apolloShape: ['Shape and test the shield', 'The repair is attached. Now make it catch the dust without hitting the rover.', 'Pull Shield reach, then run the dust test. Fine controls are optional.', 'Catch at least 9 of 12 paths and keep the repair clear.'],
   surveyorChoose: ['Choose where to sample', 'I am already standing on the Moon. These are geology points, not landing zones.', 'Pick A, B, or C along the soil transect.', 'Choose one place to begin a field log.'],
   surveyorDig: ['Operate my soil sampler', 'A stronger push may sink farther. The scoop can reveal what the surface hides.', 'Pull the probe down and release at two forces. Sweep all three strips to cut a trench.', 'Record two force readings and expose the layer below.'],
   surveyorLand: ['Turn evidence into a footprint', 'Small feet press hard. Wider feet spread the same load.', 'Change the pressure-rig feet, drop the rig, and compare how far each side sinks.', 'Both feet sink 1.4 units or less; their difference is 0.5 or less.'],
@@ -51,57 +52,7 @@ export function mountMoonTools(lrvRoot, surveyorRoot) {
   const disposers = [];
   for (const root of [lrv, surveyor]) mergeMissionHelp(root);
   const listen = (node, event, handler) => { node.addEventListener(event, handler); disposers.push(() => node.removeEventListener(event, handler)); };
-  for (const root of [lrv, surveyor]) root.querySelectorAll('.mission-incident').forEach(node => node.remove());
-  const lrvPanels = lrv.querySelectorAll('.challenge-step');
-  lrvPanels[0].insertAdjacentHTML('afterbegin', directionMarkup('apolloBuild'));
-  lrvPanels[1].insertAdjacentHTML('afterbegin', directionMarkup('apolloShape'));
-
-  // Keep the actual editable geometry visible even while the 3D preview runs.
-  const geometry = lrv.querySelector('.lrv-geometry');
-  const drawing = lrv.querySelector('.moon-challenge-2d');
-  drawing.classList.add('repair-drawing');
-  geometry.querySelector('legend').after(drawing);
-  const sliders = document.createElement('div');
-  sliders.append(...geometry.querySelectorAll(':scope > .lrv-control, :scope > .challenge-notes'));
-  geometry.append(sliders);
-  collapseChallengeNotes(sliders, 'Number controls');
-  lrv.querySelector('.lrv-goals').hidden = true; // The active step's goal above states it in plain language.
-  const materials = lrv.querySelector('.lrv-materials');
-  const assembly = document.createElement('div');
-  assembly.className = 'repair-assembly';
-  assembly.innerHTML = `<div class="repair-toolbox" role="group" aria-label="Repair tools">${['maps', 'tape', 'clamps'].map((tool, i) => `<button type="button" data-repair-tool="${tool}" aria-pressed="${i === 0}"><svg viewBox="0 0 60 44" aria-hidden="true">${tool === 'maps' ? '<path d="m4 8 16-4 18 6 17-5v31l-17 5-18-6-16 4zM20 4v31M38 10v31"/>' : tool === 'tape' ? '<ellipse cx="29" cy="21" rx="20" ry="15"/><ellipse cx="29" cy="21" rx="8" ry="6"/><path d="m46 12 10 22H43"/>' : '<path d="M40 7H17v29h23M25 12v20M8 32h25M33 26v12"/>'}</svg><span>${['Maps', 'Tape', 'Clamps'][i]}</span></button>`).join('')}</div><button type="button" class="repair-drop" aria-label="Apply selected tool to the wheel"><svg viewBox="0 0 240 130" aria-hidden="true"><circle cx="110" cy="88" r="32"/><circle cx="110" cy="88" r="11"/><path d="M65 83Q70 40 110 43"/><path class="assembly-map" d="m108 43 95-12 5 13-100 12z"/><path class="assembly-tape" d="m139 39 3 13m30-17 3 13"/><path class="assembly-clamps" d="m113 38v20m12-23v20"/></svg><span>Place on the wheel</span></button><p class="repair-assembly-status" role="status">Choose a tool, then apply it to the repair.</p>`;
-  materials.querySelector('legend').after(assembly);
-  const oldTools = lrv.querySelector('.lrv-tool-tray');
-  const materialAlternatives = collapseChallengeNotes(oldTools, 'Button controls');
-  materialAlternatives.append(materials.querySelector('.lrv-control-help'));
-  lrv.querySelector('[data-lrv-tool-status]').hidden = true;
-  const drop = assembly.querySelector('.repair-drop');
-  let selectedTool = 'maps', drag = null;
-  const choose = tool => { selectedTool = tool; assembly.querySelectorAll('[data-repair-tool]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.repairTool === tool))); };
-  const apply = () => lrv.querySelector(`[data-lrv-tool="${selectedTool}"]`).click();
-  listen(drop, 'click', apply);
-  for (const button of assembly.querySelectorAll('[data-repair-tool]')) {
-    listen(button, 'click', () => choose(button.dataset.repairTool));
-    listen(button, 'pointerdown', event => { choose(button.dataset.repairTool); drag = { x: event.clientX, y: event.clientY }; button.setPointerCapture(event.pointerId); });
-    listen(button, 'pointerup', event => {
-      if (!drag) return;
-      const bounds = drop.getBoundingClientRect();
-      if (event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom) apply();
-      drag = null;
-    });
-    listen(button, 'pointercancel', () => { drag = null; });
-  }
-  const syncAssembly = () => {
-    for (const tool of ['maps', 'tape', 'clamps']) assembly.classList.toggle(`has-${tool}`, lrv.querySelector(`[data-lrv-tool="${tool}"]`).getAttribute('aria-pressed') === 'true');
-    const status = assembly.querySelector('.repair-assembly-status');
-    const original = lrv.querySelector('[data-lrv-tool-status]');
-    if (status.textContent !== original.textContent) status.textContent = original.textContent;
-  };
-  const assemblyObserver = new MutationObserver(syncAssembly);
-  assemblyObserver.observe(oldTools, { subtree: true, attributes: true, attributeFilter: ['aria-pressed'] });
-  assemblyObserver.observe(lrv.querySelector('[data-lrv-tool-status]'), { childList: true, characterData: true, subtree: true });
-  disposers.push(() => assemblyObserver.disconnect());
-  syncAssembly();
+  surveyor.querySelectorAll('.mission-incident').forEach(node => node.remove());
 
   const surveyorPanels = surveyor.querySelectorAll('.challenge-step');
   ['surveyorChoose', 'surveyorDig', 'surveyorLand'].forEach((key, i) => surveyorPanels[i].insertAdjacentHTML('afterbegin', directionMarkup(key)));

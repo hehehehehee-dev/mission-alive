@@ -1,15 +1,13 @@
-import { quickStartMarkup, whyMarkup } from './quick-start.js';
-
 // Original Mission Alive model. The dimensions, dust paths, and pass criteria below
 // are teaching choices, not measurements or test results from Apollo hardware.
 export const LRV_GAME_COPY = Object.freeze({
   eyebrow: "APOLLO 17 · REPAIR TRAINING",
   missionLabel: "MISSION · APOLLO 17 LRV",
-  incidentTitle: "MISSION MOMENT · THE FIRST REPAIR FAILS",
-  incident: "A dust plume reaches the rover's gear on the first test. Change one part of the repair before the next sample run.",
-  title: "Keep the dust off the gear",
-  introduction: "A broken rover fender let wheel-thrown dust reach the astronauts and their equipment. Apollo 17's crew made a replacement using spare maps, duct tape, and clamps.",
-  instructions: "Tap maps, then tape, then clamps. Drag the patch tip to shape it, or use the buttons below. Run a dust test and compare your trials.",
+  incidentTitle: "THE PROBLEM",
+  incident: "The fender broke. Every wheel turn now throws Moon dust onto the crew and equipment.",
+  title: "Build a dust shield",
+  introduction: "Repair the rover with the same kind of materials the Apollo 17 crew had: spare maps, duct tape, and clamps.",
+  instructions: "Build the shield, pull it across the dust stream, then test your repair.",
   simulation: "Illustrated simulation · not NASA test data.",
   dimensions: "All dimensions below belong to this game model, not the real rover.",
   diagram: "Side-view model of a rover wheel, map fender patch, seat, and equipment. Orange dust paths reach the equipment; blue paths are caught by the patch.",
@@ -21,14 +19,29 @@ export const LRV_GAME_COPY = Object.freeze({
   equipment: "EQUIPMENT",
   caughtDust: "Caught dust",
   reachingDust: "Dust reaching gear",
-  materials: "1. Assemble the repair",
-  maps: "Spare maps: patch material",
-  tape: "Duct tape: join the maps",
+  materials: "1. Build the shield",
+  maps: "Map panel",
+  tape: "Tape strip",
   attachment: "Attach the patch to the rover",
   tapeOnly: "Tape only",
-  clamps: "Clamps + tape",
-  attachmentHelp: "Game rule: tape joins the maps. Clamps hold the taped patch on the rover during the test.",
-  geometry: "2. Shape your fender",
+  clamps: "Clamp",
+  attachmentHelp: "The crew had no spare fender. Stiff laminated maps formed a shield, tape joined its panels, and clamps fixed it to the rover.",
+  buildHow: "Drag or tap each part into the glowing spot.",
+  mapsGoal: "Make the shield",
+  tapeGoal: "Join the seams",
+  clampsGoal: "Fix it to the rover",
+  mapsProgress: "Map panels",
+  tapeProgress: "Seams taped",
+  clampsProgress: "Clamps fitted",
+  buildComplete: "Shield built. Now pull it across the dust stream.",
+  wrongDrop: "That part does not fit there. Follow the glow.",
+  whyMaterials: "Why maps, tape, and clamps?",
+  geometry: "2. Pull the shield into place",
+  shapeHow: "Pull the gold handle. Make the shield long enough to catch dust, but keep it clear of the rover.",
+  shieldReach: "Shield reach",
+  shortReach: "Short",
+  longReach: "Long",
+  fineControls: "Fine controls",
   length: "Length",
   angle: "Angle",
   clearance: "Clearance setting",
@@ -41,7 +54,7 @@ export const LRV_GAME_COPY = Object.freeze({
   increaseAngle: "Increase fender angle",
   decreaseClearance: "Decrease fender clearance setting",
   increaseClearance: "Increase fender clearance setting",
-  goals: "Pass this model test: at most 3 of 12 dust paths reach the equipment, the patch clears the wheel and equipment, and the attachment holds.",
+  goals: "Goal: catch the dust without touching the wheel or equipment.",
   runTest: "Run dust test",
   tryAgain: "Try another design",
   reset: "Reset workshop",
@@ -56,19 +69,19 @@ export const LRV_GAME_COPY = Object.freeze({
   holding: "Holding",
   touching: "Touching the wheel",
   hittingEquipment: "Hitting the equipment",
-  toolsReady: "Tap maps, then tape, then clamps.",
+  toolsReady: "Start with the three map panels.",
   slipped: "Slipped in the model",
   incomplete: "Patch incomplete",
   passed: "Passed",
   adjust: "Adjust and retest",
-  readyStatus: "Workshop ready. Assemble a patch and run a dust test.",
+  readyStatus: "Build the shield first.",
   changedStatus: "Design changed. Run a new dust test to measure this setup.",
   designBuild: "BUILD FIRST · add the map patch",
   designReady: "READY TO TEST · the repair clears the rover",
   designWheelFail: "FAIL · the patch touches the wheel",
   designEquipmentFail: "FAIL · the patch reaches the equipment",
   passedStatus: "Test passed. Your patch catches enough dust, clears the wheel, and stays attached. Another shape may work too.",
-  incompleteStatus: "Build the whole patch first: select spare maps and join them with duct tape, then test again.",
+  incompleteStatus: "Finish the glowing repair spots before testing.",
   wheelStatus: "The patch is too close to the wheel. Raise the clearance setting or lift the tip, then test again.",
   equipmentStatus: "The patch is too long and reaches the rover equipment. Shorten it, then test again.",
   attachmentStatus: "The patch slipped. Try clamps with the taped maps, then test again.",
@@ -113,6 +126,27 @@ const PATCH_EQUIPMENT_LIMIT = 68;
 const SOURCE = "https://science.nasa.gov/image-article/apod-2004-april-17-lunar-dust-and-duct-tape/";
 const copy = LRV_GAME_COPY;
 let nextWorkshopId = 0;
+
+export const LRV_ASSEMBLY_PIECES = Object.freeze([
+  Object.freeze({ id: "map-left", type: "maps", label: "Left map panel" }),
+  Object.freeze({ id: "map-center", type: "maps", label: "Center map panel" }),
+  Object.freeze({ id: "map-right", type: "maps", label: "Right map panel" }),
+  Object.freeze({ id: "tape-left", type: "tape", label: "Left tape strip" }),
+  Object.freeze({ id: "tape-right", type: "tape", label: "Right tape strip" }),
+  Object.freeze({ id: "clamp-left", type: "clamps", label: "Left clamp" }),
+  Object.freeze({ id: "clamp-right", type: "clamps", label: "Right clamp" }),
+]);
+
+const ASSEMBLY_TOTALS = Object.freeze({ maps: 3, tape: 2, clamps: 2 });
+
+export function lrvAssemblyConfiguration(placed = [], base = LRV_DEFAULT_CONFIGURATION) {
+  const ids = new Set(placed);
+  const count = (type) => LRV_ASSEMBLY_PIECES.filter((piece) => piece.type === type && ids.has(piece.id)).length;
+  const maps = count("maps") === ASSEMBLY_TOTALS.maps;
+  const tape = maps && count("tape") === ASSEMBLY_TOTALS.tape;
+  const clamps = tape && count("clamps") === ASSEMBLY_TOTALS.clamps;
+  return normalizeLrvConfiguration({ ...base, maps, tape, attachment: clamps ? "clamps" : "tape" });
+}
 
 function safeDimension(value, key) {
   const number = typeof value === "number" || typeof value === "string" && value.trim() !== "" ? Number(value) : NaN;
@@ -289,23 +323,46 @@ function controlMarkup(id, key, label, help, decrease, increase) {
   return `<div class="lrv-control"><div class="lrv-control-heading"><label for="${id}-${key}">${label} <span>${key === "angle" ? "(°)" : "(cm)"}</span></label><output data-lrv-value="${key}" for="${id}-${key}">${value}${key === "angle" ? "°" : " cm"}</output></div><div class="lrv-range-row"><button type="button" class="lrv-step" data-lrv-step="${key}" data-lrv-delta="-${step}" aria-label="${decrease}">−</button><input id="${id}-${key}" data-lrv-control="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}" aria-describedby="${id}-${key}-help"><button type="button" class="lrv-step" data-lrv-step="${key}" data-lrv-delta="${step}" aria-label="${increase}">+</button></div><p class="lrv-control-help" id="${id}-${key}-help">${help}</p></div>`;
 }
 
+function pieceIcon(type) {
+  if (type === "maps") return '<svg viewBox="0 0 64 44" aria-hidden="true"><path d="M5 8l17-5 20 7 17-5v31l-17 5-20-7-17 5z"/><path d="M22 3v31M42 10v31"/></svg>';
+  if (type === "tape") return '<svg viewBox="0 0 64 44" aria-hidden="true"><ellipse cx="28" cy="22" rx="20" ry="14"/><ellipse cx="28" cy="22" rx="9" ry="6"/><path d="M45 17l14 18H40"/></svg>';
+  return '<svg viewBox="0 0 64 44" aria-hidden="true"><path d="M18 7v25c0 7 28 7 28 0V7M12 7h40M12 33h40"/></svg>';
+}
+
+function assemblyPieceMarkup(piece) {
+  const shortLabel = piece.type === "maps" ? copy.maps : piece.type === "tape" ? copy.tape : copy.clamps;
+  return `<button type="button" class="lrv-build-piece" data-lrv-piece="${piece.id}" data-lrv-piece-type="${piece.type}" aria-pressed="false" aria-label="${piece.label}"${piece.type === "maps" ? "" : " hidden"}>${pieceIcon(piece.type)}<span>${shortLabel}</span></button>`;
+}
+
+function assemblyBoardMarkup() {
+  return `<div class="lrv-build-board" data-lrv-build-board aria-label="Rover wheel with glowing repair spots">
+    <div class="lrv-build-equipment" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="lrv-build-wheel" aria-hidden="true"><span></span></div>
+    <div class="lrv-build-stub" aria-hidden="true"></div>
+    ${LRV_ASSEMBLY_PIECES.map((piece) => `<span class="lrv-build-slot lrv-build-slot-${piece.id}" data-lrv-slot="${piece.id}" data-lrv-slot-type="${piece.type}" data-filled="false" aria-hidden="true">${pieceIcon(piece.type)}</span>`).join("")}
+    <span class="lrv-build-dust" aria-hidden="true">•••••</span>
+  </div>`;
+}
+
+function reachControlMarkup(id) {
+  const { min, max, step } = LRV_CONTROL_LIMITS.length;
+  return `<div class="lrv-reach-control"><div class="lrv-control-heading"><label for="${id}-length">${copy.shieldReach}</label><output data-lrv-value="length" for="${id}-length">${LRV_DEFAULT_CONFIGURATION.length} cm</output></div><div class="lrv-reach-track"><span aria-hidden="true"></span><input id="${id}-length" data-lrv-control="length" type="range" min="${min}" max="${max}" step="${step}" value="${LRV_DEFAULT_CONFIGURATION.length}" aria-describedby="${id}-shape-help"></div><div class="lrv-reach-labels" aria-hidden="true"><span>${copy.shortReach}</span><span>${copy.longReach}</span></div></div>`;
+}
+
 export function lrvGameMarkup() {
   const id = `lrv-workshop-${++nextWorkshopId}`;
   const initial = evaluateLrvRepair(LRV_DEFAULT_CONFIGURATION);
   return `<section class="moon-game lrv-game" data-lrv-workshop data-lrv-result="untested" aria-labelledby="${id}-title">
     <header class="lrv-heading"><p class="eyebrow">${copy.eyebrow}</p><h3 id="${id}-title">${copy.title}</h3><p>${copy.introduction}</p></header>
-    <p class="moon-challenge-identity">${copy.missionLabel}</p><aside class="mission-incident" aria-label="Mission moment"><p class="eyebrow">${copy.incidentTitle}</p><p>${copy.incident}</p><p class="fine">Watch the dust paths, change one control, and run the test again.</p></aside>
-    ${quickStartMarkup('apollo17')}
-    ${whyMarkup(`<p>${copy.instructions}</p><p>${copy.simulation}</p><p>${copy.dimensions}</p>`)}
+    <p class="moon-challenge-identity">${copy.missionLabel}</p><aside class="mission-incident lrv-incident" aria-label="Mission problem"><p class="eyebrow">${copy.incidentTitle}</p><p>${copy.incident}</p><p><strong>Your job:</strong> ${copy.instructions}</p></aside>
     <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p><p class="lrv-design-check" data-lrv-design-check data-state="building" role="status">${copy.designBuild}</p><div class="moon-challenge-canvas" data-lrv-challenge-3d></div><div class="moon-challenge-2d">${svgMarkup(initial)}</div><figcaption><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${copy.diagramCaption}</span></figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>
-    <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><div class="lrv-tool-tray" role="group" aria-label="Repair tools"><button type="button" data-lrv-tool="maps" aria-pressed="false">${copy.maps}</button><button type="button" data-lrv-tool="tape" aria-pressed="false">${copy.tape}</button><button type="button" data-lrv-tool="clamps" aria-pressed="false">${copy.clamps}</button></div><p data-lrv-tool-status role="status">${copy.toolsReady}</p><p class="lrv-control-help">${copy.attachmentHelp}</p></fieldset>
-    <fieldset class="lrv-geometry"><legend>${copy.geometry}</legend><p class="lrv-model-dimensions">${copy.dimensions}</p>
-    ${controlMarkup(id, "length", copy.length, copy.lengthHelp, copy.decreaseLength, copy.increaseLength)}
+    <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><p class="lrv-build-how">${copy.buildHow}</p><div class="lrv-build-game" data-lrv-build-game data-phase="maps">${assemblyBoardMarkup()}<div class="lrv-build-tray" role="group" aria-label="Repair parts">${LRV_ASSEMBLY_PIECES.map(assemblyPieceMarkup).join("")}</div></div><div class="lrv-build-progress" aria-label="Repair progress"><span data-lrv-progress="maps">${copy.mapsProgress} <b>0 / 3</b></span><span data-lrv-progress="tape">${copy.tapeProgress} <b>0 / 2</b></span><span data-lrv-progress="clamps">${copy.clampsProgress} <b>0 / 2</b></span></div><p class="lrv-build-status" data-lrv-tool-status role="status" aria-live="polite">${copy.toolsReady}</p><details class="lrv-material-story"><summary>${copy.whyMaterials}</summary><p>${copy.attachmentHelp}</p></details></fieldset>
+    <fieldset class="lrv-geometry" data-lrv-shape hidden><legend>${copy.geometry}</legend><p class="lrv-shape-how" id="${id}-shape-help">${copy.shapeHow}</p>${reachControlMarkup(id)}<details class="lrv-fine-controls"><summary>${copy.fineControls}</summary><p class="lrv-model-dimensions">${copy.dimensions}</p>
     ${controlMarkup(id, "angle", copy.angle, copy.angleHelp, copy.decreaseAngle, copy.increaseAngle)}
-    ${controlMarkup(id, "clearance", copy.clearance, copy.clearanceHelp, copy.decreaseClearance, copy.increaseClearance)}</fieldset>
+    ${controlMarkup(id, "clearance", copy.clearance, copy.clearanceHelp, copy.decreaseClearance, copy.increaseClearance)}</details></fieldset>
     <p class="lrv-goals">${copy.goals}</p><div class="lrv-actions"><button type="button" class="primary lrv-test-button" data-lrv-test>${copy.runTest}</button><button type="button" data-lrv-try hidden>${copy.tryAgain}</button><button type="button" data-lrv-reset>${copy.reset}</button></div></div></div>
-    <section class="lrv-results" aria-labelledby="${id}-results"><h4 id="${id}-results">${copy.results}</h4><dl class="lrv-measures"><div data-lrv-measure="dust"><dt>${copy.dustMeasure}</dt><dd><strong data-lrv-verdict hidden></strong> <span data-lrv-dust-result>${copy.notTested}</span><small>${copy.dustGoal}</small></dd></div><div data-lrv-measure="clearance"><dt>${copy.clearanceMeasure}</dt><dd><strong data-lrv-verdict hidden></strong> <span data-lrv-clearance-result>${copy.notTested}</span><small>${copy.clearanceGoal}</small></dd></div><div data-lrv-measure="attachment"><dt>${copy.attachmentMeasure}</dt><dd><strong data-lrv-verdict hidden></strong> <span data-lrv-attachment-result>${copy.notTested}</span><small>${copy.attachmentGoal}</small></dd></div></dl><p class="lrv-result-status" data-lrv-status role="status" aria-live="polite" aria-atomic="true">${copy.readyStatus}</p><p class="lrv-narrator" data-lrv-narrator hidden>${copy.narrator}</p></section>
-    <section class="lrv-history" aria-labelledby="${id}-history"><h4 id="${id}-history">${copy.history}</h4><p data-lrv-history-empty>${copy.historyEmpty}</p><div class="lrv-history-scroll" data-lrv-history-wrap tabindex="0" role="region" aria-labelledby="${id}-history" hidden><table aria-labelledby="${id}-history"><thead><tr><th scope="col">${copy.trial}</th><th scope="col">${copy.design}</th><th scope="col">${copy.dust}</th><th scope="col">${copy.wheelGap}</th><th scope="col">${copy.attachment}</th><th scope="col">${copy.result}</th></tr></thead><tbody data-lrv-history></tbody></table></div><p class="lrv-history-help">${copy.historyLimit}</p></section>
+    <section class="lrv-results" aria-labelledby="${id}-results" hidden><h4 id="${id}-results">${copy.results}</h4><dl class="lrv-measures"><div data-lrv-measure="dust"><dt>${copy.dustMeasure}</dt><dd><strong data-lrv-verdict hidden></strong> <span data-lrv-dust-result>${copy.notTested}</span><small>${copy.dustGoal}</small></dd></div><div data-lrv-measure="clearance"><dt>${copy.clearanceMeasure}</dt><dd><strong data-lrv-verdict hidden></strong> <span data-lrv-clearance-result>${copy.notTested}</span><small>${copy.clearanceGoal}</small></dd></div><div data-lrv-measure="attachment"><dt>${copy.attachmentMeasure}</dt><dd><strong data-lrv-verdict hidden></strong> <span data-lrv-attachment-result>${copy.notTested}</span><small>${copy.attachmentGoal}</small></dd></div></dl><p class="lrv-result-status" data-lrv-status role="status" aria-live="polite" aria-atomic="true">${copy.readyStatus}</p><p class="lrv-narrator" data-lrv-narrator hidden>${copy.narrator}</p></section>
+    <details class="lrv-history"><summary id="${id}-history">${copy.history}</summary><p data-lrv-history-empty>${copy.historyEmpty}</p><div class="lrv-history-scroll" data-lrv-history-wrap tabindex="0" role="region" aria-labelledby="${id}-history" hidden><table aria-labelledby="${id}-history"><thead><tr><th scope="col">${copy.trial}</th><th scope="col">${copy.design}</th><th scope="col">${copy.dust}</th><th scope="col">${copy.wheelGap}</th><th scope="col">${copy.attachment}</th><th scope="col">${copy.result}</th></tr></thead><tbody data-lrv-history></tbody></table></div><p class="lrv-history-help">${copy.historyLimit}</p></details>
     <details class="lrv-model-details"><summary>${copy.modelDetails}</summary><p>${copy.modelExplanation}</p></details><a class="lrv-source" href="${SOURCE}" target="_blank" rel="noopener">${copy.source}</a>
   </section>`;
 }
@@ -427,6 +484,9 @@ export function mountLrvGame(root) {
   let trialNumber = 0;
   let disposed = false;
   let challengeScene = null;
+  let placedPieces = new Set();
+  let pieceDrag = null;
+  let suppressPieceClick = false;
   const controls = Object.fromEntries(Object.keys(LRV_CONTROL_LIMITS).map((key) => [key, find(`[data-lrv-control="${key}"]`)]));
   let dragging = false;
   const svg = find('.lrv-workshop-svg');
@@ -453,9 +513,29 @@ export function mountLrvGame(root) {
         button.disabled = next < LRV_CONTROL_LIMITS[key].min || next > LRV_CONTROL_LIMITS[key].max;
       });
     }
-    const applied = { maps: configuration.maps, tape: configuration.tape, clamps: configuration.tape && configuration.attachment === 'clamps' };
-    workshop.dataset.lrvAssembly = applied.clamps ? 'complete' : 'building';
-    workshop.querySelectorAll('[data-lrv-tool]').forEach(button => button.setAttribute('aria-pressed', String(applied[button.dataset.lrvTool])));
+    const counts = Object.fromEntries(Object.keys(ASSEMBLY_TOTALS).map((type) => [type, LRV_ASSEMBLY_PIECES.filter((piece) => piece.type === type && placedPieces.has(piece.id)).length]));
+    const phase = counts.maps < ASSEMBLY_TOTALS.maps ? 'maps' : counts.tape < ASSEMBLY_TOTALS.tape ? 'tape' : counts.clamps < ASSEMBLY_TOTALS.clamps ? 'clamps' : 'complete';
+    const assembled = phase === 'complete';
+    workshop.dataset.lrvAssembly = assembled ? 'complete' : 'building';
+    find('[data-lrv-build-game]').dataset.phase = phase;
+    workshop.querySelectorAll('[data-lrv-piece]').forEach((button) => {
+      const piece = LRV_ASSEMBLY_PIECES.find((item) => item.id === button.dataset.lrvPiece);
+      const placed = placedPieces.has(piece.id);
+      button.setAttribute('aria-pressed', String(placed));
+      button.hidden = placed || piece.type !== phase;
+    });
+    workshop.querySelectorAll('[data-lrv-slot]').forEach((slot) => {
+      const placed = placedPieces.has(slot.dataset.lrvSlot);
+      slot.dataset.filled = String(placed);
+      slot.dataset.active = String(!placed && slot.dataset.lrvSlotType === phase);
+    });
+    for (const type of Object.keys(ASSEMBLY_TOTALS)) {
+      const progress = find(`[data-lrv-progress="${type}"]`);
+      progress.dataset.complete = String(counts[type] === ASSEMBLY_TOTALS[type]);
+      progress.querySelector('b').textContent = `${counts[type]} / ${ASSEMBLY_TOTALS[type]}`;
+    }
+    find('[data-lrv-shape]').hidden = !assembled;
+    find('[data-lrv-test]').disabled = !assembled;
     find("[data-lrv-dust-paths]").innerHTML = dustMarkup(result);
     find("[data-lrv-patch]").innerHTML = patchMarkup(configuration, result);
     const tip = pointOnScreen(lrvPatchGeometry(configuration).end);
@@ -473,6 +553,7 @@ export function mountLrvGame(root) {
     designCheck.dataset.state = !configuration.maps ? 'building' : geometryFailure ? 'fail' : 'ready';
     designCheck.textContent = !configuration.maps ? copy.designBuild : !result.wheelSafe ? copy.designWheelFail : !result.equipmentSafe ? copy.designEquipmentFail : copy.designReady;
     workshop.dataset.lrvResult = result.tested ? result.passed ? "passed" : "adjust" : "untested";
+    find('.lrv-results').hidden = !result.tested;
     find("[data-lrv-try]").hidden = !result.tested;
     find("[data-lrv-narrator]").hidden = !result.passed;
     dustResult.textContent = result.tested ? `${result.dustReaching} / ${result.dustTotal}` : copy.notTested;
@@ -491,6 +572,20 @@ export function mountLrvGame(root) {
     configuration = normalizeLrvConfiguration({ ...configuration, ...changes });
     draw();
   };
+  const assemblyPhase = () => {
+    const count = (type) => LRV_ASSEMBLY_PIECES.filter((piece) => piece.type === type && placedPieces.has(piece.id)).length;
+    return count('maps') < ASSEMBLY_TOTALS.maps ? 'maps' : count('tape') < ASSEMBLY_TOTALS.tape ? 'tape' : count('clamps') < ASSEMBLY_TOTALS.clamps ? 'clamps' : 'complete';
+  };
+  const placePiece = (id) => {
+    const piece = LRV_ASSEMBLY_PIECES.find((item) => item.id === id);
+    if (!piece || placedPieces.has(id) || piece.type !== assemblyPhase()) return false;
+    placedPieces.add(id);
+    configuration = lrvAssemblyConfiguration(placedPieces, configuration);
+    const next = assemblyPhase();
+    find('[data-lrv-tool-status]').textContent = next === 'maps' ? copy.mapsGoal : next === 'tape' ? copy.tapeGoal : next === 'clamps' ? copy.clampsGoal : copy.buildComplete;
+    draw(evaluateLrvRepair(configuration), next === 'complete' ? copy.changedStatus : copy.readyStatus);
+    return true;
+  };
   const onInput = (event) => {
     const key = event.target?.dataset?.lrvControl;
     if (Object.hasOwn(LRV_CONTROL_LIMITS, key)) edit({ [key]: event.target.value });
@@ -504,14 +599,9 @@ export function mountLrvGame(root) {
   const onClick = (event) => {
     const button = event.target?.closest?.("button");
     if (!button || !workshop.contains(button) || button.disabled) return;
-    if (button.dataset.lrvTool) {
-      // One tap applies a tool. Order still matters: maps, then tape, then clamps.
-      const tool = button.dataset.lrvTool;
-      const message = find('[data-lrv-tool-status]');
-      if (tool === 'maps') { edit({ maps: true }); message.textContent = 'Maps fitted. Join the seams with tape.'; }
-      else if (tool === 'tape' && configuration.maps) { edit({ tape: true }); message.textContent = 'Seams taped. Fit clamps to secure the repair.'; }
-      else if (tool === 'clamps' && configuration.tape) { edit({ attachment: 'clamps' }); message.textContent = 'Repair secured. Shape the patch, then test it.'; }
-      else message.textContent = 'Fit the maps first, tape the seams, then add clamps.';
+    if (button.dataset.lrvPiece) {
+      if (suppressPieceClick) { suppressPieceClick = false; return; }
+      placePiece(button.dataset.lrvPiece);
     } else if (button.hasAttribute("data-lrv-step")) {
       const key = button.dataset.lrvStep;
       if (Object.hasOwn(LRV_CONTROL_LIMITS, key)) edit({ [key]: configuration[key] + Number(button.dataset.lrvDelta) });
@@ -536,6 +626,7 @@ export function mountLrvGame(root) {
       controls.length.focus();
     } else if (button.hasAttribute("data-lrv-reset")) {
       configuration = { ...LRV_DEFAULT_CONFIGURATION };
+      placedPieces = new Set();
       find('[data-lrv-tool-status]').textContent = copy.toolsReady;
       trials = [];
       trialNumber = 0;
@@ -545,9 +636,52 @@ export function mountLrvGame(root) {
       draw(evaluateLrvRepair(configuration), copy.readyStatus);
     }
   };
+  const resetPieceDrag = () => {
+    if (!pieceDrag) return;
+    pieceDrag.button.classList.remove('is-dragging');
+    pieceDrag.button.style.removeProperty('--lrv-drag-x');
+    pieceDrag.button.style.removeProperty('--lrv-drag-y');
+    pieceDrag = null;
+  };
+  const piecePointerDown = (event) => {
+    const button = event.target?.closest?.('[data-lrv-piece]');
+    if (!button || button.hidden || event.button !== 0) return;
+    pieceDrag = { button, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, moved: false };
+    button.setPointerCapture?.(event.pointerId);
+  };
+  const piecePointerMove = (event) => {
+    if (!pieceDrag || event.pointerId !== pieceDrag.pointerId) return;
+    const dx = event.clientX - pieceDrag.startX;
+    const dy = event.clientY - pieceDrag.startY;
+    if (!pieceDrag.moved && Math.hypot(dx, dy) > 6) pieceDrag.moved = true;
+    if (!pieceDrag.moved) return;
+    event.preventDefault();
+    pieceDrag.button.classList.add('is-dragging');
+    pieceDrag.button.style.setProperty('--lrv-drag-x', `${dx}px`);
+    pieceDrag.button.style.setProperty('--lrv-drag-y', `${dy}px`);
+  };
+  const piecePointerUp = (event) => {
+    if (!pieceDrag || event.pointerId !== pieceDrag.pointerId) return;
+    const { button, moved } = pieceDrag;
+    const board = find('[data-lrv-build-board]');
+    const bounds = board.getBoundingClientRect();
+    const overBoard = event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+    resetPieceDrag();
+    if (!moved) return;
+    event.preventDefault();
+    suppressPieceClick = true;
+    if (overBoard) placePiece(button.dataset.lrvPiece);
+    else find('[data-lrv-tool-status]').textContent = copy.wrongDrop;
+    setTimeout(() => { suppressPieceClick = false; }, 80);
+  };
+  const piecePointerCancel = () => resetPieceDrag();
   workshop.addEventListener("input", onInput);
   workshop.addEventListener("change", onChange);
   workshop.addEventListener("click", onClick);
+  workshop.addEventListener('pointerdown', piecePointerDown);
+  workshop.addEventListener('pointermove', piecePointerMove);
+  workshop.addEventListener('pointerup', piecePointerUp);
+  workshop.addEventListener('pointercancel', piecePointerCancel);
   const pointerDown = event => {
     if (!event.target.closest('[data-lrv-drag-tip]')) return;
     event.preventDefault(); dragging = true; svg.setPointerCapture(event.pointerId);
@@ -577,6 +711,10 @@ export function mountLrvGame(root) {
       workshop.removeEventListener("input", onInput);
       workshop.removeEventListener("change", onChange);
       workshop.removeEventListener("click", onClick);
+      workshop.removeEventListener('pointerdown', piecePointerDown);
+      workshop.removeEventListener('pointermove', piecePointerMove);
+      workshop.removeEventListener('pointerup', piecePointerUp);
+      workshop.removeEventListener('pointercancel', piecePointerCancel);
       svg.removeEventListener('pointerdown', pointerDown); svg.removeEventListener('pointermove', pointerMove);
       svg.removeEventListener('pointerup', pointerUp); svg.removeEventListener('pointercancel', pointerUp);
       svg.removeEventListener('lostpointercapture', pointerUp); svg.removeEventListener('keydown', tipKeyDown);

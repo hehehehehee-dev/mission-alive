@@ -54,15 +54,10 @@ export function mountMoonChallengeSteps(lrvRoot, surveyorRoot) {
   const controls = lrv.querySelector('.lrv-controls');
   const find = selector => lrv.querySelector(selector);
   const geometry = find('.lrv-geometry');
-  const advanced = document.createElement('div');
-  advanced.append(...[...geometry.querySelectorAll('.lrv-control')].slice(1));
-  geometry.append(advanced);
-  collapseChallengeNotes(advanced, 'More adjustments');
   const lrvSteps = mountChallengeSteps(controls, [
     { title: '01 · Build', nodes: [find('.lrv-materials')] },
     { title: '02 · Shape and test', nodes: [geometry, find('.lrv-goals'), find('.lrv-actions'), find('.lrv-results')] },
   ]);
-  collapseChallengeNotes(find('.lrv-history'), 'Your trial history');
   const surveyor = surveyorRoot.querySelector('[data-surveyor-game]');
   const layout = surveyor.querySelector('.surveyor-study-layout');
   const fieldsets = [...surveyor.querySelectorAll('.surveyor-investigation-grid > fieldset')];
@@ -95,6 +90,8 @@ export function mountMoonChallengeSteps(lrvRoot, surveyorRoot) {
     if (event.target.closest('[data-surveyor-action="restart"]')) { evidence = false; surveyorSteps.reset(); }
   };
   surveyor.addEventListener('click', selectPatch);
-  for (const root of [lrv, surveyor]) root.querySelectorAll('.challenge-step-nav button').forEach(button => { button.disabled = false; });
+  // Apollo's second stage unlocks when the physical assembly puzzle is complete.
+  // Surveyor keeps its stages browsable because learners compare evidence across them.
+  surveyor.querySelectorAll('.challenge-step-nav button').forEach(button => { button.disabled = false; });
   return { dispose() { observer.disconnect(); surveyor.removeEventListener('click', selectPatch); } };
 }
