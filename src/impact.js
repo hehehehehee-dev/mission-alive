@@ -5,27 +5,27 @@ export function mountImpact(root, {fetcher = fetch, setTimer = setInterval, clea
   const status = root.querySelector('[data-impact-status]');
   const results = root.querySelector('[data-impact-results]');
   const format = value => new Intl.NumberFormat(getLanguage(), {maximumFractionDigits:2}).format(value);
+  const percent = (value, total) => new Intl.NumberFormat(getLanguage(), {style:'percent', maximumFractionDigits:0}).format(value / total);
   const render = () => {
     results.replaceChildren();
     if (!snapshot) return;
     status.textContent = snapshot.totalResponses ? 'Results from voluntary playtest responses.' : 'No responses yet. Results will appear here automatically.';
-    const card = (label, value, note) => {
+    const card = (label, value) => {
       const article = document.createElement('article'); article.className = 'impact-metric';
       const title = document.createElement('h2'); title.textContent = label;
       const number = document.createElement('strong'); number.textContent = value;
-      const detail = document.createElement('p'); detail.textContent = note;
-      article.append(title, number, detail); results.append(article);
+      article.append(title, number); results.append(article);
     };
-    card('Survey responses', format(snapshot.totalResponses), t('Responses, not unique visitors.'));
+    card('Survey responses', format(snapshot.totalResponses));
     for (const [key, label] of [['interest','Interest in space'], ['belonging','Feeling that space is for me']]) {
       const metric = snapshot[key];
       if (!metric?.n) continue;
-      card(label, `${format(metric.before)} → ${format(metric.after)}`, `${t('Average before → after, out of 5.')} ${t('Paired answers:')} ${format(metric.n)}. ${t('Average change:')} ${metric.change > 0 ? '+' : ''}${format(metric.change)}.`);
+      card(label, `${format(metric.after)} / 5`);
     }
     for (const [key, label, numerator] of [['learnMore','Want to learn more','agree'], ['recommend','Would recommend to a friend','agree'], ['completion','Finished all six missions (self-reported)','yes']]) {
       const metric = snapshot[key];
       if (!metric?.n) continue;
-      card(label, `${format(metric[numerator])} / ${format(metric.n)}`, key === 'completion' ? t('Yes answers among people who answered this question.') : t('Ratings of 4 or 5 among valid answers.'));
+      card(label, percent(metric[numerator], metric.n));
     }
     root.querySelector('[data-impact-updated]').textContent = `${t('Data checked:')} ${new Intl.DateTimeFormat(getLanguage(), {dateStyle:'medium',timeStyle:'short'}).format(new Date(snapshot.fetchedAt))}`;
   };

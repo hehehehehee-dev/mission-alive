@@ -19,6 +19,7 @@ test('impact refreshes at five minutes, skips hidden tabs, handles failure and c
   assert.match(root.querySelector('[data-impact-status]').textContent,/No responses yet/);
   tick(); await flush(); assert.equal(calls,2);
   assert.equal(root.querySelector('[data-impact-results]').children[0].children[1].textContent,'1');
+  assert.equal(root.querySelector('[data-impact-results]').children[0].children.length,2,'metric cards do not repeat explanatory notes');
   document.hidden=true;tick();await flush();assert.equal(calls,2);
   document.hidden=false;fail=true;tick();await flush();
   assert.match(root.querySelector('[data-impact-status]').textContent,/unavailable/);

@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Simplify public impact metrics
+
+- Replaced before-to-after arrows and per-card methodology sentences with one after-playing average out of 5 for interest and belonging.
+- Replaced growing numerator/denominator pairs with percentages for learn-more intent, recommendation and self-reported completion. Survey responses now shows only the total.
+- Kept the caution and calculation method once at the bottom of the page, with matching EN/ES/VI copy.
+
 ### Make playtest impact visible in primary navigation
 
 - Added a direct Impact button to the persistent header instead of requiring visitors to discover the link inside About.
