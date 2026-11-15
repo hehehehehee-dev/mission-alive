@@ -443,6 +443,7 @@ export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}
     action.textContent = earned ? 'Play again →' : 'Play mission →';
     button.querySelector('.diagram-callout').append(action);
     if (earned) {
+      button.querySelector('.diagram-callout').classList.add('is-earned');
       const stamp = document.createElement('span');
       stamp.className = 'map-earned-stamp';
       stamp.textContent = 'Stamp earned ✓';

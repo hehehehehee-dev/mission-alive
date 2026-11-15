@@ -104,3 +104,24 @@ body .location-map .journey-scene .planet-credit,
 body .location-map .journey-scene .diagram-note,
 body .location-map .location-map-heading p,
 body .location-map .location-map-heading .scroll-flight-instruction { font-size: 0.875rem; line-height: 1.55; }
+
+/* Rewards you can see: a stamp slot per mission, a thicker progress bar, and
+   earned missions marked on the map. */
+body .passport-track { height: 12px; border-radius: 999px; overflow: hidden; }
+body .passport-track i { display: block; height: 100%; border-radius: 999px; transition: width .5s ease-out; }
+.passport-stamp-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 14px 0 6px; padding: 0; list-style: none; }
+.passport-stamp-row li { display: grid; justify-items: center; gap: 6px; min-width: 0; text-align: center; }
+.passport-stamp-row b { display: grid; place-items: center; width: 44px; height: 44px; border: 2px dashed #8fa3ad; border-radius: 50%; color: #5d7280; font-size: 1rem; font-weight: 700; }
+.passport-stamp-row span { max-width: 100%; color: #415866; font-size: 0.75rem; line-height: 1.3; overflow-wrap: anywhere; }
+.passport-stamp-row .is-earned b { border: 3px solid #b8791f; background: #f0c98a; color: #0b141c; font-size: 1.35rem; transform: rotate(-8deg); box-shadow: 0 2px 0 #b8791f66; }
+.passport-stamp-row .is-earned span { color: #172f40; font-weight: 700; }
+body:not(.lobby-day) .passport-stamp-row span { color: #c4d3dc; }
+body:not(.lobby-day) .passport-stamp-row .is-earned span { color: #fff; }
+body.motion-reduced .passport-track i { transition: none; }
+#location-map-slot .diagram-callout.is-earned { border-color: #2f7d57; background: #f1faf2; }
+#location-map-slot .diagram-callout.is-earned::after { content: "✓"; position: absolute; top: -16px; right: -12px; display: grid; place-items: center; width: 38px; height: 38px; border: 3px solid #b8791f; border-radius: 50%; background: #f0c98a; color: #0b141c; font-size: 1.25rem; font-weight: 700; transform: rotate(-8deg); box-shadow: 0 2px 0 #b8791f66; }
+@media (max-width: 420px) {
+  .passport-stamp-row { gap: 4px; }
+  .passport-stamp-row b { width: 40px; height: 40px; }
+  .passport-stamp-row span { font-size: 0.75rem; }
+}

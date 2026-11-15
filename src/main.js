@@ -683,6 +683,21 @@ function updateMissionProgress() {
   if (!$("#lobby-progress")) return;
   $("#lobby-progress").textContent = `${count} / ${MISSION_COUNT} STAMPS`;
   $("#passport-progress-bar").style.width = `${count * 100 / MISSION_COUNT}%`;
+  // One slot per mission, in mission order, so each earned stamp is something you can see.
+  let slots = $("#passport-stamp-row");
+  if (!slots) {
+    slots = document.createElement("ol");
+    slots.id = "passport-stamp-row";
+    slots.className = "passport-stamp-row";
+    slots.setAttribute("aria-hidden", "true");
+    slots.innerHTML = missionIds.map((id, index) => `<li data-stamp-slot="${id}"><b>${index + 1}</b><span data-i18n-skip>${trainingMissions[id].name.replace(/ Lunar Roving Vehicle$/, "")}</span></li>`).join("");
+    $(".passport-track").after(slots);
+  }
+  slots.querySelectorAll("[data-stamp-slot]").forEach((slot) => {
+    const earned = completed.has(slot.dataset.stampSlot);
+    slot.classList.toggle("is-earned", earned);
+    slot.querySelector("b").textContent = earned ? "✓" : String(missionIds.indexOf(slot.dataset.stampSlot) + 1);
+  });
   $("#passport-message").textContent =
     count === MISSION_COUNT
       ? "Crew certification complete. Six machines, six training modules, one journey through space exploration."

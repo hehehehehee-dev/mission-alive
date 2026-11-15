@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Stamps you can see
+
+- The lobby now shows one stamp slot per mission under “Your mission stamps”: a dashed numbered circle until the mission is done, then a gold tilted ✓ stamp with the machine's name in bold. Slots are built from the mission registry.
+- The progress bar is 12 px tall (was 5 px) and fills smoothly; it stays still with reduced motion.
+- On the journey map, a finished mission's card turns green with a gold ✓ stamp on its corner, in addition to the existing “Stamp earned ✓” text.
+- No stamp, finale or storage rule changed; this is display only.
+
 ### Child-readable text sizes and a compact phone mission switcher
 
 - Added `src/readable-type.css`, loaded last: labels are now at least 12 px and text meant to be read at least 14 px (was as small as 7.7–10 px in places such as “TRAINING MODULE”, map callouts, opening labels and the stamp counter). Sizes use rem so the larger-text setting still scales them.
