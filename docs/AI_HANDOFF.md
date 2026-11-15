@@ -204,6 +204,12 @@ Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, m
 ## 9. Handoff log
 
 ### 2026-11-15 — Claude — `main`
+- **Commit:** Add an opening story with Commander Mira and a new cadet
+- **Changed:** new `src/intro-sequence.js`, `src/intro-sequence.css`, `tests/intro-sequence.test.js`; `src/main.js` (import, `startIntro()`, auto-play on the landing route when `shouldAutoPlayIntro(completed.size)`), 32 rows in `src/locales/nov14.js`.
+- **Verified:** 192 tests; build; local browser at 1280 and 390 px in English and Vietnamese: auto-plays with no stamps, not with one stamp, Esc and Skip release the locked page.
+- **Left for next:** the intro replays on every landing load until the first stamp (could be once per day or tab if it annoys returning teachers); characters are code-drawn placeholders that an illustrator could replace; no voice (owner chose speech bubbles only). Codex's uncommitted edits in `src/main.js`, `src/exhibit-layout.js`, `src/greetings.css`, `src/quick-start.js` and others were left out.
+
+### 2026-11-15 — Claude — `main`
 - **Commit:** Keep the site header on the Moon mission pages
 - **Changed:** `src/moon-stories.js` (route pages use non-modal `dialog.show()` placed under the header via `--moon-route-top`; `main` is inert while open; a late `close` event is ignored if the page reopened), `src/readable-type.css`, `tests/readable-type.test.js`.
 - **Verified:** 188 tests; build; local browser at 1024 and 390 px: Home, About, module switching to Curiosity, Moon to Moon, and Back to `#apollo17` all leave the header usable and the lobby locked only while a Moon page is open.

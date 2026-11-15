@@ -54,6 +54,8 @@ import './lobby-launch.css';
 import './lobby-day.css';
 import './academy-navigation.css';
 import './feedback-impact.css';
+import './intro-sequence.css';
+import { playIntro, shouldAutoPlayIntro } from './intro-sequence.js';
 import './readable-type.css';
 import { feedbackLinkMarkup, mountFeedbackLinks } from './feedback.js';
 import { mountImpact } from './impact.js';
@@ -660,6 +662,10 @@ function advanceJourney(stop) {
   locationMap?.setProgress(journeyProgress);
   configureJourneyStart();
   return true;
+}
+
+function startIntro() {
+  playIntro({ reduced: reduce, onStart: () => navigateTo("apollo17") });
 }
 
 function configureJourneyStart() {
@@ -2835,7 +2841,11 @@ const initialRoute = location.hash.slice(1);
 if (initialRoute === 'journey') renderJourneyAlias();
 else if (Object.hasOwn(academyPageTitles, initialRoute)) renderAcademyPage(initialRoute);
 else if (location.pathname === "/teachers") renderTeachers();
-else if (!initialRoute || initialRoute === "lobby") renderLobby();
+else if (!initialRoute || initialRoute === "lobby") {
+  renderLobby();
+  // The story plays by itself whenever the landing page opens, until the first stamp is earned.
+  if (shouldAutoPlayIntro(completed.size)) startIntro();
+}
 else if (initialRoute === "teachers") setRoute("teachers");
 else if (missionIds.slice(0, 2).includes(initialRoute)) renderMoonRoute(initialRoute);
 else render(exhibits[initialRoute] ? initialRoute : "curiosity");

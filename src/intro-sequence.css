@@ -1,0 +1,76 @@
+/* Opening story. Everything is a speech bubble; nothing needs sound. */
+body.intro-open { overflow: hidden; }
+.intro-sequence { position: fixed; inset: 0; z-index: 400; display: grid; grid-template-rows: auto 1fr auto; color: #eef3f5; background: #070c11; overflow: hidden; animation: intro-fade .5s ease-out both; }
+.intro-sky { position: absolute; inset: 0; background-image: radial-gradient(1.5px 1.5px at 12% 20%, #fff9, transparent), radial-gradient(1.5px 1.5px at 30% 70%, #fff8, transparent), radial-gradient(2px 2px at 55% 15%, #fffc, transparent), radial-gradient(1.5px 1.5px at 72% 55%, #fff9, transparent), radial-gradient(1.5px 1.5px at 88% 28%, #fff9, transparent), radial-gradient(1px 1px at 22% 44%, #fff8, transparent), radial-gradient(1px 1px at 64% 82%, #fff7, transparent), radial-gradient(1px 1px at 94% 74%, #fff7, transparent); background-size: 520px 520px; animation: intro-drift 80s linear infinite; }
+.intro-bridge, .intro-photo { position: absolute; inset: 0; transition: opacity .6s ease; }
+.intro-bridge { opacity: 1; }
+.intro-earth { position: absolute; left: 50%; bottom: -46vmin; width: 110vmin; height: 110vmin; transform: translateX(-50%); border-radius: 50%; background: url("/assets/journey-earth-nasa.jpg") center / 118% no-repeat; box-shadow: 0 0 0 2px #7cc3ff55, 0 0 60px #4f9dff44; }
+.intro-photo { opacity: 0; background-size: cover; background-position: center; }
+.intro-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #060b1090, #060b1040 40%, #060b10cc); }
+.intro-sequence[data-scene="message"] .intro-photo { opacity: 1; }
+.intro-sequence[data-scene="message"] .intro-bridge, .intro-sequence[data-scene="message"] .intro-people { opacity: 0; }
+.intro-photo.is-in { animation: intro-zoom 4.5s ease-out both; }
+.intro-top { position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px clamp(16px, 4vw, 40px); }
+.intro-eyebrow { color: #f0c98a; font: 700 0.75rem/1.3 monospace; letter-spacing: .14em; }
+.intro-skip { min-height: 44px; padding: 8px 18px; border: 1px solid #c4d3dc88; border-radius: 10px; background: #0b141ccc; color: #eef3f5; font-size: .9375rem; cursor: pointer; }
+.intro-skip:hover, .intro-skip:focus-visible { border-color: #f0c98a; outline: 3px solid #ffe49a; outline-offset: 2px; }
+
+.intro-people { position: relative; z-index: 2; align-self: end; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 clamp(12px, 8vw, 140px); transition: opacity .5s; pointer-events: none; }
+.intro-person { width: clamp(120px, 24vw, 250px); height: auto; filter: drop-shadow(0 6px 14px #0008); transition: transform .45s ease, filter .45s ease, opacity .45s; animation: intro-slide .8s ease-out both; }
+.intro-cadet { animation-name: intro-slide-right; }
+.intro-person.is-dim { filter: brightness(.6) saturate(.8) drop-shadow(0 6px 14px #0008); transform: scale(.95); }
+.intro-person.is-speaking { transform: scale(1.06) translateY(-4px); }
+.intro-eyes { transform-origin: 100px 120px; animation: intro-blink 4.2s infinite; }
+.intro-sleep { display: none; }
+.intro-cadet.is-asleep .intro-eyes { display: none; }
+.intro-cadet.is-asleep .intro-sleep { display: inline; }
+.intro-mouth { transform-origin: center; transform-box: fill-box; }
+.intro-person.is-speaking .intro-mouth { animation: intro-talk .28s ease-in-out infinite alternate; }
+.intro-person:not(.is-speaking) .intro-mouth { transform: scaleY(.35); }
+
+.intro-bubble { position: absolute; z-index: 4; left: calc(50% + var(--shift, 0px)); margin-left: calc(min(560px, 88vw) / -2); top: 18%; width: min(560px, 88vw); padding: 16px 22px 18px; border: 3px solid #1c2a36; border-radius: 22px; background: #fffdf4; color: #172f40; box-shadow: 0 8px 0 #0006, 0 12px 30px #0008; }
+.intro-bubble::after { content: ""; position: absolute; bottom: -22px; width: 0; height: 0; border: 14px solid transparent; border-top: 22px solid #fffdf4; filter: drop-shadow(0 3px 0 #1c2a36); }
+.intro-sequence[data-side="left"] { --shift: calc(min(14vw, 150px) * -1); }
+.intro-sequence[data-side="right"] { --shift: min(14vw, 150px); }
+.intro-sequence[data-side="left"] .intro-bubble::after { left: 14%; }
+.intro-sequence[data-side="right"] .intro-bubble::after { right: 14%; }
+.intro-sequence[data-side="center"] .intro-bubble::after, .intro-sequence[data-scene="message"] .intro-bubble::after { display: none; }
+.intro-bubble.is-in { animation: intro-pop .35s cubic-bezier(.2, 1.4, .4, 1) both; }
+.intro-tag { display: block; margin-bottom: 4px; color: #9a5d12; font: 700 0.75rem/1.3 monospace; letter-spacing: .1em; }
+.intro-bubble p { margin: 0; font-size: clamp(1.25rem, 3.4vw, 1.75rem); line-height: 1.35; font-weight: 600; }
+.intro-sequence[data-scene="message"] .intro-bubble { top: auto; bottom: 22%; border-color: #6ea9d9; background: #0d1d2bf0; color: #f2f7fa; }
+.intro-sequence[data-scene="message"] .intro-tag { color: #9dbfe7; }
+.intro-sequence[data-scene="bridge"] .intro-people { opacity: 1; }
+
+.intro-controls { position: relative; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px clamp(16px, 4vw, 40px) 22px; background: linear-gradient(0deg, #070c11ee, transparent); }
+.intro-dots { display: flex; gap: 6px; flex-wrap: wrap; max-width: 55%; }
+.intro-dots i { width: 8px; height: 8px; border-radius: 50%; background: #3a4b57; }
+.intro-dots i.is-on { background: #f0c98a; }
+.intro-next { flex: 0 0 auto; width: auto; min-height: 52px; padding: 12px 28px; border: 0; border-radius: 12px; background: #f0c98a; color: #0b141c; font-size: 1.0625rem; font-weight: 700; cursor: pointer; }
+.intro-next.is-start { animation: intro-nudge 1.2s ease-in-out infinite; padding: 14px 34px; }
+.intro-next:hover { background: #f6d9a8; }
+.intro-next:focus-visible { outline: 3px solid #ffe49a; outline-offset: 3px; }
+
+
+@keyframes intro-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes intro-drift { to { background-position: -520px 0; } }
+@keyframes intro-zoom { from { transform: scale(1.02); } to { transform: scale(1.1); } }
+@keyframes intro-slide { from { transform: translateX(-60px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes intro-slide-right { from { transform: translateX(60px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes intro-pop { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes intro-blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+@keyframes intro-talk { from { transform: scaleY(.35); } to { transform: scaleY(1.2); } }
+@keyframes intro-nudge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+
+@media (max-width: 640px) {
+  .intro-bubble { top: 14%; padding: 14px 16px 16px; }
+  .intro-person { width: clamp(110px, 38vw, 170px); }
+  .intro-people { padding: 0 8px; }
+  .intro-dots { display: none; }
+  .intro-controls { justify-content: flex-end; }
+  .intro-sequence[data-scene="message"] .intro-bubble { bottom: 26%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-sequence, .intro-sky, .intro-person, .intro-bubble.is-in, .intro-photo.is-in, .intro-eyes, .intro-next.is-start { animation: none !important; }
+}
+body.motion-reduced .intro-sequence, body.motion-reduced .intro-sky, body.motion-reduced .intro-person, body.motion-reduced .intro-bubble.is-in, body.motion-reduced .intro-photo.is-in, body.motion-reduced .intro-eyes, body.motion-reduced .intro-next.is-start, body.motion-reduced .intro-person.is-speaking .intro-mouth { animation: none !important; }

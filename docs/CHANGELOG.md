@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Opening story with Commander Mira and a new cadet
+
+- The landing page now opens with a short story that plays by itself: Commander Mira wakes the new cadet (the player), six machines ask for help in speech bubbles over real mission photos (Apollo 17, Surveyor 3, Curiosity, Ingenuity, Webb, Voyager 1), and the last bubble becomes a “Start mission 01” button that goes straight to the first mission.
+- It plays on every landing-page load until the first stamp is earned; learners who already have a stamp go straight to the lobby. Direct mission links skip it.
+- No voice and no sound: everything is in speech bubbles, with Next, Skip and Esc, bubbles that advance by themselves at a readable pace, no automatic advance with reduced motion, and the page behind locked while it plays. Characters are original flat illustrations (a fictional teacher and cadet), not NASA people.
+- English, Spanish and Vietnamese copy for every line.
+
 ### Moon pages keep the site header
 
 - Apollo 17 and Surveyor 3 pages now open below the same header as every other page (Home, Sources & credits, For Teachers, Display & access, Mission notes, Impact, About, language and stamps) instead of a full-screen modal with only “← Back to academy”.
