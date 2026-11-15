@@ -1,6 +1,14 @@
 #greetings[hidden] {
   display: none;
 }
+body[data-exhibit="voyager"] #greetings,
+body[data-exhibit="voyager"] #voyager-main,
+body[data-exhibit="voyager"] #voyager-main > .challenge-heading,
+body[data-exhibit="voyager"] #voyager-main > .challenge-layout {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
 .greeting-library :is(button, input, select, a, audio):focus-visible,
 .personal-record-studio :is(button, input, textarea, select, a, audio):focus-visible,
 .personal-record-item h5:focus,
@@ -56,12 +64,17 @@
 .greeting-library > .mission-direction,
 .greeting-tabs,
 .original-greetings,
-.greeting-library > .class-gallery { grid-column: 1 / -1; min-width: 0; }
+.greeting-library > .class-gallery,
+.greeting-library > .shared-greetings { grid-column: 1 / -1; min-width: 0; }
 .original-greetings { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px 24px; }
 .greeting-tabs { display: flex; gap: 8px; }
 .greeting-tabs button { flex: 1; min-width: 0; min-height: 48px; padding: 12px; }
 .greeting-tabs button[aria-selected="true"] { background: var(--accent); color: #101820; border-color: var(--accent); font-weight: 700; }
 .greeting-library [role="tabpanel"][hidden] { display: none; }
+.shared-greetings { scroll-margin-top: 24px; }
+.shared-greetings > .library-heading { margin-bottom: 0; }
+.voyager-listen-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.voyager-listen-actions button { min-height: 52px; }
 .greeting-save { padding: 16px 0; }
 .greeting-save > button { min-height: 48px; }
 .greeting-save > p { margin: 8px 0; }
@@ -571,6 +584,7 @@ body.motion-reduced .recording-console.is-recording .recording-orbit b {
   }
 }
 @media (max-width: 680px) {
+  .voyager-listen-actions { grid-template-columns: 1fr; }
   .original-greetings { grid-template-columns: 1fr; }
   .greeting-tabs button { font-size: .875rem; }
   .class-record { padding: 18px; }

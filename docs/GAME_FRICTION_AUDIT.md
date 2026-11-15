@@ -23,7 +23,7 @@ Orientation is not a pre-play gate. The landing hero and map present a help requ
 
 ## Shared interface
 
-The mission page itself is the start screen. Story and science remain optional reading, and the intro dialog does not open automatically. How to play stays closed; on the first visit only, its summary receives a visible emphasis and then returns to the normal label after the learner uses a real control. Five missions respond after one meaningful action. Ingenuity deliberately uses a terrain decision followed by one highly visible launch action; it has no other setup gate, tutorial gate or duplicated start control.
+The mission page itself is the start screen. Story and science remain optional reading, and the intro dialog does not open automatically. How to play stays closed; on the first visit only, its summary receives a visible emphasis and then returns to the normal label after the learner uses a real control. Voyager is the exception: its short Listen → Reply → Save guide stays visible because learners choose between the 1977 archive and public visitor voices below the model. Five missions respond after one meaningful action. Ingenuity deliberately uses a terrain decision followed by one highly visible launch action; it has no other setup gate, tutorial gate or duplicated start control.
 
 ## Remaining playtest questions
 

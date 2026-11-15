@@ -100,6 +100,8 @@ const rows = [
   ['Greeting collections', 'Colecciones de saludos', 'Các bộ sưu tập lời chào'],
   ['Golden Record · 1977', 'Disco de Oro · 1977', 'Đĩa Vàng · 1977'],
   ['Visitor greetings', 'Saludos de visitantes', 'Lời chào của mọi người'],
+  ['Hear visitor greetings', 'Escuchar saludos de visitantes', 'Nghe lời chào của mọi người'],
+  ['Choose an original 1977 greeting or hear what Mission Alive visitors have shared.', 'Elige un saludo original de 1977 o escucha lo que compartieron los visitantes de Mission Alive.', 'Chọn một lời chào gốc năm 1977 hoặc nghe những gì người dùng Mission Alive đã chia sẻ.'],
   ['Share with a classroom', 'Compartir con una clase', 'Chia sẻ với lớp học'],
   ['Share your greeting', 'Comparte tu saludo', 'Chia sẻ lời chào của bạn'],
   ['Listen to greetings shared by other visitors. You do not need a class code to listen.', 'Escucha los saludos de otros visitantes. No necesitas un código de clase para escuchar.', 'Nghe lời chào do những người khác chia sẻ. Bạn không cần mã lớp để nghe.'],

@@ -5,7 +5,7 @@ import { es, vi } from '../src/locales/mission-actions.js';
 import { es as es14, vi as vi14 } from '../src/locales/nov14.js';
 
 test('consolidated listening, sharing and guidance labels are translated', () => {
-  for (const text of ['How to play', 'Story & science', 'Greeting collections', 'Golden Record · 1977', 'Visitor greetings', 'Share your greeting', 'Your greeting or transcript', 'Name, country & translation (optional)', 'Choose a language and add your words or a recording.']) {
+  for (const text of ['How to play', 'Story & science', 'Greeting collections', 'Golden Record · 1977', 'Visitor greetings', 'Hear visitor greetings', 'Choose an original 1977 greeting or hear what Mission Alive visitors have shared.', 'Share your greeting', 'Your greeting or transcript', 'Name, country & translation (optional)', 'Choose a language and add your words or a recording.']) {
     assert.ok(es[text] && vi[text], text);
     assert.notEqual(t(text, 'es'), text);
     assert.notEqual(t(text, 'vi'), text);
@@ -13,6 +13,20 @@ test('consolidated listening, sharing and guidance labels are translated', () =>
   for (const text of ['Share with everyone', 'Voices from Earth today', 'Report', 'Remove from everyone', 'I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.']) {
     assert.ok(es14[text] && vi14[text], text);
   }
+});
+
+test('Voyager keeps its mission and three-step guide visible, with public voices beside the original record', async () => {
+  const fs = await import('node:fs/promises');
+  const layout = await fs.readFile(new URL('../src/exhibit-layout.js', import.meta.url), 'utf8');
+  const quickStart = await fs.readFile(new URL('../src/quick-start.js', import.meta.url), 'utf8');
+  const main = await fs.readFile(new URL('../src/main.js', import.meta.url), 'utf8');
+  assert.match(layout, /\["#challenge-heading", "\.challenge-layout"\].*main/);
+  assert.doesNotMatch(layout, /\["#challenge-heading", "\.challenge-layout", "#hidden-facts-slot"/);
+  assert.match(layout, /find\("\.shared-greetings"\)/);
+  assert.match(quickStart, /mission === 'voyager'/);
+  assert.match(quickStart, /is-always-visible/);
+  assert.match(main, /id="open-visitor-greetings"/);
+  assert.match(main, /#visitor-greetings-tab/);
 });
 
 function node(tag = 'div') {

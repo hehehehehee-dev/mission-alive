@@ -8,6 +8,8 @@ Owner decision, 15 November 2026: a greeting goes public as soon as it is shared
 2. Tick the sharing box: “I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.”
 3. Press **Share with everyone**. The greeting counts toward the Voyager stamp, is kept on the device under “My shared greetings”, and appears straight away in “Voices from Earth today” for everyone.
 
+Anyone can listen without sharing. In the Voyager challenge, press **Hear visitor greetings** or open the **Visitor greetings** tab beside **Golden Record · 1977**. The public “Voices from Earth today” list appears before the create-and-share studio.
+
 Without the box ticked, nothing is uploaded. If sharing fails or the site runs locally, the greeting still counts toward the stamp.
 
 ## Safeguards that do not delay publishing

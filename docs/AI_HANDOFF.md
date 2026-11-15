@@ -8,16 +8,17 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the owner has authorized validated work to be committed and pushed directly to `origin/main`; Netlify deploys that branch automatically.
-- **Last change:** owner decision (2026-11-15): greetings publish immediately via `/api/greetings` (`server/shared-greetings.mjs`, `src/shared-greetings.js`), behind a consent box, with Report (hides at once), sharer delete key and owner token. The classroom Golden Record flow was removed. See `docs/SHARED_GREETINGS.md`.
+- **Last change:** Voyager's primary challenge is no longer hidden in **More to explore**. Its three-step guide stays visible, and the listening area now has adjacent **Golden Record · 1977** and **Visitor greetings** tabs. The public “Voices from Earth today” gallery is above the create-and-share studio.
+- **Immediately preceding:** the lobby gained an optional, skippable speech-bubble story starring Commander Mira and the new cadet. Six machines ask for help, then the final action starts Apollo 17. It auto-plays only while the learner has zero stamps.
 - **Impact route:** `/#impact` is now linked directly from the persistent header. It displays only aggregate closed-question results from the configured Google Sheet through the Netlify function; ages, short answers and individual rows are excluded.
 - **Impact display:** interest and belonging show the after-playing average out of 5; learn-more, recommendation and completion show percentages; response count is a plain total. Per-card methodology text was removed, while one caution/method note remains below the grid.
-- **Last verification:** 183 tests/build pass, including a server test (consent required, public at once, report hides, delete removes every copy). Local browser: consent gate, stamp still awarded. Posting to production was not tested; only `GET /api/greetings?action=list` should be checked after deploy.
+- **Last verification:** 192 tests and the production build pass after reconciling Claude's intro/navigation commits with the Voyager work. Headless Chrome confirmed the Voyager challenge is outside the disclosure, the quick-start is visible, the public-gallery button selects its tab, and the 390 px layout has no horizontal overflow. Posting to production was not tested; `GET /api/greetings?action=list` should still be checked after deploy.
 - **Not yet verified:** physical touch dragging for Apollo's new pieces, screen-reader announcement order, translated Apollo browser rendering, new Ingenuity flight UI on a physical device, fresh six-stamp gameplay, and production security headers.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - The former three-panel Ingenuity flow has been superseded by this local visual-flight prototype. Its engine is tested, but the new UI still needs hands-on child playtesting before publication.
 - **Next suggested steps:**
   1. Let the owner play the new local Ingenuity prototype; do not commit. Verify scene targets, responsive layout, real keyboard/touch input, all three landings, automatic tab pause/resume, retry and the existing stamp ceremony once browser access works.
-  2. After the next Netlify auto-deploy, confirm CSP, HSTS, Permissions-Policy, and the classroom gallery endpoint in production.
+  2. After the next Netlify auto-deploy, confirm CSP, HSTS, Permissions-Policy, and `/api/greetings?action=list` in production.
   3. Decide whether to remove the now-unused `moonPanel.play()` and `moonPanel.open()` from `src/moon-stories.js`.
 - **Open questions for the owner:** none.
 
@@ -47,7 +48,7 @@ The normal flow is:
 1. Lobby incoming training signal, direct mission CTA, stamp progress and the outward journey map as the main mission picker. Each map card is one short help request. No separate machine-card grid.
 2. Mission opening on the page itself (no dialog): real mission image, machine voice, “Built for” and “It did” beats, then a shared Problem / Your move / Reward rescue briefing. Built by `missionOpening()` and `src/mission-calls.js`.
 3. 3D or accessible 2D machine view and anatomy hotspots.
-4. Short action and goal at the active step; optional **How to play** combines the three-step visual Quick Start and explanation.
+4. Short action and goal at the active step; optional **How to play** combines the three-step visual Quick Start and explanation. Voyager is the deliberate exception: its three short human actions stay visible because the two listening collections sit below the 3D record.
 5. Interactive challenge with actionable feedback.
 6. Explicit stamp press and 750 ms ink-settle ceremony.
 7. “Still out there” story, final transmission, and mission gift.
@@ -68,9 +69,9 @@ Important invariants:
 - The help language is emotional academy framing, not a live emergency claim. Keep the visible line that says these are academy simulations based on real mission problems.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
 - Lobby defaults to Sun mode; `src/lobby-theme.js` validates `mission-alive-lobby-theme-v1` and scopes light styling to the lobby and information pages. `src/academy-navigation.css` keeps header actions visible and map callouts large. The map initializes in the lobby and disposes when leaving; `#journey` is a compatibility alias to it. DSN/history remain at `#mission-notes`, context at `#about`. Do not hide the map in a disclosure or move it to a separate page, and do not hide primary header links in Menu.
-- Voyager uses one **Voices from Earth** listening area: original 1977 greetings and approved visitor greetings in keyboard tabs. One native player controls the selected NASA greeting. One private-save button handles either written or recorded replies; saved drafts remain visible, classroom setup/review is optional, and no drawing exercise is present.
+- Voyager puts its challenge before the listening collections. **Golden Record · 1977** and public **Visitor greetings** are adjacent keyboard tabs, and direct buttons beside the 3D record open either collection. One native player controls the selected NASA greeting. A consent-gated **Share with everyone** action handles written or recorded replies; there is no classroom code, private-only save path or drawing exercise.
 - Long story/briefing content in the four original exhibits shares one **Story & science** disclosure. Avoid adding extra instruction cards that repeat the current step's action.
-- The footer privacy dialog is the public source of truth for classroom sharing. Keep it synchronized with `docs/PRIVACY.md` and `netlify/functions/class-record.mjs`.
+- The footer privacy dialog is the public source of truth for public greeting sharing. Keep it synchronized with `docs/PRIVACY.md`, `docs/SHARED_GREETINGS.md`, and `netlify/functions/shared-greetings.mjs`.
 - Completion must survive reload through validated stored mission IDs.
 
 ## 3. Technical map
@@ -126,7 +127,6 @@ Client variables:
 
 - `VITE_MISSION_API_URL` — optional mission-data backend override.
 - `VITE_COMMUNITY_API_URL` — optional moderated community-recording backend.
-- `VITE_CLASSROOM_API_URL` — optional classroom Golden Record backend.
 
 Server-only variables include:
 
@@ -203,11 +203,17 @@ Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, m
 
 ## 9. Handoff log
 
+### 2026-11-15 — Codex — `main`
+- **Commit:** Surface the Voyager mission and shared voices
+- **Changed:** moved the Voyager challenge out of More to explore; kept its quick-start visible; placed the public shared-greeting gallery in a Visitor greetings tab beside the 1977 collection; added direct listening actions, EN/ES/VI copy, mobile containment and regression coverage.
+- **Verified:** full Node test suite; production build; Chrome tab interaction; 390 px layout with no document overflow.
+- **Left for next:** verify that production `/api/greetings?action=list` returns the expected public entries after Netlify deploy; physical touch and screen-reader order remain device checks.
+
 ### 2026-11-15 — Claude — `main`
 - **Commit:** Add an opening story with Commander Mira and a new cadet
 - **Changed:** new `src/intro-sequence.js`, `src/intro-sequence.css`, `tests/intro-sequence.test.js`; `src/main.js` (import, `startIntro()`, auto-play on the landing route when `shouldAutoPlayIntro(completed.size)`), 32 rows in `src/locales/nov14.js`.
 - **Verified:** 192 tests; build; local browser at 1280 and 390 px in English and Vietnamese: auto-plays with no stamps, not with one stamp, Esc and Skip release the locked page.
-- **Left for next:** the intro replays on every landing load until the first stamp (could be once per day or tab if it annoys returning teachers); characters are code-drawn placeholders that an illustrator could replace; no voice (owner chose speech bubbles only). Codex's uncommitted edits in `src/main.js`, `src/exhibit-layout.js`, `src/greetings.css`, `src/quick-start.js` and others were left out.
+- **Left for next:** the intro replays on every landing load until the first stamp (could be once per day or tab if it annoys returning teachers); characters are code-drawn placeholders that an illustrator could replace; no voice (owner chose speech bubbles only). Codex's uncommitted Voyager edits were preserved and reconciled after this commit.
 
 ### 2026-11-15 — Claude — `main`
 - **Commit:** Keep the site header on the Moon mission pages

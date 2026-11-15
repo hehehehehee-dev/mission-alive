@@ -37,9 +37,12 @@ export function mountExhibitLayout(id) {
     const main = create("div", { id: "voyager-main", class: "voyager-main" });
     const more = disclosure("More to explore", "voyager-more");
     container.append(main, more);
+    // The mission itself is the primary task. Keep it above both listening
+    // libraries instead of hiding it at the bottom of More to explore.
+    for (const selector of ["#challenge-heading", ".challenge-layout"]) move(find(selector), main);
     const library = find(".greeting-library");
     move(library, main);
-    const gallery = find(".class-gallery");
+    const gallery = find(".shared-greetings") || find(".class-gallery");
     if (gallery) {
       const tabs = create("div", { class: "greeting-tabs", role: "tablist", "aria-label": "Greeting collections" });
       const original = create("div", { id: "original-greetings", class: "original-greetings", role: "tabpanel", "aria-labelledby": "original-greetings-tab" });
@@ -103,7 +106,7 @@ export function mountExhibitLayout(id) {
       move(oldLabel, capsule);
     }
     for (const selector of [".journey-explainer", ".community-library"]) move(find(selector), capsule);
-    for (const selector of ["#challenge-heading", ".challenge-layout", "#hidden-facts-slot", "#discovery"]) move(find(selector), more);
+    for (const selector of ["#hidden-facts-slot", "#discovery"]) move(find(selector), more);
   }
 
   const reading = create("div", { class: "module-reading", id: "module-reading" });

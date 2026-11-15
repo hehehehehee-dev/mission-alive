@@ -23,6 +23,14 @@ export function mergeMissionHelp(host) {
   const overview = host?.querySelector('.quick-start');
   if (!overview || overview.closest('.mission-help')) return;
   const explanation = host.querySelector('.why-it-works');
+  const mission = overview.dataset.tutorialMission;
+  // Voyager has only three short human actions. They stay visible because the
+  // listening collections sit below the 3D record and must be easy to find.
+  if (mission === 'voyager') {
+    overview.classList.add('is-always-visible');
+    explanation?.remove();
+    return;
+  }
   const help = document.createElement('details');
   help.className = 'mission-help';
   const summary = document.createElement('summary');
@@ -33,7 +41,6 @@ export function mergeMissionHelp(host) {
     help.append(explanation.querySelector('div'));
     explanation.remove();
   }
-  const mission = overview.dataset.tutorialMission;
   const key = mission ? `mission-alive-tutorial-seen-${mission}-v1` : '';
   let seen = false;
   try { seen = Boolean(key && localStorage.getItem(key)); } catch {}
