@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Child-readable text sizes and a compact phone mission switcher
+
+- Added `src/readable-type.css`, loaded last: labels are now at least 12 px and text meant to be read at least 14 px (was as small as 7.7–10 px in places such as “TRAINING MODULE”, map callouts, opening labels and the stamp counter). Sizes use rem so the larger-text setting still scales them.
+- On phones the six-mission switcher above each mission is one swipeable row of names about 49 px tall instead of a 290 px block; the current mission is scrolled into view. The hidden labels stay available to screen readers. The first challenge control moves up by about 200 px.
+- Desktop layout is unchanged.
+
 ### Optional feedback and automatically updated impact
 
 - Added the owner's Google Form to every mission ending, the footer, the graduation certificate controls and the printable certificate. Feedback stays optional; certificate names and progress are not prefilled or uploaded.

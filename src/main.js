@@ -50,6 +50,7 @@ import './lobby-launch.css';
 import './lobby-day.css';
 import './academy-navigation.css';
 import './feedback-impact.css';
+import './readable-type.css';
 import { feedbackLinkMarkup, mountFeedbackLinks } from './feedback.js';
 import { mountImpact } from './impact.js';
 mountFeedbackLinks();
@@ -2702,6 +2703,12 @@ async function render(id) {
     else b.removeAttribute("aria-current");
     b.querySelector(".current-marker").hidden = !selected;
   });
+  // On phones the switcher is one swipeable row; keep the current mission in view
+  // without moving the page itself.
+  const currentTab = $(`.exhibits [data-exhibit="${id}"]`);
+  const switcher = currentTab?.closest(".exhibits");
+  if (switcher && switcher.scrollWidth > switcher.clientWidth)
+    switcher.scrollLeft = Math.max(0, currentTab.offsetLeft - (switcher.clientWidth - currentTab.offsetWidth) / 2);
   $("#eyebrow").textContent = e.place;
   $("#title").innerHTML = e.title;
   $("#title").insertAdjacentHTML(

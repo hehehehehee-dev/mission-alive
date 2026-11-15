@@ -8,8 +8,8 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the standing direct-main commit/push authorization remains active.
-- **Last change:** optional Google Form feedback at all mission endings, graduation/certificate controls, printable certificate and footer. Added About → `#impact` with automatic Sheet aggregates via a Netlify function. The server projects only known closed-question columns; age and short-answer values are not requested. New responses need no redeploy.
-- **Last verification:** 154 tests/build pass, including data projection, missing/duplicate answers and timed refresh/disposal. Production `/api/playtest-impact` returned HTTP 200 and the browser at `https://mission-alive.netlify.app/#impact` showed the actual zero-response state after deployment of `b62b9cc`. Browser checks also covered empty/populated/error states, EN/ES/VI, 390px and restored six-stamp graduation feedback with certificate printing still enabled and exactly six stamps. Local fixtures were not submitted to Google. Full six-mission gameplay/printing was not repeated.
+- **Last change:** `src/readable-type.css` (imported last in `src/main.js`) sets a child-readable type floor (labels ≥ 12 px, reading text ≥ 14 px) and turns the six-mission switcher into one swipeable row on phones; `render()` scrolls the current mission into view inside it.
+- **Last verification:** 156 tests/build pass. Local browser at 390 px: text under 12 px is 0–2% on mission pages (was 7–13%), switcher 49 px tall (was 290), no horizontal overflow; at 1366 px the layout is unchanged.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
@@ -199,6 +199,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Claude — `main`
+- **Commit:** Raise text to a child-readable floor and compact the phone mission switcher
+- **Changed:** new `src/readable-type.css`, one import and a small scroll-into-view block in `src/main.js`, new `tests/readable-type.test.js`.
+- **Verified:** 156 tests; build; local browser at 390 px and 1366 px (see section 0).
+- **Left for next (design audit, child audience):** stamps earned are still only a 12 px “Stamp earned ✓” on the map and a 5 px progress bar; the phone header is 177 px with five adult-facing buttons above the hook; three stacked headings before play remain on the four deep-space/Mars missions; copy reads at about grade 8–11 against a grade 5–7 target; lobby map credits stay at 12 px by choice.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Record production feedback integration verification

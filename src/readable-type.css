@@ -1,0 +1,106 @@
+/* Child-readable type floor (ages 10–14). Loaded last.
+   Labels never go below 12px; text meant to be read never goes below 14px.
+   Sizes are in rem so the "larger text" access setting still scales them. */
+
+/* Labels and eyebrows: at least 12px. */
+body .module-number,
+body #app > footer > span,
+body .feedback-link,
+body #passport,
+body .story-chapters > button > span,
+body .hidden-fact-card > span,
+body .diagram-callout > small,
+body .mission-opening-view figcaption small,
+body .mission-opening-view figcaption a,
+body .mission-opening-beats dt,
+body .mission-opening-marker,
+body .exhibit-story-beats dt,
+body #story-marker,
+body #story-chapter-source,
+body .briefing-points > article > span,
+body .briefing-challenge strong,
+body .module-mission-objective strong,
+body .fact h3,
+body #hidden-facts-count,
+body .scene-heading > div > span,
+body .current-stop-label,
+body .moon-panel .dialog-top .eyebrow,
+body .voyager-data-card h3,
+body .countdown-value span { font-size: 0.75rem; }
+
+/* Text children actually read: at least 14px, with room between lines. */
+body .fine,
+body .hidden-fact-card > p,
+body .greeting-choice > span,
+body .exhibits small,
+body .quick-start li small,
+body .quick-start-heading small,
+body .mission-opening-view figcaption > span,
+body .briefing-copy > a,
+body .fact a,
+body .reflection > strong,
+body .parts-hint,
+body .planet-credit a,
+body .scene-heading > a,
+body .scale-key,
+body .diagram-note,
+body .location-map-heading p,
+body .scroll-flight-instruction,
+body .map-play-action,
+body .moon-route-source,
+body .lrv-preview-label,
+body #crew-name-help,
+body #story-next,
+body #flight-attempts > li,
+body .recording-fields label,
+body .greeting-optional-fields label,
+body .greeting-source,
+body .mission-story-more > summary { font-size: 0.875rem; line-height: 1.55; }
+
+/* The sentences that carry the idea: 15–16px. */
+body .voyager-objectives > li,
+body #voyager-live-light-time,
+body .voyager-countdown > p,
+body .journey-explainer,
+body .voyager-contact p:not(.voyager-contact-source),
+body .mission-opening-beats dd { font-size: 0.9375rem; line-height: 1.6; }
+
+/* Phones: the six-mission switcher becomes one swipeable row instead of a
+   290px block above every mission. Names only; the current one is marked. */
+@media (max-width: 700px) {
+  body .exhibits {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  body .exhibits button {
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding: 12px 14px;
+    scroll-snap-align: start;
+  }
+  body .exhibits .module-number,
+  body .exhibits small { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  body .exhibits strong { font-size: 0.9375rem; white-space: nowrap; }
+  body .exhibits .number { display: inline; font-size: 0.75rem; }
+}
+
+/* Lobby map and header: later, more specific rules needed a stronger selector. */
+body #app .header-actions #passport,
+body .location-map .diagram-pin .diagram-callout > small,
+body .location-map .heliopause small,
+body .program-heading output,
+body .program-list .program-empty,
+body .program-tools button,
+body .library-heading > span,
+body .studio-heading > span,
+body .greeting-translation figcaption,
+body label .optional-label { font-size: 0.75rem; }
+body .location-map .journey-scene .scale-key,
+body .location-map .journey-scene .scene-heading > a,
+body .location-map .journey-scene .planet-credit,
+body .location-map .journey-scene .diagram-note,
+body .location-map .location-map-heading p,
+body .location-map .location-map-heading .scroll-flight-instruction { font-size: 0.875rem; line-height: 1.55; }
