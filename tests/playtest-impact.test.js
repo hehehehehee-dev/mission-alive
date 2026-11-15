@@ -75,7 +75,9 @@ test('feedback is offered at graduation and in the certificate without prefilled
 });
 test('impact cards show paired before-to-after averages without per-card explanations', async () => {
   const impact=await readFile(new URL('../src/impact.js',import.meta.url),'utf8');
-  assert.match(impact,/`\$\{format\(metric\.before\)\} → \$\{format\(metric\.after\)\} \/ 5`/);
+  assert.match(impact,/impact-paired/);
+  assert.match(impact,/t\('Before'\)/);
+  assert.match(impact,/t\('After'\)/);
   assert.match(impact,/percent\(metric\[numerator\], metric\.n\)/);
   assert.doesNotMatch(impact,/Average before → after|Paired answers:|Average change:|Responses, not unique visitors|Ratings of 4 or 5 among valid answers/);
 });

@@ -16,11 +16,30 @@ export function mountImpact(root, {fetcher = fetch, setTimer = setInterval, clea
       const number = document.createElement('strong'); number.textContent = value;
       article.append(title, number); results.append(article);
     };
+    const pairedCard = (label, metric) => {
+      const article = document.createElement('article'); article.className = 'impact-metric impact-paired';
+      const title = document.createElement('h2'); title.textContent = label;
+      const comparison = document.createElement('div'); comparison.className = 'impact-comparison';
+      comparison.setAttribute('role', 'group');
+      comparison.setAttribute('aria-label', `${t('Before')} ${format(metric.before)}, ${t('After')} ${format(metric.after)}, / 5`);
+      const before = document.createElement('div'); before.className = 'impact-side';
+      const beforeLabel = document.createElement('span'); beforeLabel.textContent = t('Before');
+      const beforeValue = document.createElement('strong'); beforeValue.textContent = format(metric.before);
+      before.append(beforeLabel, beforeValue);
+      const arrow = document.createElement('span'); arrow.className = 'impact-arrow'; arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = '→';
+      const after = document.createElement('div'); after.className = 'impact-side';
+      const afterLabel = document.createElement('span'); afterLabel.textContent = t('After');
+      const afterValue = document.createElement('strong'); afterValue.textContent = format(metric.after);
+      after.append(afterLabel, afterValue);
+      const scale = document.createElement('span'); scale.className = 'impact-scale'; scale.textContent = '/ 5';
+      comparison.append(before, arrow, after, scale);
+      article.append(title, comparison); results.append(article);
+    };
     card('Survey responses', format(snapshot.totalResponses));
     for (const [key, label] of [['interest','Interest in space'], ['belonging','Feeling that space is for me']]) {
       const metric = snapshot[key];
       if (!metric?.n) continue;
-      card(label, `${format(metric.before)} → ${format(metric.after)} / 5`);
+      pairedCard(label, metric);
     }
     for (const [key, label, numerator] of [['learnMore','Want to learn more','agree'], ['recommend','Would recommend to a friend','agree'], ['completion','Finished all six missions (self-reported)','yes']]) {
       const metric = snapshot[key];

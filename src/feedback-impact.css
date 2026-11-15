@@ -7,9 +7,21 @@
 .impact-metric { padding: 22px; background: #102330; color: #ecf3f6; border: 1px solid #78929f; border-radius: 10px; }
 .impact-metric h2 { margin: 0; font-size: 1.125rem; line-height: 1.4; }
 .impact-metric > strong { display: block; margin: 16px 0 0; font-size: 2rem; font-variant-numeric: tabular-nums; }
+.impact-comparison { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) auto; align-items: end; gap: 10px; margin-top: 16px; }
+.impact-side { min-width: 0; }
+.impact-side > span { display: block; margin-bottom: 4px; color: #b8cbd5; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+.impact-side > strong { display: block; font-size: clamp(1.65rem, 5vw, 2rem); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.impact-arrow { align-self: center; padding-top: 17px; color: var(--accent); font-size: 1.7rem; }
+.impact-scale { align-self: end; padding-bottom: 2px; color: #b8cbd5; font-size: .95rem; white-space: nowrap; }
 .impact-metric p { margin: 0; font-size: .9375rem; }
 .impact-method { max-width: 75ch; margin-top: 24px; line-height: 1.7; }
 body.lobby-day .impact-metric { background: #fffefa; color: #182c3a; border-color: #a1b4bc; }
+body.lobby-day .impact-side > span, body.lobby-day .impact-scale { color: #53717f; }
 body.lobby-day #academy-impact :is(a,button) { color: #174f67; }
 .certificate-feedback { display: inline-block; margin-top: 8px; font-size: 10pt; color: #253e49; }
+@media (max-width: 520px) {
+  .impact-comparison { gap: 7px; }
+  .impact-side > strong { font-size: clamp(1.45rem, 8vw, 1.8rem); }
+  .impact-arrow { font-size: 1.45rem; }
+}
 @media print { .feedback-invitation { display: none; } }

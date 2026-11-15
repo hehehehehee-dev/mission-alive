@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Split paired impact scores into Before and After columns
+
+- Interest and belonging cards now use labeled Before and After columns with a shared `/ 5` scale, making the direction of change readable without parsing an inline arrow.
+- The columns collapse cleanly at narrow widths and keep the existing percentage cards unchanged. Added translated labels and accessibility names.
+
 ### Make impact movement visible
 
 - Impact cards now show paired averages as `before → after / 5` for interest in space and belonging, instead of showing only the after score.

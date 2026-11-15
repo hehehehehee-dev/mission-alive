@@ -23,6 +23,8 @@ const rows = [
   ['Responses, not unique visitors.','Respuestas, no visitantes únicos.','Số phản hồi, không phải số người riêng biệt.'],
   ['Interest in space','Interés por el espacio','Mức quan tâm tới không gian'],
   ['Feeling that space is for me','Sentir que el espacio es para mí','Cảm giác không gian dành cho mình'],
+  ['Before','Antes','Trước'],
+  ['After','Después','Sau'],
   ['Average before → after, out of 5.','Promedio antes → después, sobre 5.','Trung bình trước → sau, trên thang 5.'],
   ['Paired answers:','Respuestas emparejadas:','Cặp trả lời:'],
   ['Average change:','Cambio promedio:','Thay đổi trung bình:'],
