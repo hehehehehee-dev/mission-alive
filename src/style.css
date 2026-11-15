@@ -209,19 +209,19 @@ header {
   letter-spacing: 0.12em;
   font-weight: 700;
 }
+/* Logo: Voyager's Golden Record with a heartbeat shaped like an M. */
 .brand-mark {
-  font-size: 30px;
-  letter-spacing: -0.15em;
-  border: 1px solid #6d6252;
-  border-radius: 50%;
+  flex: 0 0 auto;
   width: 47px;
   height: 47px;
-  text-align: center;
-  padding-top: 6px;
+  display: block;
 }
-.brand-mark span {
-  color: var(--accent);
-  font-size: 20px;
+.brand-pulse { stroke-dasharray: 100; stroke-dashoffset: 0; }
+body.motion-allowed .brand-pulse { animation: brand-pulse 3.2s ease-in-out infinite; }
+@keyframes brand-pulse {
+  0% { stroke-dashoffset: 100; }
+  45%, 85% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 100; }
 }
 .brand small {
   display: block;
@@ -3412,8 +3412,6 @@ body[data-exhibit="voyager"] {
   .brand-mark {
     width: 35px;
     height: 35px;
-    font-size: 23px;
-    padding-top: 3px;
   }
   .header-actions button {
     font-size: 0.75rem;

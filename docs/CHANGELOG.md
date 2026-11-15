@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Golden Record logo
+
+- Replaced the “M•” mark and the unrelated triangle favicon with one logo: Voyager's Golden Record with a heartbeat shaped like an M. The header mark and the browser-tab icon now share the same shape.
+- The heartbeat redraws slowly in the header only when motion is allowed; with reduced motion it stays still. The mark is decorative (`aria-hidden`); the link keeps its text name.
+- Original Mission Alive artwork; no NASA logo or NASA image is used.
+
 ### Make mission actions distinct and explain each active step
 
 - Apollo now has a select/place or drag/drop repair workbench. Its editable side-view patch is visible beside the 3D preview; the white tip supports dragging and keyboard length/angle adjustment. Numeric settings are optional.

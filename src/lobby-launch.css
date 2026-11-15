@@ -137,7 +137,7 @@ body[data-exhibit="lobby"] .mission-passport > .launch-ship { z-index: 1; right:
   }
   #app > header .brand { grid-column: auto; grid-row: auto; flex: 0 1 auto; min-width: 0; }
   #app > header .brand > span:last-child { white-space: nowrap; }
-  #app > header .brand-mark { flex: 0 0 auto; width: 33px; height: 33px; font-size: 21px; }
+  #app > header .brand-mark { flex: 0 0 auto; width: 33px; height: 33px; }
   #app > header .header-actions { display: flex; flex: 1 0 auto; justify-content: flex-end; align-items: center; flex-wrap: nowrap; gap: 5px; }
   #app > header .language-picker { grid-column: auto; grid-row: auto; }
   #app > header .language-picker select { width: 72px; min-height: 36px; padding: 6px; }

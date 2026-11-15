@@ -109,3 +109,14 @@ test('the project problem uses registered sources and avoids banned stock phrasi
   assert.ok(educationResearch.some((entry) => entry.id === 'lego-space-survey-2019'));
   assert.ok(educationResearch.some((entry) => entry.id === 'when-stem-age'));
 });
+
+test('the Golden Record logo is the same mark in the header and the browser tab, and respects reduced motion', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const css = await readFile(new URL('../src/style.css', import.meta.url), 'utf8');
+  const pulse = '7,26 14,26 18.5,12 24,34 29.5,12 34,26 41,26';
+  assert.match(html, /<svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"/);
+  assert.equal(html.split(pulse).length - 1, 2, 'header mark and favicon share one pulse shape');
+  assert.match(html, /rel="icon"\s+type="image\/svg\+xml"\s+href="data:image\/svg\+xml,/);
+  assert.match(css, /body\.motion-allowed \.brand-pulse \{ animation: brand-pulse/);
+  assert.doesNotMatch(css, /^\.brand-pulse \{[^}]*animation/m, 'the pulse only animates when motion is allowed');
+});

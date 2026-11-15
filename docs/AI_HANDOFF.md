@@ -197,6 +197,12 @@ Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, m
 
 ## 9. Handoff log
 
+### 2026-11-14 — Claude — `main`
+- **Commit:** Replace the header mark and favicon with the Golden Record logo
+- **Changed:** `index.html` (inline SVG `.brand-mark`, data-URI favicon), `src/style.css` and `src/lobby-launch.css` (mark sizing, `brand-pulse` animation gated on `body.motion-allowed`), `tests/project-copy.test.js`.
+- **Verified:** `npm test`; `npm run build`; local browser: 47 px mark in the header, animation on with motion allowed and off with reduced motion.
+- **Left for next:** the printable certificate and Teachers page do not show the logo yet. Codex's uncommitted rover-fender work was left out of this commit.
+
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Synchronize the field probe on reset and record playtesting
 - **Changed:** synchronized the field-tool force display with the actual game force, including resets and alternative buttons; removed duplicated visible probe readings.
