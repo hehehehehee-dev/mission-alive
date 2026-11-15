@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Make playtest impact visible in primary navigation
+
+- Added a direct Impact button to the persistent header instead of requiring visitors to discover the link inside About.
+- The existing `/#impact` page still reads aggregate closed-question results through `/api/playtest-impact`, refreshes every five minutes while open, and excludes ages, individual responses and short-answer text.
+- Added EN/ES/VI navigation copy and a regression that keeps the route visible.
+
 ### Preview: make every mission feel like a help request
 
 - Reframed the landing hero as an incoming training signal: six machines need the learner's help, six stamps unlock the certificate, and one quiet line states that these are academy simulations based on real mission problems.

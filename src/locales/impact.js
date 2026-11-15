@@ -1,4 +1,5 @@
 const rows = [
+  ['Impact','Impacto','Tác động'],
   ['Before and after ratings are recalled in the same survey.','Las valoraciones de antes y después se recuerdan en la misma encuesta.','Điểm trước và sau đều được người trả lời nhớ lại trong cùng một khảo sát.'],
   ['See playtest impact →','Ver el impacto de las pruebas →','Xem tác động từ chơi thử →'],
   ['Playtest impact','Impacto de las pruebas','Tác động từ chơi thử'],

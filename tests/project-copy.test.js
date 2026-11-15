@@ -30,6 +30,7 @@ test('the lobby uses the map as its mission picker and defers naming until gradu
     assert.match(main, new RegExp(`\\b${id}: '<svg`));
   }
   assert.match(html, /data-academy-page="mission-notes"/);
+  assert.match(html, /data-academy-page="impact">Impact<\/button>/);
   assert.doesNotMatch(html, /class="mobile-header-menu"/);
   assert.match(main, /route === "lobby-missions"/);
   const lobby = html.slice(html.indexOf('id="lobby"'), html.indexOf('id="academy-page"'));
