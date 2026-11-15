@@ -9,7 +9,7 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the standing direct-main commit/push authorization remains active.
 - **Last change:** optional Google Form feedback at all mission endings, graduation/certificate controls, printable certificate and footer. Added About → `#impact` with automatic Sheet aggregates via a Netlify function. The server projects only known closed-question columns; age and short-answer values are not requested. New responses need no redeploy.
-- **Last verification:** 154 tests/build pass, including data projection, missing/duplicate answers and timed refresh/disposal. Live Sheet read returned zero responses. Browser checks covered empty/populated/error states, EN/ES/VI, 390px and restored six-stamp graduation feedback with certificate printing still enabled and exactly six stamps. Local fixtures were not submitted to Google. Full six-mission gameplay/printing was not repeated.
+- **Last verification:** 154 tests/build pass, including data projection, missing/duplicate answers and timed refresh/disposal. Production `/api/playtest-impact` returned HTTP 200 and the browser at `https://mission-alive.netlify.app/#impact` showed the actual zero-response state after deployment of `b62b9cc`. Browser checks also covered empty/populated/error states, EN/ES/VI, 390px and restored six-stamp graduation feedback with certificate printing still enabled and exactly six stamps. Local fixtures were not submitted to Google. Full six-mission gameplay/printing was not repeated.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
@@ -199,6 +199,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Record production feedback integration verification
+- **Changed:** recorded verification of the deployed feedback/impact integration; no product changes.
+- **Verified:** production HTML contains the impact page, `/api/playtest-impact` returns HTTP 200 with aggregate-only zero-response data, and the production browser displays the waiting state and data-check time. Temporary local QA server stopped.
+- **Left for next:** collect genuine voluntary responses; broader gameplay checks and the duplicated Form question remain as recorded below.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Collect optional feedback and refresh public playtest impact

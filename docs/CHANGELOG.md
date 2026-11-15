@@ -11,6 +11,7 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 - Results refresh about every five minutes while open, without rebuilding the site. Counts, paired means and per-question denominators are reported honestly; empty and failed data have distinct states. Conflicting duplicate After ratings are excluded from that measure.
 - Updated privacy and the playtest guide. Verified the actual source had zero responses; populated/error and six-stamp graduation views were tested locally with isolated fixtures, without submitting a real response.
 - Validation: 154 tests, production build and live Sheet aggregation passed. The printed certificate link was inspected in the markup; physical printing and a fresh six-mission playthrough were not repeated.
+- Post-deploy verification: production API returned HTTP 200 with actual zero-response aggregates, and the public impact page displayed the matching waiting state and data-check time.
 
 ### Make the lobby map the mission picker
 
