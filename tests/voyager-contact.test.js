@@ -116,7 +116,8 @@ test("a failed or hanging browser request removes current contact, recovers, age
     replaceChildren(...children) { this.children = children; },
     append(...children) { this.children.push(...children); },
   });
-  const messages = element();
+  const card = { hidden: true };
+  const messages = Object.assign(element(), { closest: (selector) => (selector === ".voyager-contact" ? card : null) });
   const source = element();
   Object.defineProperty(globalThis, "window", { configurable: true, value: {
     setTimeout(callback, delay) { const id = ++nextTimer; timeouts.set(id, { callback, delay }); return id; },
@@ -152,6 +153,7 @@ test("a failed or hanging browser request removes current contact, recovers, age
   const renderedMessage = () => messages.children.map((child) => child.textContent).join(" ");
   await flush();
   assert.match(renderedMessage(), /^Voyager 1 is talking to Canberra right now\./);
+  assert.equal(card.hidden, false, "real contact data shows the card");
   assert.equal(announcements.length, 1);
   assert.equal(timeouts.size, 0);
 
@@ -167,13 +169,15 @@ test("a failed or hanging browser request removes current contact, recovers, age
   assert.equal(requestSignals[1].aborted, true);
   assert.equal(timeouts.size, 0);
   assert.equal(renderedMessage(), "Live DSN contact is unavailable. Please check again later.", "a failed refresh cannot reuse even a recent contact");
-  assert.equal(announcements.length, 2);
+  assert.equal(card.hidden, true, "with no live data the card is removed from view");
+  assert.equal(announcements.length, 1, "an unavailable state is not announced");
 
   poll();
   await flush();
   assert.equal(requestCount, 3, "polling recovers after a timed-out request");
   assert.match(renderedMessage(), /^Voyager 1 is talking to Canberra right now\./);
-  assert.equal(announcements.length, 3);
+  assert.equal(card.hidden, false);
+  assert.equal(announcements.length, 2);
 
   poll();
   assert.equal(requestCount, 4);
@@ -182,14 +186,19 @@ test("a failed or hanging browser request removes current contact, recovers, age
   poll();
   assert.equal(requestCount, 4, "polling does not overlap a pending request");
   assert.equal(renderedMessage(), "Live DSN contact is unavailable. Please check again later.");
-  assert.equal(announcements.length, 4);
+  assert.equal(card.hidden, true);
+  assert.equal(announcements.length, 2);
   ui.dispose();
   await flush();
   assert.equal(requestSignals[3].aborted, true);
   assert.equal(timeouts.size, 0);
   assert.equal(intervals.size, 0);
   assert.equal(listeners.size, 0);
-  assert.equal(announcements.length, 4, "leaving the module cannot publish a late state change");
+  assert.equal(announcements.length, 2, "leaving the module cannot publish a late state change");
   poll();
   assert.equal(requestCount, 4);
+});
+
+test("the DSN card starts hidden so an unavailable state is never shown", () => {
+  assert.match(voyagerContactMarkup(), /<aside class="voyager-contact"[^>]* hidden>/);
 });

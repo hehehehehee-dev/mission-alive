@@ -37,10 +37,25 @@ test("earned stamps are visible: a slot per mission, a thicker bar, and a marked
 test("phone header links stay visible in one swipeable row, not behind a menu", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   assert.doesNotMatch(html, /class="mobile-header-menu"/);
-  const rule = css.slice(css.lastIndexOf("@media (max-width: 700px)"));
+  const start = css.indexOf("/* Phones: the header links stay visible");
+  const rule = css.slice(start, css.indexOf("/* Mars:", start));
   assert.match(rule, /\.desktop-header-tools \{[^}]*display: flex;[^}]*flex-wrap: nowrap;[^}]*overflow-x: auto;/s);
   assert.match(rule, /\.desktop-header-tools button \{[^}]*min-height: 44px;[^}]*white-space: nowrap;/s);
   assert.doesNotMatch(rule, /display:\s*none/);
   assert.match(rule, /\.header-actions \{ min-width: 0; \}/, "the row must not widen the page on a phone");
   assert.match(rule, /min-width: 0;\s*max-width: 100%;/);
+});
+
+test("the header starts with a Home link back to the lobby, translated", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const { es, vi } = await import("../src/locales/nov14.js");
+  assert.match(html, /<div class="desktop-header-tools"><a class="home-link" id="home-link" href="\/#lobby">/);
+  assert.match(css, /\.home-link \{[^}]*min-height: 44px;/);
+  assert.ok(es.Home && vi.Home);
+});
+
+test("map cards around the same planet are pushed apart so they cannot overlap", () => {
+  assert.match(css, /#location-map-slot \.mars-ingenuity \.diagram-callout \{ top: -112px; \}/);
+  assert.match(css, /#location-map-slot \.mars-curiosity \.diagram-callout \{ top: 84px; \}/);
+  assert.match(css, /#location-map-slot \.moon-surveyor \.diagram-callout \{ top: 115px; \}/);
 });

@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Home button, separated map cards, and no empty DSN card
+
+- Added a Home link as the first header link on every page (Spanish “Inicio”, Vietnamese “Trang chủ”).
+- The Ingenuity and Curiosity cards on the Mars stop overlapped after the help-request labels and larger text; the two Moon cards were only a few pixels apart and overlapped on phones. Both pairs now keep at least 20 px between them from 390 to 1920 px wide.
+- The Voyager Deep Space Network card is hidden whenever live contact data is unavailable, instead of showing “Live DSN contact is unavailable. Please check again later.” It appears again as soon as a live snapshot arrives, and the unavailable state is no longer announced to screen readers.
+
 ### Greetings are shared with everyone at once; classroom sharing removed
 
 - Owner decision: “Save privately on this device” became **Share with everyone**. After ticking a consent box (“I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.”), a written or recorded greeting is published immediately in a new “Voices from Earth today” list on the Voyager page. It still counts toward the Voyager stamp, also when sharing fails.

@@ -154,3 +154,27 @@ body.motion-reduced .passport-track i { transition: none; }
     scroll-snap-align: start;
   }
 }
+
+/* Mars: the Ingenuity and Curiosity cards grew with "HELP REQUEST" labels and
+   larger text, so they overlapped. Push them apart around their pins. */
+#location-map-slot .mars-ingenuity .diagram-callout { top: -112px; }
+#location-map-slot .mars-curiosity .diagram-callout { top: 84px; }
+@media (max-width: 680px) {
+  #location-map-slot .mars-ingenuity .diagram-callout { top: -128px; }
+  #location-map-slot .mars-curiosity .diagram-callout { top: 84px; }
+}
+/* Moon: Apollo 17 and Surveyor 3 cards were only a few pixels apart, and
+   overlapped on phones. */
+#location-map-slot .moon-surveyor .diagram-callout { top: 115px; }
+@media (max-width: 680px) {
+  #location-map-slot .moon-surveyor .diagram-callout { top: 130px; }
+}
+
+/* Home: always first in the header links, styled like its neighbours. */
+#app > header .desktop-header-tools .home-link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 6px; color: inherit; font-size: .875rem; font-weight: 600; text-decoration: none; }
+#app > header .desktop-header-tools .home-link:hover { background: #ffffff14; }
+#app > header .desktop-header-tools .home-link:focus-visible { outline: 3px solid #ffe49a; outline-offset: 3px; }
+body.lobby-day #app > header .desktop-header-tools .home-link { color: #243e4d; background: #fffefa; border-color: #a1b4bc; }
+@media (max-width: 700px) {
+  body #app > header .desktop-header-tools .home-link { flex: 0 0 auto; padding: 8px 14px; white-space: nowrap; scroll-snap-align: start; }
+}

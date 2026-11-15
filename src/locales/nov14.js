@@ -134,6 +134,7 @@ const rows = [
   ['Estimate from NASA/JPL Horizons, not a signal from the spacecraft · press Read current distance to update', 'Estimación de NASA/JPL Horizons, no una señal de la nave · pulsa Leer la distancia actual para actualizar', 'Ước tính từ NASA/JPL Horizons, không phải tín hiệu từ con tàu · bấm Đọc khoảng cách hiện tại để cập nhật'],
   ['How this estimate works ↗', 'Cómo funciona esta estimación ↗', 'Cách tính ước tính này ↗'],
   ['Earth is here', 'Aquí está la Tierra', 'Trái Đất ở đây'],
+  ['Home', 'Inicio', 'Trang chủ'],
   ['Shared greetings', 'Saludos compartidos', 'Lời chào được chia sẻ'],
   ['OpenAI APIs · optional greeting screening', 'API de OpenAI · filtro opcional de saludos', 'API OpenAI · bộ lọc lời chào tuỳ chọn'],
   ['Storage for shared greetings.', 'Almacenamiento de los saludos compartidos.', 'Bộ lưu trữ cho các lời chào được chia sẻ.'],

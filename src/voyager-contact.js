@@ -7,7 +7,8 @@ const REQUEST_TIMEOUT_MS = 15_000;
 const STATIONS = new Set(["Goldstone", "Madrid", "Canberra"]);
 
 export function voyagerContactMarkup() {
-  return `<aside class="voyager-contact" aria-label="Voyager 1 Deep Space Network contact">
+  // Hidden until there is real DSN data to show; an "unavailable" card says nothing useful.
+  return `<aside class="voyager-contact" aria-label="Voyager 1 Deep Space Network contact" hidden>
     <div data-voyager-contact-messages><p>${CONTACT_UNAVAILABLE}</p></div>
     <p class="fine voyager-contact-source" data-voyager-contact-source>${SOURCE_LABEL}</p>
   </aside>`;
@@ -52,6 +53,9 @@ export function mountVoyagerContact(container, { onAnnounce = () => {}, fetcher 
     if (disposed) return;
     const state = voyagerContactState(snapshot);
     const nextMessage = state.messages.join(" ");
+    const unavailable = state.messages.length === 1 && state.messages[0] === CONTACT_UNAVAILABLE;
+    const card = messages.closest?.(".voyager-contact");
+    if (card) card.hidden = unavailable;
     messages.replaceChildren(...state.messages.map((message) => {
       const paragraph = document.createElement("p");
       paragraph.textContent = message;
@@ -67,7 +71,7 @@ export function mountVoyagerContact(container, { onAnnounce = () => {}, fetcher 
       }).format(new Date(state.observedAt));
       source.append(time);
     }
-    if (nextMessage !== previousMessage) onAnnounce(nextMessage);
+    if (nextMessage !== previousMessage && !unavailable) onAnnounce(nextMessage);
     previousMessage = nextMessage;
   }
 

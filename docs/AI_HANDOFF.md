@@ -204,6 +204,12 @@ Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, m
 ## 9. Handoff log
 
 ### 2026-11-15 — Claude — `main`
+- **Commit:** Add a Home link, separate the map cards, and hide an empty DSN card
+- **Changed:** `index.html` (Home link), `src/readable-type.css` (Home styles, Mars and Moon callout offsets), `src/voyager-contact.js` (card hidden while unavailable), one row in `src/locales/nov14.js`, tests.
+- **Verified:** 187 tests; build; local browser: Home from Voyager returns to the lobby; Mars gap 46–58 px and Moon gap 21–36 px at 390, 768, 1366 and 1920 px; no horizontal overflow; DSN card hidden with no local API.
+- **Note:** Codex had uncommitted edits in `src/main.js`, `src/exhibit-layout.js`, `src/greetings.css`, `src/quick-start.js` and docs at the same time; they are not part of this commit.
+
+### 2026-11-15 — Claude — `main`
 - **Commit:** Share greetings with everyone at once and remove classroom sharing
 - **Changed:** new `server/shared-greetings.mjs`, `server/greeting-screening.mjs`, `netlify/functions/shared-greetings.mjs`, `src/shared-greetings.js`, `docs/SHARED_GREETINGS.md`; `src/personal-records.js`, `src/exhibit-layout.js`, `src/teachers.js`, `src/project-attribution.js`, `index.html` privacy dialog, `docs/PRIVACY.md`, `CLAUDE.md` data rule, README, `NETLIFY_DEPLOY.md`, `src/locales/nov14.js`, tests. Removed `src/class-record.js`, `netlify/functions/class-record.mjs`, `tests/class-record.test.js`, `docs/CLASSROOM_RECORDS.md`.
 - **Verified:** 183 tests; build; local browser at `#voyager`.
