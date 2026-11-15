@@ -14,6 +14,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 - Apollo 17 and Surveyor 3 challenge panels now keep a visible mission identity beside the controls, so the machine name remains clear while a learner scrolls.
 - Surveyor's three fictional patches now show their actual teaching difference: even shallow cover, even deep cover, or uneven cover with tilt risk. The underlying model and evidence rules remain unchanged.
 
+### Add a mission moment before every challenge
+
+- Each of the six missions now opens its challenge with a short incident and a repair direction, so the learner has a reason to act before touching controls.
+- The Moon labs describe the dust-shield failure and the unexpected ground response; Curiosity, Ingenuity, Webb, and Voyager connect their existing retry loops to a clear failure or constraint.
+- The additions are concise, translated into Spanish and Vietnamese, and do not alter stamp conditions or the underlying challenge models.
+
 ### Curiosity gallery images restored in production
 
 - The Content-Security-Policy added earlier allowed images and requests only from the site itself, so the Curiosity gallery's NASA images were blocked on Netlify. The policy now also allows `https://images-assets.nasa.gov` for images and `https://images-api.nasa.gov` for the gallery search. Nothing else was loosened.

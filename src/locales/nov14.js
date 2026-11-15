@@ -1,6 +1,15 @@
 import { siDisclosure } from '../project-attribution.js';
 const rows = [
   ['Challenge steps', 'Pasos del desafío', 'Các bước thử thách'],
+  ['MISSION MOMENT', 'MOMENTO DE MISIÓN', 'KHOẢNH KHẮC NHIỆM VỤ'],
+  ['A rock impact can stop the rover and drain its integrity.', 'El impacto de una roca puede detener el rover y reducir su integridad.', 'Va vào đá có thể làm xe dừng lại và giảm độ bền.'],
+  ['Debug the route, try again, and finish the science plan.', 'Depura la ruta, inténtalo de nuevo y termina el plan científico.', 'Sửa tuyến đường, thử lại và hoàn thành kế hoạch khoa học.'],
+  ['A flight can look stable and still fail at touchdown.', 'Un vuelo puede parecer estable y aun así fallar al aterrizar.', 'Chuyến bay có thể trông ổn định nhưng vẫn hạ cánh thất bại.'],
+  ['Read the flight log, change the plan, and fly the next attempt.', 'Lee el registro de vuelo, cambia el plan y vuela el siguiente intento.', 'Đọc nhật ký bay, sửa kế hoạch rồi bay lần tiếp theo.'],
+  ['One mirror image out of place keeps the telescope from acting as one eye.', 'Una imagen del espejo fuera de lugar impide que el telescopio actúe como un solo ojo.', 'Một ảnh gương lệch khiến kính không thể hoạt động như một con mắt.'],
+  ['Open, align, and test again before revealing infrared light.', 'Abre, alinea y vuelve a probar antes de revelar la luz infrarroja.', 'Mở, căn chỉnh và thử lại trước khi khám phá ánh sáng hồng ngoại.'],
+  ['The message crosses space slowly, and a microphone may be unavailable.', 'El mensaje cruza el espacio lentamente y puede que no haya micrófono.', 'Lời nhắn đi qua không gian rất chậm và micro có thể không dùng được.'],
+  ['Choose a greeting, then type or record your reply.', 'Elige un saludo y escribe o graba tu respuesta.', 'Chọn một lời chào rồi gõ hoặc ghi âm câu trả lời.'],
   ['01 · Build', '01 · Construir', '01 · Lắp ráp'],
   ['02 · Shape and test', '02 · Ajustar y probar', '02 · Chỉnh và thử'],
   ['02 · Investigate', '02 · Investigar', '02 · Khảo sát'],

@@ -14,6 +14,8 @@ export const surveyorModel = Object.freeze({ forces: Object.freeze([1, 2, 3, 4])
 export const surveyorCopy = Object.freeze({
   eyebrow: 'MOON TRAINING · ABOUT 3 MINUTES',
   missionLabel: 'MISSION · SURVEYOR 3',
+  incidentTitle: 'MISSION MOMENT · THE GROUND SURPRISES YOU',
+  incident: 'The first probe sinks farther than expected. Stop before landing, compare the layers, and decide whether the ground can hold.',
   title: 'Surveyor 3: test before touchdown',
   intro: 'Can your evidence support a landing recommendation? Press a probe at two different forces, inspect a trench, then test a separate fictional lander.',
   disclaimer: 'Illustrated simulation · not NASA test data.',
@@ -158,7 +160,7 @@ export function surveyorGameMarkup() {
   const id = `surveyor-game-${++surveyorInstance}`;
   const c = surveyorCopy;
   return `<section class="moon-game surveyor-game" aria-labelledby="${id}-title" data-surveyor-game>
-    <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3><p class="moon-challenge-identity">${c.missionLabel}</p>
+    <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3><p class="moon-challenge-identity">${c.missionLabel}</p><aside class="mission-incident" aria-label="Mission moment"><p class="eyebrow">${c.incidentTitle}</p><p>${c.incident}</p><p class="fine">Probe twice, dig three scoops, then test the fictional lander.</p></aside>
     ${quickStartMarkup('surveyor3')}
     ${whyMarkup(`<p>${c.intro}</p><p class="surveyor-disclaimer">${c.disclaimer}</p><p class="surveyor-model-label">${c.units}</p><p>${c.history} <a href="https://science.nasa.gov/mission/surveyor-3/" target="_blank" rel="noopener noreferrer">${c.historySource} ↗</a></p>`)}
     <div class="surveyor-study-layout"><fieldset class="surveyor-controls surveyor-site-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}"><strong>${c[patchCopy[soil.id]]}</strong><small>${c[`${patchCopy[soil.id]}Detail`]}</small></button>`).join('')}</div></fieldset>

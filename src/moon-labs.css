@@ -65,6 +65,14 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
   letter-spacing: .12em;
   text-transform: uppercase;
 }
+.mission-incident {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border-left: 3px solid #f0c88b;
+  background: linear-gradient(90deg, #1b2b36, #10202a);
+}
+.mission-incident p { margin: 4px 0; }
+.mission-incident .eyebrow { color: #f0c88b; font-size: .7rem; }
 .moon-panel.is-route-page .lrv-heading > p:not(.eyebrow) { margin: 0 0 16px; max-width: 72ch; }
 .surveyor-study-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, 1fr); gap: 20px 28px; align-items: start; }
 .surveyor-study-layout > .surveyor-figure { grid-column: 1; grid-row: 1 / 3; position: sticky; top: 76px; }

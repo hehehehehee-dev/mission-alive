@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** Moon challenge panels now retain a visible mission identity while scrolling, and Surveyor's three fictional patch choices explain their different layer profiles and tilt risk instead of appearing interchangeable.
-- **Last verification:** `npm test` 136/136 pass; `npm run build` passes with the existing chunk-size advisory; markup tests cover the mission label and all three distinct patch descriptions. Production visual verification follows Netlify deployment.
+- **Last change:** all six challenges now open with a concise Mission Moment incident and a repair direction; Moon labs also explain their failure story before the first control.
+- **Last verification:** `npm test` 136/136 pass; `npm run build` passes with the existing chunk-size advisory; Spanish/Vietnamese locale coverage remains green. Production visual verification follows Netlify deployment.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Give every challenge a mission moment
+- **Changed:** added short incident/repair story strips to Curiosity, Ingenuity, Webb, Voyager, Apollo 17, and Surveyor; added Spanish/Vietnamese strings, Moon copy, styling, and changelog notes.
+- **Verified:** `npm test` 136/136; `npm run build`; `git diff --check`.
+- **Left for next:** inspect the production strips at desktop and about 390 px; deeper mechanic changes remain optional because the existing challenges already provide drag, driving, range, keyboard, and retry interactions.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Explain Moon mission choices in the challenge
