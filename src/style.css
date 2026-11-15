@@ -2239,6 +2239,7 @@ body[data-exhibit="voyager"] .voyager-main .voyager-arrival { margin-top: 26px; 
 }
 .curiosity-view-tabs button {
   min-height: 48px;
+  min-width: 0;
   padding: 8px 10px;
   border: 0;
   border-radius: 7px;
@@ -2246,6 +2247,12 @@ body[data-exhibit="voyager"] .voyager-main .voyager-arrival { margin-top: 26px; 
   background: transparent;
   cursor: pointer;
   font-size: 0.73rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .curiosity-view-tabs button[aria-selected="true"] {
   color: #08171b;

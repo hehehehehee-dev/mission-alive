@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Keep mobile mission guidance inside its cards
+
+- Quick Start cards now reflow by available width, allow long guidance to wrap, and hide decorative emoji icons when space is tight so text stays inside its card.
+- Curiosity's view tabs now use contained, non-selectable touch targets with wrapping labels, preventing long-press selection and clipped tab text on phones.
+- Added responsive CSS regression coverage. Existing mission behavior and stamp flow are unchanged.
+
 ### Make Voyager one listen-and-reply mission
 
 - Made **Hear Earth** optional and kept NASA's 1977 collection beside public visitor greetings in adjacent tabs.

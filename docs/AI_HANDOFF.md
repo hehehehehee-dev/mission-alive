@@ -8,11 +8,11 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the owner has authorized validated work to be committed and pushed directly to `origin/main`; Netlify deploys that branch automatically.
-- **Last change:** Voyager now has one compact mission flow: **Hear Earth** is optional, while **Send yours** is the required stamp action. NASA's 1977 greetings and public visitor voices remain adjacent keyboard tabs, and available server transcripts appear beside shared audio.
+- **Last change:** mobile mission guidance now stays inside its cards: Quick Start reflows before text is squeezed by decorative icons, and Curiosity's view tabs use wrapped, non-selectable touch targets. Voyager still has one compact mission flow: **Hear Earth** is optional, while **Send yours** is the required stamp action.
 - **Immediately preceding:** the lobby gained an optional, skippable speech-bubble story starring Commander Mira and the new cadet. Six machines ask for help, then the final action starts Apollo 17. It auto-plays only while the learner has zero stamps.
 - **Impact route:** `/#impact` is now linked directly from the persistent header. It displays only aggregate closed-question results from the configured Google Sheet through the Netlify function; ages, short answers and individual rows are excluded.
 - **Impact display:** interest and belonging show the after-playing average out of 5; learn-more, recommendation and completion show percentages; response count is a plain total. Per-card methodology text was removed, while one caution/method note remains below the grid.
-- **Last verification:** 193 tests and the production build pass. Headless Chrome confirmed Voyager's compact **Hear Earth / Send yours** flow, adjacent NASA/visitor tabs, translated EN/ES/VI labels, optional transcript rendering, and a 390 px layout without horizontal overflow. Posting to production was not tested; `GET /api/greetings?action=list` should still be checked after deploy.
+- **Last verification:** 194 tests and the production build pass. Headless Chrome confirmed Voyager's compact **Hear Earth / Send yours** flow, adjacent NASA/visitor tabs, translated EN/ES/VI labels, optional transcript rendering, and a 390 px layout without horizontal overflow. Responsive CSS regression coverage now protects Quick Start card wrapping and Curiosity tab containment. Posting to production was not tested; `GET /api/greetings?action=list` should still be checked after deploy.
 - **Not yet verified:** physical touch dragging for Apollo's new pieces, screen-reader announcement order, translated Apollo browser rendering, new Ingenuity flight UI on a physical device, fresh six-stamp gameplay, and production security headers.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - The former three-panel Ingenuity flow has been superseded by this local visual-flight prototype. Its engine is tested, but the new UI still needs hands-on child playtesting before publication.
@@ -202,6 +202,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Keep mobile mission guidance inside its cards
+- **Changed:** made Quick Start cards container-aware, hid decorative icons at narrow widths, allowed guidance text to wrap, and made Curiosity view tabs safer for touch and long labels.
+- **Verified:** 194 tests; production build; previous Chrome 390 px Voyager check remains clean; CSS regression covers the new responsive rules.
+- **Left for next:** verify the six mission Quick Start cards on a physical phone with enlarged text and check Curiosity tab activation after a long press.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Make Voyager one listen-and-reply mission

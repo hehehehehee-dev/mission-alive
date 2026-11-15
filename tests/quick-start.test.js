@@ -20,3 +20,12 @@ test('long explanations are optional native disclosures', () => {
   assert.match(markup, /Why this works/);
   assert.doesNotMatch(markup, / open(?:=|>)/);
 });
+
+test('quick-start cards reflow before icon space can squeeze child-readable text', async () => {
+  const fs = await import('node:fs/promises');
+  const css = await fs.readFile(new URL('../src/quick-start.css', import.meta.url), 'utf8');
+  assert.match(css, /repeat\(auto-fit, minmax\(min\(100%, 220px\), 1fr\)\)/);
+  assert.match(css, /\.quick-start li > span:last-child \{[^}]*min-width: 0/);
+  assert.match(css, /\.quick-start-icon \{ display: none; \}/);
+  assert.match(css, /@container \(max-width: 680px\)/);
+});
