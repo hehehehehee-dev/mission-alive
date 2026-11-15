@@ -36,11 +36,14 @@ function workshop() {
 
 test('probe force stays selected and a valid landing can be retried after switching patches', () => {
   const lab = workshop();
+  assert.equal(lab.game.dataset.surveyorSelectedPatch, 'a');
+  assert.equal(lab.game.dataset.surveyorPatch, undefined, 'the game region cannot impersonate a patch-choice button');
   const action = surveyorAction => lab.click({ surveyorAction });
   action('probe'); action('probe');
   assert.equal(lab.forces[0].attributes['aria-pressed'], 'true', 'two measurements do not silently change force');
   lab.click({ surveyorForce: '3' }); action('probe');
   for (let i = 0; i < 3; i++) action('trench');
+  assert.equal(lab.game.dataset.surveyorDigs, '3');
   action('wider'); action('touchdown');
   assert.equal(lab.game.dataset.surveyorOutcome, 'accepted');
   assert.deepEqual(lab.events, ['surveyor-soil-success']);

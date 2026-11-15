@@ -8,7 +8,7 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Last change:** Apollo has a material-placement repair workbench and visible draggable/key-controlled patch drawing; Surveyor has a pull probe and sweepable excavation strips. All six missions now place action and goal guidance in the actual active gameplay step, replacing generic incident cards.
-- **Last verification:** `npm test` 139/139 pass; production build passes with the existing chunk-size advisory. New checks exercise force-to-depth mapping, evidence gating and translations for all 14 step directions. Production visual/gesture verification follows deployment.
+- **Last verification:** 139 tests and production build pass. Production keyboard play reached an Apollo pass and stamp offer. Surveyor testing found root-state synchronization and a selector collision, corrected in the follow-up; production recheck follows deployment.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Keep field tool state separate from patch navigation
+- **Changed:** bound observers to the real Moon game regions, renamed selected-patch state so it cannot match a patch button, and restricted step advancement to actual patch buttons.
+- **Verified:** production Apollo keyboard assembly and patch reshaping passed; Surveyor probes recorded distinct depths. Regression now checks excavation state and absence of the conflicting patch attribute.
+- **Left for next:** recheck Surveyor excavation/landing after deploy, then finish responsive and language checks.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Give Moon missions hands-on tools and guide every active task

@@ -40,7 +40,9 @@ export function probeForceFromPull(distance, height) {
   return Math.max(1, Math.min(4, Math.round(1 + Math.max(0, distance) / Math.max(1, height) * 3)));
 }
 
-export function mountMoonTools(lrv, surveyor) {
+export function mountMoonTools(lrvRoot, surveyorRoot) {
+  const lrv = lrvRoot.querySelector('[data-lrv-workshop]');
+  const surveyor = surveyorRoot.querySelector('[data-surveyor-game]');
   const disposers = [];
   const listen = (node, event, handler) => { node.addEventListener(event, handler); disposers.push(() => node.removeEventListener(event, handler)); };
   for (const root of [lrv, surveyor]) root.querySelectorAll('.mission-incident').forEach(node => node.remove());
@@ -135,7 +137,7 @@ export function mountMoonTools(lrv, surveyor) {
     listen(strip, 'pointercancel', () => { stripDrag = null; });
   }
   const syncSoil = () => {
-    patch = surveyor.dataset.surveyorPatch || 'a';
+    patch = surveyor.dataset.surveyorSelectedPatch || 'a';
     excavated = Number(surveyor.dataset.surveyorDigs || 0);
     fieldTools.dataset.patch = patch;
     fieldTools.querySelectorAll('[data-soil-strip]').forEach((button, i) => { button.disabled = i < excavated; button.classList.toggle('is-excavated', i < excavated); });
@@ -144,7 +146,7 @@ export function mountMoonTools(lrv, surveyor) {
     if (output.textContent !== source.textContent) output.textContent = source.textContent;
   };
   const soilObserver = new MutationObserver(syncSoil);
-  soilObserver.observe(surveyor, { attributes: true, attributeFilter: ['data-surveyor-patch', 'data-surveyor-digs'] });
+  soilObserver.observe(surveyor, { attributes: true, attributeFilter: ['data-surveyor-selected-patch', 'data-surveyor-digs'] });
   soilObserver.observe(surveyor.querySelector('[data-surveyor-probe-readout]'), { childList: true, characterData: true, subtree: true });
   disposers.push(() => soilObserver.disconnect());
   syncSoil();

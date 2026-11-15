@@ -90,7 +90,7 @@ export function mountMoonChallengeSteps(lrvRoot, surveyorRoot) {
   observer.observe(lrv, { attributes: true, attributeFilter: ['data-lrv-assembly'] });
   observer.observe(surveyor, { attributes: true, attributeFilter: ['data-surveyor-evidence'] });
   const selectPatch = event => {
-    if (event.target.closest('[data-surveyor-patch]')) surveyorSteps.unlock(1);
+    if (event.target.closest('button[data-surveyor-patch]')) surveyorSteps.unlock(1);
     if (event.target.closest('[data-surveyor-action="restart"]')) { evidence = false; surveyorSteps.reset(); }
   };
   surveyor.addEventListener('click', selectPatch);
