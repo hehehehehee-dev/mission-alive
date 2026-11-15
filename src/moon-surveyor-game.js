@@ -213,6 +213,8 @@ export function mountSurveyorGame(root) {
     game.querySelectorAll('[data-surveyor-force]').forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.surveyorForce) === force)));
     const soil = soilFor(patchId);
     const evidence = evaluateSurveyorEvidence(patchId, log);
+    game.dataset.surveyorPatch = patchId;
+    game.dataset.surveyorDigs = String(digs[patchId]);
     game.dataset.surveyorEvidence = evidence.ready ? 'complete' : 'gathering';
     const latestProbe = log.findLast((entry) => entry.type === 'probe' && entry.patchId === patchId);
     find('[data-surveyor-probe-readout]').textContent = latestProbe ? format(surveyorTextTemplates[3], { force: latestProbe.force, depth: number(latestProbe.depth) }) : surveyorCopy.probePrompt;
@@ -277,6 +279,7 @@ export function mountSurveyorGame(root) {
       announce(format(surveyorTextTemplates[3], { force, depth: number(result.depth) }));
     } else if (action === 'trench') {
       digs[patchId] = Math.min(3, digs[patchId] + 1);
+      game.dataset.surveyorDigs = String(digs[patchId]);
       const trench = find(`[data-surveyor-trench="${patchId}"]`);
       trench.setAttribute('visibility', 'visible');
       trench.style.clipPath = `inset(0 ${100 - digs[patchId] * 100 / 3}% 0 0)`;

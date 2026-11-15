@@ -14,6 +14,8 @@ import { mountVoyagerDistance, lightDayLink } from "./voyager-distance.js";
 import { enhanceRangePointer } from "./range-pointer.js";
 import { mountExhibitLayout } from "./exhibit-layout.js";
 import { collapseChallengeNotes } from './challenge-steps.js';
+import { mountMissionDirections } from './mission-actions.js';
+import './mission-actions.css';
 import './challenge-steps.css';
 import { voyagerCountdownMarkup, mountVoyagerCountdown } from "./voyager-countdown.js";
 import { voyagerContactMarkup, mountVoyagerContact } from "./voyager-contact.js";
@@ -2826,6 +2828,7 @@ async function render(id) {
     }
   }
   bindControls();
+  mountMissionDirections(id);
   updateMissionProgress();
   setStatus("YOUR DISCOVERY STARTS HERE");
   await mountViewer(id, state);

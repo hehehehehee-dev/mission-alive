@@ -3,6 +3,7 @@ import { surveyorGameMarkup, mountSurveyorGame, surveyorCopy } from './moon-surv
 import { mountStampCeremony } from './stamp-ceremony.js';
 import { trainingMissions } from './certification.js';
 import { mountMoonChallengeSteps } from './challenge-steps.js';
+import { mountMoonTools } from './mission-actions.js';
 
 export const moonTransmissions = {
   apollo17: 'I am still parked on the Moon, where Apollo 17 left me. My crew brought maps to find their way. When my fender broke, those maps became a repair. You leave me with this: a good engineer can give an ordinary thing a new job.',
@@ -38,6 +39,7 @@ export function mountMoonLabs(dialog, { isStamped = () => false, onEarned = () =
   const surveyorRoot = dialog.querySelector('#moon-surveyor-lab');
   const games = [mountLrvGame(lrvRoot), mountSurveyorGame(surveyorRoot)];
   const steps = mountMoonChallengeSteps(lrvRoot, surveyorRoot);
+  const tools = mountMoonTools(lrvRoot, surveyorRoot);
   const launches = [...dialog.querySelectorAll('[data-moon-play]')];
   let selected = 'apollo17';
   let ceremony = null;
@@ -119,6 +121,7 @@ export function mountMoonLabs(dialog, { isStamped = () => false, onEarned = () =
       cancel(); observer.disconnect(); dialog.removeEventListener('close', cancel);
       games.forEach(game => game.dispose());
       steps.dispose();
+      tools.dispose();
       lrvRoot.removeEventListener('lrv-repair-success', revealRepair);
       surveyorRoot.removeEventListener('surveyor-soil-success', revealSurveyor);
     },

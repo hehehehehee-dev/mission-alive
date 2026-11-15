@@ -416,7 +416,8 @@ export function mountLrvGame(root) {
   const controls = Object.fromEntries(Object.keys(LRV_CONTROL_LIMITS).map((key) => [key, find(`[data-lrv-control="${key}"]`)]));
   let dragging = false;
   const svg = find('.lrv-workshop-svg');
-  svg.insertAdjacentHTML('beforeend', '<circle data-lrv-drag-tip r="13" fill="#eaf8ff" stroke="#329cad" stroke-width="4" aria-hidden="true"/>');
+  svg.setAttribute('role', 'group');
+  svg.insertAdjacentHTML('beforeend', '<circle data-lrv-drag-tip r="17" fill="#eaf8ff" stroke="#329cad" stroke-width="4" tabindex="0" role="slider" aria-label="Patch tip. Left and right change length. Up and down change angle." aria-valuemin="20" aria-valuemax="80" aria-valuenow="30"/>');
   const dustResult = find("[data-lrv-dust-result]");
   const clearanceResult = find("[data-lrv-clearance-result]");
   const attachmentResult = find("[data-lrv-attachment-result]");
@@ -446,6 +447,8 @@ export function mountLrvGame(root) {
     const tip = pointOnScreen(lrvPatchGeometry(configuration).end);
     const handle = find('[data-lrv-drag-tip]');
     handle.setAttribute('cx', tip.x); handle.setAttribute('cy', tip.y);
+    handle.setAttribute('aria-valuenow', String(configuration.length));
+    handle.setAttribute('aria-valuetext', `${configuration.length} cm, ${configuration.angle}°`);
     handle.style.display = configuration.maps ? '' : 'none';
     find("[data-lrv-preview-label]").textContent = result.tested ? copy.tested : copy.preview;
     workshop.dataset.lrvResult = result.tested ? result.passed ? "passed" : "adjust" : "untested";
@@ -536,8 +539,15 @@ export function mountLrvGame(root) {
     edit({ length: Math.hypot(world.x - start.x, world.y - start.y), angle: Math.atan2(world.y - start.y, world.x - start.x) * 180 / Math.PI });
   };
   const pointerUp = () => { dragging = false; };
+  const tipKeyDown = event => {
+    if (!event.target.matches('[data-lrv-drag-tip]') || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+    event.preventDefault();
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') edit({ length: configuration.length + (event.key === 'ArrowRight' ? 2 : -2) });
+    else edit({ angle: configuration.angle + (event.key === 'ArrowUp' ? 5 : -5) });
+  };
   svg.addEventListener('pointerdown', pointerDown); svg.addEventListener('pointermove', pointerMove);
   svg.addEventListener('pointerup', pointerUp); svg.addEventListener('pointercancel', pointerUp);
+  svg.addEventListener('lostpointercapture', pointerUp); svg.addEventListener('keydown', tipKeyDown);
   draw(evaluateLrvRepair(configuration), copy.readyStatus);
   return {
     dispose() {
@@ -548,6 +558,7 @@ export function mountLrvGame(root) {
       workshop.removeEventListener("click", onClick);
       svg.removeEventListener('pointerdown', pointerDown); svg.removeEventListener('pointermove', pointerMove);
       svg.removeEventListener('pointerup', pointerUp); svg.removeEventListener('pointercancel', pointerUp);
+      svg.removeEventListener('lostpointercapture', pointerUp); svg.removeEventListener('keydown', tipKeyDown);
     },
   };
 }

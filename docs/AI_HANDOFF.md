@@ -7,8 +7,8 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** all six challenges now open with a concise Mission Moment incident and a repair direction; Moon labs also explain their failure story before the first control.
-- **Last verification:** `npm test` 136/136 pass; `npm run build` passes with the existing chunk-size advisory; Spanish/Vietnamese locale coverage remains green. Production visual verification follows Netlify deployment.
+- **Last change:** Apollo has a material-placement repair workbench and visible draggable/key-controlled patch drawing; Surveyor has a pull probe and sweepable excavation strips. All six missions now place action and goal guidance in the actual active gameplay step, replacing generic incident cards.
+- **Last verification:** `npm test` 139/139 pass; production build passes with the existing chunk-size advisory. New checks exercise force-to-depth mapping, evidence gating and translations for all 14 step directions. Production visual/gesture verification follows deployment.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Give Moon missions hands-on tools and guide every active task
+- **Changed:** new `mission-actions.js/css` and locale catalog; material placement, visible patch manipulation, probe pulling and excavation strips; active-step guidance for all six missions; synchronized Moon docs.
+- **Verified:** 139 Node tests; production build; diff whitespace checks.
+- **Left for next:** inspect production pointer/keyboard interactions and EN/ES/VI at desktop and 390 px; no clean six-stamp run claimed for this change.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Give every challenge a mission moment

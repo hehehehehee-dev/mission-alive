@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Make mission actions distinct and explain each active step
+
+- Apollo now has a select/place or drag/drop repair workbench. Its editable side-view patch is visible beside the 3D preview; the white tip supports dragging and keyboard length/angle adjustment. Numeric settings are optional.
+- Surveyor now has a pull-and-release probe and three sweepable excavation strips. These feed the existing force, trench and landing model; button alternatives remain available.
+- All six missions have short first-person context, a direct action and a completion goal at the relevant playable step. Curiosity uses commands, Ingenuity flight control, Webb optical alignment and Voyager a personal message.
+- Replaced the earlier generic Mission Moment cards in the active controls. Spanish and Vietnamese cover every new instruction and tool label.
+
 ### Six-module navigation on both Moon missions
 
 - Apollo 17 LRV and Surveyor 3 now show the same six-module training navigation used by Curiosity, Ingenuity, Webb, and Voyager.
