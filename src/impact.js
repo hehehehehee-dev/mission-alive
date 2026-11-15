@@ -20,7 +20,7 @@ export function mountImpact(root, {fetcher = fetch, setTimer = setInterval, clea
     for (const [key, label] of [['interest','Interest in space'], ['belonging','Feeling that space is for me']]) {
       const metric = snapshot[key];
       if (!metric?.n) continue;
-      card(label, `${format(metric.after)} / 5`);
+      card(label, `${format(metric.before)} → ${format(metric.after)} / 5`);
     }
     for (const [key, label, numerator] of [['learnMore','Want to learn more','agree'], ['recommend','Would recommend to a friend','agree'], ['completion','Finished all six missions (self-reported)','yes']]) {
       const metric = snapshot[key];

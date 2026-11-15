@@ -22,8 +22,8 @@ The server caches only aggregates for 60 seconds and deduplicates simultaneous r
 | Display | Calculation |
 | --- | --- |
 | Survey responses | Rows with a nonempty Google-generated timestamp. This is not a unique-person count. |
-| Interest in space | Valid paired ratings on a 1–5 scale: before mean, after mean and mean paired change. |
-| Feeling space is for me | The same paired calculation for the belonging questions. |
+| Interest in space | Valid paired ratings on a 1–5 scale. The page displays the before mean → after mean; the loader also retains the paired change for analysis. |
+| Feeling space is for me | The same paired calculation and before → after display for the belonging questions. |
 | Want to learn more | Number rating 4 or 5, divided by valid answers to this question. |
 | Would recommend | Number rating 4 or 5, divided by valid answers to this question. This is not NPS. |
 | Finished six missions | Yes answers divided by valid Yes/No answers. This is self-reported, not linked to app progress. |

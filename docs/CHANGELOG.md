@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Make impact movement visible
+
+- Impact cards now show paired averages as `before → after / 5` for interest in space and belonging, instead of showing only the after score.
+- The method note now names the same before-to-after display. Survey counts, percentage metrics, refresh behavior, and the voluntary feedback flow are unchanged.
+
 ### Keep mission completion in place
 
 - Mission success now opens an in-place celebration dialog with a pulsing mark and the existing stamp ceremony, instead of scrolling the learner to the completion panel.
