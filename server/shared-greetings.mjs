@@ -19,8 +19,8 @@ const keyOk = (value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(valu
 const entryKey = (id) => `greeting/${id}`;
 const audioKey = (id) => `audio/${id}`;
 const listKey = (entry) => `public/${entry.publishedAt}/${entry.id}`;
-export const publicEntry = ({ id, name, language, country, message, translation, publishedAt, audioType }) => ({
-  id, name, language, country, message, translation, publishedAt, hasAudio: Boolean(audioType),
+export const publicEntry = ({ id, name, language, country, message, translation, transcript, publishedAt, audioType }) => ({
+  id, name, language, country, message, translation, transcript: transcript || "", publishedAt, hasAudio: Boolean(audioType),
 });
 
 function sameSecret(secret, expectedHash) {

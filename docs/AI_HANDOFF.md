@@ -8,17 +8,17 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the owner has authorized validated work to be committed and pushed directly to `origin/main`; Netlify deploys that branch automatically.
-- **Last change:** Voyager's primary challenge is no longer hidden in **More to explore**. Its three-step guide stays visible, and the listening area now has adjacent **Golden Record · 1977** and **Visitor greetings** tabs. The public “Voices from Earth today” gallery is above the create-and-share studio.
+- **Last change:** Voyager now has one compact mission flow: **Hear Earth** is optional, while **Send yours** is the required stamp action. NASA's 1977 greetings and public visitor voices remain adjacent keyboard tabs, and available server transcripts appear beside shared audio.
 - **Immediately preceding:** the lobby gained an optional, skippable speech-bubble story starring Commander Mira and the new cadet. Six machines ask for help, then the final action starts Apollo 17. It auto-plays only while the learner has zero stamps.
 - **Impact route:** `/#impact` is now linked directly from the persistent header. It displays only aggregate closed-question results from the configured Google Sheet through the Netlify function; ages, short answers and individual rows are excluded.
 - **Impact display:** interest and belonging show the after-playing average out of 5; learn-more, recommendation and completion show percentages; response count is a plain total. Per-card methodology text was removed, while one caution/method note remains below the grid.
-- **Last verification:** 192 tests and the production build pass after reconciling Claude's intro/navigation commits with the Voyager work. Headless Chrome confirmed the Voyager challenge is outside the disclosure, the quick-start is visible, the public-gallery button selects its tab, and the 390 px layout has no horizontal overflow. Posting to production was not tested; `GET /api/greetings?action=list` should still be checked after deploy.
+- **Last verification:** 193 tests and the production build pass. Headless Chrome confirmed Voyager's compact **Hear Earth / Send yours** flow, adjacent NASA/visitor tabs, translated EN/ES/VI labels, optional transcript rendering, and a 390 px layout without horizontal overflow. Posting to production was not tested; `GET /api/greetings?action=list` should still be checked after deploy.
 - **Not yet verified:** physical touch dragging for Apollo's new pieces, screen-reader announcement order, translated Apollo browser rendering, new Ingenuity flight UI on a physical device, fresh six-stamp gameplay, and production security headers.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - The former three-panel Ingenuity flow has been superseded by this local visual-flight prototype. Its engine is tested, but the new UI still needs hands-on child playtesting before publication.
 - **Next suggested steps:**
   1. Let the owner play the new local Ingenuity prototype; do not commit. Verify scene targets, responsive layout, real keyboard/touch input, all three landings, automatic tab pause/resume, retry and the existing stamp ceremony once browser access works.
-  2. After the next Netlify auto-deploy, confirm CSP, HSTS, Permissions-Policy, and `/api/greetings?action=list` in production.
+  2. After the next Netlify auto-deploy, confirm CSP, HSTS, Permissions-Policy, and `/api/greetings?action=list` in production. If transcripts are desired, configure `CLASSROOM_OPENAI_API_KEY`; audio sharing still works without it.
   3. Decide whether to remove the now-unused `moonPanel.play()` and `moonPanel.open()` from `src/moon-stories.js`.
 - **Open questions for the owner:** none.
 
@@ -37,7 +37,7 @@ This is not a general NASA encyclopedia. Each mission should leave one memorable
 | Curiosity | Block-program or freely drive a rover science plan | Habitability evidence is not proof of life; delayed missions need sequences. |
 | Ingenuity | Select 3D terrain, counter visible gusts with left/right input, and retry landing | Onboard autonomy and safe terrain matter as much as getting airborne. |
 | Webb | Unfold mirror wings, align images, and reveal infrared | Launch constraints drive folding; precision and infrared reveal more. |
-| Voyager 1 | Hear/read a Golden Record greeting and add one | Interstellar distance, signal delay, and human communication at scale. |
+| Voyager 1 | Optionally hear Earth, then send a written or recorded greeting | Interstellar distance, signal delay, and human communication at scale. |
 
 ## 2. Experience flow and invariants
 
@@ -69,7 +69,7 @@ Important invariants:
 - The help language is emotional academy framing, not a live emergency claim. Keep the visible line that says these are academy simulations based on real mission problems.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
 - Lobby defaults to Sun mode; `src/lobby-theme.js` validates `mission-alive-lobby-theme-v1` and scopes light styling to the lobby and information pages. `src/academy-navigation.css` keeps header actions visible and map callouts large. The map initializes in the lobby and disposes when leaving; `#journey` is a compatibility alias to it. DSN/history remain at `#mission-notes`, context at `#about`. Do not hide the map in a disclosure or move it to a separate page, and do not hide primary header links in Menu.
-- Voyager puts its challenge before the listening collections. **Golden Record · 1977** and public **Visitor greetings** are adjacent keyboard tabs, and direct buttons beside the 3D record open either collection. One native player controls the selected NASA greeting. A consent-gated **Share with everyone** action handles written or recorded replies; there is no classroom code, private-only save path or drawing exercise.
+- Voyager puts one clear mission flow before the listening collections: **Hear Earth** is optional, while **Send yours** is the required stamp action. **Golden Record · 1977** and public **Visitor greetings** are adjacent keyboard tabs, and the record button opens the NASA tab. A consent-gated **Share with everyone** action handles written or recorded replies; an available server transcript is shown as text. There is no classroom code, private-only save path or drawing exercise.
 - Long story/briefing content in the four original exhibits shares one **Story & science** disclosure. Avoid adding extra instruction cards that repeat the current step's action.
 - The footer privacy dialog is the public source of truth for public greeting sharing. Keep it synchronized with `docs/PRIVACY.md`, `docs/SHARED_GREETINGS.md`, and `netlify/functions/shared-greetings.mjs`.
 - Completion must survive reload through validated stored mission IDs.
@@ -202,6 +202,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Make Voyager one listen-and-reply mission
+- **Changed:** made Hear Earth optional, made Send yours the required stamp action, kept NASA 1977 and visitor greetings in adjacent tabs, surfaced optional server transcripts beside shared audio, and updated EN/ES/VI copy plus regression coverage.
+- **Verified:** 193 tests; production build; headless Chrome confirmed the compact flow, translated labels, transcript-aware gallery path, and 390 px layout without horizontal overflow.
+- **Left for next:** production `/api/greetings?action=list` and transcript behavior still need a post-deploy check; configure `CLASSROOM_OPENAI_API_KEY` only if server-generated transcripts are wanted.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Surface the Voyager mission and shared voices

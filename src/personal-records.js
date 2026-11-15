@@ -104,8 +104,8 @@ function safeAudioUrl(value) {
 
 export function personalRecordMarkup() {
   return `<section class="personal-record-studio" aria-labelledby="personal-record-heading">
-    <div class="studio-heading"><div><p class="eyebrow">YOUR TIME CAPSULE</p><h3 id="personal-record-heading" tabindex="-1">Make your own Golden Record</h3></div><span>SHARED WITH EVERYONE</span></div>
-    <p class="studio-intro">Write a greeting or record up to ${MAX_SECONDS} seconds, then share it so everyone visiting Mission Alive can hear it.</p>
+    <div class="studio-heading"><div><p class="eyebrow">SEND YOURS</p><h3 id="personal-record-heading" tabindex="-1">Make your own Golden Record</h3></div><span>REQUIRED</span></div>
+    <p class="studio-intro">Write or record up to ${MAX_SECONDS} seconds. Sharing it earns your Voyager stamp.</p>
     <div class="recording-card">
       <div class="recording-fields">
         <label for="personal-language">Your greeting's language</label><input id="personal-language" maxlength="40" required aria-describedby="personal-record-status" list="personal-language-options" placeholder="e.g. Vietnamese"><datalist id="personal-language-options">${languageOptions.map((language) => `<option value="${language}"></option>`).join("")}</datalist>
@@ -121,10 +121,10 @@ export function personalRecordMarkup() {
         <output id="personal-timer" role="timer" aria-live="off" aria-label="Recording duration">00:00 / 00:${MAX_SECONDS}</output>
         <div class="recording-actions"><button type="button" class="primary" id="start-personal-recording">Start recording</button><button type="button" id="stop-personal-recording" disabled>Stop</button></div>
         <audio id="personal-preview" controls hidden aria-label="Preview your recorded greeting"></audio>
-        <p class="fine">Your browser will ask for microphone access only after you press Start recording.</p>
+        <p class="fine">Your browser will ask for microphone access only after you press Start recording. A transcript may appear after sharing when the live site can generate one.</p>
       </div>
     </div>
-    <div class="greeting-save"><label class="share-consent"><input type="checkbox" id="share-consent"> <span>I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.</span></label><button type="button" class="primary" id="save-personal-recording" disabled>Share with everyone</button><p class="fine">Writing counts toward the Voyager stamp.</p><p class="fine" id="personal-record-status">Choose a language and add your words or a recording.</p></div>
+    <div class="greeting-save"><label class="share-consent"><input type="checkbox" id="share-consent"> <span>I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.</span></label><button type="button" class="primary" id="save-personal-recording" disabled>Share with everyone</button><p class="fine">A saved written or recorded greeting earns the Voyager stamp.</p><p class="fine" id="personal-record-status">Choose a language and add your words or a recording.</p></div>
     <p class="journey-explainer">Imagine your greeting traveling beside Voyager 1. The counters below use NASA's approximate speed of 17 km/s relative to the Sun. Your recording stays here; it is not actually on the spacecraft. <a href="https://science.nasa.gov/mission/voyager/voyager-1/" target="_blank" rel="noopener">NASA speed source ↗</a></p>
     <div class="personal-library">
       <div class="library-heading"><h4>My shared greetings</h4><span id="personal-record-count">0 SAVED</span></div>
@@ -375,6 +375,12 @@ export function mountPersonalRecords(
           translation.append(document.createTextNode("English: "), visitorWords(record.translation));
           article.append(translation);
         }
+        if (record.transcript) {
+          const transcript = document.createElement("p");
+          transcript.className = "greeting-translation-note";
+          transcript.append(document.createTextNode("Transcript: "), visitorWords(record.transcript));
+          article.append(transcript);
+        }
         if (record.audio)
           article.append(makeAudio(record.audio, `${record.language} personal greeting`));
         const actions = document.createElement("div");
@@ -470,6 +476,7 @@ export function mountPersonalRecords(
       });
       record.sharedId = result.id;
       record.deleteKey = result.deleteKey;
+      record.transcript = result.greeting?.transcript || record.transcript || "";
       try { await saveLocalRecord(record); } catch { /* the greeting is already public */ }
       await drawLocalRecords({ focusRecordId: record.id });
       sharedGallery.refresh();

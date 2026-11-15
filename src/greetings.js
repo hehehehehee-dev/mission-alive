@@ -26,7 +26,7 @@ let selectedId = "11";
 
 export function greetingMarkup() {
   return `<section class="greeting-library" aria-labelledby="greeting-heading">
- <div class="library-heading"><h3 id="greeting-heading">Voices from Earth</h3><span>55 GREETINGS</span></div>
+ <div class="library-heading"><h3 id="greeting-heading">Hear Earth</h3><span>55 GREETINGS</span></div>
  <div class="greeting-browser">
  <label for="greeting-search">Find a language or country</label><input type="search" id="greeting-search" placeholder="Try Vietnamese, India, Español…" autocomplete="off">
  <label for="greeting-country" class="sr-only">Filter by country or region</label><select id="greeting-country"><option value="">All countries & regions</option>${countryNames.map((c) => `<option>${c}</option>`).join("")}</select>

@@ -2711,6 +2711,14 @@ dialog a {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+.required-label {
+  margin-left: 6px;
+  color: var(--accent);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
 .fallback {
   display: grid !important;
   place-items: center;

@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Make Voyager one listen-and-reply mission
+
+- Made **Hear Earth** optional and kept NASA's 1977 collection beside public visitor greetings in adjacent tabs.
+- Made **Send yours** the one required Voyager action. A written or recorded greeting earns the stamp, so microphone access and listening are never blockers.
+- Shared recordings now expose an optional server-generated transcript beside playable audio when transcription is configured. Updated English, Spanish, Vietnamese, tests, and collaborator docs.
+
 ### Put the Voyager mission and shared voices where learners can find them
 
 - Removed the Voyager challenge from the collapsed **More to explore** area. The 3D record, mission actions and visible three-step guide now appear before the listening libraries.

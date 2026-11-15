@@ -8,7 +8,7 @@ Mission Alive requires no account. Certification stamps, certificate names, inte
 
 Owner decision (November 15, 2026): shared greetings are published immediately, with no review queue. The classroom code and teacher-approval flow were removed.
 
-A greeting reaches the server only after the visitor ticks the sharing statement (“I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.”) and presses Share with everyone. A shared greeting may contain a nickname, language, country, written greeting, English translation, audio up to 2 MB, and the time it was shared. It is listed at once in “Voices from Earth today”, and anyone visiting the site may read it or play its audio.
+A greeting reaches the server only after the visitor ticks the sharing statement (“I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.”) and presses Share with everyone. A shared greeting may contain a nickname, language, country, written greeting, optional transcript, English translation, audio up to 2 MB, and the time it was shared. It is listed at once in “Voices from Earth today”, and anyone visiting the site may read it or play its audio.
 
 Removal:
 

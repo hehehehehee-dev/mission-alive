@@ -23,7 +23,8 @@ test("the studio shares with everyone behind a consent box, with no classroom or
 });
 
 test("sharing is refused without consent and flagged words never go public", async () => {
-  const { handleSharedGreetings } = await import("../server/shared-greetings.mjs");
+  const { handleSharedGreetings, publicEntry } = await import("../server/shared-greetings.mjs");
+  assert.equal(publicEntry({ id: "x", name: "n", language: "English", country: "", message: "", translation: "", transcript: "hello from Earth", publishedAt: "now", audioType: "audio/webm" }).transcript, "hello from Earth");
   const blobs = new Map();
   const store = {
     async list({ prefix }) { return { blobs: [...blobs.keys()].filter((key) => key.startsWith(prefix)).map((key) => ({ key })) }; },

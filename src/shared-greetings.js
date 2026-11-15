@@ -65,6 +65,12 @@ export function mountSharedGreetings(container, { onPlay = () => {}, onPause = (
         translation.append("English: ", visitorWords(greeting.translation));
         article.append(translation);
       }
+      if (greeting.transcript) {
+        const transcript = document.createElement("p");
+        transcript.className = "greeting-translation-note";
+        transcript.append("Transcript: ", visitorWords(greeting.transcript));
+        article.append(transcript);
+      }
       if (greeting.hasAudio) {
         const audio = document.createElement("audio");
         audio.controls = true;
