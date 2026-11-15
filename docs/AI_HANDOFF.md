@@ -8,8 +8,8 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the standing direct-main commit/push authorization remains active.
-- **Last change:** visible rewards in the lobby: `updateMissionProgress()` in `src/main.js` builds `#passport-stamp-row` (one slot per mission from `missionIds`), the progress bar is 12 px, and earned map cards get `.is-earned` in `src/moon-stories.js`; styles live in `src/readable-type.css`. Display only — no certification logic changed.
-- **Last verification:** 157 tests/build pass. Local browser with two stamps stored: two gold slots and two marked map cards at 390 px, no horizontal overflow; dark lobby mode keeps slot labels readable.
+- **Last change:** on phones the visible header links (`.desktop-header-tools`) are one swipeable row, constrained with `min-width: 0` so the page cannot widen; rules are at the end of `src/readable-type.css`. The links stay visible as previously agreed with the owner; no menu was reintroduced.
+- **Last verification:** 158 tests/build pass. Local browser at 390 px: header 122 px (was about 175), document width 390, English and Vietnamese labels, lobby and Curiosity.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
@@ -199,6 +199,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Claude — `main`
+- **Commit:** Put the phone header links in one swipeable row
+- **Changed:** `src/readable-type.css`, `tests/readable-type.test.js`.
+- **Verified:** 158 tests; build; local browser at 390 px in English and Vietnamese.
+- **Left for next:** three stacked headings before play on the four deep-space/Mars missions; copy reading level; no celebration when returning to the lobby with a new stamp. Not checked on the deployed site.
 
 ### 2026-11-15 — Claude — `main`
 - **Commit:** Show earned stamps as stamps in the lobby and on the map

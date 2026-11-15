@@ -33,3 +33,14 @@ test("earned stamps are visible: a slot per mission, a thicker bar, and a marked
   assert.match(css, /\.passport-stamp-row b \{[^}]*width: 44px; height: 44px;/);
   assert.match(css, /#location-map-slot \.diagram-callout\.is-earned::after \{ content: "✓";/);
 });
+
+test("phone header links stay visible in one swipeable row, not behind a menu", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  assert.doesNotMatch(html, /class="mobile-header-menu"/);
+  const rule = css.slice(css.lastIndexOf("@media (max-width: 700px)"));
+  assert.match(rule, /\.desktop-header-tools \{[^}]*display: flex;[^}]*flex-wrap: nowrap;[^}]*overflow-x: auto;/s);
+  assert.match(rule, /\.desktop-header-tools button \{[^}]*min-height: 44px;[^}]*white-space: nowrap;/s);
+  assert.doesNotMatch(rule, /display:\s*none/);
+  assert.match(rule, /\.header-actions \{ min-width: 0; \}/, "the row must not widen the page on a phone");
+  assert.match(rule, /min-width: 0;\s*max-width: 100%;/);
+});

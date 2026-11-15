@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Phone header links in one swipeable row
+
+- On phones the five header links (Sources & credits, For Teachers, Display & access, Mission notes, About) stay visible, as agreed, but sit in one swipeable row instead of a three-column grid. The header is about 122 px tall instead of about 175 px, so the lobby headline starts about 50 px higher.
+- The row is limited to the screen width; an unconstrained row had made the whole page wider than a 390 px phone.
+
 ### Stamps you can see
 
 - The lobby now shows one stamp slot per mission under “Your mission stamps”: a dashed numbered circle until the mission is done, then a gold tilted ✓ stamp with the machine's name in bold. Slots are built from the mission registry.
