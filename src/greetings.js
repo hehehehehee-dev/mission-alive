@@ -23,7 +23,6 @@ const countryNames = [...new Set(greetings.flatMap((g) => g.countries))].sort(
   (a, b) => a.localeCompare(b),
 );
 let selectedId = "11";
-const quickGreetingIds = ["11", "45", "53"];
 
 export function greetingMarkup() {
   return `<section class="greeting-library" aria-labelledby="greeting-heading">
@@ -33,7 +32,7 @@ export function greetingMarkup() {
  <label for="greeting-country" class="sr-only">Filter by country or region</label><select id="greeting-country"><option value="">All countries & regions</option>${countryNames.map((c) => `<option>${c}</option>`).join("")}</select>
  <div class="results-heading"><span id="greeting-count">55 greetings</span><button id="clear-greetings" type="button">Clear filters</button></div>
  <div class="greeting-results" id="greeting-results" role="group" aria-label="Matching greetings"></div></div>
- <div class="greeting-player"><div class="greeting-quick-list" role="group" aria-label="Choose a greeting">${quickGreetingIds.map((id) => `<button type="button" data-quick-greeting="${id}" aria-pressed="${String(id === selectedId)}">${greetings.find((item) => item.id === id).language}</button>`).join("")}</div><button type="button" id="browse-all-greetings" class="greeting-browse-all" aria-controls="greeting-search">Browse all 55 greetings</button><p class="eyebrow">SELECTED GREETING</p><h4 id="selected-language"></h4><p id="selected-region" class="fine"></p><figure class="greeting-translation"><blockquote id="selected-translation"></blockquote><figcaption>English translation published by NASA</figcaption></figure><details class="greeting-original" data-i18n-original hidden><summary>Read NASA’s original English text</summary><blockquote id="original-greeting-translation" lang="en" data-i18n-skip></blockquote></details><audio id="greeting-audio" controls preload="none" aria-label="Golden Record greeting player"></audio><button id="play-greeting" class="primary" type="button">Play greeting</button><p id="greeting-status" class="fine">Select a greeting, then press play.</p></div>
+ <div class="greeting-player"><p class="eyebrow">SELECTED GREETING</p><h4 id="selected-language"></h4><p id="selected-region" class="fine"></p><figure class="greeting-translation"><blockquote id="selected-translation"></blockquote><figcaption>English translation published by NASA</figcaption></figure><details class="greeting-original" data-i18n-original hidden><summary>Read NASA’s original English text</summary><blockquote id="original-greeting-translation" lang="en" data-i18n-skip></blockquote></details><audio id="greeting-audio" controls preload="metadata" aria-label="Golden Record greeting player"></audio><p id="greeting-status" class="fine">Select a greeting, then press play.</p></div>
  <p class="fine association-note">Countries and regions are discovery guides, not the speaker’s nationality or a complete list of where a language is spoken. Ancient languages are labeled.</p>
  <a class="greeting-source" href="${greetingSource}" target="_blank" rel="noopener">NASA greeting list & English translations</a>
  </section>${personalRecordMarkup()}`;
@@ -45,11 +44,9 @@ export function mountGreetings(container, { onPlay, onPause, onSave, onRead = ()
     country = find("#greeting-country"),
     results = find("#greeting-results"),
     audio = find("#greeting-audio"),
-    play = find("#play-greeting"),
     status = find("#greeting-status");
-  let disposed = false,
-    selectionRevision = 0;
-  play.insertAdjacentHTML('afterend', '<button type="button" id="read-greeting">Use the written greeting</button><p class="fine">Reading counts toward your stamp; sound is optional.</p>');
+  let disposed = false;
+  audio.insertAdjacentHTML('afterend', '<button type="button" id="read-greeting">Use the written greeting</button><p class="fine">Reading counts toward your stamp; sound is optional.</p>');
   find('#read-greeting').onclick = () => {
     if (disposed) return;
     audio.pause();
@@ -67,14 +64,19 @@ export function mountGreetings(container, { onPlay, onPause, onSave, onRead = ()
     onAnnounce,
     reducedMotion,
   });
+  // Only one voice at a time, including previews and visitor recordings.
+  const soloPlayback = event => container.querySelectorAll("audio").forEach(other => {
+    if (other !== event.target) other.pause();
+  });
+  container.addEventListener("play", soloPlayback, true);
   function setStatus(message, announce = true) {
     status.textContent = message;
     if (announce && !disposed) onAnnounce(message);
   }
   function openCatalog({ focus = true, scroll = true } = {}) {
     if (disposed) return;
-    // The layout may move the existing browser into More to explore. Reveal
-    // its real ancestors so all existing handlers keep using the same nodes.
+    find("#original-greetings-tab")?.click();
+    // Keep country comparisons and optional disclosures on the same catalog.
     let disclosure = search.closest("details");
     while (disclosure && container.contains(disclosure)) {
       disclosure.open = true;
@@ -117,7 +119,6 @@ export function mountGreetings(container, { onPlay, onPause, onSave, onRead = ()
     }
   }
   function select(id, announce = true) {
-    selectionRevision++;
     audio.pause();
     audio.removeAttribute("src");
     audio.load();
@@ -130,8 +131,6 @@ export function mountGreetings(container, { onPlay, onPause, onSave, onRead = ()
     audio.setAttribute("aria-label", `${item.language} Golden Record greeting`);
     audio.src = urls.get(id) || "";
     audio.muted = false;
-    play.textContent = "Play greeting";
-    play.disabled = !urls.has(id);
     setStatus(
       urls.has(id)
         ? `${item.language} selected. Press play to listen.`
@@ -143,30 +142,20 @@ export function mountGreetings(container, { onPlay, onPause, onSave, onRead = ()
       .forEach((b) =>
         b.setAttribute("aria-pressed", String(b.dataset.greeting === id)),
       );
-    container.querySelectorAll("[data-quick-greeting]").forEach((button) =>
-      button.setAttribute("aria-pressed", String(button.dataset.quickGreeting === id)),
-    );
   }
-  container.querySelectorAll("[data-quick-greeting]").forEach((button) =>
-    button.addEventListener("click", () => select(button.dataset.quickGreeting)),
-  );
-  find("#browse-all-greetings").addEventListener("click", () => openCatalog());
   audio.addEventListener("playing", () => {
     if (disposed) return;
-    play.textContent = "Pause greeting";
     const item = greetings.find((g) => g.id === selectedId);
     setStatus(`Playing ${item.language} Golden Record greeting.`);
     onPlay(item);
   });
   audio.addEventListener("pause", () => {
     if (disposed) return;
-    play.textContent = "Play greeting";
     if (audio.currentTime > 0 && !audio.ended)
       setStatus("Paused. Resume whenever you’re ready.");
     onPause();
   });
   audio.addEventListener("ended", () => {
-    play.textContent = "Replay greeting";
     setStatus("Greeting complete. Choose another voice from Earth.");
     onPause();
   });
@@ -175,26 +164,7 @@ export function mountGreetings(container, { onPlay, onPause, onSave, onRead = ()
     setStatus(
       "This recording could not load. Try again or choose another language.",
     );
-    play.textContent = "Retry greeting";
     onPause();
-  });
-  play.addEventListener("click", async () => {
-    if (!audio.paused) {
-      audio.pause();
-      return;
-    }
-    const revision = selectionRevision;
-    audio.muted = false;
-    setStatus("Loading greeting…");
-    try {
-      await audio.play();
-    } catch (error) {
-      if (disposed || revision !== selectionRevision) return;
-      if (error.name !== "AbortError")
-        setStatus(
-          "Playback could not start. Try the audio controls or another greeting.",
-        );
-    }
   });
   search.addEventListener("input", () => {
     openCatalog({ focus: false, scroll: false });
@@ -304,9 +274,9 @@ export function mountGreetings(container, { onPlay, onPause, onSave, onRead = ()
     },
     dispose() {
       disposed = true;
-      selectionRevision++;
       lifecycle.abort();
       container.removeEventListener("compare-greeting-country", compareCountry);
+      container.removeEventListener("play", soloPlayback, true);
       audio.pause();
       audio.removeAttribute("src");
       audio.load();

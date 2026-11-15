@@ -6,6 +6,14 @@ Submissions remain pending. The teacher can hear pending audio, read the words a
 
 The serverless API is `netlify/functions/class-record.mjs`, routed at `/api/class-record`. It stores class metadata, audio, pending entries, and public gallery entries in a site-wide Netlify Blobs store. Site-wide Blobs survive redeploys. The class is limited to 60 submitted entries; the gallery shows the latest 40 approved greetings. No accounts or student email addresses are required. Passport stamps remain local.
 
+## Where visitors listen and share
+
+In Voyager, **Voices from Earth** is one listening area with two keyboard-operable tabs: **Golden Record · 1977** and **Visitor greetings**. The first keeps the language/country search beside one native audio player. The second shows the public **Classroom voices from Earth** gallery, searchable by language, country or class. Listening requires no class code. Empty results are shown honestly; there are no seeded public greetings.
+
+The studio below uses one **Save privately on this device** action for either text or audio. Name, country and English translation are optional fields in one disclosure. Saved private greetings stay beside the studio. **Share with a classroom** contains joining, creation, consent and teacher review. **Share your greeting** in the public gallery leads to this flow; a private saved greeting's **Send to class** action opens the missing code or consent control when needed. Saving alone never publishes anything.
+
+Only one Voyager voice plays at a time. Switching collections, filtering out a shared voice or leaving Voyager stops its audio. The record-cover drawing exercise has been removed; previously stored artwork is not deleted.
+
 ## Optional AI screening
 
 Set `CLASSROOM_OPENAI_API_KEY` as a server-side Netlify environment variable if you want pre-screening. The function sends text fields to OpenAI's Moderation API. For audio, it attempts a transcription and checks that transcript too. A flagged submission is rejected before the teacher queue. If no key is set or an AI call fails, the submission stays pending for the teacher to review; it is never auto-published. The queue labels its AI status. A recording whose audio could not be transcribed is marked `audio-unchecked` when the text check succeeded, so the teacher knows to listen. OpenAI transcription can incur charges. Never put this key in `VITE_` variables, the ZIP, or frontend code.

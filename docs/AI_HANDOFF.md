@@ -7,15 +7,15 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Release authorization:** the owner has now explicitly requested pushing the previously held local changes to `main`.
-- **Last change:** corrected Apollo fender arches; incremental Curiosity commands preserve executed progress, rock impacts enter the hazard tile and disable the rover with grey smoke, and anatomy markers hide during motion. Moon stages allow early trials and Voyager has a private 6×6 cover-painting grid.
-- **Last verification:** `npm test` 141/141 and production build pass. Local keyboard play confirmed row 5 → row 4 → hazard row 3 without restarting; integrity reaches zero, grey smoke is visible, and anatomy markers hide during motion then return at rest. Voyager drawing survived reload. Fender geometry and two viewing angles were checked in the preceding local preview. `HEAD` and `origin/main` matched before this release.
+- **Release authorization:** the standing direct-main commit/push authorization remains active.
+- **Last change:** consolidated Voyager into one original/visitor listening area, one private text/audio save action, visible saved drafts and optional classroom sharing. Removed cover painting and duplicate instruction cards. Shared Quick Start/explanation and story/briefing sections are grouped. Hash and browser-history navigation dismisses the Moon page before another exhibit opens.
+- **Last verification:** `npm test` 143/143 and production build pass. Browser checks covered native original and visitor audio, keyboard collection switching, filtering/clearing, country comparisons, text saving and a settled Voyager stamp, EN/ES/VI, reduced motion, all six layouts at 390px and Moon → exhibit Back/Forward. Populated gallery playback used a temporary local memory fixture, never a production submission. The production gallery API returned HTTP 200 with zero approved greetings.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
 - **Next suggested steps:**
-  1. Run the browser checks above, including all four anatomy trays, the Ingenuity three-step flow, keyboard operation, and Spanish/Vietnamese copy at about 390 px.
+  1. Finish the outstanding gameplay checks above, particularly the Ingenuity terrain outcomes. This layout pass did not replay every challenge to completion.
   2. After the next Netlify auto-deploy, confirm CSP, HSTS, Permissions-Policy, and the classroom gallery endpoint in production.
   3. Decide whether to remove the now-unused `moonPanel.play()` and `moonPanel.open()` from `src/moon-stories.js`.
 - **Open questions for the owner:** none.
@@ -46,7 +46,7 @@ The normal flow is:
 1. Lobby direct mission CTA, unified visual certification deck, and outward journey map.
 2. Mission opening on the page itself (no dialog): real mission image, machine voice, “Built for” and “It did” beats, then the objective. Built by `missionOpening()` in `src/main.js`.
 3. 3D or accessible 2D machine view and anatomy hotspots.
-4. Visual Quick Start.
+4. Short action and goal at the active step; optional **How to play** combines the three-step visual Quick Start and explanation.
 5. Interactive challenge with actionable feedback.
 6. Explicit stamp press and 750 ms ink-settle ceremony.
 7. “Still out there” story, final transmission, and mission gift.
@@ -65,6 +65,8 @@ Important invariants:
 - The optional learner name is requested below the mission choices and is used only for the certificate. Do not place it before the first mission CTA.
 - The visual machine picker and certification tracker are one shared deck. Do not create a second six-machine grid in the lobby.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
+- Voyager uses one **Voices from Earth** listening area: original 1977 greetings and approved visitor greetings in keyboard tabs. One native player controls the selected NASA greeting. One private-save button handles either written or recorded replies; saved drafts remain visible, classroom setup/review is optional, and no drawing exercise is present.
+- Long story/briefing content in the four original exhibits shares one **Story & science** disclosure. Avoid adding extra instruction cards that repeat the current step's action.
 - The footer privacy dialog is the public source of truth for classroom sharing. Keep it synchronized with `docs/PRIVACY.md` and `netlify/functions/class-record.mjs`.
 - Completion must survive reload through validated stored mission IDs.
 
@@ -197,6 +199,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Consolidate mission guidance and Voyager voices
+- **Changed:** combined original greeting search/player and visitor gallery with keyboard tabs; removed cover painting and redundant Voyager guidance; unified text/audio private saving, grouped optional metadata and classroom sharing, and retained visible drafts. Combined Quick Start/explanation and story/briefing sections. Stopped filtered-out audio and fixed a Moon overlay left open by hash/history navigation.
+- **Verified:** 143 tests and production build; local original/approved-fixture audio playback, language search, country comparisons, gallery filtering, keyboard tabs, private text saving and settled Voyager stamp; all six 390px layouts, ES/VI, reduced motion, and Moon → exhibit Back/Forward. Production gallery returned HTTP 200 with zero approved greetings. Local QA uses an in-memory store in untracked `tmp/preview-greeting-qa.mjs`; no production test recordings were created.
+- **Left for next:** full six-stamp playthrough and the listed Ingenuity gameplay checks were not repeated in this UI pass. Actual visitor content appears only after explicit sharing and teacher approval. Keep existing unrelated `public/third-party-notices.txt` line endings and untracked packages/artifacts out of this commit.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Release rover gameplay and mission experiments

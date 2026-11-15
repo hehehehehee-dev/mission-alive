@@ -54,7 +54,7 @@ export function classRecordMarkup() {
       <div class="class-record-list" id="class-record-list"></div>
       <div id="class-teacher"><h5>Teacher review</h5><p class="fine">Keep your teacher key private. Save it outside this browser so you can return at the end of the year.</p><div class="class-inline"><input id="class-teacher-key" type="password" autocomplete="off" placeholder="Paste your teacher key"><button id="class-save-key">Save key on this device</button><button id="class-copy-key">Copy key</button></div><button id="class-refresh-queue">Load pending greetings</button><div class="class-record-list" id="class-pending-list"></div></div>
     </div>
-    <div class="class-gallery"><div class="library-heading"><h5>Classroom voices from Earth</h5><span>TEACHER APPROVED</span></div><label for="class-gallery-search">Find a language, country, or class</label><div class="class-inline"><input type="search" id="class-gallery-search" placeholder="Try Vietnamese or Vietnam"><button id="class-refresh-gallery">Refresh voices</button></div><p class="fine" id="class-gallery-status" role="status">Loading approved classroom greetings…</p><div class="class-record-list" id="class-gallery-list"></div></div>
+    <div class="class-gallery"><div class="library-heading"><h4>Classroom voices from Earth</h4><span>TEACHER APPROVED</span></div><p class="fine">Listen to greetings shared by other visitors. You do not need a class code to listen.</p><label for="class-gallery-search">Find a language, country, or class</label><div class="class-inline"><input type="search" id="class-gallery-search" placeholder="Try Vietnamese or Vietnam"><button type="button" id="class-refresh-gallery">Refresh voices</button><button type="button" id="class-gallery-clear" hidden>Clear filters</button></div><p class="fine" id="class-gallery-status" role="status">Loading approved classroom greetings…</p><div class="class-record-list" id="class-gallery-list"></div><p class="fine">Shared greetings appear here after teacher approval. Saving on your device keeps them private.</p><button type="button" id="class-share-greeting" aria-controls="voyager-class-sharing">Share your greeting</button></div>
   </section>`;
 }
 
@@ -82,6 +82,17 @@ export function mountClassRecord(container, { onPlay = () => {}, onPause = () =>
   let journeyTimer = window.setInterval(updateJourneys, reducedMotion ? 30000 : 1000);
 
   function say(message) { status.textContent = message; }
+  function clearEntries(list) {
+    list.querySelectorAll("audio").forEach(audio => audio.pause());
+    list.replaceChildren();
+  }
+  function openSharing(target = "#personal-language") {
+    const sharing = find("#voyager-class-sharing");
+    if (sharing) sharing.open = true;
+    const field = find(target);
+    field.scrollIntoView({ block: "center", behavior: reducedMotion ? "instant" : "smooth" });
+    field.focus({ preventScroll: true });
+  }
   function active(title) {
     find("#class-active").hidden = false;
     find("#class-active-title").textContent = title;
@@ -213,7 +224,7 @@ export function mountClassRecord(container, { onPlay = () => {}, onPause = () =>
       if (!alive) return;
       active(data.title);
       const list = find("#class-record-list");
-      list.replaceChildren();
+      clearEntries(list);
       find("#class-count").textContent = `${data.recordings.length} APPROVED`;
       if (!data.recordings.length) list.textContent = "No approved greetings yet. The teacher will hear submissions before they appear here.";
       else data.recordings.forEach((entry) => addEntry(list, entry));
@@ -225,7 +236,7 @@ export function mountClassRecord(container, { onPlay = () => {}, onPause = () =>
     try {
       const data = await request({ action: "queue", code, teacherKey });
       const list = find("#class-pending-list");
-      list.replaceChildren();
+      clearEntries(list);
       if (!data.recordings.length) list.textContent = "No greetings waiting for review.";
       else data.recordings.forEach((entry) => addEntry(list, entry, true));
     } catch (error) { say(error.message); }
@@ -234,8 +245,14 @@ export function mountClassRecord(container, { onPlay = () => {}, onPause = () =>
     const term = find("#class-gallery-search").value.trim().toLocaleLowerCase();
     const matching = galleryEntries.filter((entry) => [entry.language, entry.country, entry.classTitle].some((value) => (value || "").toLocaleLowerCase().includes(term)));
     const list = find("#class-gallery-list");
-    list.replaceChildren();
-    if (!matching.length) list.textContent = term ? "No approved classroom greetings match that search." : "No classroom greetings have been approved yet.";
+    clearEntries(list);
+    find("#class-gallery-clear").hidden = !term;
+    if (!matching.length) {
+      const empty = document.createElement("p");
+      empty.className = "empty-greetings";
+      empty.textContent = term ? "No approved classroom greetings match that search." : "No classroom greetings have been approved yet.";
+      list.append(empty);
+    }
     else matching.forEach((entry) => addEntry(list, entry));
     find("#class-gallery-status").textContent = `${matching.length} of ${galleryEntries.length} approved greetings shown. Country labels describe trainee choices, not nationality.`;
   }
@@ -247,7 +264,7 @@ export function mountClassRecord(container, { onPlay = () => {}, onPause = () =>
       if (!alive) return;
       galleryEntries = Array.isArray(data.recordings) ? data.recordings : [];
       drawGallery();
-    } catch (error) { find("#class-gallery-status").textContent = error.message; }
+    } catch (error) { if (alive) find("#class-gallery-status").textContent = error.message; }
   }
   find("#class-join").addEventListener("click", () => {
     const nextCode = find("#class-code").value.trim().toUpperCase();
@@ -291,6 +308,12 @@ export function mountClassRecord(container, { onPlay = () => {}, onPause = () =>
   find("#class-refresh-queue").addEventListener("click", loadQueue);
   find("#class-refresh-gallery").addEventListener("click", loadGallery);
   find("#class-gallery-search").addEventListener("input", drawGallery);
+  find("#class-gallery-clear").addEventListener("click", () => {
+    find("#class-gallery-search").value = "";
+    drawGallery();
+    find("#class-gallery-search").focus();
+  });
+  find("#class-share-greeting").addEventListener("click", () => openSharing());
   find("#class-leave").addEventListener("click", () => {
     code = ""; teacherKey = "";
     saveStored({});
@@ -309,8 +332,8 @@ export function mountClassRecord(container, { onPlay = () => {}, onPause = () =>
     },
     get activeCode() { return code; },
     async submit(record) {
-      if (!api || !code) throw new Error("Open a class record first.");
-      if (!find("#class-consent").checked) throw new Error("Tick the classroom sharing consent first.");
+      if (!api || !code) { openSharing("#class-code"); throw new Error("Open a class record first."); }
+      if (!find("#class-consent").checked) { openSharing("#class-consent"); throw new Error("Tick the classroom sharing consent first."); }
       if (record.audio?.size > 2 * 1024 * 1024) throw new Error("Class audio must be under 2 MB. Write a greeting instead or make a shorter recording.");
       const result = await request({
         action: "submit", code, consent: true,

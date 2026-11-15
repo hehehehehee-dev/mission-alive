@@ -53,6 +53,18 @@
   border-bottom: 1px solid var(--line);
   scroll-margin-top: 24px;
 }
+.greeting-library > .mission-direction,
+.greeting-tabs,
+.original-greetings,
+.greeting-library > .class-gallery { grid-column: 1 / -1; min-width: 0; }
+.original-greetings { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px 24px; }
+.greeting-tabs { display: flex; gap: 8px; }
+.greeting-tabs button { flex: 1; min-width: 0; min-height: 48px; padding: 12px; }
+.greeting-tabs button[aria-selected="true"] { background: var(--accent); color: #101820; border-color: var(--accent); font-weight: 700; }
+.greeting-library [role="tabpanel"][hidden] { display: none; }
+.greeting-save { padding: 16px 0; }
+.greeting-save > button { min-height: 48px; }
+.greeting-save > p { margin: 8px 0; }
 .library-heading {
   grid-column: 1/-1;
   display: flex;
@@ -112,7 +124,7 @@
   font-size: 0.8125rem;
 }
 .greeting-results {
-  height: 235px;
+  max-height: 235px;
   overflow-y: auto;
   border: 1px solid var(--line);
   border-radius: 5px;
@@ -158,35 +170,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-.greeting-quick-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
-  margin-bottom: 10px;
-}
-.greeting-quick-list button {
-  min-width: 0;
-  min-height: 44px;
-  padding: 9px 6px;
-  font: 0.74rem/1.35 system-ui, sans-serif;
-  overflow-wrap: anywhere;
-}
-.greeting-quick-list button[aria-pressed="true"] {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: #9dbfe714;
-}
-.greeting-browse-all {
-  align-self: flex-start;
-  margin: 0 0 22px;
-  padding: 5px 0;
-  border: 0;
-  color: var(--accent);
-  font-size: 0.78rem;
-  text-align: left;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 .greeting-quick-list button:focus-visible,
 .greeting-browse-all:focus-visible {
@@ -320,6 +303,12 @@
   grid-column: 1 / -1;
 }
 .recording-fields datalist { display: none; }
+.recording-fields > label[for="personal-message"],
+.greeting-optional-fields { grid-column: 1 / -1; }
+.greeting-optional-fields > summary { min-height: 44px; padding: 12px 0; cursor: pointer; color: var(--accent); font-size: .875rem; }
+.greeting-optional-fields > summary:focus-visible { outline: 3px solid #ffe49a; outline-offset: 3px; }
+.greeting-optional-fields > div { display: grid; gap: 8px; }
+.greeting-optional-fields label { margin-top: 10px; }
 .journey-explainer {
   margin: 20px 0 0;
   padding: 12px 15px;
@@ -447,28 +436,6 @@
   min-height: 42px;
   margin-bottom: 0;
 }
-.written-greeting-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px 24px;
-  margin-top: 12px;
-  padding: 18px 22px;
-  border: 1px solid #58786e;
-  border-radius: 8px;
-  background: linear-gradient(110deg, #14251f, #101b20);
-}
-.written-greeting-card strong {
-  color: #e4f5e9;
-}
-.written-greeting-card .fine {
-  margin: 5px 0 0;
-}
-#written-greeting-status {
-  grid-column: 1 / -1;
-  min-height: 1.4em;
-  color: #a6d7bf;
-}
 .personal-library,
 .community-library {
   margin-top: 30px;
@@ -524,7 +491,10 @@
 .class-record-item audio { width: 100%; margin-top: 10px; }
 #class-teacher { margin-top: 24px; padding-top: 15px; border-top: 1px solid #ffffff20; }
 #class-refresh-queue { margin-top: 12px; }
-.class-gallery { margin-top: 28px; padding-top: 18px; border-top: 1px solid #ffffff20; }
+.class-gallery { padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: #0c1822; }
+.class-gallery h4 { margin: 0; font-size: 1.25rem; }
+.class-gallery .empty-greetings { margin: 0; padding: 20px 0; }
+.class-gallery .class-record-list { grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); }
 .class-gallery > label { display: block; margin: 12px 0 7px; color: #d9e0e5; font-size: .8rem; }
 .personal-record-list,
 .community-record-list {
@@ -601,6 +571,8 @@ body.motion-reduced .recording-console.is-recording .recording-orbit b {
   }
 }
 @media (max-width: 680px) {
+  .original-greetings { grid-template-columns: 1fr; }
+  .greeting-tabs button { font-size: .875rem; }
   .class-record { padding: 18px; }
   .class-record-start { grid-template-columns: 1fr; }
   .greeting-library {
@@ -618,7 +590,7 @@ body.motion-reduced .recording-console.is-recording .recording-orbit b {
     padding: 23px;
   }
   .greeting-results {
-    height: 200px;
+    max-height: 200px;
   }
   .greeting-player h4 {
     font-size: 1.8rem;
@@ -634,9 +606,6 @@ body.motion-reduced .recording-console.is-recording .recording-orbit b {
     align-items: flex-start;
   }
   .recording-card {
-    grid-template-columns: 1fr;
-  }
-  .written-greeting-card {
     grid-template-columns: 1fr;
   }
   .recording-fields {

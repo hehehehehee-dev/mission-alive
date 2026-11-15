@@ -16,3 +16,21 @@ export function quickStartMarkup(mission) {
 export function whyMarkup(content) {
   return `<details class="why-it-works"><summary><span aria-hidden="true">💡</span> Why this works</summary><div>${content}</div></details>`;
 }
+
+// Active steps already explain the next action. Keep the full overview and
+// background together on demand, instead of repeating them above the tools.
+export function mergeMissionHelp(host) {
+  const overview = host?.querySelector('.quick-start');
+  if (!overview || overview.closest('.mission-help')) return;
+  const explanation = host.querySelector('.why-it-works');
+  const help = document.createElement('details');
+  help.className = 'mission-help';
+  const summary = document.createElement('summary');
+  summary.textContent = 'How to play';
+  overview.before(help);
+  help.append(summary, overview);
+  if (explanation) {
+    help.append(explanation.querySelector('div'));
+    explanation.remove();
+  }
+}

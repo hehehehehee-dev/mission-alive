@@ -15,8 +15,10 @@ test("unconfigured community sharing adds no dead controls or unlock copy; HTTPS
   const { personalRecordMarkup } = await import("../src/personal-records.js");
   const markup = personalRecordMarkup();
   assert.doesNotMatch(markup, /will unlock|publishing unavailable|community-library|id="publish-consent"|id="refresh-community-records"/i);
-  for (const id of ["start-personal-recording", "save-written-greeting", "personal-message", "personal-record-list", "class-create", "class-join", "class-consent", "class-gallery-list"])
+  for (const id of ["start-personal-recording", "save-personal-recording", "personal-message", "personal-record-list", "class-create", "class-join", "class-consent", "class-gallery-list", "class-share-greeting"])
     assert.ok(markup.includes(`id="${id}"`), `${id} remains available`);
+  assert.doesNotMatch(markup, /save-written-greeting|written-greeting-status/);
+  assert.equal((markup.match(/id="save-personal-recording"/g) || []).length, 1, 'one save action handles text and audio');
 });
 
 test("offline classroom markup is omitted and its no-op controller touches no absent DOM", async (t) => {

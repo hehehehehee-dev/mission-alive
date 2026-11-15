@@ -51,7 +51,7 @@ Do not add, remove, or silently change a stamp, finale condition, storage key, c
 ## UX rules
 
 - A restless child should understand the next action without reading a paragraph.
-- Put the challenge first. Use the shared three-step visual Quick Start from `src/quick-start.js`; place deeper explanations in optional disclosures.
+- Put the challenge first. Keep short action and goal guidance at the active step. The shared three-step Quick Start from `src/quick-start.js` and its explanation live together in the optional **How to play** disclosure; do not add another competing instruction card. Longer mission reading lives in **Story & science**.
 - Failure should teach one actionable correction. A learner should normally succeed within two or three informed attempts.
 - Never make audio, microphone permission, precise dragging, color alone, hover, or WebGL mandatory.
 - Maintain native keyboard controls, visible focus, touch targets, text alternatives, reduced motion, and a functional 2D fallback.

@@ -2583,6 +2583,9 @@ async function mountViewer(id, token, view = null) {
 }
 
 async function render(id) {
+  // Hash navigation and browser Back bypass setRoute; dismiss the Moon page
+  // here too so it cannot cover the newly rendered training module.
+  if (moonPanel.dialog.open) moonPanel.dialog.close();
   $('.skip').href = '#controls';
   $('.skip').textContent = 'Skip to training controls';
   disposeOpenData();
@@ -2714,8 +2717,9 @@ async function render(id) {
   $("#briefing").innerHTML = briefingMarkup(id);
   $("#begin-challenge").onclick = () => {
     if (id === "voyager") {
-      $("#play-greeting").scrollIntoView({ behavior: reduce ? "instant" : "smooth", block: "center" });
-      $("#play-greeting").focus({ preventScroll: true });
+      greetingPlayer?.openCatalog({ focus: false, scroll: false });
+      $("#greeting-audio").scrollIntoView({ behavior: reduce ? "instant" : "smooth", block: "center" });
+      $("#greeting-audio").focus({ preventScroll: true });
       return;
     }
     if (id === "webb") {

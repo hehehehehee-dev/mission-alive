@@ -105,25 +105,26 @@ function safeAudioUrl(value) {
 export function personalRecordMarkup() {
   return `<section class="personal-record-studio" aria-labelledby="personal-record-heading">
     <div class="studio-heading"><div><p class="eyebrow">YOUR TIME CAPSULE</p><h3 id="personal-record-heading" tabindex="-1">Make your own Golden Record</h3></div><span>PRIVATE UNTIL PUBLISHED</span></div>
-    <p class="studio-intro">Record a greeting of up to ${MAX_SECONDS} seconds, or write one if a microphone is unavailable. Either choice can complete your Voyager mission after you listen to a greeting from Earth.</p>
+    <p class="studio-intro">Write a greeting or record up to ${MAX_SECONDS} seconds. Save it privately, then choose whether to share it.</p>
     <div class="recording-card">
       <div class="recording-fields">
-        <label for="personal-name">Your display name <span>(optional)</span></label><input id="personal-name" maxlength="40" placeholder="Space listener">
-        <label for="personal-language">Your greeting's language</label><input id="personal-language" maxlength="40" required aria-describedby="personal-record-status written-greeting-status" list="personal-language-options" placeholder="e.g. Vietnamese"><datalist id="personal-language-options">${languageOptions.map((language) => `<option value="${language}"></option>`).join("")}</datalist>
-        <label for="personal-country">Country or region <span>(optional)</span></label><input id="personal-country" maxlength="50" list="personal-country-options" placeholder="e.g. Vietnam"><datalist id="personal-country-options">${countryOptions.map((country) => `<option value="${country}"></option>`).join("")}</datalist>
-        <label for="personal-message">Type your greeting instead</label><textarea id="personal-message" maxlength="240" rows="3" aria-describedby="written-greeting-status" placeholder="Write a greeting in the language you speak at home."></textarea>
-        <label for="personal-translation">English translation <span>(optional)</span></label><textarea id="personal-translation" maxlength="240" rows="2" placeholder="Help another listener understand your words."></textarea>
+        <label for="personal-language">Your greeting's language</label><input id="personal-language" maxlength="40" required aria-describedby="personal-record-status" list="personal-language-options" placeholder="e.g. Vietnamese"><datalist id="personal-language-options">${languageOptions.map((language) => `<option value="${language}"></option>`).join("")}</datalist>
+        <label for="personal-message">Your greeting or transcript</label><textarea id="personal-message" maxlength="240" rows="3" aria-describedby="personal-record-status" placeholder="Write a greeting in the language you speak at home."></textarea>
+        <details class="greeting-optional-fields"><summary>Name, country & translation (optional)</summary><div>
+          <label for="personal-name">Your display name <span>(optional)</span></label><input id="personal-name" maxlength="40" placeholder="Space listener">
+          <label for="personal-country">Country or region <span>(optional)</span></label><input id="personal-country" maxlength="50" list="personal-country-options" placeholder="e.g. Vietnam"><datalist id="personal-country-options">${countryOptions.map((country) => `<option value="${country}"></option>`).join("")}</datalist>
+          <label for="personal-translation">English translation <span>(optional)</span></label><textarea id="personal-translation" maxlength="240" rows="2" placeholder="Help another listener understand your words."></textarea>
+        </div></details>
       </div>
       <div class="recording-console">
         <div class="recording-orbit" aria-hidden="true"><i></i><b></b></div>
         <output id="personal-timer" role="timer" aria-live="off" aria-label="Recording duration">00:00 / 00:${MAX_SECONDS}</output>
         <div class="recording-actions"><button type="button" class="primary" id="start-personal-recording">Start recording</button><button type="button" id="stop-personal-recording" disabled>Stop</button></div>
         <audio id="personal-preview" controls hidden aria-label="Preview your recorded greeting"></audio>
-        <button type="button" id="save-personal-recording" disabled>Save privately on this device</button>
-        <p class="fine" id="personal-record-status">Your browser will ask for microphone access only after you press Start recording.</p>
+        <p class="fine">Your browser will ask for microphone access only after you press Start recording.</p>
       </div>
     </div>
-    <div class="written-greeting-card"><div><strong>No microphone? Send a written greeting.</strong><p class="fine">Enter a language and message above. Your words stay on this device; written greetings are not submitted to the public audio archive.</p></div><button type="button" class="secondary" id="save-written-greeting">Save written greeting</button><p class="fine" id="written-greeting-status">Writing counts toward the Voyager stamp.</p></div>
+    <div class="greeting-save"><button type="button" class="primary" id="save-personal-recording" disabled>Save privately on this device</button><p class="fine">Writing counts toward the Voyager stamp.</p><p class="fine" id="personal-record-status">Choose a language and add your words or a recording.</p></div>
     <p class="journey-explainer">Imagine your greeting traveling beside Voyager 1. The counters below use NASA's approximate speed of 17 km/s relative to the Sun. Your recording stays here; it is not actually on the spacecraft. <a href="https://science.nasa.gov/mission/voyager/voyager-1/" target="_blank" rel="noopener">NASA speed source ↗</a></p>
     <div class="personal-library">
       <div class="library-heading"><h4>My saved greetings</h4><span id="personal-record-count">0 SAVED</span></div>
@@ -148,7 +149,6 @@ export function mountPersonalRecords(
   const startButton = find("#start-personal-recording");
   const stopButton = find("#stop-personal-recording");
   const saveButton = find("#save-personal-recording");
-  const writeButton = find("#save-written-greeting");
   const preview = find("#personal-preview");
   const timer = find("#personal-timer");
   const status = find("#personal-record-status");
@@ -319,6 +319,7 @@ export function mountPersonalRecords(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
       );
       if (disposed) return;
+      localList.querySelectorAll("audio").forEach(audio => audio.pause());
       localUrls.forEach((url) => URL.revokeObjectURL(url));
       localUrls.clear();
       localList.replaceChildren();
@@ -482,22 +483,21 @@ export function mountPersonalRecords(
   }
 
   async function saveWrittenGreeting() {
-    const writtenStatus = find("#written-greeting-status");
     const details = metadata();
     if (!details.language) {
       find("#personal-language").setAttribute("aria-invalid", "true");
       find("#personal-language").focus();
-      setStatus("Add the language of your greeting first.", writtenStatus);
+      setStatus("Add the language of your greeting first.");
       return;
     }
     if (!details.message) {
       find("#personal-message").setAttribute("aria-invalid", "true");
       find("#personal-message").focus();
-      setStatus("Write your greeting before saving it.", writtenStatus);
+      setStatus("Write your greeting before saving it.");
       return;
     }
-    const moveToSavedGreeting = document.activeElement === writeButton || document.activeElement === saveButton;
-    writeButton.disabled = true;
+    const moveToSavedGreeting = document.activeElement === saveButton;
+    saveButton.disabled = true;
     const record = {
       id: crypto.randomUUID(),
       ...details,
@@ -507,14 +507,13 @@ export function mountPersonalRecords(
     try {
       await saveLocalRecord(record);
       await drawLocalRecords({ focusRecordId: moveToSavedGreeting ? record.id : undefined });
-      setStatus("Written greeting saved privately on this device. It counts toward your stamp.", writtenStatus);
+      setStatus("Written greeting saved privately on this device. It counts toward your stamp.");
     } catch {
-      setStatus("Your greeting counts toward the stamp, but this browser could not save a private copy. Copy your words before leaving.", writtenStatus);
+      setStatus("Your greeting counts toward the stamp, but this browser could not save a private copy. Copy your words before leaving.");
     }
     onSave(record);
     lastSavedTextKey = `${details.language}\n${details.message}\n${details.translation}`;
     updateSaveAvailability();
-    writeButton.disabled = false;
   }
 
   async function publishRecord(record, button) {
@@ -635,7 +634,6 @@ export function mountPersonalRecords(
   startButton.addEventListener("click", startRecording);
   stopButton.addEventListener("click", stopRecording);
   saveButton.addEventListener("click", saveCurrentRecording);
-  writeButton.addEventListener("click", saveWrittenGreeting);
   find("#personal-language").addEventListener("input", updateSaveAvailability);
   find("#personal-message").addEventListener("input", updateSaveAvailability);
   find("#personal-translation").addEventListener("input", updateSaveAvailability);

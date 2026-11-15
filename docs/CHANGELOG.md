@@ -2,6 +2,17 @@
 
 Claude and other collaborators should read this file after `CLAUDE.md`. Every product, code, content, data, or UX change must update this log in the same commit. Keep entries short and factual. Do not repeat the full commit diff.
 
+## 2026-11-15
+
+### Consolidate mission guidance and Voyager voices
+
+- Voyager's language/country search and selected greeting now share one listening area with one native player. Keyboard tabs switch between the original 1977 greetings and approved visitor recordings; the public gallery no longer sits inside More to explore.
+- Removed the cover-painting grid and duplicate Voyager instruction cards. Text and audio now share one private-save action. Optional name, country and translation fields are grouped; saved greetings remain beside the studio, with classroom sharing and review in one disclosure.
+- All six missions group the visual Quick Start and explanation under How to play. The four original exhibits combine story and briefing under Story & science. Signal Lab's result sits with the optional lab.
+- Audio stops when another Voyager voice starts or when a gallery filter removes it. Missing class/consent actions reveal the appropriate sharing control.
+- Fixed direct hash/Back/Forward navigation leaving the Moon page over another module. EN/ES/VI and 390px layouts were checked, including the Voyager text-to-stamp path. Public production gallery returned zero approved recordings; populated playback was tested with an isolated local fixture only.
+- Validation: 143 tests and production build passed. Handoff and classroom guide updated; no publication rules or stamp conditions changed.
+
 ## 2026-11-14
 
 ### Rover gameplay and mission experiments

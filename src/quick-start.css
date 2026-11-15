@@ -16,4 +16,9 @@
 .why-it-works summary::marker { color: #f3c969; }
 .why-it-works > div { padding: 0 .25rem .85rem; color: var(--muted, #c7d6df); }
 .why-it-works p { margin: .35rem 0; max-width: 68ch; }
+.mission-help { margin: .75rem 0 1rem; border-block: 1px solid var(--line, #647987); }
+.mission-help > summary { min-height: 44px; padding: 12px 2px; color: var(--accent, #f3c969); cursor: pointer; font-weight: 700; }
+.mission-help > summary:focus-visible { outline: 3px solid #ffe49a; outline-offset: 3px; }
+.mission-help .quick-start { margin: 0 0 12px; }
+.mission-help > div { padding: 0 4px 14px; color: var(--muted, #c7d6df); }
 @media (max-width: 680px) { .quick-start ol { grid-template-columns: 1fr; gap: .45rem; } .quick-start li { min-height: 3.6rem; } }
