@@ -52,5 +52,9 @@ test('probe force stays selected and a valid landing can be retried after switch
   lab.click({ surveyorPatch: 'a' }); action('touchdown');
   assert.equal(lab.game.dataset.surveyorOutcome, 'accepted');
   assert.deepEqual(lab.events, ['surveyor-soil-success', 'surveyor-soil-success'], 'host can offer its cancelled completion ceremony again');
+  action('restart');
+  assert.equal(lab.game.dataset.surveyorSelectedForce, '1');
+  assert.equal(lab.game.dataset.surveyorDigs, '0');
+  assert.equal(lab.game.dataset.surveyorSelectedPatch, 'a');
   lab.controller.dispose();
 });

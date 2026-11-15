@@ -3,7 +3,7 @@ const missions = Object.freeze({
   ingenuity: [["📍", "Choose", "Pick a landing zone."], ["📡", "Prepare", "Link and power up."], ["🚁", "Fly", "Hold the wind band."]],
   webb: [["↔", "Unfold", "Pull both gold wings out."], ["✦", "Focus", "Move three stars to center."], ["🌈", "Reveal", "Explore infrared light."]],
   voyager: [["▶", "Listen", "Play one Earth greeting."], ["💬", "Reply", "Write or record yours."], ["✓", "Save", "Your stamp unlocks."]],
-  apollo17: [["🧰", "Build", "Add maps, tape, and clamps."], ["↕", "Shape", "Move the blue patch."], ["💨", "Test", "Keep dust off the gear."]],
+  apollo17: [["🧰", "Build", "Add maps, tape, and clamps."], ["↕", "Shape", "Pull the white tip."], ["💨", "Test", "Keep dust off the gear."]],
   surveyor3: [["↓", "Probe", "Press twice with new force."], ["⛏", "Dig", "Reveal the hidden layer."], ["🛬", "Test", "Make the landing stable."]],
 });
 

@@ -11,6 +11,8 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 - All six missions have short first-person context, a direct action and a completion goal at the relevant playable step. Curiosity uses commands, Ingenuity flight control, Webb optical alignment and Voyager a personal message.
 - Replaced the earlier generic Mission Moment cards in the active controls. Spanish and Vietnamese cover every new instruction and tool label.
 - Production playtesting corrected field-tool state binding and separated selected-patch data from navigation targets, so excavation visuals update and landing adjustments stay in the landing step.
+- Reset and alternative force buttons also synchronize the visual probe. The displayed measurement appears once beside the field tools.
+- The patch tip has a larger invisible touch target around its visible grip; assembly/measurement feedback is shown once and quick-start wording matches the new workbench.
 
 ### Six-module navigation on both Moon missions
 

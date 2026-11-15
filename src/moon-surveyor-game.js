@@ -214,6 +214,7 @@ export function mountSurveyorGame(root) {
     const soil = soilFor(patchId);
     const evidence = evaluateSurveyorEvidence(patchId, log);
     game.dataset.surveyorSelectedPatch = patchId;
+    game.dataset.surveyorSelectedForce = String(force);
     game.dataset.surveyorDigs = String(digs[patchId]);
     game.dataset.surveyorEvidence = evidence.ready ? 'complete' : 'gathering';
     const latestProbe = log.findLast((entry) => entry.type === 'probe' && entry.patchId === patchId);

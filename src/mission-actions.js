@@ -54,7 +54,7 @@ export function mountMoonTools(lrvRoot, surveyorRoot) {
   const geometry = lrv.querySelector('.lrv-geometry');
   const drawing = lrv.querySelector('.moon-challenge-2d');
   drawing.classList.add('repair-drawing');
-  geometry.prepend(drawing);
+  geometry.querySelector('legend').after(drawing);
   const sliders = document.createElement('div');
   sliders.append(...geometry.querySelectorAll(':scope > .lrv-control, :scope > .challenge-notes'));
   geometry.append(sliders);
@@ -64,9 +64,11 @@ export function mountMoonTools(lrvRoot, surveyorRoot) {
   const assembly = document.createElement('div');
   assembly.className = 'repair-assembly';
   assembly.innerHTML = `<div class="repair-toolbox" role="group" aria-label="Repair tools">${['maps', 'tape', 'clamps'].map((tool, i) => `<button type="button" data-repair-tool="${tool}" aria-pressed="${i === 0}"><svg viewBox="0 0 60 44" aria-hidden="true">${tool === 'maps' ? '<path d="m4 8 16-4 18 6 17-5v31l-17 5-18-6-16 4zM20 4v31M38 10v31"/>' : tool === 'tape' ? '<ellipse cx="29" cy="21" rx="20" ry="15"/><ellipse cx="29" cy="21" rx="8" ry="6"/><path d="m46 12 10 22H43"/>' : '<path d="M40 7H17v29h23M25 12v20M8 32h25M33 26v12"/>'}</svg><span>${['Maps', 'Tape', 'Clamps'][i]}</span></button>`).join('')}</div><button type="button" class="repair-drop" aria-label="Apply selected tool to the wheel"><svg viewBox="0 0 240 130" aria-hidden="true"><circle cx="110" cy="88" r="32"/><circle cx="110" cy="88" r="11"/><path d="M65 83Q70 40 110 43"/><path class="assembly-map" d="m108 43 95-12 5 13-100 12z"/><path class="assembly-tape" d="m139 39 3 13m30-17 3 13"/><path class="assembly-clamps" d="m113 38v20m12-23v20"/></svg><span>Place on the wheel</span></button><p class="repair-assembly-status" role="status">Choose a tool, then apply it to the repair.</p>`;
-  materials.prepend(assembly);
+  materials.querySelector('legend').after(assembly);
   const oldTools = lrv.querySelector('.lrv-tool-tray');
-  collapseChallengeNotes(oldTools, 'Button controls');
+  const materialAlternatives = collapseChallengeNotes(oldTools, 'Button controls');
+  materialAlternatives.append(materials.querySelector('.lrv-control-help'));
+  lrv.querySelector('[data-lrv-tool-status]').hidden = true;
   const drop = assembly.querySelector('.repair-drop');
   let selectedTool = 'maps', drag = null;
   const choose = tool => { selectedTool = tool; assembly.querySelectorAll('[data-repair-tool]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.repairTool === tool))); };
@@ -101,7 +103,7 @@ export function mountMoonTools(lrvRoot, surveyorRoot) {
   const fieldTools = document.createElement('div');
   fieldTools.className = 'soil-field-tools';
   fieldTools.innerHTML = `<div class="probe-station"><button type="button" class="probe-pull" aria-label="Pull the probe. Arrow keys choose force; Enter measures."><svg viewBox="0 0 70 120" aria-hidden="true"><path d="M20 8h30v16H20zM35 24v82M22 106h26"/></svg><span>Pull down, then release</span><output data-probe-force>1</output></button><div class="probe-scale" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="soil-sweep" role="group" aria-label="Excavate three soil strips">${[0, 1, 2].map(i => `<button type="button" data-soil-strip="${i}" aria-label="Excavate strip ${i + 1}"><span>${i + 1}</span></button>`).join('')}</div><p class="soil-tool-help">Sweep a strip sideways to dig. You can also tap each strip.</p><p class="soil-measurement" role="status"></p>`;
-  investigation.prepend(fieldTools);
+  investigation.querySelector('legend').after(fieldTools);
   const numericControls = document.createElement('div');
   for (const node of [...investigation.children]) {
     if (node === fieldTools || node.tagName === 'LEGEND' || node.matches('[data-surveyor-probe-readout], [data-surveyor-trench-readout], [data-surveyor-evidence]')) continue;
@@ -110,6 +112,7 @@ export function mountMoonTools(lrvRoot, surveyorRoot) {
   investigation.append(numericControls);
   collapseChallengeNotes(numericControls, 'Button controls');
   const probe = fieldTools.querySelector('.probe-pull');
+  surveyor.querySelector('[data-surveyor-probe-readout]').hidden = true;
   let force = 1, pull = null, stripDrag = null;
   const setForce = value => {
     force = value;
@@ -138,6 +141,9 @@ export function mountMoonTools(lrvRoot, surveyorRoot) {
   }
   const syncSoil = () => {
     patch = surveyor.dataset.surveyorSelectedPatch || 'a';
+    force = Number(surveyor.dataset.surveyorSelectedForce || 1);
+    probe.style.setProperty('--probe-pull', `${(force - 1) * 17}px`);
+    fieldTools.querySelector('[data-probe-force]').textContent = String(force);
     excavated = Number(surveyor.dataset.surveyorDigs || 0);
     fieldTools.dataset.patch = patch;
     fieldTools.querySelectorAll('[data-soil-strip]').forEach((button, i) => { button.disabled = i < excavated; button.classList.toggle('is-excavated', i < excavated); });
@@ -146,7 +152,7 @@ export function mountMoonTools(lrvRoot, surveyorRoot) {
     if (output.textContent !== source.textContent) output.textContent = source.textContent;
   };
   const soilObserver = new MutationObserver(syncSoil);
-  soilObserver.observe(surveyor, { attributes: true, attributeFilter: ['data-surveyor-selected-patch', 'data-surveyor-digs'] });
+  soilObserver.observe(surveyor, { attributes: true, attributeFilter: ['data-surveyor-selected-patch', 'data-surveyor-selected-force', 'data-surveyor-digs'] });
   soilObserver.observe(surveyor.querySelector('[data-surveyor-probe-readout]'), { childList: true, characterData: true, subtree: true });
   disposers.push(() => soilObserver.disconnect());
   syncSoil();

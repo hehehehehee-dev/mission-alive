@@ -1,4 +1,5 @@
 const rows = [
+  ['Pull the white tip.', 'Tira de la punta blanca.', 'Kéo đầu màu trắng.'],
   ['Do this', 'Haz esto', 'Cách làm'],
   ['Goal', 'Objetivo', 'Mục tiêu'],
   ['Repair the broken dust shield', 'Repara el guardabarros roto', 'Sửa tấm chắn bụi bị hỏng'],

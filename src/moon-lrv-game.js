@@ -417,7 +417,7 @@ export function mountLrvGame(root) {
   let dragging = false;
   const svg = find('.lrv-workshop-svg');
   svg.setAttribute('role', 'group');
-  svg.insertAdjacentHTML('beforeend', '<circle data-lrv-drag-tip r="17" fill="#eaf8ff" stroke="#329cad" stroke-width="4" tabindex="0" role="slider" aria-label="Patch tip. Left and right change length. Up and down change angle." aria-valuemin="20" aria-valuemax="80" aria-valuenow="30"/>');
+  svg.insertAdjacentHTML('beforeend', '<circle data-lrv-drag-tip r="56" fill="transparent" tabindex="0" role="slider" aria-label="Patch tip. Left and right change length. Up and down change angle." aria-valuemin="20" aria-valuemax="80" aria-valuenow="30"/><circle data-lrv-tip-visual r="15" fill="#eaf8ff" stroke="#329cad" stroke-width="4" pointer-events="none" aria-hidden="true"/>');
   const dustResult = find("[data-lrv-dust-result]");
   const clearanceResult = find("[data-lrv-clearance-result]");
   const attachmentResult = find("[data-lrv-attachment-result]");
@@ -447,6 +447,9 @@ export function mountLrvGame(root) {
     const tip = pointOnScreen(lrvPatchGeometry(configuration).end);
     const handle = find('[data-lrv-drag-tip]');
     handle.setAttribute('cx', tip.x); handle.setAttribute('cy', tip.y);
+    const visual = find('[data-lrv-tip-visual]');
+    visual.setAttribute('cx', tip.x); visual.setAttribute('cy', tip.y);
+    visual.style.display = configuration.maps ? '' : 'none';
     handle.setAttribute('aria-valuenow', String(configuration.length));
     handle.setAttribute('aria-valuetext', `${configuration.length} cm, ${configuration.angle}°`);
     handle.style.display = configuration.maps ? '' : 'none';

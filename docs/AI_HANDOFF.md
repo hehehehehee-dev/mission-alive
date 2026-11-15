@@ -8,7 +8,7 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Last change:** Apollo has a material-placement repair workbench and visible draggable/key-controlled patch drawing; Surveyor has a pull probe and sweepable excavation strips. All six missions now place action and goal guidance in the actual active gameplay step, replacing generic incident cards.
-- **Last verification:** 139 tests and production build pass. Production keyboard play reached an Apollo pass and stamp offer. Surveyor testing found root-state synchronization and a selector collision, corrected in the follow-up; production recheck follows deployment.
+- **Last verification:** 139 tests/build pass. Production Apollo keyboard assembly/reshaping and Surveyor two-force/three-strip investigation both reached a pass and stamp offer. At 390 px, actual probe pulling and excavation swiping produced model data; all six guidance surfaces fit without horizontal overflow, with ES/VI guidance inspected. Reset now also synchronizes the probe's force display.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +196,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Synchronize the field probe on reset and record playtesting
+- **Changed:** synchronized the field-tool force display with the actual game force, including resets and alternative buttons; removed duplicated visible probe readings.
+- **Verified:** production keyboard Apollo pass/stamp offer; Surveyor evidence-gated pass/stamp offer; actual 390 px swipe/pull gestures; no overflow in Moon tools or the other four mission guides; translated directions inspected in VI and ES. Tests/build rerun for this follow-up.
+- **Left for next:** physical-device/screen-reader testing and a fresh six-stamp finale run remain outside this focused playtest.
 
 ### 2026-11-14 — Codex — `main`
 - **Commit:** Keep field tool state separate from patch navigation
