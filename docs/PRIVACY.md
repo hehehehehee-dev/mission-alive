@@ -1,6 +1,6 @@
 # Mission Alive privacy and sharing
 
-Last updated: November 14, 2026.
+Last updated: November 15, 2026.
 
 Mission Alive requires no account. Certification stamps, certificate names, interface settings, and personal Golden Record drafts remain in the visitor’s browser by default.
 
@@ -19,3 +19,11 @@ If the site owner configures `CLASSROOM_OPENAI_API_KEY`, submitted text may be c
 ## External mission data
 
 Voyager distance and DSN status requests use same-origin serverless endpoints. They do not include a learner name, greeting, certificate, or passport progress.
+
+## Optional playtest feedback and impact
+
+Feedback links open the owner's Google Form in a separate tab. There is no automatic submission, and Mission Alive does not prefill certificate names, saved greetings or progress. Feedback is optional and never gates a stamp, graduation or printing. The Form itself remains under the owner's Google Forms settings.
+
+The public impact page reads `/api/playtest-impact`. The server first requests spreadsheet headers without response rows, then requests only the known rating and Yes/No columns, plus the timestamp needed to count response rows. It never requests age or short-answer response values. The browser receives only aggregate counts, averages and a data-check time, with no individual answers or response timestamps. The raw response Sheet is not linked or embedded in the app.
+
+Results refresh about every five minutes while the page is open, with up to one minute of server caching. Each measure reports its own valid answer count. Incomplete, invalid or conflicting duplicate answers are excluded from that measure. Counts represent voluntary submissions, not unique people or verified certificate completions. Before/after ratings are retrospective, reported together in the same survey; they do not establish a causal learning effect.

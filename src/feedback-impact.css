@@ -1,0 +1,15 @@
+.feedback-link { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 14px; text-underline-offset: 4px; }
+.feedback-invitation { margin: 20px 0 0; padding: 22px; border: 1px solid #a6bfcb; border-radius: 10px; background: #122735; text-align: left; }
+.feedback-invitation h3 { margin: 0; font-size: 1.25rem; color: #f2f6f8; }
+.feedback-invitation p { color: #d7e4eb; }
+.feedback-invitation a.primary { background: #efc987; color: #10212b; border-radius: 6px; text-decoration: none; font-weight: 700; }
+.impact-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 18px; margin: 22px 0; }
+.impact-metric { padding: 22px; background: #102330; color: #ecf3f6; border: 1px solid #78929f; border-radius: 10px; }
+.impact-metric h2 { margin: 0; font-size: 1.125rem; line-height: 1.4; }
+.impact-metric > strong { display: block; margin: 16px 0; font-size: 2rem; font-variant-numeric: tabular-nums; }
+.impact-metric p { margin: 0; font-size: .9375rem; }
+.impact-method { max-width: 75ch; margin-top: 24px; line-height: 1.7; }
+body.lobby-day .impact-metric { background: #fffefa; color: #182c3a; border-color: #a1b4bc; }
+body.lobby-day #academy-impact :is(a,button) { color: #174f67; }
+.certificate-feedback { display: inline-block; margin-top: 8px; font-size: 10pt; color: #253e49; }
+@media print { .feedback-invitation { display: none; } }

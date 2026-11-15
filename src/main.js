@@ -49,6 +49,11 @@ import { quickStartMarkup, whyMarkup } from './quick-start.js';
 import './lobby-launch.css';
 import './lobby-day.css';
 import './academy-navigation.css';
+import './feedback-impact.css';
+import { feedbackLinkMarkup, mountFeedbackLinks } from './feedback.js';
+import { mountImpact } from './impact.js';
+mountFeedbackLinks();
+let impactView = null;
 import { mountLobbyTheme } from './lobby-theme.js';
 mountLobbyTheme();
 import {
@@ -357,6 +362,8 @@ spaceAmbience.setReduced(reduce);
 const missionFilm = createMissionFilm($("#mission-film"));
 missionFilm.setReduced(reduce);
 function disposeOpenData() {
+  impactView?.dispose();
+  impactView = null;
   roverTextMap = null;
   rangeButtons.forEach(control => control.dispose());
   rangeButtons = [];
@@ -874,7 +881,7 @@ function renderJourneyAlias() {
   renderLobby();
   $('#location-map-slot').scrollIntoView({ block: 'start', behavior: 'instant' });
 }
-const academyPageTitles = Object.freeze({ 'mission-notes': 'Mission notes', about: 'About Mission Alive' });
+const academyPageTitles = Object.freeze({ 'mission-notes': 'Mission notes', about: 'About Mission Alive', impact: 'Playtest impact' });
 document.querySelectorAll('[data-academy-page]').forEach(button => {
   button.onclick = () => navigateTo(button.dataset.academyPage);
 });
@@ -892,6 +899,7 @@ function renderAcademyPage(id) {
     dsnWidget = mountDsnWidget($('#dsn-widget-slot'));
     $('#mission-history-slot').innerHTML = missionHistoryMarkup();
   }
+  if (id === 'impact') impactView = mountImpact($('#academy-impact'));
   locationMap?.dispose();
   locationMap = null;
   $('#academy-page-title').focus({ preventScroll: true });
@@ -1015,6 +1023,7 @@ function renderCompletion(id, fresh) {
   $("#discovery .fact h3").textContent = fresh ? "✦ MISSION STAMP EARNED" : "ALREADY STAMPED";
   $("#discovery .reflection").innerHTML =
     `<div class="completion-panel" data-completion-phase="${fresh ? "present" : "complete"}"><p class="completion-status"><span class="completion-seal" aria-hidden="true">${verb}</span>${fresh ? "MISSION STAMP EARNED" : "Already stamped"}</p><section class="completion-story" aria-labelledby="completion-story-title"><p class="eyebrow">STILL OUT THERE</p><h3 id="completion-story-title" tabindex="-1">${exhibits[id].name}</h3><p>${story.beats[2][1]}</p></section><div class="final-transmission"${hidden}><span>FINAL TRANSMISSION</span><blockquote>${story.transmission}</blockquote><p class="mission-gift"${hidden}>${story.gift}</p>${machineVoices.has(id) ? '<button type="button" class="secondary transmission-replay" data-replay-transmission>Replay transmission</button>' : ""}</div><p class="completion-reflection"${hidden}>${exhibits[id].question}</p><button id="next"${hidden}>${certificationComplete(completed) ? "Open crew certification" : "Next unstamped module"}</button></div>`;
+  $('#discovery .completion-panel').insertAdjacentHTML('beforeend', feedbackLinkMarkup());
   const replay = $("[data-replay-transmission]");
   if (replay) {
     replay.setAttribute("aria-label", `Replay ${exhibits[id].name} transmission`);

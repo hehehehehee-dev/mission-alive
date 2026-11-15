@@ -4,6 +4,7 @@ import { mountStampCeremony } from './stamp-ceremony.js';
 import { trainingMissions } from './certification.js';
 import { mountMoonChallengeSteps } from './challenge-steps.js';
 import { mountMoonTools } from './mission-actions.js';
+import { feedbackLinkMarkup } from './feedback.js';
 
 export const moonTransmissions = {
   apollo17: 'I am still parked on the Moon, where Apollo 17 left me. My crew brought maps to find their way. When my fender broke, those maps became a repair. You leave me with this: a good engineer can give an ordinary thing a new job.',
@@ -53,6 +54,7 @@ export function mountMoonLabs(dialog, { isStamped = () => false, onEarned = () =
     const slot = dialog.querySelector(`[data-moon-stamp="${id}"]`);
     slot.hidden = false;
     slot.innerHTML = `<div class="moon-transmission"><p class="eyebrow">MISSION STAMP EARNED · FINAL TRANSMISSION</p><h3>${trainingMissions[id].name}</h3><blockquote>${moonTransmissions[id]}</blockquote><p class="mission-gift">${moonGifts[id]}</p><p class="fine">Original Mission Alive narration, based on the NASA sources below.</p><button type="button" data-moon-continue>Continue training →</button></div>`;
+    slot.querySelector('.moon-transmission').insertAdjacentHTML('beforeend', feedbackLinkMarkup());
     slot.querySelector('[data-moon-continue]').onclick = () => { cancel(); onContinue(); };
     const heading = slot.querySelector('h3');
     heading.tabIndex = -1;

@@ -63,6 +63,7 @@ Do not add, remove, or silently change a stamp, finale condition, storage key, c
 
 - Core missions require no account and no analytics.
 - Personal greetings remain private unless the visitor explicitly shares them.
+- Playtest feedback is optional and must always be offered at graduation/certificate completion. `/#impact` auto-refreshes aggregated closed-question results from the owner's Sheet via `/api/playtest-impact`. Never publish age, individual responses or short-answer text, prefill certificate names into the Form, or present self-reported changes as causal learning impact. See `docs/PLAYTEST_IMPACT.md`.
 - Classroom/public recordings require consent and moderation. Never expose server tokens through a `VITE_` variable.
 - Voyager distance is an ephemeris estimate from JPL Horizons, not direct telemetry.
 - DSN status must not claim a live contact when data is stale, missing, or only an assignment.

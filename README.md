@@ -45,6 +45,12 @@ Each mission opens with a short story and a visual three-step Quick Start. The l
 
 For a classroom walkthrough, see [the demo guide](docs/demo.md) and the built-in **For Teachers** page.
 
+## Playtest feedback and impact
+
+Players can give optional feedback after a mission or at graduation. The [playtest impact page](https://mission-alive.netlify.app/#impact) updates automatically from the response Sheet, showing counts and rating summaries with their answer counts. Age and short-answer values are excluded. These are voluntary, self-reported results; they do not establish a causal learning effect.
+
+See [the impact guide](docs/PLAYTEST_IMPACT.md) for refresh behavior, calculations and privacy boundaries.
+
 ## How it works
 
 ```mermaid

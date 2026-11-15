@@ -75,7 +75,17 @@
         <section id="academy-page" class="academy-page" hidden aria-labelledby="academy-page-title">
           <a class="academy-back" href="/#lobby">← Back to academy</a><h1 id="academy-page-title" tabindex="-1"></h1>
           <div id="academy-mission-notes" hidden><div class="lobby-notes-grid"><div id="dsn-widget-slot"></div><div id="mission-history-slot"></div></div></div>
-          <div id="academy-about" hidden><p>Mission Alive turns six real space machines into an interactive learning journey for ages 10 to 14.</p><p>Teaching with this? <button id="lobby-teachers">Open For Teachers →</button></p><a href="https://github.com/hehehehehee-dev/mission-alive/blob/main/docs/PROBLEM_SOLUTION.md" target="_blank" rel="noopener">Read the problem and solution ↗</a></div>
+          <div id="academy-about" hidden><p>Mission Alive turns six real space machines into an interactive learning journey for ages 10 to 14.</p><p>Teaching with this? <button id="lobby-teachers">Open For Teachers →</button></p><p><a class="academy-back" href="/#impact">See playtest impact →</a></p><a href="https://github.com/hehehehehee-dev/mission-alive/blob/main/docs/PROBLEM_SOLUTION.md" target="_blank" rel="noopener">Read the problem and solution ↗</a></div>
+          <div id="academy-impact" hidden>
+            <p>What players told us, in their own ratings.</p>
+            <p class="fine">Updates automatically about every five minutes while this page is open.</p>
+            <p data-impact-status role="status">Checking playtest responses…</p><div class="impact-grid" data-impact-results></div><p class="fine" data-impact-updated></p>
+            <button type="button" data-impact-refresh>Refresh results</button>
+            <p class="impact-method">These are voluntary, self-reported responses, not proof that the app caused a change. Repeat submissions may be included. Each measure shows its own answer count. Incomplete or conflicting answers are excluded from that measure.</p>
+            <p class="fine">Ages, individual answers and short-answer text are not displayed.</p>
+            <p class="fine">Before and after ratings are recalled in the same survey.</p>
+            <a class="feedback-link" data-feedback-link>Source: Mission Alive playtest form ↗</a>
+          </div>
         </section>
         <section class="teachers-page" id="teachers-page" aria-labelledby="teachers-title" tabindex="-1" hidden></section>
         <nav class="exhibits" aria-label="Choose a training module"></nav>
@@ -134,6 +144,7 @@
           >
           <button id="credits-footer-link" hidden>Sources & credits</button>
           <button id="privacy-footer-link" aria-haspopup="dialog" aria-controls="privacy-dialog">Privacy & sharing</button>
+          <a class="feedback-link" data-feedback-link>Give feedback ↗</a>
           <button id="motion" aria-pressed="false" hidden>Reduce motion</button
           ><button id="view-mode" aria-pressed="false">3D view</button></span
         >
@@ -156,6 +167,7 @@
           <div class="finale-stamps" aria-label="All six mission stamps earned"><span>Apollo 17 LRV<small>REPAIR ✓</small></span><span>Surveyor 3<small>TEST ✓</small></span><span>Curiosity<small>DRIVE ✓</small></span><span>Ingenuity<small>FLY ✓</small></span><span>Webb<small>UNFOLD ✓</small></span><span>Voyager<small>LISTEN ✓</small></span></div>
           <p class="finale-date" id="finale-date"></p>
           <div class="certificate-maker"><label for="graduate-name">Name on your certificate (optional)</label><div><input id="graduate-name" maxlength="60" autocomplete="name" placeholder="Mission Alive crew member"><button class="primary" id="print-certificate">Print certificate</button></div><p id="certificate-status" role="status">Your name stays in this browser and is not uploaded.</p></div>
+          <section class="feedback-invitation" aria-labelledby="graduate-feedback-title"><h3 id="graduate-feedback-title">Help improve Mission Alive</h3><p>What worked? What was confusing?</p><a class="primary feedback-link" data-feedback-link>Share feedback (Google Form) ↗</a><p class="fine">Optional. You can keep your certificate without answering.</p></section>
         </div>
         <figure class="homecoming-keepsake"><div class="pale-dot-frame"><img src="/assets/voyager-pale-blue-dot.jpg" alt="Earth as a tiny pale dot in a sunbeam in Voyager 1’s 1990 photograph, reprocessed by NASA in 2020." width="5230" height="5175" loading="lazy"><span class="pale-dot-marker" aria-hidden="true"><i></i><span>EARTH</span></span></div><figcaption><h3>One small world. All of us.</h3><p>Every machine you met began here. So did you.</p><p class="fine">Voyager 1 · 14 February 1990 · reprocessed in 2020</p><a href="https://science.nasa.gov/photojournal/pale-blue-dot-revisited/" target="_blank" rel="noopener">Pale Blue Dot Revisited · NASA/JPL-Caltech ↗</a><button type="button" data-replay-homecoming>Replay the journey home</button></figcaption></figure>
         <p class="finale-gifts finale-six-virtues">You carry six things home: resourcefulness, evidence, patience, daring, precision, endurance. That is the crew.</p>
@@ -177,6 +189,7 @@
       <section><h3>After teacher approval</h3><p>The class title and approved greeting can appear in the public “Classroom voices from Earth” library. Anyone visiting Mission Alive may read it or play its audio. Use nicknames and class titles that do not identify students.</p></section>
       <section><h3>Removing a greeting</h3><p>The teacher can remove a published greeting with the private teacher key. Keep that key somewhere safe. Data remains stored until the teacher removes it or the site operator deletes it; there is currently no automatic end-of-year deletion.</p></section>
       <p class="privacy-fine">Optional AI screening may check submitted text and audio before teacher review when the site owner enables it. AI screening never publishes a greeting and does not replace teacher approval.</p>
+      <p class="privacy-fine">Optional feedback opens Google Forms. Certificate names and progress are not sent to the form. The impact page shows only aggregate counts and ratings; ages and short-answer text are excluded.</p>
     </dialog>
     <div id="moon-panel-slot"></div>
     <section class="graduate-certificate" id="graduate-certificate" aria-hidden="true">
@@ -190,6 +203,7 @@
         <div class="certificate-stamps" aria-label="Six missions completed"><span><b>01</b>Apollo 17 LRV<small>REPAIR</small></span><span><b>02</b>Surveyor 3<small>TEST</small></span><span><b>03</b>Curiosity<small>DRIVE</small></span><span><b>04</b>Ingenuity<small>FLY</small></span><span><b>05</b>Webb<small>UNFOLD</small></span><span><b>06</b>Voyager 1<small>LISTEN</small></span></div>
         <p class="certificate-finish">Six machines. Six missions. One explorer.</p>
         <p class="certificate-date" id="certificate-date"></p>
+        <a class="certificate-feedback" data-feedback-link>Give feedback ↗</a>
       </div>
     </section>
     <dialog class="resource-credits" id="resource-credits" aria-labelledby="credits-title"></dialog>

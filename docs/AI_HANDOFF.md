@@ -8,8 +8,8 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the standing direct-main commit/push authorization remains active.
-- **Last change:** the owner corrected the navigation direction: the journey map is back in the lobby as the main mission picker, and the Choose your mission grid is removed. Six large map callouts show explicit play actions and earned stamps. Name remains below. Notes/About and visible header links/Settings remain unchanged; `#journey` is now an alias to the lobby map.
-- **Last verification:** `npm test` 146/146 and production build pass. Browser clicks on all six map callouts reached their correct routes; EN/ES/VI, 390px and desktop layouts, larger text/high contrast, legacy `#journey`, scene bounds and source-credit spacing were checked. No callout overflow or scene intersections remained. Prior stamp checks are documented below; a full graduation run was not repeated.
+- **Last change:** optional Google Form feedback at all mission endings, graduation/certificate controls, printable certificate and footer. Added About → `#impact` with automatic Sheet aggregates via a Netlify function. The server projects only known closed-question columns; age and short-answer values are not requested. New responses need no redeploy.
+- **Last verification:** 154 tests/build pass, including data projection, missing/duplicate answers and timed refresh/disposal. Live Sheet read returned zero responses. Browser checks covered empty/populated/error states, EN/ES/VI, 390px and restored six-stamp graduation feedback with certificate printing still enabled and exactly six stamps. Local fixtures were not submitted to Google. Full six-mission gameplay/printing was not repeated.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
@@ -199,6 +199,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Collect optional feedback and refresh public playtest impact
+- **Changed:** Form links on mission endings, footer, graduation and print certificate; About → Impact; allowlisted server-side Sheet projection, aggregate-only API, five-minute page refresh with one-minute server cache, explicit denominators and empty/error states. Added translations, tests, privacy copy and `docs/PLAYTEST_IMPACT.md`.
+- **Verified:** live Form/Sheet and actual zero-response aggregate; unit coverage for exclusions, score validity, duplicate After conflicts, caching and refresh/disposal. Browser empty/populated/error states, EN/ES/VI at 390px, restored six-stamp certificate controls and unprefilled feedback URLs. No response or source-sheet edit was made.
+- **Left for next:** the Form repeats the interest-after question. The owner can remove it; header discovery supports that automatically. Do not create public seed responses or infer causal learning gains. Source access must remain readable for this public-data implementation; failure is shown honestly. Existing gameplay QA remains outstanding above.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Make the lobby map the main mission picker

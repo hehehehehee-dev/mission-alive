@@ -4,6 +4,14 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Optional feedback and automatically updated impact
+
+- Added the owner's Google Form to every mission ending, the footer, the graduation certificate controls and the printable certificate. Feedback stays optional; certificate names and progress are not prefilled or uploaded.
+- About links to a localized `#impact` page. A same-origin Netlify function discovers Sheet headers, then requests only known closed-question columns. Age and short-answer values are never requested or returned.
+- Results refresh about every five minutes while open, without rebuilding the site. Counts, paired means and per-question denominators are reported honestly; empty and failed data have distinct states. Conflicting duplicate After ratings are excluded from that measure.
+- Updated privacy and the playtest guide. Verified the actual source had zero responses; populated/error and six-stamp graduation views were tested locally with isolated fixtures, without submitting a real response.
+- Validation: 154 tests, production build and live Sheet aggregation passed. The printed certificate link was inspected in the markup; physical printing and a fresh six-mission playthrough were not repeated.
+
 ### Make the lobby map the mission picker
 
 - Corrected the previous interpretation of the owner's request: removed the Choose your mission card grid and restored the full journey map directly in the lobby, above the optional certificate name.
