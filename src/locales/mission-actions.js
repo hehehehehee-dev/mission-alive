@@ -1,4 +1,8 @@
 const rows = [
+  ['Skip to page content', 'Saltar al contenido de la página', 'Đến nội dung trang'],
+  ['Mission notes', 'Notas de misión', 'Ghi chú nhiệm vụ'],
+  ['About', 'Acerca de', 'Giới thiệu'],
+  ['Explore the journey & discoveries →', 'Explora el viaje y los descubrimientos →', 'Khám phá hành trình và những phát hiện →'],
   ['Pick a machine.', 'Elige una máquina.', 'Chọn một cỗ máy.'],
   ['Take a mission.', 'Acepta una misión.', 'Nhận một nhiệm vụ.'],
   ['Six missions. Six stamps. Your adventure.', 'Seis misiones. Seis sellos. Tu aventura.', 'Sáu nhiệm vụ. Sáu con dấu. Chuyến phiêu lưu của bạn.'],

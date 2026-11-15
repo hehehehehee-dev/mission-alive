@@ -26,10 +26,11 @@ test('the lobby uses one visual six-mission certification deck before optional c
   for (const id of ['apollo17', 'surveyor3', 'curiosity', 'ingenuity', 'webb', 'voyager']) {
     assert.match(main, new RegExp(`\\b${id}: '<svg`));
   }
-  assert.match(html, /class="mobile-header-menu"/);
+  assert.match(html, /data-academy-page="mission-notes"/);
+  assert.doesNotMatch(html, /class="mobile-header-menu"/);
   assert.match(main, /route === "lobby-missions"/);
   assert.ok(html.indexOf('id="lobby-missions"') < html.indexOf('id="crew-name"'));
-  assert.match(html, /Add your name for the certificate/);
+  assert.match(html, /Your name \(optional\)/);
 });
 
 test('journey image credits stay inside their own desktop scenes', async () => {

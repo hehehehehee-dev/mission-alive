@@ -45,8 +45,7 @@
           <div class="desktop-header-tools"><button id="sources">Sources & credits</button
             ><button id="teachers-link">For Teachers</button
             ><button id="access-settings" aria-haspopup="dialog" aria-controls="access-dialog">Display & access</button
-            ><button id="sound" aria-pressed="false">Sound off</button></div>
-          <details class="mobile-header-menu"><summary>Menu</summary><div><button data-header-proxy="sources">Sources & credits</button><button data-header-proxy="teachers-link">For Teachers</button><button data-header-proxy="access-settings">Display & access</button><button data-header-proxy="sound">Sound</button></div></details>
+            ><button id="sound" aria-pressed="false">Sound off</button><button data-academy-page="mission-notes">Mission notes</button><button data-academy-page="about">About</button></div>
           <button class="passport" id="passport" aria-label="Open crew certification">0 / 6 stamped</button>
         </div>
       </header>
@@ -69,11 +68,15 @@
             <button class="passport-certificate" id="lobby-certificate" hidden>Create your graduation certificate →</button>
             <div class="lobby-missions" id="lobby-missions" tabindex="-1"></div>
             <span class="launch-flight-path" aria-hidden="true"></span><span class="launch-ship" aria-hidden="true"></span>
-            <details class="crew-name-setup"><summary>Add your name for the certificate</summary><div class="crew-name-field"><label for="crew-name">Your name (optional)</label><input id="crew-name" maxlength="60" autocomplete="given-name" aria-describedby="crew-name-help"><p id="crew-name-help">Used only on your certificate. It stays in this browser.</p></div></details>
-            <details class="lobby-bonus"><summary>Explore the journey & discoveries</summary><div id="hidden-fact-passport-slot"></div><div id="location-map-slot"></div></details>
+            <a class="journey-entry" href="/#journey">Explore the journey & discoveries →</a>
           </section>
-          <details class="lobby-field-notes"><summary>Mission notes · live links & the archive</summary><div class="lobby-notes-grid"><div id="dsn-widget-slot"></div><div id="mission-history-slot"></div></div></details>
-          <details class="lobby-about"><summary>About Mission Alive</summary><div><p>Mission Alive turns six real space machines into an interactive learning journey for ages 10 to 14.</p><p>Teaching with this? <button id="lobby-teachers">Open For Teachers →</button></p><a href="https://github.com/hehehehehee-dev/mission-alive/blob/main/docs/PROBLEM_SOLUTION.md" target="_blank" rel="noopener">Read the problem and solution ↗</a></div></details>
+          <section class="crew-name-setup" aria-labelledby="crew-name-label"><div class="crew-name-field"><label for="crew-name" id="crew-name-label">Your name (optional)</label><input id="crew-name" maxlength="60" autocomplete="given-name" aria-describedby="crew-name-help"><p id="crew-name-help">Used only on your certificate. It stays in this browser.</p></div></section>
+        </section>
+        <section id="academy-page" class="academy-page" hidden aria-labelledby="academy-page-title">
+          <a class="academy-back" href="/#lobby">← Back to academy</a><h1 id="academy-page-title" tabindex="-1"></h1>
+          <div id="academy-mission-notes" hidden><div class="lobby-notes-grid"><div id="dsn-widget-slot"></div><div id="mission-history-slot"></div></div></div>
+          <div id="academy-about" hidden><p>Mission Alive turns six real space machines into an interactive learning journey for ages 10 to 14.</p><p>Teaching with this? <button id="lobby-teachers">Open For Teachers →</button></p><a href="https://github.com/hehehehehee-dev/mission-alive/blob/main/docs/PROBLEM_SOLUTION.md" target="_blank" rel="noopener">Read the problem and solution ↗</a></div>
+          <div id="academy-journey" hidden><div id="hidden-fact-passport-slot"></div><div id="location-map-slot"></div></div>
         </section>
         <section class="teachers-page" id="teachers-page" aria-labelledby="teachers-title" tabindex="-1" hidden></section>
         <nav class="exhibits" aria-label="Choose a training module"></nav>
@@ -128,11 +131,11 @@
         <span>AN INDEPENDENT SPACE ACADEMY <b>•</b> PRACTICE EDITION<br><span class="ambient-credit" id="ambient-credit"></span><span class="ambient-credit machine-voice-credit" id="machine-voice-credit" hidden>Machine voices generated with ElevenLabs.</span><span class="data-sources-credit">Data: NASA JPL Horizons, DSN Now, NASA flight log, STScI.</span></span
         ><span
           >Real missions. Your discoveries.
-          <button id="teachers-footer-link">For Teachers</button
+          <button id="teachers-footer-link" hidden>For Teachers</button
           >
-          <button id="credits-footer-link">Sources & credits</button>
+          <button id="credits-footer-link" hidden>Sources & credits</button>
           <button id="privacy-footer-link" aria-haspopup="dialog" aria-controls="privacy-dialog">Privacy & sharing</button>
-          <button id="motion" aria-pressed="false">Reduce motion</button
+          <button id="motion" aria-pressed="false" hidden>Reduce motion</button
           ><button id="view-mode" aria-pressed="false">3D view</button></span
         >
       </footer>

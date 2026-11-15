@@ -239,7 +239,7 @@ Project requirements, supplied voice assets, feedback and publication decisions 
 - Creator / credit: NASA / JPL-Caltech
 - Official source: https://eyes.nasa.gov/apps/dsn-now/dsn.html
 - Original file / endpoint: https://eyes.nasa.gov/dsn/data/dsn.xml
-- Used in: Lobby, Voyager 1
+- Used in: Mission notes, Voyager 1
 - Usage / modifications: Active signals and NASA timestamps are checked before showing a contact.
 
 ### Ingenuity · all 72 flights

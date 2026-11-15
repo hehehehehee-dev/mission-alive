@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Direct navigation and separate academy pages
+
+- Removed lobby dropdowns. Kept the six enlarged mission cards as the main entry and added a direct journey-map link. The optional certificate name is a normal field below the cards with readable helper text.
+- Mission notes, About and the journey map have separate hash routes with Back links and direct reload/history support. DSN/archive and map rendering start on their respective pages rather than the lobby.
+- For Teachers, Sources, Settings, Mission notes and About are visible header actions at desktop and mobile widths. Motion and sound are in Settings; repeated footer actions are hidden while privacy remains available.
+- Updated DSN placement in Sources and the generated reference exports. EN/ES/VI, 390px navigation, page reload/history, map rendering and Settings were checked. Validation: 146 tests and production build passed.
+
 ### Sunlight lobby with fewer decisions
 
 - The lobby defaults to a cream background, dark text and a clear blue start button. A keyboard-operable Sun/Moon button remembers the lobby display choice; mission scenes keep their existing appearance.

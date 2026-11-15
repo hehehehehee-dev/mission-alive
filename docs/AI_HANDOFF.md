@@ -8,8 +8,8 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the standing direct-main commit/push authorization remains active.
-- **Last change:** lobby defaults to a light Sun mode with dark text and one prominent start button. Sun/Moon toggle persists the lobby choice. Short child-facing copy and compact mission cards replace repeated text; the journey map and bonus discoveries open on demand. Mission appearance and certification conditions are unchanged.
-- **Last verification:** `npm test` 145/145 and production build pass. Browser checks covered EN/ES/VI, desktop and 390px, keyboard toggle and persistence, reduced motion, larger text/high contrast, expandable map rendering and lobby-to-Curiosity navigation. A conflicting high-contrast card background found during testing was corrected. The preceding Voyager library and stamp checks remain documented below.
+- **Last change:** no lobby dropdowns; six larger machine buttons, a direct journey-page link and an optional certificate name field below. Mission notes, About and Journey have dedicated hash pages. Header links remain visible on mobile/desktop; motion and sound are in Settings. The light theme also applies to these information pages.
+- **Last verification:** `npm test` 146/146 and production build pass. Browser checks covered EN/ES/VI, desktop/390px, direct page loads, Back navigation, map canvases and Settings. All five header links are visible with touch-sized buttons. Prior theme, high-contrast and Voyager stamp verification remain documented below.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
@@ -64,7 +64,7 @@ Important invariants:
 - The optional learner name is requested below the mission choices and is used only for the certificate. Do not place it before the first mission CTA.
 - The visual machine picker and certification tracker are one shared deck. Do not create a second six-machine grid in the lobby.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
-- Lobby defaults to Sun mode; `src/lobby-theme.js` validates the persisted `mission-alive-lobby-theme-v1` choice and scopes the light styling to the visible lobby. The Moon option restores the darker lobby. `src/lobby-day.css` covers both modes, including high contrast. Journey map/bonus discoveries are in one native disclosure beneath the six mission choices.
+- Lobby defaults to Sun mode; `src/lobby-theme.js` validates `mission-alive-lobby-theme-v1` and scopes light styling to the lobby and academy information pages. `src/academy-navigation.css` keeps header actions visible and machine choices large. Journey map/bonus discoveries live at `#journey`; DSN and history live at `#mission-notes`; project context lives at `#about`. Rendering is initialized when its page opens and disposed when leaving. Avoid restoring the earlier lobby disclosures or hiding primary header links in Menu.
 - Voyager uses one **Voices from Earth** listening area: original 1977 greetings and approved visitor greetings in keyboard tabs. One native player controls the selected NASA greeting. One private-save button handles either written or recorded replies; saved drafts remain visible, classroom setup/review is optional, and no drawing exercise is present.
 - Long story/briefing content in the four original exhibits shares one **Story & science** disclosure. Avoid adding extra instruction cards that repeat the current step's action.
 - The footer privacy dialog is the public source of truth for classroom sharing. Keep it synchronized with `docs/PRIVACY.md` and `netlify/functions/class-record.mjs`.
@@ -199,6 +199,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Give academy information its own pages and visible navigation
+- **Changed:** separate Journey, Mission notes and About pages; enlarged machine cards; direct name field below; five visible header actions on mobile/desktop; motion and sound moved to Settings. DSN placement and reference exports synchronized. Existing mission routes and six-stamp rules retained.
+- **Verified:** 146 tests/build; browser EN/ES/VI, 390px header buttons, page reload/history, optional map rendering and Settings. Fixed inherited grid-column rules that initially distorted the mobile header. The earlier Voyager and six-mission tests remain unchanged.
+- **Left for next:** full six-stamp gameplay has not been repeated in this navigation pass. Preserve unrelated notices and local artifacts; source-reference export changes belong to this commit because DSN now lives on Mission notes.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Brighten and simplify the academy lobby
