@@ -1,4 +1,10 @@
 const rows = [
+  ['Your mission stamps', 'Tus sellos de misión', 'Con dấu nhiệm vụ của bạn'],
+  ['Tap a machine to play', 'Toca una máquina para jugar', 'Bấm vào cỗ máy để chơi'],
+  ['Follow the route. Tap a named button to start its mission.', 'Sigue la ruta. Toca un botón con nombre para iniciar su misión.', 'Đi theo đường bay. Bấm vào nút có tên cỗ máy để bắt đầu nhiệm vụ.'],
+  ['Play mission →', 'Jugar misión →', 'Chơi nhiệm vụ →'],
+  ['Play again →', 'Jugar de nuevo →', 'Chơi lại →'],
+  ['Stamp earned ✓', 'Sello conseguido ✓', 'Đã nhận con dấu ✓'],
   ['Skip to page content', 'Saltar al contenido de la página', 'Đến nội dung trang'],
   ['Mission notes', 'Notas de misión', 'Ghi chú nhiệm vụ'],
   ['About', 'Acerca de', 'Giới thiệu'],

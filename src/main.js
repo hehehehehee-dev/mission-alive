@@ -432,6 +432,7 @@ async function navigateTo(id) {
 }
 function setRoute(id) {
   if (moonPanel.dialog.open) moonPanel.dialog.close();
+  if (id === 'journey') { history.pushState({ route: id }, '', '/#journey'); renderJourneyAlias(); return; }
   if (Object.hasOwn(academyPageTitles, id)) {
     history.pushState({ route: id }, "", `/#${id}`);
     renderAcademyPage(id);
@@ -856,39 +857,24 @@ function renderLobby() {
   $("#teachers-page").hidden = true;
   $("#lobby").hidden = false;
   updateViewModeButton();
-  $("#lobby-missions").innerHTML = Object.entries(trainingMissions)
-    .map(
-      ([id, exhibit], index) =>
-        `<button class="lobby-mission-card" data-lobby-exhibit="${id}"><span class="mission-number">0${index + 1}</span><span class="mission-stamp">OPEN</span><span class="mission-icon">${missionIconSvgs[id]}</span><span class="mission-name"><strong>${exhibit.name}</strong><small>${storyLayer[id]?.heading || trainingMissions[id].heading}</small></span><span class="mission-verb">${exhibit.verb}</span><span class="mission-action">Open mission →</span></button>`,
-    )
-    .join("");
-  $("#lobby-missions").onclick = (event) => {
-    const card = event.target.closest("[data-lobby-exhibit]");
-    if (card) navigateTo(card.dataset.lobbyExhibit);
-  };
-  $("#lobby-missions")
-    .querySelectorAll(".lobby-mission-card")
-    .forEach((card) => {
-      card.onpointermove = (event) => {
-        const bounds = card.getBoundingClientRect();
-        const x = (event.clientX - bounds.left) / bounds.width;
-        const y = (event.clientY - bounds.top) / bounds.height;
-        card.style.setProperty("--spot-x", `${x * 100}%`);
-        card.style.setProperty("--spot-y", `${y * 100}%`);
-        card.style.setProperty("--tilt-x", `${(x - 0.5) * 7}deg`);
-        card.style.setProperty("--tilt-y", `${(0.5 - y) * 7}deg`);
-      };
-      card.onpointerleave = () => {
-        card.style.setProperty("--tilt-x", "0deg");
-        card.style.setProperty("--tilt-y", "0deg");
-      };
-    });
+  $('#hidden-fact-passport-slot').innerHTML = hiddenFactPassportMarkup();
+  locationMap = mountLocationMap($('#location-map-slot'), {
+    journeyProgress,
+    onCompare: trigger => planetComparison.open($('#location-map-slot'), trigger),
+    onExhibit: id => { advanceJourney(id); navigateTo(id); },
+    onMoon: id => { advanceJourney(id); navigateTo(id); },
+    isStamped: id => completed.has(id),
+  });
   configureJourneyStart();
   updateMissionProgress();
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 
-const academyPageTitles = Object.freeze({ 'mission-notes': 'Mission notes', about: 'About Mission Alive', journey: 'Explore the journey & discoveries' });
+function renderJourneyAlias() {
+  renderLobby();
+  $('#location-map-slot').scrollIntoView({ block: 'start', behavior: 'instant' });
+}
+const academyPageTitles = Object.freeze({ 'mission-notes': 'Mission notes', about: 'About Mission Alive' });
 document.querySelectorAll('[data-academy-page]').forEach(button => {
   button.onclick = () => navigateTo(button.dataset.academyPage);
 });
@@ -906,15 +892,8 @@ function renderAcademyPage(id) {
     dsnWidget = mountDsnWidget($('#dsn-widget-slot'));
     $('#mission-history-slot').innerHTML = missionHistoryMarkup();
   }
-  if (id === 'journey') {
-    $('#hidden-fact-passport-slot').innerHTML = hiddenFactPassportMarkup();
-    locationMap = mountLocationMap($('#location-map-slot'), {
-      journeyProgress,
-      onCompare: trigger => planetComparison.open($('#location-map-slot'), trigger),
-      onExhibit: id => { advanceJourney(id); navigateTo(id); },
-      onMoon: id => { advanceJourney(id); navigateTo(id); },
-    });
-  }
+  locationMap?.dispose();
+  locationMap = null;
   $('#academy-page-title').focus({ preventScroll: true });
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
@@ -3004,6 +2983,7 @@ window.addEventListener("keyup", (event) => {
 window.addEventListener("hashchange", () => {
   if (["#controls", "#greetings", "#academy-page-title"].includes(location.hash)) return;
   const route = location.hash.slice(1);
+  if (route === 'journey') { renderJourneyAlias(); return; }
   if (Object.hasOwn(academyPageTitles, route)) { renderAcademyPage(route); return; }
   if (!route || route === "lobby") renderLobby();
   else if (route === "lobby-missions") {
@@ -3019,6 +2999,7 @@ window.addEventListener("popstate", () => {
   if (location.pathname === "/teachers") renderTeachers();
   else {
     const route = location.hash.slice(1);
+    if (route === 'journey') { renderJourneyAlias(); return; }
     if (Object.hasOwn(academyPageTitles, route)) { renderAcademyPage(route); return; }
     if (!route || route === "lobby") renderLobby();
     else if (route === "lobby-missions") {
@@ -3104,7 +3085,8 @@ function tick(now) {
   requestAnimationFrame(tick);
 }
 const initialRoute = location.hash.slice(1);
-if (Object.hasOwn(academyPageTitles, initialRoute)) renderAcademyPage(initialRoute);
+if (initialRoute === 'journey') renderJourneyAlias();
+else if (Object.hasOwn(academyPageTitles, initialRoute)) renderAcademyPage(initialRoute);
 else if (location.pathname === "/teachers") renderTeachers();
 else if (!initialRoute || initialRoute === "lobby") renderLobby();
 else if (initialRoute === "teachers") setRoute("teachers");

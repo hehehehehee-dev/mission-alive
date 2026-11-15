@@ -17,11 +17,13 @@ test('the lobby opens with a short action addressed to the child', async () => {
   assert.ok(html.indexOf(hook[0]) < html.indexOf('id="passport-title"'));
 });
 
-test('the lobby uses one visual six-mission certification deck before optional certificate setup', async () => {
+test('the lobby uses the map as its mission picker before optional certificate setup', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const main = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
   assert.doesNotMatch(html, /data-launch-exhibit=|class="launch-bay"/);
-  assert.match(html, /Choose your mission/);
+  assert.doesNotMatch(html, /Choose your mission/);
+  assert.match(html, /Your mission stamps/);
+  assert.doesNotMatch(main, /data-lobby-exhibit="\$\{id\}"/);
   assert.equal((main.match(/missionIconSvgs\s*=\s*\{/g) || []).length, 1);
   for (const id of ['apollo17', 'surveyor3', 'curiosity', 'ingenuity', 'webb', 'voyager']) {
     assert.match(main, new RegExp(`\\b${id}: '<svg`));

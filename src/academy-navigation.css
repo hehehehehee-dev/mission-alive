@@ -23,7 +23,34 @@ body.lobby-screen .mission-icon svg { width: 90px; height: 66px; }
 body.lobby-screen .lobby-mission-card:focus-visible { outline-width: 4px; }
 body.lobby-screen .lobby-mission-card:hover { border-color: #27647a; }
 #motion[hidden], #teachers-footer-link[hidden], #credits-footer-link[hidden] { display: none !important; }
+/* The map itself is the mission picker. Each callout is one native button. */
+#lobby .mission-passport { padding: 0; border: 0; background: transparent; box-shadow: none; overflow: visible; }
+#lobby .passport-heading { padding: 12px 0 0; }
+#lobby .passport-heading h2 { font-size: 1rem; }
+#lobby .lobby-hero { padding-bottom: 16px; }
+#location-map-slot { scroll-margin-top: 20px; }
+#location-map-slot .location-map-heading { margin-top: 0; padding: 26px 18px; gap: 20px; }
+#location-map-slot .location-map-heading h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+body.lobby-day #location-map-slot .eyebrow { color: #efc987; }
+#location-map-slot .diagram-pin { min-width: 44px; min-height: 44px; cursor: pointer; }
+#location-map-slot .diagram-callout { width: 205px; min-height: 100px; padding: 12px 14px; gap: 5px; background: #fffdf4; border: 2px solid #f0c477; border-radius: 12px; box-shadow: 0 4px 0 #0008; text-shadow: none; }
+#location-map-slot .diagram-callout strong { color: #172f40; font-size: 1.125rem; font-weight: 750; text-shadow: none; }
+#location-map-slot .diagram-callout small { margin: 0; color: #415866; font-size: .75rem; }
+#location-map-slot .diagram-callout .route-stop-state { display: none; }
+#location-map-slot .map-play-action { display: block; margin-top: 5px; padding: 8px 10px; border-radius: 5px; background: #174f67; color: #fff; font-size: .875rem; font-weight: 700; }
+#location-map-slot .map-earned-stamp { color: #245a40; font-size: .75rem; font-weight: 700; }
+#location-map-slot .diagram-pin:hover .diagram-callout { background: #e6f3f4; border-color: #83cbdc; }
+#location-map-slot .diagram-pin:focus-visible .diagram-callout { outline: 4px solid #8ee8ff; outline-offset: 5px; }
+#location-map-slot .moon-surveyor .diagram-callout { top: 95px; }
+#location-map-slot .journey-scenes { grid-template-rows: 44rem 45rem 48rem 54rem 56rem; min-height: 0; }
+body.high-contrast #location-map-slot .diagram-callout { border-color: #fff; background: #fff; color: #172f40; }
 @media(max-width:680px) {
+  #location-map-slot .journey-scenes { grid-template-rows: 45rem 46rem 48rem 54rem 48rem; }
+  #location-map-slot .diagram-callout { width: 148px; min-height: 104px; padding: 10px; }
+  #location-map-slot .diagram-callout strong { font-size: .95rem; }
+  #location-map-slot .diagram-callout small { font-size: .6875rem; }
+  #location-map-slot .map-play-action { font-size: .8125rem; padding: 8px 5px; }
+  #location-map-slot .moon-surveyor .diagram-callout { top: 100px; }
   #app > header { min-height: 0; margin: 0 4vw; padding: 12px 0; align-items: center; flex-wrap: wrap; }
   #app > header .brand { flex: 0 0 auto; align-self: flex-start; padding-top: 5px; }
   #app > header .brand > span:last-child { display: none; }

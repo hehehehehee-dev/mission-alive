@@ -62,21 +62,20 @@
             </div>
           </div>
           <section class="mission-passport" aria-labelledby="passport-title">
-            <div class="passport-heading"><div><h2 id="passport-title">Choose your mission</h2></div><output id="lobby-progress">0 / 6 STAMPS</output></div>
+            <div class="passport-heading"><div><h2 id="passport-title">Your mission stamps</h2></div><output id="lobby-progress">0 / 6 STAMPS</output></div>
             <div class="passport-track" aria-hidden="true"><i id="passport-progress-bar"></i></div>
             <p id="passport-message" class="sr-only">Complete a machine’s challenge to earn its stamp.</p>
             <button class="passport-certificate" id="lobby-certificate" hidden>Create your graduation certificate →</button>
-            <div class="lobby-missions" id="lobby-missions" tabindex="-1"></div>
+            <div id="lobby-missions" tabindex="-1"><div id="location-map-slot"></div></div>
             <span class="launch-flight-path" aria-hidden="true"></span><span class="launch-ship" aria-hidden="true"></span>
-            <a class="journey-entry" href="/#journey">Explore the journey & discoveries →</a>
           </section>
           <section class="crew-name-setup" aria-labelledby="crew-name-label"><div class="crew-name-field"><label for="crew-name" id="crew-name-label">Your name (optional)</label><input id="crew-name" maxlength="60" autocomplete="given-name" aria-describedby="crew-name-help"><p id="crew-name-help">Used only on your certificate. It stays in this browser.</p></div></section>
+          <div id="hidden-fact-passport-slot"></div>
         </section>
         <section id="academy-page" class="academy-page" hidden aria-labelledby="academy-page-title">
           <a class="academy-back" href="/#lobby">← Back to academy</a><h1 id="academy-page-title" tabindex="-1"></h1>
           <div id="academy-mission-notes" hidden><div class="lobby-notes-grid"><div id="dsn-widget-slot"></div><div id="mission-history-slot"></div></div></div>
           <div id="academy-about" hidden><p>Mission Alive turns six real space machines into an interactive learning journey for ages 10 to 14.</p><p>Teaching with this? <button id="lobby-teachers">Open For Teachers →</button></p><a href="https://github.com/hehehehehee-dev/mission-alive/blob/main/docs/PROBLEM_SOLUTION.md" target="_blank" rel="noopener">Read the problem and solution ↗</a></div>
-          <div id="academy-journey" hidden><div id="hidden-fact-passport-slot"></div><div id="location-map-slot"></div></div>
         </section>
         <section class="teachers-page" id="teachers-page" aria-labelledby="teachers-title" tabindex="-1" hidden></section>
         <nav class="exhibits" aria-label="Choose a training module"></nav>

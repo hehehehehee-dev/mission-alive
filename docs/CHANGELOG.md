@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Make the lobby map the mission picker
+
+- Corrected the previous interpretation of the owner's request: removed the Choose your mission card grid and restored the full journey map directly in the lobby, above the optional certificate name.
+- Each of the six map callouts has a large solid surface and an explicit Play mission / Play again action. Earned stamps are shown on the corresponding callout. The point and its leader still locate the machine on the Moon, Mars or deep-space view.
+- Increased scene spacing to keep enlarged labels clear of neighboring headings and source credits, including larger text at 390px. The old `#journey` URL opens the lobby map. Mission notes, About, visible header links and Settings remain as agreed.
+- Verified all six callout clicks reach the correct mission, EN/ES/VI actions, 390px/desktop, larger text/high contrast and no callout overflow. Tests and production build pass (146 tests). Six-stamp conditions are unchanged.
+
 ### Direct navigation and separate academy pages
 
 - Removed lobby dropdowns. Kept the six enlarged mission cards as the main entry and added a direct journey-map link. The optional certificate name is a normal field below the cards with readable helper text.

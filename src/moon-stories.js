@@ -244,7 +244,7 @@ export function moonPanelMarkup() {
 
 export function locationMapMarkup() {
   return `<section class="location-map" aria-labelledby="location-map-title">
-    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">A little ship. A very big universe.</h2></div><div><p>Earth, the Moon, and Mars share one size scale. The space between stops is compressed; the Webb orbit view changes scale.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p><button type="button" class="compare-planets-trigger" data-compare-planets aria-haspopup="dialog" aria-controls="planet-comparison">Put Earth beside Mars ↗</button></div></div>
+    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">Tap a machine to play</h2></div><div><p>Follow the route. Tap a named button to start its mission.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p><button type="button" class="compare-planets-trigger" data-compare-planets aria-haspopup="dialog" aria-controls="planet-comparison">Put Earth beside Mars ↗</button></div></div>
     <div class="location-map-field" role="group" aria-label="Scroll journey from Earth to the Moon, Mars, Webb, and Voyager">
       <svg class="journey-scroll-route" viewBox="0 0 1000 3400" preserveAspectRatio="none" aria-hidden="true">
         <path class="journey-path-glow" d="${journeyRoutes.desktop}"/>
@@ -311,7 +311,7 @@ export function locationMapMarkup() {
       </div>
       <p class="sr-only journey-progress-status" aria-live="polite"></p>
     </div>
-    <p class="fine location-map-credit"><a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">Size scale: NASA Planetary Fact Sheet ↗</a><span>Distances compressed. Landing sites are approximate. Spacecraft illustrations are enlarged.</span><a href="https://science.nasa.gov/mission/webb/webbs-first-images/" target="_blank" rel="noopener">Background: Webb's First Deep Field · NASA, ESA, CSA, STScI ↗</a></p>
+    <p class="fine location-map-credit"><a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">Size scale: NASA Planetary Fact Sheet ↗</a><span>Earth, the Moon, and Mars share one size scale. The space between stops is compressed; the Webb orbit view changes scale.</span><span>Distances compressed. Landing sites are approximate. Spacecraft illustrations are enlarged.</span><a href="https://science.nasa.gov/mission/webb/webbs-first-images/" target="_blank" rel="noopener">Background: Webb's First Deep Field · NASA, ESA, CSA, STScI ↗</a></p>
   </section>`;
 }
 
@@ -434,8 +434,21 @@ export function mountMoonPanel(root, options = {}) {
   };
 }
 
-export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}, onCompare = () => {}, journeyProgress = 0 } = {}) {
+export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}, onCompare = () => {}, journeyProgress = 0, isStamped = () => false } = {}) {
   root.innerHTML = locationMapMarkup();
+  for (const button of root.querySelectorAll('[data-map-exhibit], [data-map-moon]')) {
+    const earned = isStamped(button.dataset.mapExhibit || button.dataset.mapMoon);
+    const action = document.createElement('span');
+    action.className = 'map-play-action';
+    action.textContent = earned ? 'Play again →' : 'Play mission →';
+    button.querySelector('.diagram-callout').append(action);
+    if (earned) {
+      const stamp = document.createElement('span');
+      stamp.className = 'map-earned-stamp';
+      stamp.textContent = 'Stamp earned ✓';
+      button.querySelector('.diagram-callout').append(stamp);
+    }
+  }
   let activeProgress = clampJourneyProgress(journeyProgress);
   updateJourneyRoute(root, activeProgress);
   const scrollJourney = mountScrollJourney(root);

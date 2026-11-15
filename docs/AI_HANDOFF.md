@@ -8,8 +8,8 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the standing direct-main commit/push authorization remains active.
-- **Last change:** no lobby dropdowns; six larger machine buttons, a direct journey-page link and an optional certificate name field below. Mission notes, About and Journey have dedicated hash pages. Header links remain visible on mobile/desktop; motion and sound are in Settings. The light theme also applies to these information pages.
-- **Last verification:** `npm test` 146/146 and production build pass. Browser checks covered EN/ES/VI, desktop/390px, direct page loads, Back navigation, map canvases and Settings. All five header links are visible with touch-sized buttons. Prior theme, high-contrast and Voyager stamp verification remain documented below.
+- **Last change:** the owner corrected the navigation direction: the journey map is back in the lobby as the main mission picker, and the Choose your mission grid is removed. Six large map callouts show explicit play actions and earned stamps. Name remains below. Notes/About and visible header links/Settings remain unchanged; `#journey` is now an alias to the lobby map.
+- **Last verification:** `npm test` 146/146 and production build pass. Browser clicks on all six map callouts reached their correct routes; EN/ES/VI, 390px and desktop layouts, larger text/high contrast, legacy `#journey`, scene bounds and source-credit spacing were checked. No callout overflow or scene intersections remained. Prior stamp checks are documented below; a full graduation run was not repeated.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
@@ -42,7 +42,7 @@ The canonical mission registry is `src/certification.js`. `MISSION_COUNT` must b
 
 The normal flow is:
 
-1. Lobby direct mission CTA, unified visual certification deck, and outward journey map.
+1. Lobby direct mission CTA, stamp progress and the outward journey map as the main mission picker. No separate machine-card grid.
 2. Mission opening on the page itself (no dialog): real mission image, machine voice, “Built for” and “It did” beats, then the objective. Built by `missionOpening()` in `src/main.js`.
 3. 3D or accessible 2D machine view and anatomy hotspots.
 4. Short action and goal at the active step; optional **How to play** combines the three-step visual Quick Start and explanation.
@@ -62,9 +62,9 @@ Important invariants:
 - Apollo 17 LRV and Surveyor 3 have dedicated `#apollo17` and `#surveyor3` routes. Their challenges still reuse the shared Moon lab and stamp logic.
 - Sound begins off. Microphone permission is never required to finish Voyager.
 - The optional learner name is requested below the mission choices and is used only for the certificate. Do not place it before the first mission CTA.
-- The visual machine picker and certification tracker are one shared deck. Do not create a second six-machine grid in the lobby.
+- The journey map is the visual mission picker, with one stamp-progress row and six obvious Play mission buttons. Do not restore a second machine-card grid.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
-- Lobby defaults to Sun mode; `src/lobby-theme.js` validates `mission-alive-lobby-theme-v1` and scopes light styling to the lobby and academy information pages. `src/academy-navigation.css` keeps header actions visible and machine choices large. Journey map/bonus discoveries live at `#journey`; DSN and history live at `#mission-notes`; project context lives at `#about`. Rendering is initialized when its page opens and disposed when leaving. Avoid restoring the earlier lobby disclosures or hiding primary header links in Menu.
+- Lobby defaults to Sun mode; `src/lobby-theme.js` validates `mission-alive-lobby-theme-v1` and scopes light styling to the lobby and information pages. `src/academy-navigation.css` keeps header actions visible and map callouts large. The map initializes in the lobby and disposes when leaving; `#journey` is a compatibility alias to it. DSN/history remain at `#mission-notes`, context at `#about`. Do not hide the map in a disclosure or move it to a separate page, and do not hide primary header links in Menu.
 - Voyager uses one **Voices from Earth** listening area: original 1977 greetings and approved visitor greetings in keyboard tabs. One native player controls the selected NASA greeting. One private-save button handles either written or recorded replies; saved drafts remain visible, classroom setup/review is optional, and no drawing exercise is present.
 - Long story/briefing content in the four original exhibits shares one **Story & science** disclosure. Avoid adding extra instruction cards that repeat the current step's action.
 - The footer privacy dialog is the public source of truth for classroom sharing. Keep it synchronized with `docs/PRIVACY.md` and `netlify/functions/class-record.mjs`.
@@ -199,6 +199,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Make the lobby map the main mission picker
+- **Changed:** restored the journey map to the lobby and removed the separate six-card chooser. Added large, explicit Play mission / Play again callout surfaces with earned-stamp labels, localized actions, and extra scene spacing. Retained Notes/About, Settings and the name below the map. Legacy `#journey` opens the lobby map.
+- **Verified:** 146 tests/build; browser clicks on all six callout surfaces, correct routes, 390px/desktop, EN/ES/VI, larger text/high contrast, alias URL, source-credit clearance and scene-bound checks. Mobile Moon labels initially touched the next scene; corrected with font-relative scene spacing.
+- **Left for next:** full six-stamp graduation was not replayed. The owner's latest direction is map-first lobby, not card-first lobby; earlier log entries describe superseded designs. Preserve unrelated notices and local artifacts.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Give academy information its own pages and visible navigation

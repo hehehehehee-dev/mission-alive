@@ -6,8 +6,9 @@ test('lobby has direct choices and an always-visible optional name, without disc
   const lobby = html.slice(html.indexOf('id="lobby"'), html.indexOf('id="academy-page"'));
   assert.doesNotMatch(lobby, /<details|<summary/);
   assert.ok(lobby.indexOf('id="lobby-missions"') < lobby.indexOf('id="crew-name"'));
-  assert.match(lobby, /href="\/#journey"/);
-  for (const id of ['academy-mission-notes', 'academy-about', 'academy-journey']) assert.ok(html.includes(`id="${id}"`));
+  assert.ok(lobby.indexOf('id="location-map-slot"') < lobby.indexOf('id="crew-name"'));
+  assert.doesNotMatch(lobby, /Choose your mission|class="lobby-missions"|journey-entry/);
+  for (const id of ['academy-mission-notes', 'academy-about']) assert.ok(html.includes(`id="${id}"`));
   assert.match(html, /id="motion"[^>]*hidden/);
   assert.match(html, /id="teachers-footer-link" hidden/);
   assert.match(html, /id="credits-footer-link" hidden/);
