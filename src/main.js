@@ -375,6 +375,7 @@ function disposeOpenData() {
   rangeButtons = [];
   stampCeremony?.dispose();
   stampCeremony = null;
+  closeMissionCompleteDialog(false);
   for (const timer of completionTimers) clearTimeout(timer);
   completionTimers.clear();
   $("#discovery").classList.remove("has-completion");
@@ -561,6 +562,44 @@ $('#graduate-name').oninput = () => {
 };
 
 let finaleReturnFocus = null;
+let missionCompleteReturnFocus = null;
+function openMissionCompleteDialog(id) {
+  const dialog = $("#mission-complete-dialog");
+  if (!dialog) return;
+  missionCompleteReturnFocus = document.activeElement;
+  dialog.dataset.stampPhase = "waiting";
+  $("#mission-complete-title").textContent = `${exhibits[id].name}: ${t("MISSION COMPLETE")}`;
+  $("#mission-complete-message").textContent = t("Press the stamp, then close this window to review your result.");
+  $("#mission-complete-hint").textContent = t("Your result will stay where you left it.");
+  $("#mission-complete-close").disabled = true;
+  if (!dialog.open) {
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
+  }
+}
+function closeMissionCompleteDialog(restoreFocus = true) {
+  const dialog = $("#mission-complete-dialog");
+  if (!dialog?.open) return;
+  if (dialog.dataset.stampPhase === "stamping") return;
+  if (typeof dialog.close === "function") dialog.close();
+  else dialog.removeAttribute("open");
+  if (restoreFocus) {
+    const target = $("#completion-story-title") || missionCompleteReturnFocus;
+    target?.focus?.({ preventScroll: true });
+  }
+  missionCompleteReturnFocus = null;
+}
+$("#mission-complete-close").onclick = () => closeMissionCompleteDialog();
+$("#mission-complete-dialog").addEventListener("cancel", event => {
+  if ($("#mission-complete-dialog").dataset.stampPhase !== "settled") event.preventDefault();
+});
+$("#mission-complete-dialog").addEventListener("close", () => {
+  const dialog = $("#mission-complete-dialog");
+  if (dialog.dataset.stampPhase !== "settled" || !missionCompleteReturnFocus) return;
+  const target = $("#completion-story-title") || missionCompleteReturnFocus;
+  target?.focus?.({ preventScroll: true });
+  missionCompleteReturnFocus = null;
+});
 const homecoming = mountHomecoming($('#finale'));
 const planetComparison = mountPlanetComparison($('#planet-comparison'));
 function closeFinale(restoreFocus = true) {
@@ -576,6 +615,7 @@ function closeFinale(restoreFocus = true) {
 
 function openFinale({ homecoming: playHomecoming = true } = {}) {
   if (!certificationComplete(completed) || !$("#finale").hidden) return;
+  closeMissionCompleteDialog(false);
   if (moonPanel.dialog.open) moonPanel.dialog.close();
   state.finaleOpened = true;
   for (const timer of completionTimers) clearTimeout(timer);
@@ -1068,7 +1108,6 @@ function renderCompletion(id, fresh) {
     navigateTo(ordered.find((id) => !completed.has(id)) || "lobby");
   };
   $("#completion-story-title").focus({ preventScroll: true });
-  $(".completion-panel").scrollIntoView({ behavior: reduce ? "instant" : "smooth", block: "start" });
   if (!fresh) {
     announce(`Already stamped: ${exhibits[id].name}.`, true);
     return;
@@ -1084,7 +1123,14 @@ function renderCompletion(id, fresh) {
       // Let the mandatory present-state beat and voice be read before graduation.
       const words = `${story.beats[2][1]} ${story.transmission} ${story.gift}`.split(/\s+/).length;
       afterCompletion(Math.max(12000, words * 330), () => {
-        if (certificationComplete(completed) && state.stamped && !state.finaleOpened) openFinale();
+        if (!certificationComplete(completed) || !state.stamped || state.finaleOpened) return;
+        if ($("#mission-complete-dialog")?.open) {
+          $("#mission-complete-dialog").addEventListener("close", () => {
+            if (state === owner && current === id && certificationComplete(completed) && state.stamped && !state.finaleOpened) openFinale();
+          }, { once: true });
+          return;
+        }
+        openFinale();
       });
     });
   });
@@ -1112,10 +1158,14 @@ function success() {
   }
   $("#stage-status").textContent = "MISSION COMPLETE · PRESS YOUR CERTIFICATION STAMP";
   $("#discovery .fact h3").textContent = "FROM THE MISSION ARCHIVE";
-  stampCeremony = mountStampCeremony($("#discovery .reflection"), {
+  openMissionCompleteDialog(id);
+  const stampRoot = $("#mission-complete-stamp");
+  stampRoot.replaceChildren();
+  stampCeremony = mountStampCeremony(stampRoot, {
     name: exhibits[id].name,
     verb: { curiosity: "DRIVE", ingenuity: "FLY", webb: "UNFOLD", voyager: "LISTEN" }[id],
     reducedMotion: reduce,
+    scrollIntoView: false,
     onPress: playStampThud,
     onSettled: () => {
       if (state !== owner || current !== id || completed.has(id)) return;
@@ -1124,7 +1174,13 @@ function success() {
       saveProgress();
       updateMissionProgress();
       $("#stage-status").textContent = "DISCOVERY COMPLETE · CERTIFICATION STAMPED";
+      const dialog = $("#mission-complete-dialog");
+      dialog.dataset.stampPhase = "settled";
+      $("#mission-complete-close").disabled = false;
+      $("#mission-complete-message").textContent = t("Stamp secured. Close this window to review your result.");
+      $("#mission-complete-hint").textContent = t("You can stay here and inspect what your choices changed.");
       renderCompletion(id, true);
+      $("#mission-complete-close").focus({ preventScroll: true });
     },
   });
 }

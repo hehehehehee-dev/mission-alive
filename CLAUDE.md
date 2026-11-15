@@ -55,6 +55,7 @@ Do not add, remove, or silently change a stamp, finale condition, storage key, c
 - Quick Start cards must keep their text inside the card at narrow widths and enlarged text. Decorative icons may disappear when space is tight; they must never squeeze or push instructions outside the frame.
 - Put the challenge first. Keep short action and goal guidance at the active step. The shared three-step Quick Start from `src/quick-start.js` and its explanation normally live together in the optional **How to play** disclosure; do not add another competing instruction card. Voyager is the deliberate exception: its three short actions remain visible because the two listening collections sit directly below the Golden Record. **Hear Earth** is optional; **Send yours** is the required stamp action. Longer mission reading lives in **Story & science**.
 - Failure should teach one actionable correction. A learner should normally succeed within two or three informed attempts.
+- When a learner completes a mission, keep the current result in view. Open the completion stamp ceremony in an in-place dialog, let the stamp animation settle, then enable a clear close button so the learner can inspect the result without being auto-scrolled to the passport.
 - Never make audio, microphone permission, precise dragging, color alone, hover, or WebGL mandatory.
 - Maintain native keyboard controls, visible focus, touch targets, text alternatives, reduced motion, and a functional 2D fallback.
 - Use one font family unless the owner explicitly changes the design system.

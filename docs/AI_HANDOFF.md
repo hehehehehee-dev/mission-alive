@@ -8,11 +8,11 @@ Whoever commits (Claude, Codex, or a human) updates this section and adds an ent
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
 - **Release authorization:** the owner has authorized validated work to be committed and pushed directly to `origin/main`; Netlify deploys that branch automatically.
-- **Last change:** mobile mission guidance now stays inside its cards: Quick Start reflows before text is squeezed by decorative icons, and Curiosity's view tabs use wrapped, non-selectable touch targets. Voyager still has one compact mission flow: **Hear Earth** is optional, while **Send yours** is the required stamp action.
+- **Last change:** mission completion now stays in place: success opens an in-place celebration dialog with a pulsing mark and the stamp ceremony, then enables a close button after the stamp settles so learners can inspect the mission result without an automatic scroll. Mobile mission guidance still stays inside its cards, and Voyager still has one compact mission flow: **Hear Earth** is optional, while **Send yours** is the required stamp action.
 - **Immediately preceding:** the lobby gained an optional, skippable speech-bubble story starring Commander Mira and the new cadet. Six machines ask for help, then the final action starts Apollo 17. It auto-plays only while the learner has zero stamps.
 - **Impact route:** `/#impact` is now linked directly from the persistent header. It displays only aggregate closed-question results from the configured Google Sheet through the Netlify function; ages, short answers and individual rows are excluded.
 - **Impact display:** interest and belonging show the after-playing average out of 5; learn-more, recommendation and completion show percentages; response count is a plain total. Per-card methodology text was removed, while one caution/method note remains below the grid.
-- **Last verification:** 194 tests and the production build pass. Headless Chrome confirmed Voyager's compact **Hear Earth / Send yours** flow, adjacent NASA/visitor tabs, translated EN/ES/VI labels, optional transcript rendering, and a 390 px layout without horizontal overflow. Responsive CSS regression coverage now protects Quick Start card wrapping and Curiosity tab containment. Posting to production was not tested; `GET /api/greetings?action=list` should still be checked after deploy.
+- **Last verification:** 195 tests and the production build pass. Headless Chrome confirmed Voyager's compact **Hear Earth / Send yours** flow, adjacent NASA/visitor tabs, translated EN/ES/VI labels, optional transcript rendering, and a 390 px layout without horizontal overflow. Responsive CSS regression coverage now protects Quick Start card wrapping and Curiosity tab containment; mission-completion regression coverage protects the in-place dialog and no-scroll stamp path. Posting to production was not tested; `GET /api/greetings?action=list` should still be checked after deploy.
 - **Not yet verified:** physical touch dragging for Apollo's new pieces, screen-reader announcement order, translated Apollo browser rendering, new Ingenuity flight UI on a physical device, fresh six-stamp gameplay, and production security headers.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - The former three-panel Ingenuity flow has been superseded by this local visual-flight prototype. Its engine is tested, but the new UI still needs hands-on child playtesting before publication.
@@ -202,6 +202,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main`
+- **Commit:** Keep mission results in place during stamp ceremony
+- **Changed:** replaced the completion auto-scroll with an in-place mission celebration dialog. The dialog mounts the existing stamp ceremony without scrolling, adds a pulsing completion mark, keeps its close button disabled until the stamp settles, then returns focus to the underlying mission result. Finale opening waits until the dialog is closed. Added EN/ES/VI copy and a regression test.
+- **Verified:** 195 tests; production build; diff check. The existing six-mission stamp/finale invariants remain unchanged.
+- **Left for next:** verify a fresh success in each mission on a clean browser and confirm the dialog remains readable at 390 px with reduced motion enabled.
 
 ### 2026-11-15 — Codex — `main`
 - **Commit:** Keep mobile mission guidance inside its cards

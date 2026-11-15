@@ -2465,6 +2465,34 @@ dialog::backdrop {
   background: #000a;
   backdrop-filter: blur(5px);
 }
+.mission-complete-dialog {
+  width: min(560px, calc(100% - 24px));
+  max-width: 560px;
+  max-height: min(90vh, 760px);
+  padding: 0;
+  overflow: visible;
+  border-color: color-mix(in srgb, var(--accent), transparent 28%);
+  background: #0b1824;
+  box-shadow: 0 28px 90px #000b, 0 0 0 1px #f0c88b1c;
+}
+.mission-complete-dialog::backdrop { background: #03070ccc; backdrop-filter: blur(8px) saturate(.8); }
+.mission-complete-card { position: relative; padding: clamp(22px, 5vw, 38px); text-align: center; }
+.mission-complete-card .dialog-top { position: relative; z-index: 1; text-align: left; }
+.mission-complete-card .dialog-top .eyebrow { margin: 0; }
+.mission-complete-close { flex: 0 0 auto; width: 44px; height: 44px; min-height: 44px; padding: 0; border: 1px solid var(--line); border-radius: 50%; font-size: 1.5rem; line-height: 1; }
+.mission-complete-close:not(:disabled):hover, .mission-complete-close:not(:disabled):focus-visible { border-color: var(--accent); color: var(--accent); }
+.mission-complete-close:disabled { opacity: .42; cursor: wait; }
+.mission-complete-mark { display: grid; place-items: center; width: 58px; height: 58px; margin: 4px auto 12px; border: 1px solid color-mix(in srgb, var(--accent), transparent 35%); border-radius: 50%; color: var(--accent); font-size: 1.7rem; animation: mission-complete-pulse 1.5s ease-in-out infinite; }
+.mission-complete-card h2 { margin: 0 0 10px; font: 400 clamp(1.8rem, 5vw, 2.6rem)/1.1 var(--story-serif); }
+.mission-complete-card > p:not(.fine) { max-width: 34rem; margin: 0 auto; }
+.mission-complete-card .mission-complete-hint { max-width: 34rem; margin: 8px auto 0; }
+.mission-complete-dialog .stamp-ceremony { margin: 18px 0 0; padding: 14px 0 0; border: 0; border-top: 1px solid #ffffff1c; border-radius: 0; background: transparent; box-shadow: none; }
+.mission-complete-dialog .stamp-ceremony .stamp-ready { display: none; }
+.mission-complete-dialog .stamp-ceremony .stamp-instruction { margin-bottom: 4px; font-size: 1rem; }
+.mission-complete-dialog .stamp-ceremony .stamp-press-area { min-height: 15rem; }
+.mission-complete-dialog .stamp-ceremony .stamp-press { width: min(100%, 12rem); min-height: 12rem; }
+@keyframes mission-complete-pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 #f0c88b00; } 50% { transform: scale(1.06); box-shadow: 0 0 0 12px #f0c88b14; } }
+body.motion-reduced .mission-complete-mark { animation: none; }
 dialog h2 {
   font-size: 2rem;
   font-weight: 400;

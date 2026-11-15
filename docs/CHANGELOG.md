@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Keep mission completion in place
+
+- Mission success now opens an in-place celebration dialog with a pulsing mark and the existing stamp ceremony, instead of scrolling the learner to the completion panel.
+- The close button stays unavailable until the stamp settles. Closing the dialog returns focus to the mission result so learners can inspect the transmission and feedback where they finished.
+- Finale opening waits for the dialog to close, and the six-mission certification loop remains unchanged. Added Spanish/Vietnamese copy and regression coverage.
+
 ### Keep mobile mission guidance inside its cards
 
 - Quick Start cards now reflow by available width, allow long guidance to wrap, and hide decorative emoji icons when space is tight so text stays inside its card.

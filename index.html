@@ -178,6 +178,16 @@
         <div class="finale-actions"><button class="primary" id="finale-passport">Finish</button><button class="secondary" id="finale-teachers">For Teachers</button></div>
       </div>
     </section>
+    <dialog class="mission-complete-dialog" id="mission-complete-dialog" aria-labelledby="mission-complete-title" aria-describedby="mission-complete-message">
+      <div class="mission-complete-card">
+        <div class="dialog-top"><p class="eyebrow">MISSION MOMENT</p><button type="button" class="mission-complete-close" id="mission-complete-close" aria-label="Close mission celebration" disabled>×</button></div>
+        <div class="mission-complete-mark" aria-hidden="true">✦</div>
+        <h2 id="mission-complete-title">You did it.</h2>
+        <p id="mission-complete-message">Press the stamp, then close this window to review your result.</p>
+        <div id="mission-complete-stamp"></div>
+        <p class="fine mission-complete-hint" id="mission-complete-hint">Your result will stay where you left it.</p>
+      </div>
+    </dialog>
     <dialog class="exhibit-story-dialog mission-view" id="exhibit-story-dialog" aria-labelledby="exhibit-story-title">
       <div class="mission-view-photo"><img id="mission-view-image" alt=""><div class="mission-view-photo-label"><span class="eyebrow">A VIEW FROM MY MISSION</span><p id="mission-view-caption"></p><span id="mission-view-kind"></span></div></div>
       <button type="button" class="mission-view-close" id="mission-view-close" aria-label="Close mission view">×</button>

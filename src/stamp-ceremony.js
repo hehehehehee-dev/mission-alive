@@ -38,6 +38,7 @@ export function mountStampCeremony(root, {
   verb,
   idPrefix = 'stamp',
   reducedMotion = false,
+  scrollIntoView = true,
   onPress = () => {},
   onSettled = () => {},
 } = {}) {
@@ -104,7 +105,7 @@ export function mountStampCeremony(root, {
   // Native button activation supplies click for tap, Space and Enter alike.
   button.addEventListener("click", press);
   button.focus({ preventScroll: true });
-  panel.scrollIntoView?.({ behavior: reducedMotion ? "instant" : "smooth", block: "center" });
+  if (scrollIntoView) panel.scrollIntoView?.({ behavior: reducedMotion ? "instant" : "smooth", block: "center" });
 
   return {
     get phase() { return cycle.phase; },
