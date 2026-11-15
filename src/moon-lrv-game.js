@@ -41,20 +41,21 @@ export const LRV_GAME_COPY = Object.freeze({
   increaseAngle: "Increase fender angle",
   decreaseClearance: "Decrease fender clearance setting",
   increaseClearance: "Increase fender clearance setting",
-  goals: "Pass this model test: at most 3 of 12 dust paths reach the equipment, the whole patch stays at least 3 cm from the wheel, and the attachment holds.",
+  goals: "Pass this model test: at most 3 of 12 dust paths reach the equipment, the patch clears the wheel and equipment, and the attachment holds.",
   runTest: "Run dust test",
   tryAgain: "Try another design",
   reset: "Reset workshop",
   results: "3. Read the test",
   dustMeasure: "Dust reaching equipment",
-  clearanceMeasure: "Smallest wheel gap",
+  clearanceMeasure: "Repair clearance",
   attachmentMeasure: "Attachment holding",
   dustGoal: "Goal: 3 or fewer of 12 paths",
-  clearanceGoal: "Goal: at least 3 cm in this model",
+  clearanceGoal: "Goal: clear the wheel and stop before the equipment",
   attachmentGoal: "Goal: a taped map patch held by clamps",
   notTested: "Not tested",
   holding: "Holding",
   touching: "Touching the wheel",
+  hittingEquipment: "Hitting the equipment",
   toolsReady: "Tap maps, then tape, then clamps.",
   slipped: "Slipped in the model",
   incomplete: "Patch incomplete",
@@ -62,9 +63,14 @@ export const LRV_GAME_COPY = Object.freeze({
   adjust: "Adjust and retest",
   readyStatus: "Workshop ready. Assemble a patch and run a dust test.",
   changedStatus: "Design changed. Run a new dust test to measure this setup.",
+  designBuild: "BUILD FIRST · add the map patch",
+  designReady: "READY TO TEST · the repair clears the rover",
+  designWheelFail: "FAIL · the patch touches the wheel",
+  designEquipmentFail: "FAIL · the patch reaches the equipment",
   passedStatus: "Test passed. Your patch catches enough dust, clears the wheel, and stays attached. Another shape may work too.",
   incompleteStatus: "Build the whole patch first: select spare maps and join them with duct tape, then test again.",
   wheelStatus: "The patch is too close to the wheel. Raise the clearance setting or lift the tip, then test again.",
+  equipmentStatus: "The patch is too long and reaches the rover equipment. Shorten it, then test again.",
   attachmentStatus: "The patch slipped. Try clamps with the taped maps, then test again.",
   dustStatus: "Too much dust reached the equipment. Try a longer patch or change its angle and clearance, then test again.",
   narrator: "A small repair can protect a big mission. The Apollo 17 crew solved their real dust problem with materials they had on hand.",
@@ -79,7 +85,7 @@ export const LRV_GAME_COPY = Object.freeze({
   noPatch: "No map patch",
   untaped: "Maps without tape",
   modelDetails: "How this model works",
-  modelExplanation: "Twelve curved sample paths leave the wheel. A path is caught where it crosses the patch. Tape alone slips after the first four paths; clamps hold an assembled patch. The wheel-gap check uses the closest point on the patch. These simplified rules help compare designs; they do not predict real lunar dust.",
+  modelExplanation: "Twelve curved sample paths leave the wheel. A path is caught where it crosses the patch. Tape alone slips after the first four paths; clamps hold an assembled patch. A design fails immediately if it touches the wheel or reaches the equipment zone. These simplified rules help compare designs; they do not predict real lunar dust.",
   source: "NASA · Lunar Dust and Duct Tape ↗",
 });
 
@@ -103,6 +109,7 @@ export const LRV_CONTROL_LIMITS = Object.freeze({
 const WHEEL_RADIUS = 24;
 const DUST_PATHS = 12;
 const EQUIPMENT = Object.freeze({ left: 85, right: 120, bottom: 30, top: 105 });
+const PATCH_EQUIPMENT_LIMIT = 68;
 const SOURCE = "https://science.nasa.gov/image-article/apod-2004-april-17-lunar-dust-and-duct-tape/";
 const copy = LRV_GAME_COPY;
 let nextWorkshopId = 0;
@@ -210,12 +217,13 @@ export function evaluateLrvRepair(input, { tested = false } = {}) {
   const assembled = configuration.maps && configuration.tape;
   const dustSafe = dustReaching <= 3;
   const wheelSafe = geometry.clearanceCm >= 3;
+  const equipmentSafe = geometry.end.x <= PATCH_EQUIPMENT_LIMIT;
   const attachmentHolding = assembled && configuration.attachment === "clamps";
   return {
     configuration, geometry, paths, tested: tested === true,
     dustReaching, dustTotal: DUST_PATHS, dustSafe,
-    clearanceCm: geometry.clearanceCm, wheelSafe, assembled, attachmentHolding,
-    passed: tested === true && dustSafe && wheelSafe && attachmentHolding,
+    clearanceCm: geometry.clearanceCm, wheelSafe, equipmentSafe, assembled, attachmentHolding,
+    passed: tested === true && dustSafe && wheelSafe && equipmentSafe && attachmentHolding,
   };
 }
 
@@ -224,7 +232,7 @@ const pointOnScreen = ({ x, y }) => ({ x: 210 + x * 2.4, y: 330 - y * 2.4 });
 const coordinate = (number) => Number(number.toFixed(2));
 const svgPoint = (point) => { const screen = pointOnScreen(point); return `${coordinate(screen.x)},${coordinate(screen.y)}`; };
 
-function patchMarkup(configuration) {
+function patchMarkup(configuration, result = evaluateLrvRepair(configuration)) {
   if (!configuration.maps) return "";
   const { start, end } = lrvPatchGeometry(configuration);
   const angle = configuration.angle * Math.PI / 180;
@@ -241,7 +249,8 @@ function patchMarkup(configuration) {
     const middle = pointOnScreen({ x: start.x + (end.x - start.x) * fraction, y: start.y + (end.y - start.y) * fraction });
     return `<rect x="${coordinate(middle.x - 3)}" y="${coordinate(middle.y - 8)}" width="6" height="16" rx="2" fill="#efaf6b" stroke="#533923" stroke-width="1.5"/>`;
   }).join("") : "";
-  return `<g class="lrv-map-patch"><path d="M${svgPoint({ x: -8, y: WHEEL_RADIUS })}L${svgPoint(start)}" stroke="#b9c6cb" stroke-width="5"/><polygon points="${polygon}" fill="#92b6a0" stroke="#e4efda" stroke-width="2"/>${seams}${clamps}</g>`;
+  const invalid = !result.wheelSafe || !result.equipmentSafe;
+  return `<g class="lrv-map-patch${invalid ? ' is-invalid' : ''}"><path d="M${svgPoint({ x: -8, y: WHEEL_RADIUS })}L${svgPoint(start)}" stroke="${invalid ? '#ff766e' : '#b9c6cb'}" stroke-width="5"/><polygon points="${polygon}" fill="${invalid ? '#a9383a' : '#567f67'}" stroke="${invalid ? '#ff9f98' : '#e4efda'}" stroke-width="3"/>${seams}${clamps}</g>`;
 }
 
 function dustMarkup(result) {
@@ -254,14 +263,14 @@ function svgMarkup(result) {
     <path d="M0 390Q100 382 186 389T366 387T552 391T720 387V430H0Z" fill="#343945"/>
     <path d="M24 407h36m60-12h21m198 15h40m143-12h22m83 16h22" stroke="#69717b" stroke-width="2"/>
     <g class="lrv-seat-equipment">
-      <path d="M291 300H549M307 298l31-55h179l27 55M339 244l-12-66h61l20 66" fill="none" stroke="#a4b1b7" stroke-width="9" stroke-linejoin="round"/>
-      <path d="M333 179h52v49h-42z" fill="#81959b" stroke="#d9e1df" stroke-width="3"/>
-      <path d="M405 124h39v118h-39zM450 95h48v147h-48zM505 154h42v88h-42z" fill="#c0c6bb" stroke="#e9ede4" stroke-width="3"/>
-      <path d="M416 142h18v19h-18zM461 115h26v29h-26zM514 169h23v20h-23z" fill="#294c57" stroke="#6bd3d0" stroke-width="2"/>
-      <path d="M416 178h18m27-15h26m27 43h23" stroke="#677b80" stroke-width="4"/>
-      <path d="M499 302l50 53M302 302l-38 27" stroke="#a4b1b7" stroke-width="7"/>
-      <circle cx="550" cy="353" r="34" fill="#24323c" stroke="#82929b" stroke-width="5"/>
-      <circle cx="550" cy="353" r="10" fill="#a4b1b7"/>
+      <path d="M270 298H602M287 296l38-51h230l43 51M329 246H560" fill="none" stroke="#a4b1b7" stroke-width="9" stroke-linejoin="round"/>
+      <path d="M335 226h92v58h-92z" fill="#9b6b2e" stroke="#d2a65c" stroke-width="3"/>
+      <path d="M433 238h75v46h-75z" fill="#252f36" stroke="#718088" stroke-width="3"/>
+      <path d="M445 171h42v67h-42zM493 156h42v82h-42z" fill="#dce2df" stroke="#ffffff" stroke-width="3" transform="skewX(-7)"/>
+      <path d="M354 226v-71m0 0h35m-35 0l-22-33m22 33l25-28" fill="none" stroke="#b9c6cb" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="333" cy="120" r="7" fill="#202e39" stroke="#dce7e9" stroke-width="3"/>
+      <path d="M539 246l51-34M282 298l-34 37M580 298l37 37" stroke="#a4b1b7" stroke-width="7"/>
+      <g transform="translate(550 330)"><circle r="57.6" fill="#202e39" stroke="#91a2a9" stroke-width="5"/><circle r="44" fill="none" stroke="#657b86" stroke-width="2"/>${Array.from({ length: 12 }, (_, index) => { const angle = index * Math.PI / 6; return `<path d="M${coordinate(Math.cos(angle) * 13)},${coordinate(Math.sin(angle) * 13)}L${coordinate(Math.cos(angle) * 54)},${coordinate(Math.sin(angle) * 54)}" stroke="#7d949e" stroke-width="2"/>`; }).join("")}<circle r="14" fill="#b67a24" stroke="#6f4b1d" stroke-width="3"/></g>
     </g>
     <g class="lrv-wheel"><circle cx="210" cy="330" r="57.6" fill="#202e39" stroke="#91a2a9" stroke-width="5"/><circle cx="210" cy="330" r="44" fill="none" stroke="#657b86" stroke-width="2"/>
       ${Array.from({ length: 12 }, (_, index) => { const angle = index * Math.PI / 6; return `<path d="M${coordinate(210 + Math.cos(angle) * 13)},${coordinate(330 + Math.sin(angle) * 13)}L${coordinate(210 + Math.cos(angle) * 54)},${coordinate(330 + Math.sin(angle) * 54)}" stroke="#7d949e" stroke-width="2"/>`; }).join("")}
@@ -269,7 +278,7 @@ function svgMarkup(result) {
     </g>
     <path class="lrv-fender-stub" d="M139 310Q148 262 191 265" fill="none" stroke="#c7c7b6" stroke-width="9"/>
     <g data-lrv-dust-paths>${dustMarkup(result)}</g>
-    <g data-lrv-patch>${patchMarkup(result.configuration)}</g>
+    <g data-lrv-patch>${patchMarkup(result.configuration, result)}</g>
     <g class="lrv-svg-labels" fill="#dce7e9" font-family="system-ui, sans-serif" font-size="13" font-weight="700" letter-spacing="1.5"><text x="160" y="421">${copy.wheel}</text><text x="279" y="65">${copy.patch}</text><text x="444" y="65">${copy.equipment}</text></g>
   </svg>`;
 }
@@ -288,7 +297,7 @@ export function lrvGameMarkup() {
     <p class="moon-challenge-identity">${copy.missionLabel}</p><aside class="mission-incident" aria-label="Mission moment"><p class="eyebrow">${copy.incidentTitle}</p><p>${copy.incident}</p><p class="fine">Watch the dust paths, change one control, and run the test again.</p></aside>
     ${quickStartMarkup('apollo17')}
     ${whyMarkup(`<p>${copy.instructions}</p><p>${copy.simulation}</p><p>${copy.dimensions}</p>`)}
-    <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p><div class="moon-challenge-canvas" data-lrv-challenge-3d></div><div class="moon-challenge-2d">${svgMarkup(initial)}</div><figcaption><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${copy.diagramCaption}</span></figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>
+    <div class="lrv-workshop-grid"><figure class="lrv-illustration"><p class="lrv-preview-label" data-lrv-preview-label>${copy.preview}</p><p class="lrv-design-check" data-lrv-design-check data-state="building" role="status">${copy.designBuild}</p><div class="moon-challenge-canvas" data-lrv-challenge-3d></div><div class="moon-challenge-2d">${svgMarkup(initial)}</div><figcaption><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${copy.diagramCaption}</span></figcaption><div class="lrv-dust-legend"><span class="lrv-dust-key lrv-dust-caught">${copy.caughtDust}</span><span class="lrv-dust-key lrv-dust-reaching">${copy.reachingDust}</span></div><p class="lrv-simulation-label">${copy.simulation}</p></figure>
     <div class="lrv-controls"><fieldset class="lrv-materials"><legend>${copy.materials}</legend><div class="lrv-tool-tray" role="group" aria-label="Repair tools"><button type="button" data-lrv-tool="maps" aria-pressed="false">${copy.maps}</button><button type="button" data-lrv-tool="tape" aria-pressed="false">${copy.tape}</button><button type="button" data-lrv-tool="clamps" aria-pressed="false">${copy.clamps}</button></div><p data-lrv-tool-status role="status">${copy.toolsReady}</p><p class="lrv-control-help">${copy.attachmentHelp}</p></fieldset>
     <fieldset class="lrv-geometry"><legend>${copy.geometry}</legend><p class="lrv-model-dimensions">${copy.dimensions}</p>
     ${controlMarkup(id, "length", copy.length, copy.lengthHelp, copy.decreaseLength, copy.increaseLength)}
@@ -327,7 +336,9 @@ export function lrvNextChange(result) {
   // even if that lets some dust through for one test.
   const better = (prediction) => !result.wheelSafe
     ? prediction.wheelSafe
-    : prediction.wheelSafe && prediction.dustReaching < result.dustReaching;
+    : !result.equipmentSafe
+      ? prediction.wheelSafe && prediction.equipmentSafe
+      : prediction.wheelSafe && prediction.equipmentSafe && prediction.dustReaching < result.dustReaching;
   let best = null;
   const consider = (key, direction, steps, passes, penalty = 0) => {
     // Prefer a change that passes, then a forgiving one, then the fewest presses.
@@ -382,13 +393,16 @@ export function lrvRepairHint(result) {
   if (result.passed) return copy.passedStatus;
   if (!result.assembled) return copy.incompleteStatus;
   if (!result.attachmentHolding) return copy.attachmentStatus;
+  if (!result.equipmentSafe) return copy.equipmentStatus;
   const change = lrvNextChange(result);
   if (change) return LRV_HINTS[change.key][change.direction][hintSize(change.steps)];
   return result.wheelSafe ? copy.dustStatus : copy.wheelStatus;
 }
 
 function gapText(result) {
-  return result.clearanceCm < 0 ? copy.touching : `${result.clearanceCm.toFixed(1)} cm`;
+  if (!result.wheelSafe) return copy.touching;
+  if (!result.equipmentSafe) return copy.hittingEquipment;
+  return `${result.clearanceCm.toFixed(1)} cm`;
 }
 
 function attachmentText(result) {
@@ -443,7 +457,7 @@ export function mountLrvGame(root) {
     workshop.dataset.lrvAssembly = applied.clamps ? 'complete' : 'building';
     workshop.querySelectorAll('[data-lrv-tool]').forEach(button => button.setAttribute('aria-pressed', String(applied[button.dataset.lrvTool])));
     find("[data-lrv-dust-paths]").innerHTML = dustMarkup(result);
-    find("[data-lrv-patch]").innerHTML = patchMarkup(configuration);
+    find("[data-lrv-patch]").innerHTML = patchMarkup(configuration, result);
     const tip = pointOnScreen(lrvPatchGeometry(configuration).end);
     const handle = find('[data-lrv-drag-tip]');
     handle.setAttribute('cx', tip.x); handle.setAttribute('cy', tip.y);
@@ -454,13 +468,17 @@ export function mountLrvGame(root) {
     handle.setAttribute('aria-valuetext', `${configuration.length} cm, ${configuration.angle}°`);
     handle.style.display = configuration.maps ? '' : 'none';
     find("[data-lrv-preview-label]").textContent = result.tested ? copy.tested : copy.preview;
+    const designCheck = find('[data-lrv-design-check]');
+    const geometryFailure = !result.wheelSafe || !result.equipmentSafe;
+    designCheck.dataset.state = !configuration.maps ? 'building' : geometryFailure ? 'fail' : 'ready';
+    designCheck.textContent = !configuration.maps ? copy.designBuild : !result.wheelSafe ? copy.designWheelFail : !result.equipmentSafe ? copy.designEquipmentFail : copy.designReady;
     workshop.dataset.lrvResult = result.tested ? result.passed ? "passed" : "adjust" : "untested";
     find("[data-lrv-try]").hidden = !result.tested;
     find("[data-lrv-narrator]").hidden = !result.passed;
     dustResult.textContent = result.tested ? `${result.dustReaching} / ${result.dustTotal}` : copy.notTested;
     clearanceResult.textContent = result.tested ? gapText(result) : copy.notTested;
     attachmentResult.textContent = result.tested ? attachmentText(result) : copy.notTested;
-    [result.dustSafe, result.wheelSafe, result.attachmentHolding].forEach((passed, index) => {
+    [result.dustSafe, result.wheelSafe && result.equipmentSafe, result.attachmentHolding].forEach((passed, index) => {
       measures[index].dataset.result = result.tested ? passed ? "pass" : "adjust" : "untested";
       const verdict = measures[index].querySelector('[data-lrv-verdict]');
       verdict.hidden = !result.tested;

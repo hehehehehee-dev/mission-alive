@@ -54,6 +54,8 @@ test('markup keeps fictional model, real history, accessible controls, and homec
   const markup = surveyorGameMarkup();
   assert.match(markup, /MISSION · SURVEYOR 3/);
   assert.equal((markup.match(/data-surveyor-patch=/g) || []).length, 3);
+  assert.match(markup, /Surveyor 3: read the ground/);
+  assert.match(markup, /Sample point A/);
   assert.match(markup, /Even, shallow cover/);
   assert.match(markup, /Even, deep cover/);
   assert.match(markup, /Uneven cover · tilt risk/);
@@ -62,7 +64,7 @@ test('markup keeps fictional model, real history, accessible controls, and homec
   assert.match(markup, /Illustrated simulation · not NASA test data\./);
   assert.match(markup, /dimensionless simulation units/);
   assert.match(markup, /patches and their layers are invented/);
-  assert.match(markup, /This adjustable-footpad experiment is fictional/);
+  assert.match(markup, /Drop a separate two-foot pressure rig onto the soil/);
   assert.match(markup, /I am still here\. But part of me made it home\./);
   assert.match(markup, /1969, Apollo 12 astronauts returned Surveyor 3’s television camera and soil scoop/);
   assert.match(markup, /https:\/\/science\.nasa\.gov\/mission\/surveyor-3\//);
@@ -74,6 +76,14 @@ test('markup keeps fictional model, real history, accessible controls, and homec
   assert.doesNotMatch(markup, /disabled|<canvas|<input[^>]*type="range"|<img/);
   assert.notEqual(markup.match(/id="([^"]+)-grains"/)[1], surveyorGameMarkup().match(/id="([^"]+)-grains"/)[1]);
   assert.doesNotThrow(() => mountSurveyorGame(null).dispose());
+});
+
+test('the 3D study is a geology transect with a separate pressure rig, not three landing zones', () => {
+  const source = readFileSync(new URL('../src/moon-challenge-scenes.js', import.meta.url), 'utf8');
+  assert.match(source, /surveyor-transect/);
+  assert.match(source, /separate two-foot rig/i);
+  assert.match(source, /lander\.position\.set\(0, \.28, -1\.45\)/);
+  assert.doesNotMatch(source, /const pad = cylinder\(1, 1\.1, \.35/);
 });
 
 test('optional investigation has no persistence, route, stamp, timer, or external image effects', () => {

@@ -6,18 +6,19 @@ import { es, vi } from '../src/locales/six-missions.js';
 import { t } from '../src/i18n.js';
 
 const hook = [
-  'Pick a machine.',
-  'Take a mission.',
+  'Six machines',
+  'need your help.',
 ];
 
 test('the lobby opens with a short action addressed to the child', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   for (const line of hook) assert.match(html, new RegExp(line.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  assert.match(html, /Academy simulations based on real mission problems\./);
   assert.doesNotMatch(html, /Some of NASA's machines cannot be brought back/);
   assert.ok(html.indexOf(hook[0]) < html.indexOf('id="passport-title"'));
 });
 
-test('the lobby uses the map as its mission picker before optional certificate setup', async () => {
+test('the lobby uses the map as its mission picker and defers naming until graduation', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const main = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
   assert.doesNotMatch(html, /data-launch-exhibit=|class="launch-bay"/);
@@ -31,8 +32,9 @@ test('the lobby uses the map as its mission picker before optional certificate s
   assert.match(html, /data-academy-page="mission-notes"/);
   assert.doesNotMatch(html, /class="mobile-header-menu"/);
   assert.match(main, /route === "lobby-missions"/);
-  assert.ok(html.indexOf('id="lobby-missions"') < html.indexOf('id="crew-name"'));
-  assert.match(html, /Your name \(optional\)/);
+  const lobby = html.slice(html.indexOf('id="lobby"'), html.indexOf('id="academy-page"'));
+  assert.doesNotMatch(lobby, /id="crew-name"|Your name \(optional\)/);
+  assert.match(html, /class="certificate-maker"[\s\S]*id="graduate-name"/);
 });
 
 test('journey image credits stay inside their own desktop scenes', async () => {

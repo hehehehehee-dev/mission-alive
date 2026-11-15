@@ -250,6 +250,14 @@ Project requirements, supplied voice assets, feedback and publication decisions 
 - Local files: src/data/ingenuity-flights.json
 - Usage / modifications: Measurements transcribed from NASA’s final published flight log, dated 21 June 2024.
 
+### Ingenuity · onboard computer flight game
+
+- Creator / credit: Mission Alive
+- Official source: https://science.nasa.gov/wp-content/uploads/2024/06/ingenuity-helicopter-flight-log.pdf
+- Used in: Ingenuity
+- Local files: src/ingenuity-flight-game.js, src/scene.js
+- Usage / modifications: Original 3D model, imagined landing patches and simplified gust/steering rules. Wind forces, route, 2.4 m height, 22 s duration and pass criteria are game values, not NASA telemetry. The learner acts as the onboard computer, not a live pilot on Earth.
+
 ### Curiosity · NASA image archive
 
 - Creator / credit: NASA / JPL-Caltech / MSSS; each image retains its supplied credit

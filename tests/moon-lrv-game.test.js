@@ -79,6 +79,11 @@ test("multiple lengths, angles, and clearance settings can protect the equipment
   assert.equal(shortPatch.wheelSafe, true);
   assert.equal(shortPatch.dustSafe, false);
   assert.equal(shortPatch.passed, false);
+  const overlongPatch = testDesign({ ...goodDesign, length: 80 });
+  assert.equal(overlongPatch.wheelSafe, true);
+  assert.equal(overlongPatch.equipmentSafe, false);
+  assert.equal(overlongPatch.passed, false);
+  assert.match(lrvRepairHint(overlongPatch), /too long|Shorten/i);
 });
 
 test("illustrated dust paths change with the design, and caught paths drop before the gear", () => {
@@ -138,6 +143,7 @@ test("markup provides native keyboard controls, a live result, history, and an h
   assert.ok(markup.includes('role="status" aria-live="polite" aria-atomic="true"'));
   assert.ok(markup.includes('data-lrv-result="untested"'));
   assert.ok(markup.includes("data-lrv-history"));
+  assert.ok(markup.includes('data-lrv-design-check'));
   assert.match(markup, /class="lrv-history-scroll"[^>]*tabindex="0"[^>]*role="region"[^>]*aria-labelledby="lrv-workshop-\d+-history"/);
   assert.match(markup, /<table aria-labelledby="lrv-workshop-\d+-history">/);
   assert.ok(markup.includes("data-lrv-reset"));

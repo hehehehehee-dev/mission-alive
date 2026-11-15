@@ -1,6 +1,7 @@
 import { mountJourneyGlobes } from './journey-globes.js';
 import { moonLabMarkup, mountMoonLabs } from './moon-labs.js';
 import { trainingMissions } from './certification.js';
+import { mapHelpCalloutMarkup, missionCallMarkup } from './mission-calls.js';
 
 function routeMissionNavigationMarkup() {
   return `<nav class="exhibits moon-route-modules" aria-label="Choose a training module" hidden>${Object.entries(trainingMissions)
@@ -236,7 +237,7 @@ export function moonPanelMarkup() {
     ${routeMissionNavigationMarkup()}
     <h2 id="moon-panel-title">Two machines still on the Moon</h2>
     <p class="moon-panel-intro">Your crew's voyage begins here. Repair a rover and investigate the ground. Earn two Moon stamps toward your six-mission certification.</p>
-    <div class="moon-route-summary" id="moon-route-summary" hidden><p class="eyebrow" id="moon-route-year"></p><section class="mission-opening moon-route-opening" aria-labelledby="moon-panel-title"><figure class="moon-route-photo mission-opening-view"><div class="mission-opening-photo"><img alt="" decoding="async"></div><figcaption><a target="_blank" rel="noopener"></a></figcaption></figure><div><dl class="mission-opening-beats"><div><dt>Built for</dt><dd id="moon-route-purpose"></dd></div><div><dt>It did</dt><dd id="moon-route-did"></dd></div></dl><a class="moon-route-source" id="moon-route-source" target="_blank" rel="noopener"></a></div></section></div>
+    <div class="moon-route-summary" id="moon-route-summary" hidden><p class="eyebrow" id="moon-route-year"></p><section class="mission-opening moon-route-opening" aria-labelledby="moon-panel-title"><figure class="moon-route-photo mission-opening-view"><div class="mission-opening-photo"><img alt="" decoding="async"></div><figcaption><a target="_blank" rel="noopener"></a></figcaption></figure><div><dl class="mission-opening-beats"><div><dt>Built for</dt><dd id="moon-route-purpose"></dd></div><div><dt>It did</dt><dd id="moon-route-did"></dd></div></dl><a class="moon-route-source" id="moon-route-source" target="_blank" rel="noopener"></a></div></section><div id="moon-route-mission-call"></div></div>
     ${moonLabMarkup()}
     <div class="moon-story-grid">${Object.entries(moonStories).map(([id, story]) => storyCard(id, story)).join("")}</div>
   </dialog>`;
@@ -244,7 +245,7 @@ export function moonPanelMarkup() {
 
 export function locationMapMarkup() {
   return `<section class="location-map" aria-labelledby="location-map-title">
-    <div class="location-map-heading"><div><p class="eyebrow">WHERE THEY ARE</p><h2 id="location-map-title">Tap a machine to play</h2></div><div><p>Follow the route. Tap a named button to start its mission.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p><button type="button" class="compare-planets-trigger" data-compare-planets aria-haspopup="dialog" aria-controls="planet-comparison">Put Earth beside Mars ↗</button></div></div>
+    <div class="location-map-heading"><div><p class="eyebrow">SIX CALLS FOR HELP</p><h2 id="location-map-title">Tap a signal. Help a machine.</h2></div><div><p>Each signal is a real mission problem turned into training.</p><p class="scroll-flight-instruction">Scroll to fly outward · Scroll up to turn home</p><button type="button" class="compare-planets-trigger" data-compare-planets aria-haspopup="dialog" aria-controls="planet-comparison">Put Earth beside Mars ↗</button></div></div>
     <div class="location-map-field" role="group" aria-label="Scroll journey from Earth to the Moon, Mars, Webb, and Voyager">
       <svg class="journey-scroll-route" viewBox="0 0 1000 3400" preserveAspectRatio="none" aria-hidden="true">
         <path class="journey-path-glow" d="${journeyRoutes.desktop}"/>
@@ -264,8 +265,8 @@ export function locationMapMarkup() {
           <div class="system-canvas moon-system">
             <div class="planet-globe moon-globe"><canvas data-globe="moon" role="img" aria-label="The Moon's near side, rendered from NASA LRO surface imagery"></canvas></div>
             <svg class="diagram-leaders" aria-hidden="true"><path data-leader="apollo17"/><path data-leader="surveyor3"/></svg>
-            <button class="diagram-pin moon-apollo" data-map-moon="apollo17" data-journey-stop="apollo17" data-visual-stop="apollo17" aria-label="Open Apollo 17 Lunar Roving Vehicle Moon training"><i></i><span class="diagram-callout"><strong>Apollo 17 LRV</strong><small>TAURUS–LITTROW · TRAINING</small></span></button>
-            <button class="diagram-pin moon-surveyor" data-map-moon="surveyor3" data-journey-stop="surveyor3" data-visual-stop="surveyor3" aria-label="Open Surveyor 3 Moon training"><i></i><span class="diagram-callout"><strong>Surveyor 3</strong><small>OCEANUS PROCELLARUM · TRAINING</small></span></button>
+            <button class="diagram-pin moon-apollo" data-map-moon="apollo17" data-journey-stop="apollo17" data-visual-stop="apollo17" aria-label="Answer Apollo 17 Lunar Roving Vehicle help request"><i></i>${mapHelpCalloutMarkup('apollo17', 'TAURUS–LITTROW')}</button>
+            <button class="diagram-pin moon-surveyor" data-map-moon="surveyor3" data-journey-stop="surveyor3" data-visual-stop="surveyor3" aria-label="Answer Surveyor 3 help request"><i></i>${mapHelpCalloutMarkup('surveyor3', 'OCEANUS PROCELLARUM')}</button>
           </div>
           <p class="planet-credit"><a href="https://svs.gsfc.nasa.gov/4720/" target="_blank" rel="noopener">Moon surface: NASA SVS / LRO ↗</a></p>
         </article>
@@ -276,8 +277,8 @@ export function locationMapMarkup() {
           <div class="system-canvas mars-system">
             <div class="planet-globe mars-globe"><canvas data-globe="mars" role="img" aria-label="Mars rendered from NASA Viking surface imagery"></canvas></div>
             <svg class="diagram-leaders" aria-hidden="true"><path data-leader="curiosity"/><path data-leader="ingenuity"/></svg>
-            <button class="diagram-pin mars-curiosity" data-map-exhibit="curiosity" data-journey-stop="curiosity" data-visual-stop="curiosity" aria-label="Open Curiosity training module"><i></i><span class="diagram-callout"><strong>Curiosity</strong><small>GALE CRATER · TRAINING</small></span></button>
-            <button class="diagram-pin mars-ingenuity" data-map-exhibit="ingenuity" data-journey-stop="ingenuity" data-visual-stop="ingenuity" aria-label="Open Ingenuity training module"><i></i><span class="diagram-callout"><strong>Ingenuity</strong><small>JEZERO CRATER · TRAINING</small></span></button>
+            <button class="diagram-pin mars-curiosity" data-map-exhibit="curiosity" data-journey-stop="curiosity" data-visual-stop="curiosity" aria-label="Answer Curiosity help request"><i></i>${mapHelpCalloutMarkup('curiosity', 'GALE CRATER')}</button>
+            <button class="diagram-pin mars-ingenuity" data-map-exhibit="ingenuity" data-journey-stop="ingenuity" data-visual-stop="ingenuity" aria-label="Answer Ingenuity help request"><i></i>${mapHelpCalloutMarkup('ingenuity', 'JEZERO CRATER')}</button>
           </div>
           <p class="planet-credit"><a href="https://space.jpl.nasa.gov/tmaps/mars.html" target="_blank" rel="noopener">Mars surface: NASA / JPL / USGS · Viking ↗</a></p>
         </article>
@@ -290,7 +291,7 @@ export function locationMapMarkup() {
             <span class="sun-earth-line" aria-hidden="true"></span>
             <span class="diagram-body webb-earth"><img src="/assets/journey-earth-nasa.jpg" alt="" width="800" height="800" loading="lazy"><small>EARTH</small></span>
             <span class="l2-marker"><i></i><small>L2</small></span>
-            <button class="diagram-pin webb-pin" data-map-exhibit="webb" data-journey-stop="webb" data-visual-stop="webb" aria-label="Open Webb training module"><i class="webb-miniature" aria-hidden="true"><img src="/assets/journey-webb-esa.png" alt="" width="4096" height="4096" loading="lazy" decoding="async"></i><span class="diagram-callout"><strong>Webb</strong><small>ORBITS L2 · TRAINING</small></span></button>
+            <button class="diagram-pin webb-pin" data-map-exhibit="webb" data-journey-stop="webb" data-visual-stop="webb" aria-label="Answer Webb help request"><i class="webb-miniature" aria-hidden="true"><img src="/assets/journey-webb-esa.png" alt="" width="4096" height="4096" loading="lazy" decoding="async"></i>${mapHelpCalloutMarkup('webb', 'ORBITS L2')}</button>
             <p class="diagram-note">L2 and Webb are on the side of Earth away from the Sun.</p>
           </div>
           <p class="planet-credit orbit-image-credits"><a href="https://science.nasa.gov/photojournal/image-of-sun-from-nasas-solar-dynamics-observatory/" target="_blank" rel="noopener">Sun: NASA/GSFC/SDO · 171 Å, false color ↗</a><a href="https://www.esa.int/ESA_Multimedia/Images/2021/06/Webb_spacecraft_artist_s_impression" target="_blank" rel="noopener">Webb: ©ESA/ATG medialab · artist's impression ↗</a></p>
@@ -304,7 +305,7 @@ export function locationMapMarkup() {
             <span class="solar-orbit orbit-one"></span><span class="solar-orbit orbit-two"></span><span class="solar-orbit orbit-three"></span>
             <span class="heliopause"><small>HELIOPAUSE</small></span>
             <svg class="voyager-outbound" viewBox="0 0 500 250" preserveAspectRatio="none" aria-hidden="true"><path d="M250 135 C315 119 349 89 392 61"/><path class="transfer-arrow" d="m378 58 16 2-7 15"/></svg>
-            <button class="diagram-pin voyager-pin" data-map-exhibit="voyager" data-journey-stop="voyager" data-visual-stop="voyager" aria-label="Open Voyager training module"><i class="voyager-miniature" aria-hidden="true"><svg viewBox="0 0 96 90"><path d="m28 50-17 27M49 46l32 31M43 34l17-25M60 9l9-5M41 49l-4 25" fill="none" stroke="#c8d6df" stroke-width="3"/><path d="m25 44 17-8 14 11-17 9z" fill="#bd944a"/><ellipse cx="37" cy="31" rx="24" ry="13" transform="rotate(-24 37 31)" fill="#f1eee2" stroke="#8696a2" stroke-width="2"/><path d="m17 38 17-25 22 8" fill="none" stroke="#9caab3" stroke-width="2"/><circle cx="34" cy="23" r="3" fill="#526c7c"/></svg></i><span class="diagram-callout"><strong>Voyager 1</strong><small>INTERSTELLAR SPACE · TRAINING</small></span></button>
+            <button class="diagram-pin voyager-pin" data-map-exhibit="voyager" data-journey-stop="voyager" data-visual-stop="voyager" aria-label="Answer Voyager 1 help request"><i class="voyager-miniature" aria-hidden="true"><svg viewBox="0 0 96 90"><path d="m28 50-17 27M49 46l32 31M43 34l17-25M60 9l9-5M41 49l-4 25" fill="none" stroke="#c8d6df" stroke-width="3"/><path d="m25 44 17-8 14 11-17 9z" fill="#bd944a"/><ellipse cx="37" cy="31" rx="24" ry="13" transform="rotate(-24 37 31)" fill="#f1eee2" stroke="#8696a2" stroke-width="2"/><path d="m17 38 17-25 22 8" fill="none" stroke="#9caab3" stroke-width="2"/><circle cx="34" cy="23" r="3" fill="#526c7c"/></svg></i>${mapHelpCalloutMarkup('voyager', 'INTERSTELLAR SPACE')}</button>
           </div>
           <p class="planet-credit"><a href="https://science.nasa.gov/photojournal/image-of-sun-from-nasas-solar-dynamics-observatory/" target="_blank" rel="noopener">Sun: NASA/GSFC/SDO · 171 Å, false color ↗</a></p>
         </article>
@@ -417,6 +418,7 @@ export function mountMoonPanel(root, options = {}) {
       source.href = story.sources[0][1];
       source.textContent = `${story.sources[0][0]} ↗`;
       dialog.querySelector('#moon-route-summary').hidden = false;
+      dialog.querySelector('#moon-route-mission-call').innerHTML = missionCallMarkup(id, { elementId: `moon-${id}-mission-call` });
       const photo = dialog.querySelector('.moon-route-photo');
       photo.querySelector('img').src = story.reveal.image;
       photo.querySelector('img').alt = story.reveal.alt;
@@ -443,7 +445,10 @@ export function mountLocationMap(root, { onExhibit = () => {}, onMoon = () => {}
     action.textContent = earned ? 'Play again →' : 'Play mission →';
     button.querySelector('.diagram-callout').append(action);
     if (earned) {
-      button.querySelector('.diagram-callout').classList.add('is-earned');
+      const callout = button.querySelector('.diagram-callout');
+      callout.classList.add('is-earned');
+      callout.querySelector('.map-help-signal span').textContent = 'MISSION HELPED ✓';
+      callout.querySelector('.map-help-signal').classList.add('is-helped');
       const stamp = document.createElement('span');
       stamp.className = 'map-earned-stamp';
       stamp.textContent = 'Stamp earned ✓';

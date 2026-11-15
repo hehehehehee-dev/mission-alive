@@ -3,12 +3,13 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { orientWebbMirror, webbWingAngle } from './webb-pose.js';
 import { recordArtifacts } from "./record-artifacts.js";
 import { machinePartGuide } from "./machine-parts.js";
+import { landingZones } from './ingenuity-flight-game.js';
 import {
   createTerrainRockLayout,
   curiosityFieldSites,
   curiosityTerrainRocks,
 } from "./mars-terrain.js";
-export function createScene(host, id, onFailure, onInspect = () => {}, onViewChange = () => {}) {
+export function createScene(host, id, onFailure, onInspect = () => {}, onViewChange = () => {}, {onSelectSite = () => {}} = {}) {
   const renderer = new T.WebGLRenderer({
     antialias: true,
     alpha: true,
@@ -83,6 +84,16 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
     washRings = [],
     ingenuitySites = {},
     ingenuitySitePositions = {},
+    flightSitesLayer,
+    flightRoute,
+    flightShadow,
+    flightGuideRing,
+    flightSmoke,
+    flightSmokeMaterial,
+    flightSmokeTexture,
+    flightWindArrows = [],
+    routeSite = null,
+    wasFlightActive = false,
     lastRoverPosition = new T.Vector3(),
     roverWheelTravel = 0,
     lastRoverProgress = null,
@@ -500,7 +511,43 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
     }
     camera.fov = 46;
     camera.updateProjectionMatrix();
-    camera.position.set(14, 15, 19);
+    camera.position.set(0, 13, 20);
+    flightRoute = new T.Group();
+    scene.add(flightRoute);
+    flightShadow = mesh(new T.CircleGeometry(.38,24),new T.MeshBasicMaterial({color:0x15272c,transparent:true,opacity:.65,depthWrite:false}),scene,0,.03,-5.7);
+    flightShadow.rotation.x = -Math.PI/2;
+    flightGuideRing = mesh(new T.RingGeometry(.34,.48,32),new T.MeshBasicMaterial({color:0xffd77d,transparent:true,opacity:.92,side:T.DoubleSide,depthWrite:false}),scene,0,.045,-4.5);
+    flightGuideRing.rotation.x = -Math.PI/2;
+    flightGuideRing.visible = false;
+    const smokeCanvas=document.createElement('canvas');smokeCanvas.width=64;smokeCanvas.height=64;
+    const smokeContext=smokeCanvas.getContext('2d');
+    const smokeGradient=smokeContext.createRadialGradient(32,32,4,32,32,30);
+    smokeGradient.addColorStop(0,'rgba(55,61,64,.95)');smokeGradient.addColorStop(.55,'rgba(61,67,69,.68)');smokeGradient.addColorStop(1,'rgba(40,45,47,0)');
+    smokeContext.fillStyle=smokeGradient;smokeContext.fillRect(0,0,64,64);
+    flightSmokeTexture=new T.CanvasTexture(smokeCanvas);
+    const flightSmokeGeometry = new T.BufferGeometry();
+    flightSmokeGeometry.setAttribute('position',new T.Float32BufferAttribute(new Float32Array(72*3),3));
+    flightSmokeMaterial = new T.PointsMaterial({map:flightSmokeTexture,color:0x697073,size:.78,transparent:true,opacity:0,alphaTest:.025,depthWrite:false,sizeAttenuation:true});
+    flightSmoke = new T.Points(flightSmokeGeometry,flightSmokeMaterial);
+    scene.add(flightSmoke);
+    for (let i=0;i<3;i++) {
+      const arrow = new T.ArrowHelper(new T.Vector3(1,0,0), new T.Vector3(), 1.6, 0x9ae8ed, .35, .22);
+      arrow.visible = false;
+      scene.add(arrow); flightWindArrows.push(arrow);
+    }
+    flightSitesLayer = document.createElement('div');
+    flightSitesLayer.className = 'flight-sites';
+    flightSitesLayer.setAttribute('aria-label','Landing zones on the 3D ground');
+    Object.entries(landingZones).forEach(([site,zone],i)=>{
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'flight-site-marker'; button.dataset.sceneSite = site;
+      const letter = document.createElement('b'); letter.textContent = ['A','B','C'][i];
+      const label = document.createElement('span'); label.textContent = zone.label;
+      button.append(letter,label);
+      button.onclick = () => onSelectSite(site);
+      flightSitesLayer.append(button);
+    });
+    host.append(flightSitesLayer);
     orbit.target.set(0, 1.1, 0);
   }
   if (id === "webb") {
@@ -730,6 +777,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
   updateViewLabel();
   function keyboardOrbit(event) {
     if (event.target !== host) return;
+    if (id === 'ingenuity' && st.visualFlight?.active) return;
     const key = event.key;
     if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "+", "=", "-", "_", "0"].includes(key)) return;
     event.preventDefault();
@@ -823,6 +871,17 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
   function updateHotspots() {
     const hostWidth = host.clientWidth;
     const hostHeight = host.clientHeight;
+    if (flightSitesLayer) {
+      for (const button of flightSitesLayer.children) {
+        const site = button.dataset.sceneSite;
+        const point = ingenuitySitePositions[site].clone();
+        point.y = .2;
+        point.project(camera);
+        button.hidden = point.z < -1 || point.z > 1 || Boolean(st.visualFlight?.active && st.landingSite !== site);
+        button.style.left = `${Math.max(12,Math.min(88,point.x*.5*100+50))}%`;
+        button.style.top = `${Math.max(15,Math.min(hostHeight-30,(-point.y*.5+.5)*hostHeight+25))}px`;
+      }
+    }
     partAnchors.forEach((anchor, index) => {
       anchor.getWorldPosition(projectedPart);
       projectedPart.project(camera);
@@ -962,71 +1021,114 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
         }
       }
       if (id === "ingenuity") {
-        Object.entries(ingenuitySites).forEach(([site, group]) => {
-          group.visible = true;
-          const selected = st.landingSite === site;
-          group.userData.selector.visible = selected;
-          if (selected) {
-            const pulse = reduced ? 1 : 1 + Math.sin(time * 3.2) * 0.035;
-            group.userData.selector.scale.setScalar(pulse);
-          }
-        });
+        const game = st.visualFlight;
+        const flying = Boolean(game?.active);
+        wasFlightActive = flying;
         const sitePoint = ingenuitySitePositions[st.landingSite];
-        const baseX = sitePoint?.x || 0;
-        const baseZ = sitePoint?.z || 0;
-        const flightTime = st.flight || 0;
-        const flying = Boolean(st.flying && !st.done);
-        const rotorPower = flying ? Math.max(78, st.rotor || 0) : st.rotor || 0;
-        rotors.forEach((r, i) => {
-          if (!reduced) r.rotation.y += dt * rotorPower * 0.9 * (i ? -1 : 1);
+        const progress = game?.progress || 0;
+        const baseX = (sitePoint?.x || 0)*progress;
+        const baseZ = -5.7 + ((sitePoint?.z || 0)+5.7)*progress;
+        const routeDirection = sitePoint
+          ? new T.Vector3(sitePoint.x,0,sitePoint.z+5.7).normalize()
+          : new T.Vector3(0,0,1);
+        const routeSide = new T.Vector3(routeDirection.z,0,-routeDirection.x);
+        orbit.enabled = !flying;
+        Object.entries(ingenuitySites).forEach(([site, group]) => {
+          group.userData.selector.visible = st.landingSite === site;
         });
-        if (st.crashed) {
-          root.position.set(
-            baseX + (st.landingSite === "crater" ? 0.5 : 0.18),
-            0.08,
-            baseZ + 0.12,
-          );
-          root.rotation.z = st.landingSite === "crater" ? 0.72 : -0.48;
-          root.rotation.x = st.landingSite === "crater" ? 0.12 : 0.28;
-        } else {
-          root.position.y = st.height || 0;
-          const cruise = Math.max(0, Math.min(1, (flightTime - 4.2) / 1.5));
-          const targetX = baseX + (reduced ? 0 : cruise * 0.95);
-          const targetZ =
-            baseZ + (reduced ? 0 : Math.sin(cruise * Math.PI) * 0.45);
-          if (!flying && sitePoint) {
-            root.position.x = T.MathUtils.damp(root.position.x, targetX, 4.2, dt);
-            root.position.z = T.MathUtils.damp(root.position.z, targetZ, 4.2, dt);
-          } else {
-            root.position.x = targetX;
-            root.position.z = targetZ;
+        if (flightSitesLayer) {
+          for (const button of flightSitesLayer.children) {
+            button.disabled = flying || game?.phase === 'landed';
+            button.setAttribute('aria-pressed',String(button.dataset.sceneSite === st.landingSite));
           }
-          const trimError = ((st.trim || 50) - (st.windTarget || 50)) / 100;
-          root.rotation.z = reduced
-            ? 0
-            : -Math.sin(cruise * Math.PI) * 0.055 + trimError * 0.36;
-          root.rotation.x = reduced
-            ? 0
-            : Math.sin(cruise * Math.PI * 2) * 0.025 - trimError * 0.12;
         }
-        const washStrength =
-          flying && (st.height || 0) < 1.35 ? 1 - (st.height || 0) / 1.35 : 0;
-        washRings.forEach((ring) => {
-          const pulse = (time * 1.2 + ring.userData.delay) % 1;
-          ring.scale.setScalar(0.75 + pulse * 1.05);
-          ring.material.opacity = reduced
-            ? 0
-            : washStrength * (1 - pulse) * 0.42;
+        if (routeSite !== st.landingSite) {
+          routeSite = st.landingSite;
+          for (const child of [...flightRoute.children]) { child.geometry.dispose(); child.material.dispose(); flightRoute.remove(child); }
+          if (sitePoint) {
+            for (const edge of [-1.35,0,1.35]) {
+              const points = [];
+              for (let i=0;i<=24;i++) {
+                const p=i/24;
+                points.push(new T.Vector3(sitePoint.x*p+routeSide.x*edge,.12,-5.7+(sitePoint.z+5.7)*p+routeSide.z*edge));
+              }
+              const line = new T.Line(new T.BufferGeometry().setFromPoints(points),
+                new T.LineDashedMaterial({color:edge ? 0xb5e7dc : 0xf0d28b,dashSize:.18,gapSize:.15,transparent:true,opacity:edge ? .45 : .85}));
+              line.computeLineDistances(); flightRoute.add(line);
+            }
+          }
+        }
+        rotors.forEach((rotor, i) => {
+          if (!reduced && flying) rotor.rotation.y += dt*78*.9*(i ? -1 : 1);
         });
-        if (flying)
-          orbit.target.lerp(
-            new T.Vector3(
-              root.position.x,
-              1.2 + (st.height || 0) * 0.25,
-              root.position.z,
-            ),
-            Math.min(1, dt * 1.4),
+        root.position.set(baseX+routeSide.x*(game?.offset || 0),st.height || 0,baseZ+routeSide.z*(game?.offset || 0));
+        flightShadow.position.set(root.position.x,.03,root.position.z);
+        root.rotation.y = Math.atan2(routeDirection.x,routeDirection.z);
+        if (flightGuideRing) {
+          flightGuideRing.visible = flying && Number.isFinite(st.flightGuideTarget);
+          if (flightGuideRing.visible) {
+            const ahead = 1.8;
+            flightGuideRing.position.set(
+              root.position.x+routeDirection.x*ahead+routeSide.x*st.flightGuideTarget,
+              .045,
+              root.position.z+routeDirection.z*ahead+routeSide.z*st.flightGuideTarget,
+            );
+            const pulse = reduced ? 1 : .92+Math.sin(time*7)*.12;
+            flightGuideRing.scale.setScalar(pulse);
+          }
+        }
+        if (flying) {
+          // Chase from behind the helicopter so the chosen terrain stays ahead
+          // and pointer-left/right matches the visible flight direction.
+          const desiredCamera = new T.Vector3(
+            root.position.x-routeDirection.x*5.4,
+            root.position.y+3.1,
+            root.position.z-routeDirection.z*5.4,
           );
+          const desiredTarget = new T.Vector3(
+            root.position.x+routeDirection.x*3.2,
+            Math.max(.65,root.position.y*.55),
+            root.position.z+routeDirection.z*3.2,
+          );
+          const follow = reduced ? 1 : 1-Math.exp(-dt*5.2);
+          camera.position.lerp(desiredCamera,follow);
+          orbit.target.lerp(desiredTarget,follow);
+          camera.lookAt(orbit.target);
+        }
+        if (st.crashed) {
+          root.position.y = .08;
+          root.rotation.z = game?.result === 'slope' ? .85 : -.6;
+          root.rotation.x = .2;
+          rotors[0].rotation.z = .28;
+          rotors[1].rotation.x = -.22;
+        } else {
+          root.rotation.z = reduced ? 0 : -(game?.tilt || 0);
+          root.rotation.x = reduced ? 0 : flying ? -.03 : 0;
+          rotors.forEach(rotor=>{rotor.rotation.z=0;rotor.rotation.x=0;});
+        }
+        if (flightSmoke && flightSmokeMaterial) {
+          flightSmokeMaterial.opacity += ((st.crashed ? .96 : 0)-flightSmokeMaterial.opacity)*Math.min(1,dt*7);
+          const smokePositions=flightSmoke.geometry.attributes.position;
+          for(let i=0;i<smokePositions.count;i++){
+            const life=reduced ? i/smokePositions.count : (time*.48+i/smokePositions.count)%1;
+            const curl=Math.sin(i*2.39996+life*9)*(.16+life*.72);
+            smokePositions.setXYZ(i,root.position.x+curl,root.position.y+.55+life*4.2,root.position.z+Math.cos(i*1.73+life*4)*(.12+life*.48));
+          }
+          smokePositions.needsUpdate=st.crashed;
+        }
+        hotspotLayer.hidden = Boolean(game && game.phase !== 'choose');
+        if (hotspotLayer.hidden) partCard.hidden = true;
+        flightWindArrows.forEach((arrow,i)=>{
+          arrow.visible = flying && Boolean(game.wind);
+          if (!arrow.visible) return;
+          arrow.position.set(root.position.x-1.6,root.position.y+2.8,root.position.z+(i-1)*.65);
+          arrow.setDirection(new T.Vector3(Math.sign(game.wind),0,0));
+        });
+        washRings.forEach(ring=>{
+          const pulse = reduced ? .4 : (time*1.2+ring.userData.delay)%1;
+          ring.scale.setScalar(.75+pulse*1.05);
+          ring.material.opacity = flying && st.height<1.35 && !reduced ? (1-st.height/1.35)*(1-pulse)*.42 : 0;
+        });
       }
       if (id === "webb") {
         wings.forEach((w) => {
@@ -1065,6 +1167,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
     dispose() {
       disposed = true;
       Object.values(recordTextures).forEach((texture) => texture.dispose());
+      flightSmokeTexture?.dispose();
       observer.disconnect();
       host.removeEventListener("keydown", keyboardOrbit);
       orbit.removeEventListener("change", updateViewLabel);
@@ -1081,6 +1184,7 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
       renderer.domElement.remove();
       partDock.remove();
       hotspotLayer.remove();
+      flightSitesLayer?.remove();
     },
   };
 }

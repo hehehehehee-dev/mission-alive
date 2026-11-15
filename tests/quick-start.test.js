@@ -6,6 +6,8 @@ test('all six missions provide three concise visual quick-start steps', () => {
   for (const mission of ['apollo17', 'surveyor3', 'curiosity', 'ingenuity', 'webb', 'voyager']) {
     const markup = quickStartMarkup(mission);
     assert.match(markup, /QUICK START/);
+    assert.match(markup, new RegExp(`data-tutorial-mission="${mission}"`));
+    assert.match(markup, /Follow 1 → 2 → 3/);
     assert.equal((markup.match(/<li>/g) || []).length, 3);
     assert.equal((markup.match(/quick-start-icon/g) || []).length, 3);
     assert.doesNotMatch(markup, /button|dialog|onclick/);

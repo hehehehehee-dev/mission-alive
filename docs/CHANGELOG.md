@@ -4,6 +4,69 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Preview: make every mission feel like a help request
+
+- Reframed the landing hero as an incoming training signal: six machines need the learner's help, six stamps unlock the certificate, and one quiet line states that these are academy simulations based on real mission problems.
+- Reframed the journey map as six calls for help. Every machine card now states one short first-person request before its Play mission action; after its stamp is earned, Help request changes to Mission helped.
+- Added the same compact Problem / Your move / Reward briefing to all six mission pages. The four main exhibits receive it after their opening story; the two Moon routes receive it before the existing lab. No tutorial modal, gameplay rule, stamp, finale or certificate logic changed.
+- Added complete Spanish and Vietnamese copy, reduced-motion-safe signal animation, and regression coverage. 183 tests, the production build and diff check pass. The English landing hero and all six map requests were confirmed in the local browser; 390 px and mission-page visual checks remain pending.
+
+### Preview: ask for the certificate name at graduation
+
+- Removed the optional name field from the bottom of the long lobby map, where playtesters could miss it and where it competed with starting a mission.
+- The same optional name field now appears only in the completed six-stamp finale, directly beside Print certificate. Existing locally saved names still prefill it, and edits continue to stay in the browser.
+- Updated the lobby and copy regressions plus the shared AI instructions. The preview remains uncommitted at the owner's request.
+
+### Preview: keep bonus progress above the journey
+
+- Moved the existing 0/16 hidden-fact badge beside the stamp progress and above the long journey map, where it is visible before scrolling through the mission route.
+- Made the same badge more compact in the lobby; its storage, 16-fact target, completion rule and bonus reward are unchanged.
+- Added a layout regression that keeps the badge before the map. The preview remains uncommitted at the owner's request.
+
+### Preview: shorten the first story glance
+
+- Cut the Built for and It did opening beats for Curiosity, Ingenuity, Webb and Voyager from paragraphs to a maximum of 18 words each.
+- Kept the real mission image, optional character voice, longer on-request story, mission objective and source trail unchanged, so sound-off and reading users retain the same paths.
+- Added matching Spanish and Vietnamese copy and a regression budget that prevents the visible opening beats from growing back into paragraphs. The preview remains uncommitted at the owner's request.
+
+### Preview: make the academy goal explicit
+
+- Replaced the vague lobby hook with one short line that tells learners the whole loop: complete six space missions, earn six stamps, and unlock the graduation certificate.
+- Kept the existing hero, journey map, passport and six-mission flow unchanged; no extra instruction card or paragraph was added.
+- Added matching Spanish and Vietnamese copy and updated the localization regression. The preview remains uncommitted at the owner's request.
+
+### Preview: guide Ingenuity directly and teach every game once
+
+- Replaced Ingenuity's detached position track and left/right buttons with direct guidance on the 3D terrain. The craft automatically flies toward the selected landing patch; holding on the terrain only counters wind drift. A chase camera follows behind Ingenuity and looks toward the destination. Arrow keys/A/D remain available.
+- Choosing terrain now reveals one large gold FLY NOW button next to the model. It replaces the former setup sequence while preserving a deliberate launch moment. Wind, lift and drift act from the first flight frame; there is no protected practice animation or pre-flight pace choice. After a failure the same button reads RETRY NOW.
+- Failed landings now leave the helicopter visibly wrecked: the body tips, rotor planes bend, rotation stops and dense gray smoke rises. Reduced motion retains a static damaged state.
+- Removed the redundant “Smoke means this landing failed” explanation. A drifted craft now stays airborne until it misses the prepared zone, makes an emergency touchdown, buckles a landing leg and strikes a rotor. The result states that damage and the correction directly. Slope and boulder failures retain their own causes.
+- Replaced tiny square smoke points with 72 soft round puffs, higher opacity and a taller continuously animated plume. Reduced motion shows the full plume without moving it.
+- Removed Pause, Resume flight and Fly one step. Flight is always continuous; leaving the tab pauses automatically and returning resumes automatically without another decision. Reduced motion changes presentation, not the control flow.
+- All six missions keep their visual How to play guide closed but highlight it on a learner's first visit. The game remains immediately operable, and the guide stays reopenable without another instruction card or modal.
+- Added EN/ES/VI guidance, a six-game friction audit and controller/scene regression coverage. 179 tests pass; browser and 390px verification remain pending. The preview is still uncommitted at the owner's request.
+- Rebuilt Apollo 17's side diagram as the same two-wheel rover silhouette shown in 3D. Both views now anchor the patch to the same exposed wheel, use the same model scale, and show matching green maps, white tape and orange clamps. The 3D patch sits outside the body instead of disappearing through it. A patch that touches the wheel or extends into the equipment zone turns red and displays FAIL immediately; it cannot pass the dust test.
+- Reframed Surveyor 3 as a stationary geology field lab instead of a smaller landing-zone game. Its three circles are now one continuous soil transect with three sample points; the probe moves between them, excavated cross-sections reveal layers, and a separate two-foot pressure rig performs the final footprint test while Surveyor stays put. Step names and copy now distinguish sampling, probing and footprint evidence from Ingenuity's flight loop.
+
+### Preview: a clear next action after choosing a flight patch
+
+- In 3D, Ingenuity's terrain labels are the single zone selector. The duplicate palette only appears in 2D fallback.
+- Choosing a patch now displays its name, an explicit Press Lift off instruction and a gold launch button on the model's own deck. Pacing and retry live there too. Steering is hidden until launch.
+- 176 tests pass, including scene selection enabling the deck action and switching fallback without losing the patch. Added EN/ES/VI instructions. Browser access remains unavailable, so visual verification is pending. Still uncommitted at the owner's request.
+
+### Preview: visual Ingenuity flight game (not committed or deployed)
+
+- Replaced the link, rotor-power and numeric-trim form with a visual flight game using the existing 3D helicopter and three landing environments. Select a labelled patch, lift off, then hold/tap left or right against visible gusts. Ground markers, dotted path boundaries, lean, drift and a ground shadow connect input to the scene.
+- Controls remain alongside the model. Pause, one-second steps and retry from just before landing provide a forgiving alternative to realtime input. Rocks and slopes remain flyable experiments and fail at touchdown with specific feedback; a safe level landing calls the existing stamp ceremony. No stamp or certificate count changes.
+- Updated EN/ES/VI controls, Quick Start, teacher guidance, Sources & credits, accessibility notes and `docs/INGENUITY_FLIGHT.md`. Flight values are identified as an original teaching simulation.
+- Validation: 174 tests cover flight outcomes, steering, retry, equivalent time stepping, pause-on-blur, reduced-motion pacing, cleanup and a single success callback. Browser verification was blocked by unavailable browser access and native URL-policy uncertainty, so actual WebGL/mobile/UI playtesting remains pending. Owner asked to keep everything local and uncommitted.
+
+### Preview: story voices and obvious Curiosity repair (not committed or deployed)
+
+- Added Hear my message / Stop my message beside the opening story for the four machines with supplied recordings. The matching transcript appears on request, translated with the interface; audio is explicitly labelled English. No autoplay, new AI generation or new recording. Sound-off, navigation and reset stop playback.
+- Curiosity shows a gold Repair & restart rover action at the failed program or Free Explore controls and highlights the existing reset. Repair restores health and the start position, keeps the program blocks, and preserves the current driving mode. Hazard feedback now tells the player which action to use.
+- Verified 161 tests/build, all four voice routes, mouse/keyboard, EN/ES/VI, 390px and reduced motion; actual hazard crash/recovery preserved two blocks. Owner explicitly requested keeping this work uncommitted for review.
+
 ### Phone header links in one swipeable row
 
 - On phones the five header links (Sources & credits, For Teachers, Display & access, Mission notes, About) stay visible, as agreed, but sit in one swipeable row instead of a three-column grid. The header is about 122 px tall instead of about 175 px, so the lobby headline starts about 50 px higher.

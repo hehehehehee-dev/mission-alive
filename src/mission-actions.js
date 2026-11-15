@@ -6,9 +6,9 @@ import { mergeMissionHelp } from './quick-start.js';
 export const missionDirections = Object.freeze({
   apolloBuild: ['Repair the broken dust shield', 'My broken fender lets dust reach the gear. Build a replacement so I can keep exploring.', 'Choose maps, tape, then clamps. Place each on the wheel.', 'Fit all three repair parts.'],
   apolloShape: ['Shape it. Test it. Improve it.', 'The maps are attached. Will your repair stop the flying dust?', 'Pull the white patch tip to change its length and angle. Run a dust test.', 'Catch at least 9 of 12 dust paths and keep a 3 cm wheel gap.'],
-  surveyorChoose: ['Find ground that can hold a lander', 'The surface hides softer layers. Help me investigate before we trust it.', 'Choose a test patch. Each has different layers in this simulation.', 'Gather evidence and support a stable landing.'],
-  surveyorDig: ['Read the ground with your tools', 'A stronger push may sink farther. What is hiding below?', 'Pull the probe down and release at two different forces. Sweep all three soil strips.', 'Two force readings and three excavated strips on this patch.'],
-  surveyorLand: ['Use your evidence to design the landing', 'Small feet press hard. Wider feet spread the same load.', 'Change the footpad width, test touchdown, and compare the two sinking depths.', 'Both pads sink 1.4 units or less; their difference is 0.5 or less.'],
+  surveyorChoose: ['Choose where to sample', 'I am already standing on the Moon. These are geology points, not landing zones.', 'Pick A, B, or C along the soil transect.', 'Choose one place to begin a field log.'],
+  surveyorDig: ['Operate my soil sampler', 'A stronger push may sink farther. The scoop can reveal what the surface hides.', 'Pull the probe down and release at two forces. Sweep all three strips to cut a trench.', 'Record two force readings and expose the layer below.'],
+  surveyorLand: ['Turn evidence into a footprint', 'Small feet press hard. Wider feet spread the same load.', 'Change the pressure-rig feet, drop the rig, and compare how far each side sinks.', 'Both feet sink 1.4 units or less; their difference is 0.5 or less.'],
   curiosity: ['Send a plan, then debug it', 'I cannot wait for Earth to steer every turn. Your commands must guide me.', 'Build MOVE and TURN blocks. ANALYZE at the outcrop, then reach UPLINK. Use Step to debug.', 'Analyze the rock, upload the data, and choose the claim the evidence supports.'],
   ingenuityPlan: ['Plan a safe return to the ground', 'Flying is only half the job. A slope or boulder can end the flight.', 'Choose terrain and the onboard controller, then test the link.', 'Prepare a flight that can land safely.'],
   ingenuityPower: ['Make lift in thin air', 'My blades need speed before I can leave the ground.', 'Power the rotors, then move on to flight control.', 'Reach the marked safe rotor band.'],
@@ -30,7 +30,7 @@ export function mountMissionDirections(id) {
   find('#controls')?.querySelectorAll('.mission-incident').forEach(node => node.remove());
   const locations = {
     curiosity: [['#program-workspace', 'curiosity']],
-    ingenuity: [['[data-ingenuity-step="plan"]', 'ingenuityPlan'], ['[data-ingenuity-step="power"]', 'ingenuityPower'], ['[data-ingenuity-step="fly"]', 'ingenuityFly']],
+    ingenuity: [], // The flight deck gives the active instruction beside the 3D model.
     webb: [['#webb-deploy-step', 'webbOpen'], ['#webb-focus-step', 'webbFocus'], ['#webb-infrared-step', 'webbInfrared']],
     // Voyager's objective, player caption and studio intro already give these
     // instructions. A second pair of instruction cards repeats the same task.

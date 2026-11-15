@@ -7,14 +7,14 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Release authorization:** the standing direct-main commit/push authorization remains active.
-- **Last change:** on phones the visible header links (`.desktop-header-tools`) are one swipeable row, constrained with `min-width: 0` so the page cannot widen; rules are at the end of `src/readable-type.css`. The links stay visible as previously agreed with the owner; no menu was reintroduced.
-- **Last verification:** 158 tests/build pass. Local browser at 390 px: header 122 px (was about 175), document width 390, English and Vietnamese labels, lobby and Curiosity.
-- **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
+- **Release authorization:** the owner explicitly requested no commit or push for the current story-voice, Curiosity recovery and visual Ingenuity changes. Keep this preview uncommitted until the owner asks to publish it.
+- **Last change (uncommitted preview):** The landing hero now opens with an incoming training signal and states that six machines need the learner's help. The journey map presents six short first-person Help requests, changing each to Mission helped after its stamp. Every mission page now shares one compact Problem / Your move / Reward briefing; a quiet honesty line identifies it as an academy simulation based on a real mission problem. This rescue layer does not change the six stamps, gameplay, finale or certificate. The optional certificate name is requested only in the completed six-stamp finale. The hidden-fact badge sits with stamp progress above the map. The four original mission openings keep their real image, optional voice and short Built for / It did beats. Ingenuity uses one FLY NOW action, automatic forward travel and direct wind guidance; failed landings show mechanical damage and continuous smoke. Apollo 17's two views share one repair geometry with immediate collision failures. Surveyor 3 is a stationary geology field lab with a continuous transect and separate pressure rig. Earlier voice and Curiosity recovery changes are preserved.
+- **Last verification:** 183 Node tests pass, including all six rescue briefings, all six map help requests, completed-map state, EN/ES/VI localization, Ingenuity flight behavior, Apollo repair geometry, and Surveyor's geology-transect/pressure-rig separation. Production build and diff check pass. The English landing hero and all six map help requests were confirmed in the local browser. Do not claim actual 390px rescue-card layout, translated browser rendering, touch/keyboard play, or new WebGL playback verification. The earlier voice/Curiosity preview had browser checks at 390px in EN/ES/VI. Local URLs: `http://127.0.0.1:5176/#surveyor3` and `http://127.0.0.1:5176/#ingenuity`.
+- **Not yet verified:** new Ingenuity flight UI in a real browser, desktop/mobile layout and 3D framing, the two Moon challenge canvases, fresh six-stamp gameplay, and production security headers.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
-  - Ingenuity flight itself was not replayed after the new three-panel setup; verify all three terrain outcomes and continuous/step-by-step flight in production.
+  - The former three-panel Ingenuity flow has been superseded by this local visual-flight prototype. Its engine is tested, but the new UI still needs hands-on child playtesting before publication.
 - **Next suggested steps:**
-  1. Finish the outstanding gameplay checks above, particularly the Ingenuity terrain outcomes. This layout pass did not replay every challenge to completion.
+  1. Let the owner play the new local Ingenuity prototype; do not commit. Verify scene targets, responsive layout, real keyboard/touch input, all three landings, automatic tab pause/resume, retry and the existing stamp ceremony once browser access works.
   2. After the next Netlify auto-deploy, confirm CSP, HSTS, Permissions-Policy, and the classroom gallery endpoint in production.
   3. Decide whether to remove the now-unused `moonPanel.play()` and `moonPanel.open()` from `src/moon-stories.js`.
 - **Open questions for the owner:** none.
@@ -32,7 +32,7 @@ This is not a general NASA encyclopedia. Each mission should leave one memorable
 | Apollo 17 LRV | Build, shape, and dust-test a replacement fender | Engineers can repurpose ordinary materials under constraints. |
 | Surveyor 3 | Probe, trench, compare evidence, and test a fictional lander | Measure the ground before trusting a landing decision. |
 | Curiosity | Block-program or freely drive a rover science plan | Habitability evidence is not proof of life; delayed missions need sequences. |
-| Ingenuity | Choose terrain, link, power, trim, fly, and land | Thin air and terrain make controlled flight an engineering experiment. |
+| Ingenuity | Select 3D terrain, counter visible gusts with left/right input, and retry landing | Onboard autonomy and safe terrain matter as much as getting airborne. |
 | Webb | Unfold mirror wings, align images, and reveal infrared | Launch constraints drive folding; precision and infrared reveal more. |
 | Voyager 1 | Hear/read a Golden Record greeting and add one | Interstellar distance, signal delay, and human communication at scale. |
 
@@ -42,8 +42,8 @@ The canonical mission registry is `src/certification.js`. `MISSION_COUNT` must b
 
 The normal flow is:
 
-1. Lobby direct mission CTA, stamp progress and the outward journey map as the main mission picker. No separate machine-card grid.
-2. Mission opening on the page itself (no dialog): real mission image, machine voice, “Built for” and “It did” beats, then the objective. Built by `missionOpening()` in `src/main.js`.
+1. Lobby incoming training signal, direct mission CTA, stamp progress and the outward journey map as the main mission picker. Each map card is one short help request. No separate machine-card grid.
+2. Mission opening on the page itself (no dialog): real mission image, machine voice, “Built for” and “It did” beats, then a shared Problem / Your move / Reward rescue briefing. Built by `missionOpening()` and `src/mission-calls.js`.
 3. 3D or accessible 2D machine view and anatomy hotspots.
 4. Short action and goal at the active step; optional **How to play** combines the three-step visual Quick Start and explanation.
 5. Interactive challenge with actionable feedback.
@@ -61,8 +61,9 @@ Important invariants:
 - Moon missions are full certification missions, not optional story cards in the current version.
 - Apollo 17 LRV and Surveyor 3 have dedicated `#apollo17` and `#surveyor3` routes. Their challenges still reuse the shared Moon lab and stamp logic.
 - Sound begins off. Microphone permission is never required to finish Voyager.
-- The optional learner name is requested below the mission choices and is used only for the certificate. Do not place it before the first mission CTA.
+- The optional learner name is requested only in the completed six-stamp finale and is used only for the certificate. Do not add a name field to the lobby or place it before gameplay.
 - The journey map is the visual mission picker, with one stamp-progress row and six obvious Play mission buttons. Do not restore a second machine-card grid.
+- The help language is emotional academy framing, not a live emergency claim. Keep the visible line that says these are academy simulations based on real mission problems.
 - Mobile keeps language and passport visible while secondary utilities live in the accessible header Menu.
 - Lobby defaults to Sun mode; `src/lobby-theme.js` validates `mission-alive-lobby-theme-v1` and scopes light styling to the lobby and information pages. `src/academy-navigation.css` keeps header actions visible and map callouts large. The map initializes in the lobby and disposes when leaving; `#journey` is a compatibility alias to it. DSN/history remain at `#mission-notes`, context at `#about`. Do not hide the map in a disclosure or move it to a separate page, and do not hide primary header links in Menu.
 - Voyager uses one **Voices from Earth** listening area: original 1977 greetings and approved visitor greetings in keyboard tabs. One native player controls the selected NASA greeting. One private-save button handles either written or recorded replies; saved drafts remain visible, classroom setup/review is optional, and no drawing exercise is present.
@@ -199,6 +200,24 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-15 — Codex — `main` — UNCOMMITTED FLIGHT NEXT-ACTION FIX
+- **Commit:** none; keep all current preview changes local.
+- **Changed:** moved launch, pacing and retry onto the helicopter's deck. Scene selection immediately displays the patch name, explicit next instruction and enabled gold Lift off button. Hide steering before launch. Removed the redundant 3D zone palette; native alternatives appear only in 2D fallback, with view switches preserving the chosen patch. Added ES/VI copy and updated the flight guide.
+- **Verified:** 176 tests and production build pass, including next-action availability on scene selection and fallback visibility/state preservation. Browser connector still unavailable; no visual claims for this change.
+- **Left for next:** owner to refresh and try selection → launch in the local prototype. No commit/push until instructed; original flight UI browser checks remain pending.
+
+### 2026-11-15 — Codex — `main` — UNCOMMITTED INGENUITY PROTOTYPE
+- **Commit:** none; owner explicitly requested local playtesting first.
+- **Changed:** new `ingenuity-flight-game.js` with fixed-substep simulation and native input UI; retained 3D model and three terrain groups. Added projected site buttons, route guides, gust arrows, a ground shadow and visible lean/drift; shared left/right controls stay with the canvas. Removed retired link/power/trim setup and wired safe landing into the unchanged `success()` stamp ceremony. Checkpoint retry, continuous/paced play, EN/ES/VI copy, teacher instructions and simulation attribution included.
+- **Verified:** 174 automated tests cover safe/rock/slope/drift results, steering, checkpoints, deterministic pacing, UI callback count, pause-on-blur, reduced-motion pacing and cleanup. Browser UI verification was attempted but blocked by unavailable browser access and native URL-policy uncertainty; no more app input was attempted after that stop. No images of the new game were captured. Local Vite preview remains on port 5176.
+- **Left for next:** do not commit/push. Owner should try the local prototype; verify actual desktop/390px rendering, projected site taps, keyboard/touch steering, all outcomes, repeat/reset and stamp ceremony. Existing voice/Curiosity changes remain uncommitted too. The new game uses invented teaching values, not measured flight physics.
+
+### 2026-11-15 — Codex — `main` — UNCOMMITTED PREVIEW
+- **Commit:** none; owner asked to review more changes before committing.
+- **Changed:** story-message player beside the opening text for Curiosity, Ingenuity, Webb and Voyager, using existing MP3s and their exact transcripts. Added translated playback/recovery controls. Curiosity gets a prominent repair action on failure, keeps blocks on repair, resets science/free-drive state, and gives an explicit crash correction. Existing reset also lights up. No credit-consuming speech generation or new narration asset.
+- **Verified:** 161 tests/build, local keyboard/mouse playback, four character routes, EN/ES/VI, 390px and reduced motion. Actual two-MOVE hazard crash then repair retained both blocks. Switched wrecked rover to Free Explore and verified recovery kept Free Explore active. Captures in ignored/untracked `output/voice-recovery/`. Current preview server uses port 5176; other local servers were already occupying 5173–5175.
+- **Left for next:** do not commit/push until instructed. These are short English character messages, not recordings of the Built for / It did paragraphs. Apollo 17 and Surveyor 3 still have no supplied narration files. Full six-stamp gameplay was not repeated.
 
 ### 2026-11-15 — Claude — `main`
 - **Commit:** Put the phone header links in one swipeable row

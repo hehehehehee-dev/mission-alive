@@ -18,13 +18,15 @@ test('machine anatomy controls live outside the 3D canvas', () => {
   assert.match(styles, /\.part-dock\s*\{[^}]*max-width:\s*100%/s);
 });
 
-test('Ingenuity uses three progressive challenge panels and one-action safe power', () => {
-  for (const step of ['plan', 'power', 'fly']) {
-    assert.match(main, new RegExp(`data-ingenuity-step="${step}"`));
-    assert.match(main, new RegExp(`data-ingenuity-step-target="${step}"`));
-  }
-  assert.match(main, /state\.rotor = 75/);
-  assert.match(main, /showIngenuityStep\("power", true\)/);
-  assert.match(main, /showIngenuityStep\("fly", true\)/);
-  assert.match(main, /class="flight-log-details"/);
+test('Ingenuity uses its visual flight game instead of the retired link, rotor and trim form', () => {
+  assert.match(main, /return flightGameMarkup\(\)/);
+  assert.match(main, /mountFlightGame\(/);
+  assert.doesNotMatch(main, /id="trim-input"|id="link-test"|data-ingenuity-step=/);
+});
+
+test('a failed Ingenuity landing has visible 3D damage instead of only text feedback', () => {
+  assert.match(scene, /flightSmokeMaterial\.opacity/);
+  assert.match(scene, /CanvasTexture\(smokeCanvas\)/);
+  assert.match(scene, /rotors\[0\]\.rotation\.z/);
+  assert.match(scene, /st\.crashed \? \.96 : 0/);
 });

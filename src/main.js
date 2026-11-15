@@ -7,6 +7,8 @@ import { greetingMarkup, mountGreetings } from "./greetings.js";
 import { recordArtifacts, recordCredit } from "./record-artifacts.js";
 import { createMachineAudio } from "./machine-audio.js";
 import { createMachineVoices } from "./machine-voices.js";
+import { createStoryVoice } from './story-voice.js';
+import './story-voice.css';
 import { mountStampCeremony } from "./stamp-ceremony.js";
 import "./stamp-ceremony.css";
 import { createFrictionFeedback } from "./friction-feedback.js";
@@ -21,7 +23,8 @@ import { voyagerCountdownMarkup, mountVoyagerCountdown } from "./voyager-countdo
 import { voyagerContactMarkup, mountVoyagerContact } from "./voyager-contact.js";
 import { webbAlignmentMarkup, mountWebbAlignment } from "./webb-alignment-story.js";
 import "./webb-alignment-story.css";
-import { flightComparisonMarkup, renderFlightComparison } from "./ingenuity-flight-comparison.js";
+import { flightGameMarkup, mountFlightGame } from "./ingenuity-flight-game.js";
+import "./ingenuity-flight-game.css";
 import "./ingenuity-flight-comparison.css";
 import { createSpaceAmbience } from "./space-ambience.js";
 import { createMissionFilm } from "./mission-film.js";
@@ -29,6 +32,7 @@ import { mountCuriosityGallery } from "./curiosity-gallery.js";
 import { teacherPageMarkup, mountTeacherPage } from "./teachers.js";
 import { mountMachineStory } from "./machine-stories.js";
 import { storyLayer } from "./story-layer.js";
+import { missionCallMarkup } from './mission-calls.js';
 import { dsnWidgetMarkup, mountDsnWidget } from "./dsn-widget.js";
 import { missionHistoryMarkup } from "./mission-history.js";
 import { marsSoundsMarkup, mountMarsSounds } from "./mars-sounds.js";
@@ -39,7 +43,7 @@ import './resource-credits.css';
 import { showMissionView, missionViews, mountPlanetComparison, mountHomecoming } from './journey-experience.js';
 import './journey-experience.css';
 import { mountAccessPreferences } from './access-preferences.js';
-import { mountRoverTextMap, roverPosition, describeStar, mountRangeButtons, nextFlightCheckpoint } from './accessible-controls.js';
+import { mountRoverTextMap, roverPosition, describeStar, mountRangeButtons } from './accessible-controls.js';
 import './accessible-academy.css';
 import './moon-labs.css';
 import './typography.css';
@@ -156,7 +160,7 @@ const briefings = {
       ["SCOUT", "Its success showed how future aircraft could examine terrain ahead of rovers and reach difficult places."],
     ],
     challenge:
-      "Choose an onboard controller, test a landing site, then use the flight log to improve your next attempt.",
+      "Choose a landing patch, act as the onboard computer to push against gusts, then land on level ground.",
   },
   webb: {
     label: "FOLDING SPACE OBSERVATORY",
@@ -190,12 +194,6 @@ const trainingBriefs = {
   ingenuity: "The air on Mars is about one percent as thick as Earth's. Nothing this light should be able to fly there. Your job is to keep it in the air anyway.",
   webb: "This telescope was too big to launch whole, so it folded up to fit its rocket and had to unfold itself, once, perfectly, where no one could reach it. Your job is that unfolding.",
   voyager: "Everything you send this machine takes almost a day to arrive, and everything it answers was said a day ago. Your job is to speak across that distance.",
-};
-const missionObjectives = {
-  curiosity: "Program a route or drive freely, analyze a rock, then choose the scientific claim your evidence supports.",
-  ingenuity: "Choose an onboard controller, test a landing site, then use the flight log to improve your next attempt.",
-  webb: "Open both mirror wings, align the star images, then reveal what infrared light can show through some dust.",
-  voyager: "Play or read a Golden Record greeting, then record and save or type your own greeting to earn your stamp.",
 };
 const challengeIncidents = {
   curiosity: ["A rock impact can stop the rover and drain its integrity.", "Debug the route, try again, and finish the science plan."],
@@ -363,6 +361,11 @@ spaceAmbience.setReduced(reduce);
 const missionFilm = createMissionFilm($("#mission-film"));
 missionFilm.setReduced(reduce);
 function disposeOpenData() {
+  flightGame?.dispose();
+  flightGame = null;
+  $('#reset')?.classList.remove('needs-repair');
+  storyVoice?.dispose();
+  storyVoice = null;
   impactView?.dispose();
   impactView = null;
   roverTextMap = null;
@@ -468,7 +471,11 @@ function renderMoonRoute(id) {
   moonPanel.openRoute(id, () => navigateTo('lobby'));
 }
 const machineAudio = createMachineAudio();
-const machineVoices = createMachineVoices();
+let storyVoice = null;
+let flightGame = null;
+const machineVoices = createMachineVoices({ onState({ id, kind, state: voiceState }) {
+  if (id === current && kind === 'final') storyVoice?.update(voiceState);
+} });
 $("#machine-voice-credit").hidden = !machineVoices.available;
 
 function playMachineTransmission(id) {
@@ -541,16 +548,15 @@ mountTeacherPage($("#teachers-page"), {
 });
 
 const CREW_NAME_KEY = 'mission-alive-crew-name-v1';
-try { $('#crew-name').value = localStorage.getItem(CREW_NAME_KEY) || ''; } catch { /* Private browsing. */ }
+try { $('#graduate-name').value = localStorage.getItem(CREW_NAME_KEY) || ''; } catch { /* Private browsing. */ }
 const cleanCrewName = value => value.trim().replace(/\s+/g, ' ').slice(0, 60);
 function certificateName() {
-  return cleanCrewName($('#graduate-name').value) || cleanCrewName($('#crew-name').value) || t('Mission Alive crew member');
+  return cleanCrewName($('#graduate-name').value) || t('Mission Alive crew member');
 }
-$('#crew-name').oninput = () => {
-  $('#graduate-name').value = $('#crew-name').value;
-  try { localStorage.setItem(CREW_NAME_KEY, cleanCrewName($('#crew-name').value)); } catch { /* Keep it for this visit. */ }
+$('#graduate-name').oninput = () => {
+  $('#certificate-name').textContent = certificateName();
+  try { localStorage.setItem(CREW_NAME_KEY, cleanCrewName($('#graduate-name').value)); } catch { /* Keep it for this visit. */ }
 };
-$('#graduate-name').oninput = () => { $('#certificate-name').textContent = certificateName(); };
 
 let finaleReturnFocus = null;
 const homecoming = mountHomecoming($('#finale'));
@@ -573,7 +579,6 @@ function openFinale({ homecoming: playHomecoming = true } = {}) {
   for (const timer of completionTimers) clearTimeout(timer);
   completionTimers.clear();
   finaleReturnFocus = document.activeElement;
-  if (!$('#graduate-name').value.trim()) $('#graduate-name').value = $('#crew-name').value;
   $('#certificate-name').textContent = certificateName();
   $("#finale-date").dataset.i18nDate = new Date().toISOString();
   $("#finale-date").textContent = new Intl.DateTimeFormat(getLanguage(), { dateStyle: "long" }).format(new Date());
@@ -1120,8 +1125,7 @@ function success() {
 function controls() {
   if (current === "curiosity")
     return `<p class="eyebrow">GALE CRATER SCIENCE PLAN</p><h2>Drill a Martian outcrop.</h2><p>Navigate to the cyan sedimentary outcrop (DRILL OUTCROP). Drill powdered rock for Curiosity’s SAM and CheMin laboratories, then park at the gold uplink site (UPLINK).</p>${challengeIncidentMarkup("curiosity")}${meter("Rover integrity", "health")}<button class="secondary free-explore" id="free-explore">Enter Free Explore</button><div class="drive-pad" id="drive-pad" hidden aria-label="Free Explore driving controls"><span></span><button data-drive="forward" aria-label="Drive forward">▲</button><span></span><button data-drive="left" aria-label="Turn left">↶</button><button data-drive="reverse" aria-label="Drive backward">▼</button><button data-drive="right" aria-label="Drive right">↷</button></div><p class="fine" id="explore-help" hidden>Drive with WASD or arrow keys. Avoid rocks: every impact damages the rover.<span class="readout" id="explore-readout">0.0 m from center</span></p><section class="field-mission" id="field-mission" hidden><p class="eyebrow">FREE EXPLORE MISSIONS</p><ol><li data-field-step="0">Survey cyan outcrop (DRILL OUTCROP) with Mastcam</li><li data-field-step="1">Drill and analyze rock powder</li><li data-field-step="2">Reach gold beacon (UPLINK) and uplink data</li></ol><p id="mission-guidance">Drive to the cyan outcrop (DRILL OUTCROP).</p><button class="primary" id="mission-action" disabled>Too far from target</button></section><div id="program-workspace"><div class="rover-grid" id="rover-grid" role="img" aria-label="Five by five rover mission map"></div><div class="map-legend" aria-hidden="true"><span><i class="legend-sample"></i>Outcrop</span><span><i class="legend-rock"></i>Hazard</span><span><i class="legend-goal"></i>Uplink</span></div><div class="program-heading"><strong>COMMAND BLOCKS</strong><output id="block-count">0 / ${roverMission.maxBlocks}</output></div><div class="block-palette" aria-label="Command blocks">${Object.entries(roverCommands).map(([command, info]) => `<button class="code-block ${info.className}" data-command="${command}">${info.label}</button>`).join("")}</div><div class="program-heading"><strong>YOUR PROGRAM</strong><span>Select a block to add it</span></div><ol class="program-list" id="program-list" aria-label="Rover program"></ol><div class="program-actions"><button id="step-program">Step</button><button class="primary" id="run-program">Run science plan</button></div><div class="program-tools"><button id="undo-program">Undo</button><button id="clear-program">Clear</button></div>${meter("Energy remaining", "energy")}<p class="program-status" id="program-status" role="status">Build a science plan of up to ${roverMission.maxBlocks} blocks.</p><p class="fine">Curiosity drills powdered rock and delivers it to SAM and CheMin inside the rover. Loop blocks repeat the command directly after them.</p></div>`;
-  if (current === "ingenuity")
-    return `<p class="eyebrow">YOUR MISSION</p><h2>Make the impossible lift off.</h2><p>Choose a landing site, establish the link, then fly the full route to discover whether the site was truly safe.</p>${challengeIncidentMarkup("ingenuity")}<nav class="ingenuity-step-nav" aria-label="Ingenuity challenge steps"><button type="button" data-ingenuity-step-target="plan" aria-current="step">01 · Choose</button><button type="button" data-ingenuity-step-target="power" disabled>02 · Power</button><button type="button" data-ingenuity-step-target="fly" disabled>03 · Fly</button></nav><section class="ingenuity-step" data-ingenuity-step="plan"><div class="preflight-panel"><strong>01 · PICK A LANDING ZONE</strong><div class="landing-choices"><button data-site="flat">Flat plain<br><small>Open ground</small></button><button data-site="crater">Crater rim<br><small>Sloped ground</small></button><button data-site="rocks">Rock field<br><small>Broken terrain</small></button></div><p class="fine" id="site-feedback">All three zones are already on the Mars field. Choose one to move Ingenuity there.</p><button class="primary" id="link-test" disabled>Test flight link</button></div></section><section class="ingenuity-step" data-ingenuity-step="power" hidden><p class="eyebrow">02 · POWER THE ROTORS</p>${meter("Rotor power · safe band 65–85%", "rotor")}<button class="primary" id="spin" disabled>Power rotors to safe speed</button><button id="bleed" hidden disabled>Release power</button><p class="fine" id="rotor-guidance">Mars has very thin air. Ingenuity needs fast rotors, but too much power is unsafe.</p></section><section class="ingenuity-step" data-ingenuity-step="fly" hidden><p class="eyebrow">03 · FLY AND LAND</p><button class="primary" id="launch" disabled>Lift off</button><div class="flight-readout"><span id="flight-phase">ON THE GROUND</span><output id="altitude-value">0.0 m</output></div><div class="meter flight-meter"><i id="altitude-bar"></i></div>${meter("Flight stability", "stability")}<label for="trim-input" class="fine">Move the blue control into the striped WIND BAND, then keep it there during flight.</label><div class="trim-control" aria-label="Wind trim and target"><span class="trim-track"></span><i id="wind-target" aria-hidden="true"></i><input id="trim-input" type="range" min="0" max="100" value="50" disabled aria-label="Flight stability trim" aria-valuetext="Trim 50, outside wind band; target 65"></div><div class="trim-ticks" aria-hidden="true"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><p class="trim-target-label" id="trim-target-label">WIND BAND — target zone: trim 65 (safe 53–77)</p><p class="wind-cue" id="wind-cue">Move into the striped band before lift-off.</p><p class="fine">A controlled flight can still fail at touchdown if the terrain is unsafe.</p></section>`;
+  if (current === "ingenuity") return flightGameMarkup();
   if (current === "webb")
     return `<p class="eyebrow">YOUR MISSION</p><h2>Bring the stars together.</h2><p>Drag both folded mirror wings away from the center, then align the scattered star images.</p>${challengeIncidentMarkup("webb")}<div class="webb-step"><strong>01 · DRAG THE MIRROR OPEN</strong><p class="fine">Pull the gold LEFT and RIGHT mirror wings toward their matching outer brackets.</p><div class="webb-deploy-field" id="webb-deploy-field" aria-label="Mirror wing deployment field"><span class="webb-deploy-rail" aria-hidden="true"></span><span class="webb-deploy-core" aria-hidden="true"></span><button class="webb-wing-handle is-left" data-wing="left" aria-label="Left mirror wing, folded. Drag left or use arrow keys"><span>⬡</span><small>LEFT</small></button><button class="webb-wing-handle is-right" data-wing="right" aria-label="Right mirror wing, folded. Drag right or use arrow keys"><span>⬡</span><small>RIGHT</small></button></div></div><div class="webb-step" id="webb-focus-step" hidden><strong>02 · ALIGN THE IMAGES</strong><p class="fine">Drag each light point into the gold target circle (CROSSHAIR) and it will snap to focus. Arrow keys now move in 5% steps.</p><div class="webb-focus-field" id="webb-focus-field" aria-label="Star alignment field"><span class="webb-focus-grid" aria-hidden="true"></span><span class="webb-focus-target" aria-hidden="true"></span><button class="webb-star" data-star="0" aria-label="Star image A. Drag to the center or use arrow keys">A</button><button class="webb-star" data-star="1" aria-label="Star image B. Drag to the center or use arrow keys">B</button><button class="webb-star" data-star="2" aria-label="Star image C. Drag to the center or use arrow keys">C</button></div><output class="webb-focus-count" id="webb-focus-count">0 / 3 images focused</output></div><p class="fine" id="webb-state" role="status">Drag the left and right mirror wings outward.</p><p class="fine">This challenge simplifies Webb’s mirror alignment. The real observatory also deployed its five-layer sunshield and other structures.</p>`;
   return `<p class="eyebrow">YOUR MISSION</p><h2>Listen to a little of Earth.</h2><p>Complete these two human actions to earn the Voyager mission stamp. No microphone is needed if you write your greeting. Turning the record and traveling outward are optional ways to explore.</p>${challengeIncidentMarkup("voyager")}<ol class="voyager-objectives" aria-label="Voyager mission objectives"><li data-voyager-step="listen">Play one Golden Record greeting</li><li data-voyager-step="greeting">Record and save, or write your own greeting</li></ol><div class="record-views" role="group" aria-label="Choose an artifact to view"><button data-record-face="front" aria-pressed="true">Record front</button><button data-record-face="cover" aria-pressed="false">Protective cover</button></div><p class="fine" id="record-caption">${recordArtifacts.front.caption}</p><a class="record-credit" id="record-source" href="${recordArtifacts.front.source}" target="_blank" rel="noopener">Photo: ${recordCredit}</a><label for="record">Turn the Golden Record <span class="optional-label">optional</span></label><input id="record" type="range" min="0" max="360" value="0"><button class="primary" id="open-greetings">Choose a voice from Earth</button><p class="fine">Explore all 55 greetings below. Search by language or country, select a recording, then press play. After listening, record or write a greeting of your own.</p><section class="voyager-live" aria-labelledby="voyager-live-heading"><p class="eyebrow" id="voyager-live-heading">DISTANCE FROM EARTH · LIVE ESTIMATE</p><output class="readout" id="voyager-live-distance">Awaiting mission data…</output><span id="voyager-live-light-time">${lightDayLink()}</span><p class="fine" id="voyager-live-status" role="status">Checking mission data…</p><a class="fine" href="https://ssd-api.jpl.nasa.gov/doc/horizons.html" target="_blank" rel="noopener">How this estimate works ↗</a></section><label for="distance">Imagine the journey outward <span class="optional-label">optional</span></label><input id="distance" type="range" min="0" max="100" value="0"><p class="fine">Projected milestone · 18 NOV 2026<span class="readout">${facts.distance.value} billion km</span>One-way signal time: ${facts.distance.signal_hours} hours.<br>NASA projection, not live telemetry.</p>`;
@@ -1151,29 +1155,10 @@ function bindHold(el, on, off) {
 function learningMarkup(id) {
   if (id === "curiosity")
     return `<section class="learning-panel" id="curiosity-conclusion" hidden aria-labelledby="curiosity-conclusion-title"><p class="eyebrow">SCIENCE DECISION · YOUR REPORT TO EARTH</p><h3 id="curiosity-conclusion-title">What can this rock tell us?</h3><p>Your simulated sample shows layers and minerals that can form in water. Choose the headline supported by that evidence.</p><div class="learning-choices"><button data-science-claim="life">We found life on Mars</button><button data-science-claim="habitable">Ancient Mars may have supported microbial life</button></div><p class="learning-feedback" id="curiosity-claim-feedback" role="status">Look at what the instruments measured, then decide.</p><a class="fine" href="https://science.nasa.gov/resource/the-science-of-curiosity-seeking-signs-of-past-mars-habitability/" target="_blank" rel="noopener">NASA: Curiosity studies past habitability ↗</a></section>`;
-  if (id === "ingenuity")
-    return `<section class="learning-panel" id="flight-computer" aria-labelledby="flight-computer-title"><p class="eyebrow">WHO CORRECTS A GUST?</p><h3 id="flight-computer-title">Choose the flight controller</h3><p>Earth is minutes away by radio. A gust changes flight in seconds.</p><div class="learning-choices"><button data-flight-controller="earth">Pilot live from Earth</button><button data-flight-controller="onboard">Use the onboard computer</button></div><p class="learning-feedback" id="flight-computer-feedback" role="status">Choose who reacts before testing the link.</p></section><details class="flight-log-details"><summary>Flight log</summary><section class="learning-panel flight-log" aria-labelledby="flight-log-title"><p class="eyebrow">TEST · LEARN · REVISE</p><h3 id="flight-log-title">Flight log</h3><ol id="flight-attempts"><li>Choose a site and fly. Your results will appear here.</li></ol><p class="fine">The trim control simulates the onboard computer responding to wind. It is not a live joystick from Earth.</p></section></details>`;
+  if (id === "ingenuity") return "";
   if (id === "webb")
     return `<section class="webb-step learning-panel" id="webb-infrared-step" hidden aria-labelledby="webb-infrared-title"><strong>03 · REVEAL WHAT VISIBLE LIGHT MISSES</strong><h3 id="webb-infrared-title">Look through the dust</h3><p>Now that the mirror is focused, shift from visible light toward infrared. See what appears behind this illustrated dust cloud.</p><div class="webb-vision" id="webb-vision" style="--infrared:0"><span class="webb-vision-dust" aria-hidden="true"></span><span class="webb-vision-hidden" aria-hidden="true">✦</span><span class="webb-vision-label">STAR-FORMING REGION</span></div><label for="webb-wavelength" class="fine">Visible light ← wavelength → Infrared</label><input id="webb-wavelength" type="range" min="0" max="100" value="0" aria-label="Shift from visible light toward infrared"><p class="learning-feedback" id="webb-infrared-feedback" role="status">Move toward infrared to reveal the hidden glow.</p><p class="fine">Concept illustration. Infrared can pass through some dust clouds; actual Webb images use measured wavelengths and processed color.</p><a class="fine" href="https://science.nasa.gov/mission/webb/fact-sheet/" target="_blank" rel="noopener">NASA: why Webb observes infrared ↗</a></section>`;
   return `<section class="learning-panel signal-lab" aria-labelledby="signal-lab-title"><p class="eyebrow">SIGNAL LAB · OPTIONAL</p><h3 id="signal-lab-title">How long does “hello” take?</h3><p>Choose a destination, then send a radio ping. Radio travels at light speed, so even a quick reply takes time.</p><div class="learning-choices"><button data-signal-target="moon">Moon</button><button data-signal-target="au">1 AU</button><button data-signal-target="voyager">Voyager 1</button></div><button class="secondary" id="send-signal" disabled>Send a ping</button><p class="learning-feedback" id="signal-result" role="status">Choose a destination to compare.</p><div class="signal-beam" aria-hidden="true"><i id="signal-beam-fill"></i></div><p class="fine">1 AU is the approximate Sun–Earth distance. The Moon comparison uses an average distance. Voyager uses the live JPL estimate when available.</p></section>`;
-}
-function showIngenuityStep(step, focus = false) {
-  $$('[data-ingenuity-step]').forEach((panel) => {
-    panel.hidden = panel.dataset.ingenuityStep !== step;
-  });
-  $$('[data-ingenuity-step-target]').forEach((button) => {
-    if (button.dataset.ingenuityStepTarget === step) button.setAttribute('aria-current', 'step');
-    else button.removeAttribute('aria-current');
-  });
-  if (focus) {
-    const panel = $(`[data-ingenuity-step="${step}"]`);
-    const target = panel?.querySelector('button:not(:disabled), input:not(:disabled)');
-    (target || panel)?.focus({ preventScroll: true });
-  }
-}
-function unlockIngenuityStep(step) {
-  const button = $(`[data-ingenuity-step-target="${step}"]`);
-  if (button) button.disabled = false;
 }
 function bindControls() {
   if (current === "curiosity") {
@@ -1203,6 +1188,10 @@ function bindControls() {
       $('[data-command="move"]')?.focus();
     };
     $("#free-explore").onclick = toggleFreeExplore;
+    const recoveryMarkup = '<aside class="rover-recovery" hidden><button type="button" data-recover-rover>Repair &amp; restart rover</button><p>Your blocks stay. Change the route and try again.</p></aside>';
+    $('#program-workspace .program-actions').insertAdjacentHTML('beforebegin', recoveryMarkup);
+    $('#drive-pad').insertAdjacentHTML('beforebegin', recoveryMarkup);
+    $$('[data-recover-rover]').forEach(button => { button.onclick = recoverCuriosity; });
     $$("[data-drive]").forEach((button) => {
       const action = button.dataset.drive;
       button.onpointerdown = (event) => {
@@ -1289,150 +1278,13 @@ function bindControls() {
     });
   }
   if (current === "ingenuity") {
-    const pacing = document.createElement('fieldset');
-    pacing.className = 'flight-pacing';
-    pacing.innerHTML = '<legend>Flight pace</legend><label><input type="radio" name="flight-pace" value="continuous" checked> Continuous</label><label><input type="radio" name="flight-pace" value="stepped"> Pause at each stage</label><button type="button" id="flight-next" hidden disabled>Continue flight</button>';
-    $('#launch').before(pacing);
-    $$('[data-ingenuity-step-target]').forEach((button) => {
-      button.onclick = () => showIngenuityStep(button.dataset.ingenuityStepTarget, true);
+    flightGame = mountFlightGame($("#controls"), {
+      host: $("#stage"), state, fallback: force2d,
+      onSuccess: success,
+      onAnnounce: text => announce(text, true),
+      onStart() { machineVoices.beginAttempt("ingenuity"); },
+      onStop() { machineAudio.stop(); },
     });
-    pacing.onchange = event => {
-      if (state.flying || event.target.name !== 'flight-pace') return;
-      state.flightPaced = event.target.value === 'stepped';
-      $('#flight-next').hidden = !state.flightPaced;
-    };
-    $('#flight-next').onclick = () => {
-      if (!state.flying || !state.flightPaced) return;
-      const next = nextFlightCheckpoint(state.flight);
-      state.flightAdvanceSoundUntil = performance.now() + 450;
-      advanceFlight(next, next - state.flight);
-      if (state.flying) announce(`${getSourceText($('#flight-phase'))}. ${getSourceText($('#wind-cue'))}`, true);
-    };
-    rangeButtons.push(mountRangeButtons($('#trim-input'), { label: 'wind trim' }));
-    $$("[data-flight-controller]").forEach((button) => {
-      button.onclick = () => {
-        const onboard = button.dataset.flightController === "onboard";
-        state.autonomySelected = onboard;
-        $$("[data-flight-controller]").forEach((item) =>
-          item.classList.toggle("is-selected", item === button),
-        );
-        $("#flight-computer-feedback").textContent = onboard
-          ? "Correct. Upload the plan; the onboard computer can react before a radio command arrives."
-          : "A radio reply would arrive minutes later. Try the onboard computer for second-by-second corrections.";
-        if (!onboard) {
-          const hint = $("#flight-computer-feedback").textContent;
-          const line = frictionFeedback.failure("ingenuity", hint);
-          if (line !== hint) {
-            const voice = document.createElement('span');
-            voice.textContent = line;
-            $("#flight-computer-feedback").prepend(voice, document.createTextNode(' '));
-          }
-        }
-        $("#link-test").disabled = !onboard || !state.landingSite;
-      };
-    });
-    $$("[data-site]").forEach((button) => {
-      button.onclick = () => {
-        if (state.flying) return;
-        const site = button.dataset.site;
-        $$("[data-site]").forEach((item) => item.classList.toggle("is-selected", item === button));
-        state.landingSite = site;
-        state.ready = false;
-        state.spinning = false;
-        state.crashed = false;
-        state.rotor = state.flightAttempts ? 75 : 0;
-        state.stability = 100;
-        setMeter("rotor", state.rotor);
-        setMeter("stability", 100);
-        $("#site-feedback").textContent =
-          site === "flat"
-            ? "Flat plain selected · Ingenuity moved to a wide, level touchdown area."
-            : site === "crater"
-              ? "Crater rim selected · Ingenuity moved to the sloped landing zone."
-              : "Rock field selected · Ingenuity moved among the boulders.";
-        state.ready = Boolean(state.flightAttempts && state.autonomySelected);
-        $("#link-test").textContent = state.ready ? "✓ Flight plan retained for retry" : "Test flight link";
-        $("#link-test").disabled = state.ready || !state.autonomySelected;
-        $("#spin").disabled = true;
-        $("#spin").textContent = state.ready ? "✓ Rotors at safe speed" : "Power rotors to safe speed";
-        $("#trim-input").disabled = !state.ready;
-        $("#launch").disabled = true;
-        $("#launch").textContent = "Lift off";
-        $("#flight-phase").textContent = "SITE SELECTED";
-        $("#wind-cue").textContent = "Move into the striped band before lift-off.";
-        setStatus(`${site.toUpperCase()} LANDING ZONE SELECTED`);
-        if (state.ready) {
-          unlockIngenuityStep("power");
-          unlockIngenuityStep("fly");
-          updateRotor();
-          showIngenuityStep("fly", true);
-        } else showIngenuityStep("plan");
-      };
-    });
-    $("#link-test").onclick = () => {
-      if (!state.landingSite || !state.autonomySelected) return;
-      state.ready = true;
-      $("#link-test").textContent = "✓ Radio link confirmed";
-      $("#link-test").disabled = true;
-      $("#spin").disabled = false;
-      $("#site-feedback").textContent = "Link ready. Now bring the rotors to a safe flight speed.";
-      machineAudio.pulse("servo", 0.5);
-      unlockIngenuityStep("power");
-      showIngenuityStep("power", true);
-      updateRotor();
-    };
-    $("#spin").onclick = () => {
-      if (!state.ready || state.flying) return;
-      state.rotor = 75;
-      state.spinning = true;
-      state.rotorPulseUntil = performance.now() + 360;
-      updateRotor();
-      $("#spin").textContent = "✓ Rotors at safe speed";
-      $("#spin").disabled = true;
-      $("#trim-input").disabled = false;
-      unlockIngenuityStep("fly");
-      showIngenuityStep("fly", true);
-      beep(380, 0.12);
-    };
-    $("#trim-input").oninput = (event) => {
-      state.trim = Number(event.target.value);
-      updateTrimFeedback();
-      announce($("#trim-input").getAttribute("aria-valuetext"));
-    };
-    trimPointer = enhanceRangePointer($("#trim-input"));
-    $("#launch").onclick = () => {
-      const displayedPower = Math.round(state.rotor);
-      if (!state.ready || displayedPower < 65 || displayedPower > 85) return;
-      machineVoices.beginAttempt("ingenuity");
-      state.flying = true;
-      state.flightAttempts += 1;
-      state.flight = 0;
-      state.flightMaxAltitude = 0;
-      state.flightPhase = "spool";
-      pacing.querySelectorAll('input').forEach(input => { input.disabled = true; });
-      $('#flight-next').disabled = false;
-      state.stability = 100;
-      state.windTarget = 65;
-      state.spinning = false;
-      $$("[data-site]").forEach((button) => (button.disabled = true));
-      $("#link-test").disabled = true;
-      $("#spin").disabled = true;
-      $("#launch").disabled = true;
-      $("#launch").textContent = "Flight in progress";
-      $("#trim-input").disabled = false;
-      updateTrimFeedback();
-      setMeter("stability", 100);
-      $("#wind-cue").textContent =
-        "Wind band stays at trim 65. Use arrow keys or drag the slider into 53–77.";
-      setStatus("ROTOR READY · Beginning launch sequence");
-      beep(330, 0.5);
-      if (state.flightPaced) {
-        $('#wind-cue').textContent = 'Ready when you are. Set the trim, then continue to the next flight stage.';
-        $('#flight-next').focus({ preventScroll: true });
-      }
-    };
-    setMeter("stability", 100);
-    $("#wind-target").style.left = "65%";
   }
   if (current === "webb") {
     rangeButtons.push(mountRangeButtons($('#webb-wavelength'), { label: 'wavelength', step: 25 }));
@@ -1628,6 +1480,44 @@ function resetRoverSimulation() {
   if ($("#program-status"))
     $("#program-status").textContent = "Ready at the start tile.";
   drawRoverGrid();
+  updateRoverRecoveryUI();
+}
+
+function updateRoverRecoveryUI() {
+  const needsRepair = state.failed || state.health <= 0;
+  $$('.rover-recovery').forEach(panel => {
+    const programPanel = Boolean(panel.closest('#program-workspace'));
+    panel.hidden = !needsRepair || programPanel === state.freeExplore;
+  });
+  $('#reset')?.classList.toggle('needs-repair', needsRepair);
+}
+
+function recoverCuriosity() {
+  driveKeys.clear();
+  resetRoverSimulation();
+  state.exploreMoving = false;
+  state.collisionCooldown = 0;
+  state.rockContact = null;
+  state.lastImpactRock = null;
+  state.fieldMissionStep = 0;
+  state.fieldMissionComplete = false;
+  state.scienceReady = false;
+  $('#curiosity-conclusion').hidden = true;
+  if (state.freeExplore) {
+    state.exploreX = -3 + roverMission.start.x * 1.5;
+    state.exploreZ = -2.3 + roverMission.start.y * 1.15;
+    state.exploreHeading = Math.atan2(state.exploreZ, -state.exploreX);
+    updateExploreReadout();
+    updateFieldMissionUI();
+  }
+  updateRoverProgramUI();
+  const message = state.freeExplore
+    ? 'Rover repaired. Continue exploring from the start.'
+    : 'Rover repaired. Your blocks are ready to edit.';
+  $('#program-status').textContent = message;
+  setStatus('ROVER READY · TRY A SAFER ROUTE');
+  announce(message, true);
+  (state.freeExplore ? $('[data-drive="forward"]') : $('[data-command="move"]')).focus({ preventScroll: true });
 }
 
 function drawRoverGrid() {
@@ -1680,6 +1570,7 @@ function drawRoverGrid() {
 }
 
 function updateRoverProgramUI() {
+  updateRoverRecoveryUI();
   const list = $("#program-list");
   if (!list) return;
   list.replaceChildren();
@@ -1895,9 +1786,9 @@ function executeRoverCommand(now = performance.now()) {
       state.motionUntil = now + 500;
       machineAudio.stop();
       machineAudio.pulse("crunch", 1);
-      $("#program-status").textContent = frictionFeedback.failure("curiosity", outside
-        ? "Boundary collision · turn before leaving the map."
-        : "Rover damaged. Reset the exhibit to try a safer route.");
+      $("#program-status").textContent = outside
+        ? frictionFeedback.failure('curiosity', 'Boundary collision · turn before leaving the map.')
+        : 'Rover damaged. Use Repair & restart rover, then change the route.';
       setStatus("ROVER STOPPED · DEBUG YOUR PROGRAM");
       void machineVoices.playMid("curiosity");
       beep(145, 0.4);
@@ -2108,6 +1999,7 @@ function damageCuriosity(now) {
   } else {
     setStatus(`ROCK IMPACT · ROVER INTEGRITY ${state.health}%`);
   }
+  updateRoverRecoveryUI();
   updateFieldMissionUI();
 }
 
@@ -2213,178 +2105,6 @@ function smoothstep(value) {
   return t * t * (3 - 2 * t);
 }
 
-function flightPose(seconds) {
-  if (seconds < 0.85)
-    return {
-      altitude: 0,
-      phase: "ROTOR SPOOL-UP",
-      message: "ROTOR SPOOL-UP · Holding steady",
-    };
-  if (seconds < 2.35) {
-    const altitude = smoothstep((seconds - 0.85) / 1.5) * 2.15;
-    return {
-      altitude,
-      phase: "ASCENDING",
-      message: "LIFT OFF · Climbing through thin Martian air",
-    };
-  }
-  if (seconds < 4.35) {
-    const altitude = 2.15 + Math.sin((seconds - 2.35) * Math.PI * 1.5) * 0.035;
-    return { altitude, phase: "HOVERING", message: "HOVER · Holding position" };
-  }
-  if (seconds < 5.95)
-    return {
-      altitude: 2.15,
-      phase: "SCOUTING",
-      message: "SCOUTING · A new path opens from the air",
-    };
-  if (seconds < 7.7) {
-    const altitude = (1 - smoothstep((seconds - 5.95) / 1.75)) * 2.15;
-    return {
-      altitude,
-      phase: "DESCENDING",
-      message: "LANDING · Returning gently to the surface",
-    };
-  }
-  return {
-    altitude: 0,
-    phase: "TOUCHDOWN",
-    message: "TOUCHDOWN · Flight cycle complete",
-  };
-}
-
-function updateFlightReadout(pose) {
-  if (!$("#flight-phase")) return;
-  $("#flight-phase").textContent = pose.phase;
-  $("#altitude-value").textContent = `${pose.altitude.toFixed(1)} m`;
-  $("#altitude-bar").style.width =
-    `${Math.min(100, (pose.altitude / 2.15) * 100)}%`;
-  if (state.flightPhase !== pose.phase) {
-    state.flightPhase = pose.phase;
-    setStatus(pose.message);
-    if (
-      ["ASCENDING", "HOVERING", "SCOUTING", "DESCENDING", "TOUCHDOWN"].includes(
-        pose.phase,
-      )
-    )
-      beep(
-        {
-          ASCENDING: 420,
-          HOVERING: 520,
-          SCOUTING: 600,
-          DESCENDING: 360,
-          TOUCHDOWN: 280,
-        }[pose.phase],
-        0.12,
-      );
-  }
-}
-
-function updateTrimFeedback() {
-  const slider = $("#trim-input");
-  if (!slider) return;
-  const inside = Math.abs(state.trim - state.windTarget) <= 12;
-  slider.setAttribute("aria-valuetext", `Trim ${state.trim}, ${inside ? "inside" : "outside"} wind band; target 65`);
-}
-function updateWindChallenge(dt) {
-  const active = state.flight >= 0.9 && state.flight < 7.35;
-  const error = Math.abs(state.trim - state.windTarget);
-  if (active) {
-    if (error > 12) void machineVoices.playMid("ingenuity");
-    const change = error <= 12 ? 9 : error <= 26 ? -3 : -11;
-    state.stability = Math.max(0, Math.min(100, state.stability + change * dt));
-  }
-  setMeter("stability", state.stability);
-  $("#wind-target").style.left = `${state.windTarget}%`;
-  $("#wind-cue").textContent = !active
-    ? state.flight < 0.9
-      ? "Rotor wash building · target stays at trim 65."
-      : "Final descent · hold the trim steady."
-    : error <= 12
-      ? `STABLE · trim ${state.trim} is inside the wind band (53–77)`
-      : state.trim < state.windTarget
-        ? `TRIM TOO LOW · move toward 65 (safe 53–77)`
-        : `TRIM TOO HIGH · move toward 65 (safe 53–77)`;
-}
-
-function finishFlightAttempt() {
-  renderFlightComparison($("#flight-comparison"), { maxAltitudeM: state.flightMaxAltitude, durationS: state.flight });
-  state.height = 0;
-  state.rotor = 0;
-  state.flying = false;
-  $('#flight-next').disabled = true;
-  $$('.flight-pacing input').forEach(input => { input.disabled = false; });
-  machineAudio.stop();
-  setMeter("rotor", 0);
-  $("#trim-input").disabled = true;
-  const flightLog = $("#flight-attempts");
-  const flightLogDetails = flightLog.closest(".flight-log-details");
-  if (flightLogDetails) flightLogDetails.open = true;
-  if (state.flightAttempts === 1) flightLog.replaceChildren();
-  const entry = document.createElement("li");
-  const result = state.stability < 45
-    ? "control drifted; improve wind trim"
-    : state.landingSite === "flat"
-      ? "stable flight and level touchdown"
-      : state.landingSite === "crater"
-        ? "stable flight; the slope tipped a landing leg"
-        : "stable flight; a boulder struck a landing leg";
-  entry.textContent = `Test ${state.flightAttempts} · ${state.landingSite} · ${result}.`;
-  flightLog.append(entry);
-  if (state.stability >= 45 && state.landingSite === "flat") {
-    $("#flight-computer-feedback").textContent = state.flightAttempts === 1
-      ? "Your flight plan worked."
-      : "A revised flight plan worked.";
-    $("#launch").textContent = "Flight complete · up to 5 planned, 72 flown";
-    success();
-    return;
-  }
-  const terrainFailure = state.stability >= 45 && state.landingSite !== "flat";
-  state.crashed = terrainFailure;
-  state.flightPhase = "failed";
-  $$("[data-site]").forEach((button) => (button.disabled = false));
-  state.ready = false;
-  $("#spin").disabled = true;
-  $("#link-test").disabled = false;
-  $("#link-test").textContent = "Test flight link again";
-  $("#launch").disabled = true;
-  $("#flight-computer-feedback").textContent = frictionFeedback.failure("ingenuity", "Use the result below to revise your plan. Choosing a site again retains the onboard controller and safe rotor power for a quick retry.");
-  if (terrainFailure && state.landingSite === "crater") {
-    $("#launch").textContent = "Crater landing failed";
-    $("#flight-phase").textContent = "SLOPE TIP-OVER";
-    $("#wind-cue").textContent =
-      "Flight was stable, but one landing leg touched the crater slope first. Choose a new site or retry to compare.";
-    setStatus("LANDING FAILED · CRATER SLOPE TIPPED THE HELICOPTER");
-  } else if (terrainFailure) {
-    $("#launch").textContent = "Rock-field landing failed";
-    $("#flight-phase").textContent = "ROCK IMPACT";
-    $("#wind-cue").textContent =
-      "Flight was stable, but a landing leg struck a boulder at touchdown. Choose a new site or retry to compare.";
-    setStatus("LANDING FAILED · BOULDER STRIKE AT TOUCHDOWN");
-  } else {
-    $("#launch").textContent = "Stabilize and retry";
-    $("#flight-phase").textContent = "ROUGH LANDING";
-    $("#wind-cue").textContent =
-      "Stability fell below 45% · test the radio link and rebuild rotor power.";
-    setStatus("ROUGH LANDING · FLIGHT NOT CLEARED");
-  }
-  showIngenuityStep("plan");
-  beep(145, 0.45);
-}
-
-function updateRotor() {
-  setMeter("rotor", state.rotor);
-  const displayedPower = Math.round(state.rotor);
-  $("#launch").disabled =
-    !state.ready || displayedPower < 65 || displayedPower > 85 || state.flying;
-  setStatus(
-    displayedPower >= 65 && displayedPower <= 85
-      ? "SAFE BAND · Ready for lift off"
-      : displayedPower > 85
-        ? "TOO FAST · Lower the rotor power"
-        : "PREFLIGHT · Bring the rotor into the safe band",
-  );
-}
 function jumpWebbStep(step) {
   if (step === 'focus' && state.deploy < 1 || step === 'infrared' && state.align < 1) return;
   const panel = $(`#webb-${step}-step`);
@@ -2596,6 +2316,7 @@ async function mountViewer(id, token, view = null) {
         beep(part.sound || 420, 0.12);
       },
       (description) => announce(description),
+      { onSelectSite: site => flightGame?.selectSite(site) },
     );
     if (id === "voyager") $("#stage .part-card")?.setAttribute("aria-live", "off");
     scene.setReduced(reduce);
@@ -2603,8 +2324,10 @@ async function mountViewer(id, token, view = null) {
     scene.setState(token);
     if (view) scene.setViewState(view);
     scene.render(0);
+    if (id === 'ingenuity') flightGame?.setFallback(false);
   } catch {
     if (state !== token || generation !== viewerGeneration) return;
+    if (id === 'ingenuity') flightGame?.setFallback(true);
     $("#stage").classList.add("fallback");
     $("#stage").insertAdjacentHTML(
       "beforeend",
@@ -2734,18 +2457,23 @@ async function render(id) {
     if (index) node.remove();
   });
   $("#module-mission-objective")?.remove();
-  const objective = document.createElement("p");
-  objective.id = "module-mission-objective";
-  objective.className = "module-mission-objective";
-  const objectiveLabel = document.createElement("strong");
-  objectiveLabel.textContent = "YOUR MISSION";
-  const objectiveText = document.createElement("span");
-  objectiveText.textContent = missionObjectives[id];
-  objective.append(objectiveLabel, objectiveText);
-  $("#machine-voice").after(objective);
+  $("#machine-voice").insertAdjacentHTML('afterend', missionCallMarkup(id));
   $("#mission-opening")?.remove();
   const opening = missionOpening(id);
   if (opening) $("#machine-voice").after(opening);
+  if (machineVoices.has(id)) {
+    storyVoice = createStoryVoice({
+      transcript: storyLayer[id].transmission,
+      onPlay() {
+        sound = true;
+        machineAudio.setEnabled(true);
+        updateSoundButton();
+        playMachineTransmission(id);
+      },
+      onStop: () => machineVoices.stop(),
+    });
+    $('#machine-voice').after(storyVoice.root);
+  }
   $("#story").textContent = e.story;
   $("#story-source").href = e.storySource;
   $("#story-source").textContent = `— ${e.storyAttribution} · NASA source ↗`;
@@ -2813,9 +2541,6 @@ async function render(id) {
     webbImageNotes.append($('.webb-real-images'));
     webbAlignment.updateProgress(state.align);
   }
-  if (id === "ingenuity") {
-    $("#flight-attempts").closest(".flight-log").insertAdjacentHTML("beforeend", flightComparisonMarkup());
-  }
   $("#mars-sounds-slot").innerHTML = id === "curiosity" ? marsSoundsMarkup() : "";
   if (id === "curiosity") {
     marsSoundPlayer = mountMarsSounds($("#mars-sounds-slot"), {
@@ -2828,7 +2553,6 @@ async function render(id) {
     });
   }
   hiddenFactCache = mountHiddenFacts($("#hidden-facts-slot"), id);
-  if (id === "ingenuity") $("#link-test").before($("#flight-computer"));
   $("#discovery").innerHTML =
     `<div class="fact"><span class="fact-icon">✧</span><div><h3>FROM THE MISSION ARCHIVE</h3><p>${facts[id].claim}</p><a href="${facts[id].source_url}" target="_blank" rel="noopener">${facts[id].source_title}</a></div></div><div class="reflection"><strong>ONE MACHINE. ONE BIG IDEA.</strong><p>${e.question}</p><button class="secondary" id="discovery-sources">Open Field notes</button></div>`;
   $("#discovery-sources").onclick = openFieldNotes;
@@ -2948,6 +2672,7 @@ function setReducedMotion(value) {
   $("#motion").textContent = reduce ? "Motion reduced" : "Reduce motion";
   stampCeremony?.setReduced(reduce);
   scene?.setReduced(reduce);
+  flightGame?.setReduced(reduce);
   spaceAmbience.setReduced(reduce);
   missionFilm.setReduced(reduce);
   voyagerDistance?.setReduced(reduce);
@@ -3041,15 +2766,6 @@ window.addEventListener("popstate", () => {
     else render(exhibits[route] ? route : "curiosity");
   }
 });
-function advanceFlight(seconds, elapsed) {
-  state.flight = seconds;
-  const pose = flightPose(state.flight);
-  state.flightMaxAltitude = Math.max(state.flightMaxAltitude, pose.altitude);
-  state.height = reduce ? state.flight < 0.85 || state.flight >= 5.95 ? 0 : 2.15 : pose.altitude;
-  updateWindChallenge(elapsed);
-  updateFlightReadout({ ...pose, altitude: state.height });
-  if (state.flight >= 7.9) finishFlightAttempt();
-}
 function tick(now) {
   const dt = Math.min((now - last) / 1000, 0.05);
   last = now;
@@ -3084,7 +2800,7 @@ function tick(now) {
     if (current === "ingenuity") {
       if (state.spinning && now >= (state.rotorPulseUntil || 0))
         state.spinning = false;
-      if (state.flying && !state.done && !state.flightPaced) advanceFlight(state.flight + dt, dt);
+      flightGame?.tick(dt);
       if ((state.spinning || state.flying && (!state.flightPaced || state.flightAdvanceSoundUntil > now)) && !machineVoices.isPlaying) {
         machineAudio.start("rotor");
         machineAudio.update({

@@ -123,6 +123,9 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
 .lrv-workshop-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, 1fr); gap: 28px; align-items: start; }
 .moon-game .lrv-illustration { position: sticky; top: 76px; min-width: 0; margin: 0; padding: 18px; border: 1px solid #647987; background: #09141d; border-radius: 5px; }
 .lrv-preview-label { font-size: .8125rem !important; margin: 0 0 14px; color: #d4e1e7; }
+.lrv-design-check { display: inline-flex; align-items: center; min-height: 34px; margin: 0 0 12px; padding: 6px 10px; border: 1px solid #77b598; border-radius: 4px; background: #15372b; color: #c8f3dd; font-size: .8125rem; font-weight: 800; letter-spacing: .06em; }
+.lrv-design-check[data-state="building"] { border-color: #718692; background: #172731; color: #d4e1e7; }
+.lrv-design-check[data-state="fail"] { border-color: #ff8e87; background: #4b2023; color: #ffd9d6; }
 .lrv-dust-legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 15px; }
 .lrv-dust-key { display: flex; align-items: center; gap: 8px; font-size: .875rem; }
 .lrv-dust-key::before { content: ''; width: 26px; border-top: 3px dashed #ffb267; }
@@ -156,7 +159,12 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
 .lrv-model-details { margin: 24px 0; border-block: 1px solid #647987; }
 .surveyor-investigation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
 .surveyor-patches, .surveyor-force-buttons, .surveyor-pad-stepper { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
-.surveyor-patches > button { display: grid; gap: 5px; flex: 1 1 150px; text-align: left; }
+.surveyor-patches { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding-top: 16px; }
+.surveyor-patches::before { content: ''; position: absolute; top: 5px; left: 8%; right: 8%; border-top: 2px dashed #72c9d4; opacity: .75; }
+.surveyor-patches > button { display: grid; gap: 5px; min-width: 0; text-align: left; border-top: 5px solid #a98d67; background: linear-gradient(#8e8172 0 18%, #172630 18%); }
+.surveyor-patches > button:nth-child(2) { border-top-color: #716b64; background: linear-gradient(#716b64 0 32%, #172630 32%); }
+.surveyor-patches > button:nth-child(3) { border-image: linear-gradient(90deg, #b5976c 0 35%, #716b64 35%) 1; }
+.surveyor-patches > button[aria-pressed="true"] { transform: translateY(-3px); box-shadow: 0 0 0 2px #72c9d4; }
 .surveyor-patches > button strong { font-size: 1rem; }
 .surveyor-patches > button small { color: #c5d2db; font-size: .78rem; line-height: 1.35; }
 .surveyor-force-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -27,15 +27,25 @@ body.lobby-screen .lobby-mission-card:hover { border-color: #27647a; }
 #lobby .mission-passport { padding: 0; border: 0; background: transparent; box-shadow: none; overflow: visible; }
 #lobby .passport-heading { padding: 12px 0 0; }
 #lobby .passport-heading h2 { font-size: 1rem; }
+#lobby #hidden-fact-passport-slot { margin: 10px 0 16px; }
+#lobby #hidden-fact-passport-slot .secret-passport { max-width: 620px; margin: 0; padding: 10px 12px; }
+#lobby #hidden-fact-passport-slot .secret-passport-icon { font-size: 1.35rem; }
 #lobby .lobby-hero { padding-bottom: 16px; }
 #location-map-slot { scroll-margin-top: 20px; }
 #location-map-slot .location-map-heading { margin-top: 0; padding: 26px 18px; gap: 20px; }
 #location-map-slot .location-map-heading h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 body.lobby-day #location-map-slot .eyebrow { color: #efc987; }
 #location-map-slot .diagram-pin { min-width: 44px; min-height: 44px; cursor: pointer; }
-#location-map-slot .diagram-callout { width: 205px; min-height: 100px; padding: 12px 14px; gap: 5px; background: #fffdf4; border: 2px solid #f0c477; border-radius: 12px; box-shadow: 0 4px 0 #0008; text-shadow: none; }
+#location-map-slot .diagram-callout { width: 220px; min-height: 152px; padding: 12px 14px; gap: 5px; background: #fffdf4; border: 2px solid #f0c477; border-radius: 12px; box-shadow: 0 4px 0 #0008; text-shadow: none; }
 #location-map-slot .diagram-callout strong { color: #172f40; font-size: 1.125rem; font-weight: 750; text-shadow: none; }
 #location-map-slot .diagram-callout small { margin: 0; color: #415866; font-size: .75rem; }
+#location-map-slot .map-help-signal { display: flex; align-items: center; gap: 6px; color: #8b5305; font-size: .66rem; font-weight: 800; letter-spacing: .08em; }
+#location-map-slot .map-help-signal > i { display: block; position: static; width: 9px; height: 9px; border: 0; border-radius: 50%; background: #d96c23; box-shadow: 0 0 0 5px #d96c2320; }
+body.motion-allowed #location-map-slot .map-help-signal:not(.is-helped) > i { animation: map-help-pulse 1.65s ease-in-out infinite; }
+@keyframes map-help-pulse { 0%,100% { box-shadow: 0 0 0 4px #d96c231c; } 50% { box-shadow: 0 0 0 9px #d96c2300; } }
+#location-map-slot .map-help-signal.is-helped { color: #245a40; }
+#location-map-slot .map-help-signal.is-helped > i { background: #2f7d57; box-shadow: 0 0 0 5px #2f7d5720; }
+#location-map-slot .map-help-request { color: #243e4d; font-size: .86rem; line-height: 1.35; }
 #location-map-slot .diagram-callout .route-stop-state { display: none; }
 #location-map-slot .map-play-action { display: block; margin-top: 5px; padding: 8px 10px; border-radius: 5px; background: #174f67; color: #fff; font-size: .875rem; font-weight: 700; }
 #location-map-slot .map-earned-stamp { color: #245a40; font-size: .75rem; font-weight: 700; }
@@ -46,9 +56,10 @@ body.lobby-day #location-map-slot .eyebrow { color: #efc987; }
 body.high-contrast #location-map-slot .diagram-callout { border-color: #fff; background: #fff; color: #172f40; }
 @media(max-width:680px) {
   #location-map-slot .journey-scenes { grid-template-rows: 45rem 46rem 48rem 54rem 48rem; }
-  #location-map-slot .diagram-callout { width: 148px; min-height: 104px; padding: 10px; }
+  #location-map-slot .diagram-callout { width: 160px; min-height: 158px; padding: 10px; }
   #location-map-slot .diagram-callout strong { font-size: .95rem; }
   #location-map-slot .diagram-callout small { font-size: .6875rem; }
+  #location-map-slot .map-help-request { font-size: .78rem; }
   #location-map-slot .map-play-action { font-size: .8125rem; padding: 8px 5px; }
   #location-map-slot .moon-surveyor .diagram-callout { top: 100px; }
   #app > header { min-height: 0; margin: 0 4vw; padding: 12px 0; align-items: center; flex-wrap: wrap; }

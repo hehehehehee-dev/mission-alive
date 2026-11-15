@@ -1798,8 +1798,22 @@ input[type="range"] {
 body[data-exhibit="voyager"] #greetings { max-width: 1100px; margin: 0 auto; }
 .exhibit .intro { min-height: 0; padding: 28px 0 20px; }
 .exhibit .intro h1 { font-size: clamp(2.1rem, 3.4vw, 3.4rem); }
-.module-mission-objective { margin: 18px 0 0; color: #e3edf2; font-size: 0.95rem; line-height: 1.6; }
-.module-mission-objective strong { display: block; margin-bottom: 4px; color: var(--accent); font: 700 0.65rem/1.4 monospace; letter-spacing: 0.12em; }
+.mission-call { margin: 20px 0 4px; padding: 16px; border: 1px solid #efc98780; border-radius: 10px; background: #0b1922d9; color: #e3edf2; }
+.mission-call-signal { display: flex; align-items: center; gap: 9px; margin-bottom: 13px; color: var(--accent); }
+.mission-call-signal strong { font: 750 .68rem/1.4 Arial, Helvetica, sans-serif; letter-spacing: .095em; }
+.training-signal-icon { width: 26px; height: 26px; flex: 0 0 26px; fill: currentColor; stroke: currentColor; stroke-width: 1.6; }
+.mission-call-grid { display: grid; grid-template-columns: 1fr 1fr .72fr; gap: 10px; }
+.mission-call-grid p { display: grid; align-content: start; gap: 5px; min-width: 0; margin: 0; padding: 11px 12px; border: 1px solid #91a9b54d; border-radius: 7px; background: #142733; }
+.mission-call-grid p > strong { color: #efc987; font: 800 .62rem/1.35 Arial, Helvetica, sans-serif; letter-spacing: .09em; }
+.mission-call-grid p > span { color: #edf3f5; font-size: .88rem; line-height: 1.42; }
+.mission-call-grid .mission-call-reward { background: #19362f; }
+.mission-call > small { display: block; margin-top: 9px; color: #9fb2bc; font-size: .72rem; line-height: 1.45; }
+@media (max-width: 720px) {
+  .mission-call { padding: 13px; }
+  .mission-call-grid { grid-template-columns: 1fr; gap: 7px; }
+  .mission-call-grid p { grid-template-columns: 86px 1fr; align-items: start; padding: 9px 10px; }
+  .mission-call-grid p > span { font-size: .84rem; }
+}
 .mission-opening { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 20px; align-items: start; margin: 22px 0 4px; pointer-events: auto; }
 .mission-opening-view { position: relative; margin: 0; overflow: hidden; border: 1px solid #ffffff1f; border-radius: 8px; background: #05090d; }
 .mission-opening-view img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }

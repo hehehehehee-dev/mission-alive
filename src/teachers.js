@@ -36,7 +36,7 @@ const guides = [
     name: "Ingenuity — Mars Flight Demonstrator",
     hook: "I was built to attempt up to five flights. I flew seventy-two.",
     time: "8–10 min",
-    action: "Choose an onboard flight controller, test the radio link, then choose a landing site, set rotor power, and simulate wind corrections. The flight log records what failed at touchdown so students can revise the next plan quickly.",
+    action: "Choose a landing patch on the 3D ground. Act as the onboard computer: push against gusts, then land. Compare a level patch with rocks or a slope. Retry from just before landing, or play step by step.",
     goals: [
       "Explain why flying on Mars is hard despite weaker gravity (air ~1% as dense as Earth's — almost nothing for rotors to push against).",
       "Explain why Ingenuity had to fly itself autonomously (radio delay to Mars).",

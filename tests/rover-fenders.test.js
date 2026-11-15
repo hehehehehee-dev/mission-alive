@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as T from 'three';
 import { buildLunarRover } from '../src/moon-model-detail.js';
+import { lrvRepairSceneTransform } from '../src/moon-challenge-scenes.js';
 
 test('fixed rover fenders arch above their wheels and share the wheel axle', () => {
   const scene = new T.Scene();
@@ -30,4 +31,16 @@ test('fixed rover fenders arch above their wheels and share the wheel axle', () 
     assert.ok(Math.abs(size.z - .38) < 1e-5, 'the fender width follows the Z axle');
   }
   rover.traverse(node => { node.geometry?.dispose(); node.material?.dispose(); });
+});
+
+test('the Apollo repair preview uses the side-view diagram scale and repair-wheel anchor', () => {
+  const short = lrvRepairSceneTransform({ length: 20, angle: 0, clearance: 4 });
+  const long = lrvRepairSceneTransform({ length: 80, angle: 35, clearance: 12 });
+  assert.deepEqual(short.anchor, { x: -1.4, y: 1.655, z: 1.18 });
+  assert.equal(short.length, .625);
+  assert.equal(long.length, 2.5);
+  assert.ok(long.anchor.y > short.anchor.y, 'raising clearance moves the same wheel-mounted patch upward');
+  assert.equal(long.anchor.x, short.anchor.x, 'changing the design must not detach it from the repair wheel');
+  assert.equal(long.anchor.z, short.anchor.z);
+  assert.equal(long.angle, T.MathUtils.degToRad(35));
 });
