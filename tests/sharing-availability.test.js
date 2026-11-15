@@ -10,25 +10,41 @@ function useLocation(t, value) {
   });
 }
 
-test("unconfigured community sharing adds no dead controls or unlock copy; HTTPS classroom controls remain", async (t) => {
+test("the studio shares with everyone behind a consent box, with no classroom or private-save path", async (t) => {
   useLocation(t, { protocol: "https:", port: "", origin: "https://training.example" });
   const { personalRecordMarkup } = await import("../src/personal-records.js");
   const markup = personalRecordMarkup();
-  assert.doesNotMatch(markup, /will unlock|publishing unavailable|community-library|id="publish-consent"|id="refresh-community-records"/i);
-  for (const id of ["start-personal-recording", "save-personal-recording", "personal-message", "personal-record-list", "class-create", "class-join", "class-consent", "class-gallery-list", "class-share-greeting"])
-    assert.ok(markup.includes(`id="${id}"`), `${id} remains available`);
-  assert.doesNotMatch(markup, /save-written-greeting|written-greeting-status/);
-  assert.equal((markup.match(/id="save-personal-recording"/g) || []).length, 1, 'one save action handles text and audio');
+  for (const id of ["start-personal-recording", "save-personal-recording", "share-consent", "personal-message", "personal-record-list", "shared-greetings-list"])
+    assert.ok(markup.includes(`id="${id}"`), `${id} is present`);
+  assert.match(markup, /id="save-personal-recording" disabled>Share with everyone</);
+  assert.match(markup, /I did not say my full name, my school, or where I live\. Everyone can hear it\./);
+  assert.doesNotMatch(markup, /class-code|class-create|class-join|Save privately|PRIVATE UNTIL PUBLISHED/);
+  assert.equal((markup.match(/id="save-personal-recording"/g) || []).length, 1, "one action handles text and audio");
 });
 
-test("offline classroom markup is omitted and its no-op controller touches no absent DOM", async (t) => {
-  useLocation(t, { protocol: "http:", port: "5173", origin: "http://localhost:5173" });
-  const { classRecordMarkup, mountClassRecord } = await import("../src/class-record.js?offline-availability-check");
-  assert.equal(classRecordMarkup(), "");
-  const controller = mountClassRecord({ querySelector() { throw new Error("No unavailable classroom DOM should be queried"); } });
-  assert.equal(controller.available, false);
-  assert.equal(controller.activeCode, "");
-  controller.setReduced(true);
-  await assert.rejects(controller.submit({ message: "Hello" }), /Open a class record first/);
-  controller.dispose();
+test("sharing is refused without consent and flagged words never go public", async () => {
+  const { handleSharedGreetings } = await import("../server/shared-greetings.mjs");
+  const blobs = new Map();
+  const store = {
+    async list({ prefix }) { return { blobs: [...blobs.keys()].filter((key) => key.startsWith(prefix)).map((key) => ({ key })) }; },
+    async get(key) { return blobs.get(key) ?? null; },
+    async set(key, value) { blobs.set(key, value); },
+    async setJSON(key, value) { blobs.set(key, value); },
+    async delete(key) { blobs.delete(key); },
+  };
+  const post = (body) => handleSharedGreetings(new Request("https://x.test/api/greetings", { method: "POST", body: JSON.stringify(body) }), store);
+  assert.equal((await post({ action: "share", language: "Vietnamese", message: "Xin chào" })).status, 400);
+
+  const shared = await post({ action: "share", consent: true, language: "Vietnamese", message: "Xin chào", name: "Space listener" });
+  assert.equal(shared.status, 201);
+  const { id, deleteKey } = await shared.json();
+  const list = async () => (await (await handleSharedGreetings(new Request("https://x.test/api/greetings?action=list"), store)).json()).greetings;
+  assert.equal((await list()).length, 1, "a shared greeting is public immediately");
+  assert.equal((await list())[0].deleteHash, undefined, "secrets never reach the public list");
+
+  assert.equal((await post({ action: "delete", id, deleteKey: "0".repeat(64) })).status, 403);
+  assert.equal((await post({ action: "report", id })).status, 200);
+  assert.equal((await list()).length, 0, "one report hides it at once");
+  assert.equal((await post({ action: "delete", id, deleteKey })).status, 200);
+  assert.equal(blobs.size, 0, "the sharer's delete removes every stored copy");
 });

@@ -625,8 +625,8 @@ Project requirements, supplied voice assets, feedback and publication decisions 
 
 - Creator / credit: Netlify · MIT License
 - Official source: https://www.npmjs.com/package/@netlify/blobs
-- Used in: Optional classroom records
-- Usage / modifications: Storage adapter for the optional moderated classroom features.
+- Used in: Shared greetings
+- Usage / modifications: Storage for shared greetings.
 
 ### Node.js
 
@@ -650,12 +650,12 @@ Project requirements, supplied voice assets, feedback and publication decisions 
 - Used in: Code, debugging, testing, text and translations
 - Usage / modifications: AI development assistance for code, test design, translations and narrative drafts. See the SI disclosure.
 
-### OpenAI APIs · optional classroom screening
+### OpenAI APIs · optional greeting screening
 
 - Creator / credit: OpenAI
 - Official source: https://platform.openai.com/docs/guides/moderation
-- Used in: Optional classroom records
-- Usage / modifications: Optional transcription and moderation run only with server configuration. Teacher approval remains required before publication.
+- Used in: Shared greetings
+- Usage / modifications: Optional transcription and moderation run only with server configuration. Flagged greetings are refused; there is no human review before publishing.
 
 ### ElevenLabs
 

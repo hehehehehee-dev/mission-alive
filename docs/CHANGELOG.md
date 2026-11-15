@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Greetings are shared with everyone at once; classroom sharing removed
+
+- Owner decision: “Save privately on this device” became **Share with everyone**. After ticking a consent box (“I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.”), a written or recorded greeting is published immediately in a new “Voices from Earth today” list on the Voyager page. It still counts toward the Voyager stamp, also when sharing fails.
+- Removed the classroom Golden Record (class codes, teacher key, approval queue, “Share with a classroom”, `/api/class-record`). It had no published entries in production.
+- Safeguards that do not delay publishing: Report hides a greeting at once; the sharing device can “Remove from everyone” with a private delete key; the owner can remove or restore with `COMMUNITY_ADMIN_TOKEN`; optional OpenAI screening refuses flagged greetings when `CLASSROOM_OPENAI_API_KEY` is set.
+- Rewrote the in-app privacy notice, `docs/PRIVACY.md`, the Teachers page privacy lines, credits labels and the CLAUDE.md data rule to match. New guide: `docs/SHARED_GREETINGS.md`. Spanish and Vietnamese copy added.
+
 ### Turn Apollo 17 repair into a spatial game
 
 - Replaced the maps → tape → clamps button sequence with a visual build board: place three map panels, cover two seams with tape, then clamp the shield to the rover. Drag, tap and keyboard activation share the same forgiving placement state.

@@ -82,11 +82,6 @@ export function mountExhibitLayout(id) {
       show(0);
     }
     move(find(".personal-record-studio"), main);
-    const sharing = disclosure("Share with a classroom", "voyager-class-sharing");
-    if (find(".class-record")) {
-      find(".personal-record-studio").append(sharing);
-      move(find(".class-record"), sharing);
-    }
 
     const arrival = create("section", { class: "voyager-arrival learning-panel", "aria-labelledby": "voyager-arrival-title" });
     arrival.innerHTML = '<h3 id="voyager-arrival-title">Signal arrival</h3>';

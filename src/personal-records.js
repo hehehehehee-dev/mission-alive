@@ -1,7 +1,7 @@
 import { greetings } from "./greetings-catalog.js";
 import { t, canonicalOptionValue } from "./i18n.js";
 import { formatJourney } from "./greeting-journey.js";
-import { classRecordMarkup, mountClassRecord } from "./class-record.js";
+import { sharedGreetingsMarkup, mountSharedGreetings, shareGreeting, deleteSharedGreeting, sharedGreetingsApi } from "./shared-greetings.js";
 
 const DB_NAME = "mission-alive-personal-records";
 const STORE_NAME = "recordings";
@@ -104,8 +104,8 @@ function safeAudioUrl(value) {
 
 export function personalRecordMarkup() {
   return `<section class="personal-record-studio" aria-labelledby="personal-record-heading">
-    <div class="studio-heading"><div><p class="eyebrow">YOUR TIME CAPSULE</p><h3 id="personal-record-heading" tabindex="-1">Make your own Golden Record</h3></div><span>PRIVATE UNTIL PUBLISHED</span></div>
-    <p class="studio-intro">Write a greeting or record up to ${MAX_SECONDS} seconds. Save it privately, then choose whether to share it.</p>
+    <div class="studio-heading"><div><p class="eyebrow">YOUR TIME CAPSULE</p><h3 id="personal-record-heading" tabindex="-1">Make your own Golden Record</h3></div><span>SHARED WITH EVERYONE</span></div>
+    <p class="studio-intro">Write a greeting or record up to ${MAX_SECONDS} seconds, then share it so everyone visiting Mission Alive can hear it.</p>
     <div class="recording-card">
       <div class="recording-fields">
         <label for="personal-language">Your greeting's language</label><input id="personal-language" maxlength="40" required aria-describedby="personal-record-status" list="personal-language-options" placeholder="e.g. Vietnamese"><datalist id="personal-language-options">${languageOptions.map((language) => `<option value="${language}"></option>`).join("")}</datalist>
@@ -124,10 +124,10 @@ export function personalRecordMarkup() {
         <p class="fine">Your browser will ask for microphone access only after you press Start recording.</p>
       </div>
     </div>
-    <div class="greeting-save"><button type="button" class="primary" id="save-personal-recording" disabled>Save privately on this device</button><p class="fine">Writing counts toward the Voyager stamp.</p><p class="fine" id="personal-record-status">Choose a language and add your words or a recording.</p></div>
+    <div class="greeting-save"><label class="share-consent"><input type="checkbox" id="share-consent"> <span>I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.</span></label><button type="button" class="primary" id="save-personal-recording" disabled>Share with everyone</button><p class="fine">Writing counts toward the Voyager stamp.</p><p class="fine" id="personal-record-status">Choose a language and add your words or a recording.</p></div>
     <p class="journey-explainer">Imagine your greeting traveling beside Voyager 1. The counters below use NASA's approximate speed of 17 km/s relative to the Sun. Your recording stays here; it is not actually on the spacecraft. <a href="https://science.nasa.gov/mission/voyager/voyager-1/" target="_blank" rel="noopener">NASA speed source ↗</a></p>
     <div class="personal-library">
-      <div class="library-heading"><h4>My saved greetings</h4><span id="personal-record-count">0 SAVED</span></div>
+      <div class="library-heading"><h4>My shared greetings</h4><span id="personal-record-count">0 SAVED</span></div>
       <div id="personal-record-list" class="personal-record-list"></div>
     </div>
     ${communityApi ? `<div class="community-library">
@@ -137,7 +137,7 @@ export function personalRecordMarkup() {
       <button id="refresh-community-records">Refresh community voices</button>
       <div id="community-record-list" class="community-record-list"></div>
     </div>` : ""}
-    ${classRecordMarkup()}
+    ${sharedGreetingsMarkup()}
   </section>`;
 }
 
@@ -164,7 +164,8 @@ export function mountPersonalRecords(
   let startedAt = 0;
   let disposed = false;
   const localUrls = new Set();
-  const classroom = mountClassRecord(container, { onPlay, onPause, reducedMotion });
+  const sharedGallery = mountSharedGreetings(container, { onPlay, onPause });
+  const consent = find("#share-consent");
 
   function setStatus(message, target = status) {
     target.textContent = message;
@@ -208,6 +209,7 @@ export function mountPersonalRecords(
     if (details.message) find("#personal-message").removeAttribute("aria-invalid");
     const textKey = `${details.language}\n${details.message}\n${details.translation}`;
     saveButton.disabled = recorder?.state === "recording" || (!currentBlob?.size && (!details.language || !details.message || textKey === lastSavedTextKey));
+    saveButton.setAttribute("aria-describedby", "personal-record-status");
   }
 
   function validateMetadata() {
@@ -264,7 +266,7 @@ export function mountPersonalRecords(
         updateSaveAvailability();
         const seconds = Math.min(MAX_SECONDS, (Date.now() - startedAt) / 1000);
         timer.textContent = `${formatDuration(seconds)} / 00:${MAX_SECONDS}`;
-        setStatus("Recording ready. Listen to the preview, then save it privately.");
+        setStatus("Recording ready. Listen to the preview, then share it.");
         if (moveToSave) saveButton.focus();
       });
       recorder.start(250);
@@ -327,7 +329,7 @@ export function mountPersonalRecords(
       if (!records.length) {
         const empty = document.createElement("p");
         empty.className = "empty-greetings";
-        empty.textContent = "No private greetings yet. Your first recording or written message will appear here.";
+        empty.textContent = "Nothing shared yet. Your first greeting will appear here.";
         localList.append(empty);
         return;
       }
@@ -341,7 +343,7 @@ export function mountPersonalRecords(
         byline.className = "fine";
         byline.append(displayName(record.name));
         if (record.country) byline.append(" · ", countryLabel(record.country));
-        byline.append(document.createTextNode(` · ${record.audio ? "audio" : "written"} greeting · private on this device`));
+        byline.append(document.createTextNode(` · ${record.audio ? "audio" : "written"} greeting · ${record.sharedId ? "shared with everyone" : "only on this device"}`));
         article.append(heading, byline);
         if (record.country) {
           const origin = document.createElement("p");
@@ -384,7 +386,7 @@ export function mountPersonalRecords(
           download.download = `golden-record-${record.language.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "greeting"}.webm`;
           download.textContent = "Download";
           actions.append(download);
-          if (communityApi) {
+          if (communityApi && !sharedGreetingsApi) {
             const publish = document.createElement("button");
             publish.type = "button";
             publish.textContent = "Submit for publishing";
@@ -392,36 +394,21 @@ export function mountPersonalRecords(
             actions.append(publish);
           }
         }
-        if (classroom.available) {
-          const sendToClass = document.createElement("button");
-          sendToClass.type = "button";
-          sendToClass.textContent = "Send to class";
-          sendToClass.addEventListener("click", async () => {
-            sendToClass.disabled = true;
-            try {
-              await classroom.submit(record);
-              sendToClass.textContent = "Sent for teacher review";
-            } catch (error) {
-              setStatus(error.message);
-              sendToClass.disabled = false;
-            }
-          });
-          actions.append(sendToClass);
-        }
         const remove = document.createElement("button");
         remove.type = "button";
-        remove.textContent = "Delete private copy";
+        const deleteLabel = record.sharedId ? "Remove from everyone" : "Delete";
+        remove.textContent = deleteLabel;
         const itemLabel = record.audio ? "recording" : "greeting";
         const cancelDelete = document.createElement('button');
         cancelDelete.type = 'button';
-        cancelDelete.textContent = 'Keep private copy';
+        cancelDelete.textContent = 'Keep it';
         cancelDelete.hidden = true;
         let confirming = false;
         cancelDelete.onclick = () => {
           confirming = false;
           cancelDelete.hidden = true;
-          remove.textContent = 'Delete private copy';
-          setStatus('Private copy kept on this device.');
+          remove.textContent = deleteLabel;
+          setStatus('Kept.');
           remove.focus();
         };
         remove.addEventListener("click", async () => {
@@ -429,20 +416,22 @@ export function mountPersonalRecords(
             confirming = true;
             remove.textContent = 'Confirm delete';
             cancelDelete.hidden = false;
-            setStatus(`Delete this private ${itemLabel} from this device?`);
+            setStatus(record.sharedId ? `Remove this ${itemLabel} so no one can hear it any more?` : `Delete this ${itemLabel}?`);
             return;
           }
           remove.disabled = true;
           try {
+            if (record.sharedId) await deleteSharedGreeting(record.sharedId, record.deleteKey);
             await deleteLocalRecord(record.id);
             await drawLocalRecords();
-            setStatus(`Private ${itemLabel} deleted from this device.`);
+            sharedGallery.refresh();
+            setStatus(record.sharedId ? `Your ${itemLabel} was removed for everyone.` : `${itemLabel[0].toUpperCase()}${itemLabel.slice(1)} deleted.`);
             const heading = find('#personal-record-heading');
             heading.tabIndex = -1;
             heading.focus();
           } catch {
             remove.disabled = false;
-            setStatus('Could not delete the private copy. Please try again.');
+            setStatus("Couldn't remove it. Please try again.");
           }
         });
         actions.append(remove, cancelDelete);
@@ -459,7 +448,40 @@ export function mountPersonalRecords(
     }
   }
 
+  function consentGiven() {
+    if (consent?.checked) return true;
+    consent?.focus();
+    setStatus("Tick the box first to share your greeting with everyone.");
+    return false;
+  }
+
+  // Publish straight away (owner's choice). The device copy keeps the private
+  // delete key so the person who shared it can remove it for everyone.
+  async function shareRecord(record) {
+    if (!sharedGreetingsApi) {
+      setStatus("Your greeting counts toward the stamp. Sharing works on the live site.");
+      return;
+    }
+    try {
+      const result = await shareGreeting({
+        name: record.name, language: record.language, country: record.country,
+        message: record.message, translation: record.translation,
+        ...(record.audio ? { mimeType: record.mimeType || record.audio.type, audioBase64: await blobToBase64(record.audio) } : {}),
+      });
+      record.sharedId = result.id;
+      record.deleteKey = result.deleteKey;
+      try { await saveLocalRecord(record); } catch { /* the greeting is already public */ }
+      await drawLocalRecords({ focusRecordId: record.id });
+      sharedGallery.refresh();
+      consent.checked = false;
+      setStatus("Shared! Everyone can hear your greeting now. You can remove it below at any time.");
+    } catch (error) {
+      setStatus(`${error.message} Your greeting still counts toward the stamp.`);
+    }
+  }
+
   async function saveCurrentRecording() {
+    if (!consentGiven()) return;
     if (!currentBlob) return saveWrittenGreeting();
     if (!currentBlob || !validateMetadata()) return;
     const record = {
@@ -475,10 +497,11 @@ export function mountPersonalRecords(
       currentBlob = null;
       updateSaveAvailability();
       await drawLocalRecords({ focusRecordId: moveToSavedGreeting ? record.id : undefined });
-      setStatus("Recorded greeting saved privately on this device. It stays in this browser unless you download or publish it.");
       onSave(record);
+      await shareRecord(record);
     } catch {
-      setStatus("This browser could not save the recording. Download it instead and keep the file safe.");
+      onSave(record);
+      await shareRecord(record);
     }
   }
 
@@ -507,11 +530,9 @@ export function mountPersonalRecords(
     try {
       await saveLocalRecord(record);
       await drawLocalRecords({ focusRecordId: moveToSavedGreeting ? record.id : undefined });
-      setStatus("Written greeting saved privately on this device. It counts toward your stamp.");
-    } catch {
-      setStatus("Your greeting counts toward the stamp, but this browser could not save a private copy. Copy your words before leaving.");
-    }
+    } catch { /* sharing below still works without a device copy */ }
     onSave(record);
+    await shareRecord(record);
     lastSavedTextKey = `${details.language}\n${details.message}\n${details.translation}`;
     updateSaveAvailability();
   }
@@ -653,7 +674,6 @@ export function mountPersonalRecords(
       reducedMotion = value;
       clearInterval(journeyTimer);
       journeyTimer = window.setInterval(updateJourneys, reducedMotion ? 30000 : 1000);
-      classroom.setReduced(value);
     },
     pause() {
       preview.pause();
@@ -664,7 +684,7 @@ export function mountPersonalRecords(
       if (recorder?.state === "recording") recorder.stop();
       stopTimer();
       clearInterval(journeyTimer);
-      classroom.dispose();
+      sharedGallery.dispose();
       stopStream();
       preview.pause();
       clearPreviewUrl();

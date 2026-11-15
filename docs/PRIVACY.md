@@ -2,19 +2,25 @@
 
 Last updated: November 15, 2026.
 
-Mission Alive requires no account. Certification stamps, certificate names, interface settings, and personal Golden Record drafts remain in the visitor’s browser by default.
+Mission Alive requires no account. Certification stamps, certificate names, interface settings, and a device copy of the visitor’s own greetings remain in the visitor’s browser.
 
-## Classroom Golden Records
+## Shared Golden Record greetings
 
-A classroom greeting reaches the server only after a visitor enters a class code and explicitly confirms the sharing statement. A submission may contain a nickname, language, country, written greeting, English translation, audio, and creation time.
+Owner decision (November 15, 2026): shared greetings are published immediately, with no review queue. The classroom code and teacher-approval flow were removed.
 
-Every submission remains pending until the teacher reviews it. After approval, the class title and approved greeting become available through the public Classroom voices from Earth gallery. Anyone visiting the site may read the approved text or play its audio. Teachers and students should use nicknames and nonspecific class titles that do not identify students.
+A greeting reaches the server only after the visitor ticks the sharing statement (“I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.”) and presses Share with everyone. A shared greeting may contain a nickname, language, country, written greeting, English translation, audio up to 2 MB, and the time it was shared. It is listed at once in “Voices from Earth today”, and anyone visiting the site may read it or play its audio.
 
-The teacher can reject a pending greeting or remove a published greeting using the private teacher key. The key must be stored safely because the site has no teacher account recovery. Classroom data remains in Netlify Blobs until the teacher removes it or the site operator deletes it. There is currently no automatic end-of-year deletion.
+Removal:
+
+- The sharing device receives a private delete key, kept with its local copy, and can remove the greeting for everyone with “Remove from everyone”.
+- Any visitor can press Report. One report hides the greeting immediately.
+- The site owner can permanently remove or restore any greeting with `COMMUNITY_ADMIN_TOKEN` (`owner-remove` / `owner-restore` on `/api/greetings`).
+
+Greetings are stored in Netlify Blobs (`mission-alive-shared-greetings`) until removed. There is no automatic deletion.
 
 ## Optional AI screening
 
-If the site owner configures `CLASSROOM_OPENAI_API_KEY`, submitted text may be checked with OpenAI moderation before entering the teacher queue. Audio may be transcribed and checked. AI screening never publishes a greeting and never replaces teacher approval. If screening is unavailable, the submission remains pending for teacher review.
+If the site owner configures `CLASSROOM_OPENAI_API_KEY`, submitted text is checked with OpenAI moderation and audio is transcribed and checked before publishing. A flagged greeting is refused. Without the key, greetings are published without any automatic check.
 
 ## External mission data
 

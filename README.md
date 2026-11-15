@@ -145,7 +145,7 @@ The script retains only the current and previous distinct Netlify ZIPs. A source
 
 The core academy uses no analytics and requires no account. Personal greetings remain on the device unless the visitor explicitly chooses a configured sharing flow. Classroom or public recordings require consent and moderation. Server secrets must never use a `VITE_` variable.
 
-See [`docs/COMMUNITY_RECORDINGS.md`](docs/COMMUNITY_RECORDINGS.md) and [`docs/CLASSROOM_RECORDS.md`](docs/CLASSROOM_RECORDS.md) before enabling shared recordings.
+See [`docs/COMMUNITY_RECORDINGS.md`](docs/COMMUNITY_RECORDINGS.md) and [`docs/SHARED_GREETINGS.md`](docs/SHARED_GREETINGS.md) before changing how greetings are shared.
 
 ## Project notes
 

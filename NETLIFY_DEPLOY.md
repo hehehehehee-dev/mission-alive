@@ -1,6 +1,6 @@
 # Deploy Mission Alive to Netlify
 
-The project includes a Vite build and Netlify Functions for Voyager 1’s JPL Horizons estimate, NASA DSN Now station links, and classroom Golden Records. Deploy the project source rather than only the `dist` folder if you want those online features.
+The project includes a Vite build and Netlify Functions for Voyager 1’s JPL Horizons estimate, NASA DSN Now station links, and shared Golden Record greetings. Deploy the project source rather than only the `dist` folder if you want those online features.
 
 English, Spanish and Vietnamese are bundled in the source ZIP. The header selector saves the visitor's choice locally; no translation API, secret or Netlify environment setting is needed.
 
@@ -8,7 +8,7 @@ English, Spanish and Vietnamese are bundled in the source ZIP. The header select
 
 1. Sign in to Netlify and open [Netlify Drop](https://app.netlify.com/drop).
 2. Drop `mission-alive-netlify-update.zip` onto the deploy dropzone for your existing site's **Deploys** page. This source ZIP uses portable file permissions and includes the module required by the Voyager function.
-3. Netlify reads `netlify.toml`, runs `npm run build`, publishes `dist`, and deploys the functions at `/api/voyager-distance`, `/api/dsn-now`, and `/api/class-record`.
+3. Netlify reads `netlify.toml`, runs `npm run build`, publishes `dist`, and deploys the functions at `/api/voyager-distance`, `/api/dsn-now`, and `/api/greetings`.
 4. Open the deployed site, visit Voyager, and confirm the counter says “JPL Horizons ephemeris anchored…” rather than “Live estimate unavailable.”
 
 After validating changes, run `python scripts/package-netlify.py`. Keep only these two deploy archives in the project root:
@@ -24,7 +24,7 @@ Retention was initialized on October 21, 2026 with the current build and the new
 
 Personal greetings already record and save privately in the visitor’s browser. Public sharing still needs the moderated recording backend described in `docs/COMMUNITY_RECORDINGS.md`. Configure `VITE_COMMUNITY_API_URL` only after that service is deployed. Microphone capture requires HTTPS outside localhost; Netlify supplies HTTPS automatically.
 
-The **classroom** archive is a separate Netlify Function and Blob store; see `docs/CLASSROOM_RECORDS.md`. It publishes only after teacher review. Optional AI pre-screening requires a server-only `CLASSROOM_OPENAI_API_KEY` environment variable. The public community audio archive above remains a separate prototype.
+Shared greetings use a separate Netlify Function and Blob store; see `docs/SHARED_GREETINGS.md`. Greetings publish immediately (owner decision). Optional AI screening requires a server-only `CLASSROOM_OPENAI_API_KEY`; owner removal requires a server-only `COMMUNITY_ADMIN_TOKEN`.
 
 ## Quick checks after deployment
 
@@ -35,7 +35,7 @@ The **classroom** archive is a separate Netlify Function and Blob store; see `do
 - In Voyager, confirm the contact block reflects the returned `voyager1` array and displays the feed timestamp. A failed refresh or stale data must clear active contact and silently use the quiet state, even if recent cached metadata exists. The countdown uses the visitor's clock and switches to the supplied past-tense text at the stored November 18 milestone.
 - Complete Webb alignment: real scattered images, a real hexagonal array, a simplified stacking diagram, a 1.2-second stacked-point hold, then SMACS 0723 with its caption and credit.
 - Finish an Ingenuity attempt and check the maximum-altitude/duration comparison with Flight 61 (24 m, 129.5 s). No horizontal-distance comparison is made.
-- Visit `/api/class-record?action=gallery` and confirm it returns a JSON `recordings` array. A 404 means this deploy did not include Functions.
+- Visit `/api/greetings?action=list` and confirm it returns a JSON `greetings` array. A 404 means this deploy did not include Functions.
 - Complete one exhibit and confirm the stamp button waits without changing the count. Press it, check the 750ms ink animation and present-state → transmission → gift reveal, then reload and confirm the stamp remains. Replay shows “Already stamped” without a second ceremony.
 - In Voyager, play a greeting, write your own without granting microphone access, then press LISTEN to stamp the certification.
 - After the fourth pressed stamp, allow the completion-reading interval and confirm the finale opens automatically. X and Escape close it; opening and closing it early must not make it reopen later.

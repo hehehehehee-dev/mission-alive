@@ -240,15 +240,11 @@ test("translated autocomplete choices resolve to stable countries even after ano
   } finally { setLanguage("en"); }
 });
 
-test("every classroom API error and moderation status has a local message", () => {
-  const source = readFileSync(new URL("../netlify/functions/class-record.mjs", import.meta.url), "utf8");
-  const messages = [...source.matchAll(/error:\s*"([^"]+)"/g)].map((match) => match[1]);
-  assert.ok(messages.length > 20);
+test("every shared-greeting error a visitor can see has a local message", () => {
+  const source = readFileSync(new URL("../server/shared-greetings.mjs", import.meta.url), "utf8");
+  const shown = ["Sharing is temporarily unavailable.", "Tick the sharing box first.", "Add a language and a greeting.", "This greeting can't be shared. Try different words.", "Audio must be under 2 MB.", "Unsupported audio format.", "Only the person who shared this greeting can delete it.", "Greeting not found."];
+  for (const message of shown) assert.ok(source.includes(message), message);
   for (const locale of ["vi", "es"]) {
-    for (const message of messages) assert.notEqual(t(message, locale), message, `${locale}: ${message}`);
-    for (const status of ["clear", "flagged", "unavailable", "not-configured", "audio-unchecked"]) {
-      const translated = t(`· AI check: ${status}`, locale);
-      assert.ok(!translated.includes(status), `${locale}: ${status}`);
-    }
+    for (const message of shown) assert.notEqual(t(message, locale), message, `${locale}: ${message}`);
   }
 });

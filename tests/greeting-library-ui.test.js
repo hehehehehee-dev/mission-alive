@@ -2,31 +2,34 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { t } from '../src/i18n.js';
 import { es, vi } from '../src/locales/mission-actions.js';
+import { es as es14, vi as vi14 } from '../src/locales/nov14.js';
 
-test('consolidated listening, saving and guidance labels are translated', () => {
-  for (const text of ['How to play', 'Story & science', 'Greeting collections', 'Golden Record · 1977', 'Visitor greetings', 'Share with a classroom', 'Share your greeting', 'Your greeting or transcript', 'Name, country & translation (optional)', 'Choose a language and add your words or a recording.']) {
+test('consolidated listening, sharing and guidance labels are translated', () => {
+  for (const text of ['How to play', 'Story & science', 'Greeting collections', 'Golden Record · 1977', 'Visitor greetings', 'Share your greeting', 'Your greeting or transcript', 'Name, country & translation (optional)', 'Choose a language and add your words or a recording.']) {
     assert.ok(es[text] && vi[text], text);
     assert.notEqual(t(text, 'es'), text);
     assert.notEqual(t(text, 'vi'), text);
+  }
+  for (const text of ['Share with everyone', 'Voices from Earth today', 'Report', 'Remove from everyone', 'I made this greeting. I did not say my full name, my school, or where I live. Everyone can hear it.']) {
+    assert.ok(es14[text] && vi14[text], text);
   }
 });
 
 function node(tag = 'div') {
   return {
-    tag, children: [], dataset: {}, listeners: {}, value: '', textContent: '', hidden: false, paused: true,
+    tag, children: [], dataset: {}, listeners: {}, value: '', textContent: '', hidden: false, paused: true, disabled: false,
     append(...items) { this.children.push(...items); },
     replaceChildren(...items) { this.children = items; },
+    remove() { this.removed = true; },
     setAttribute(name, value) { this[name] = value; },
     addEventListener(event, callback) { this.listeners[event] = callback; },
     querySelectorAll(tag) { return this.children.flatMap(child => typeof child === 'object' ? [...(child.tag === tag ? [child] : []), ...child.querySelectorAll(tag)] : []); },
-    pause() { this.paused = true; this.pauseCalls = (this.pauseCalls || 0) + 1; },
-    focus() { this.focused = true; },
-    scrollIntoView() {},
+    pause() { this.paused = true; },
   };
 }
 
-test('public voices need no class code; filtering stops removed audio and sharing requires consent', async context => {
-  const originals = new Map(['location', 'document', 'window', 'fetch', 'localStorage'].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+test('the public gallery lists shared greetings, plays same-origin audio, and Report hides one at once', async context => {
+  const originals = new Map(['location', 'document', 'fetch'].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
   context.after(() => {
     for (const [key, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, key, descriptor);
@@ -36,40 +39,26 @@ test('public voices need no class code; filtering stops removed audio and sharin
   const elements = new Map();
   const find = selector => { if (!elements.has(selector)) elements.set(selector, node()); return elements.get(selector); };
   const requests = [];
-  const entry = {id: 'local-test', code: 'ABCDEF123456', name: 'Listener', language: 'Vietnamese', country: 'Vietnam', message: 'Xin chào', classTitle: 'Test class', hasAudio: true, createdAt: '2026-11-14T12:00:00Z'};
+  const greeting = { id: '0f8fad5b-d9cb-469f-a165-70867728950e', name: 'Space listener', language: 'Vietnamese', country: 'Vietnam', message: 'Xin chào', hasAudio: true, publishedAt: '2026-11-15T12:00:00Z' };
   for (const [key, value] of Object.entries({
-    location: {protocol: 'https:', port: '', origin: 'https://test.example'},
-    document: {createElement: node, createTextNode: text => text},
-    window: {setInterval: () => 1},
-    localStorage: {getItem: () => null},
-    fetch: async (url, options) => { requests.push({url, options}); return {ok: true, json: async () => ({recordings: [entry]})}; },
-  })) Object.defineProperty(globalThis, key, {configurable: true, writable: true, value});
+    location: { protocol: 'https:', port: '', origin: 'https://test.example' },
+    document: { createElement: node, createTextNode: text => text },
+    fetch: async (url, options) => { requests.push({ url, options }); return { ok: true, json: async () => (options ? { status: 'hidden' } : { greetings: [greeting] }) }; },
+  })) Object.defineProperty(globalThis, key, { configurable: true, writable: true, value });
 
-  const { mountClassRecord } = await import('../src/class-record.js?gallery-ui-regression');
-  const controller = mountClassRecord({querySelector: find, querySelectorAll: () => []});
+  const { mountSharedGreetings, sharedGreetingsApi } = await import('../src/shared-greetings.js?gallery-ui-regression');
+  assert.equal(sharedGreetingsApi, '/api/greetings');
+  const controller = mountSharedGreetings({ querySelector: find });
   context.after(() => controller.dispose());
   await new Promise(resolve => setImmediate(resolve));
-  assert.equal(requests.length, 1);
-  assert.equal(requests[0].url, '/api/class-record?action=gallery');
-  assert.equal(requests[0].options, undefined, 'listening never sends a teacher key or POST');
-  const list = find('#class-gallery-list');
+  assert.equal(requests[0].url, '/api/greetings?action=list');
+  assert.equal(requests[0].options, undefined, 'listening sends nothing');
+  const list = find('#shared-greetings-list');
+  const article = list.children[0];
   const audio = list.querySelectorAll('audio')[0];
-  assert.match(audio.src, /action=audio&code=ABCDEF123456&id=local-test$/);
-  assert.equal(audio.controls, true);
-  audio.paused = false;
-
-  find('#class-gallery-search').value = 'no matches';
-  find('#class-gallery-search').listeners.input();
-  assert.equal(audio.paused, true, 'filtered-out audio cannot keep playing invisibly');
-  assert.equal(audio.pauseCalls, 1);
-  assert.match(list.children[0].textContent, /No approved classroom greetings match/);
-  assert.equal(find('#class-gallery-clear').hidden, false);
-  find('#class-gallery-clear').listeners.click();
-  assert.equal(list.querySelectorAll('audio').length, 1);
-  assert.equal(find('#class-gallery-search').focused, true);
-
-  await assert.rejects(controller.submit({message: 'Private draft'}), /Open a class record first/);
-  assert.equal(find('#voyager-class-sharing').open, true);
-  assert.equal(find('#class-code').focused, true);
-  assert.equal(requests.length, 1, 'no private greeting was submitted');
+  assert.equal(audio.src, `/api/greetings?action=audio&id=${greeting.id}`);
+  const report = article.children.find(child => child.className === 'report-greeting');
+  await report.listeners.click();
+  assert.equal(JSON.parse(requests[1].options.body).action, 'report');
+  assert.equal(article.removed, true, 'a reported greeting disappears immediately');
 });

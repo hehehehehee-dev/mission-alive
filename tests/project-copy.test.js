@@ -56,15 +56,18 @@ test('both Moon missions have dedicated routes instead of a shared chooser step'
   assert.doesNotMatch(main, /moonPanel\.play\(id, document\.activeElement\)/);
 });
 
-test('the public privacy notice matches classroom publication and removal behavior', async () => {
+test('the public privacy notice matches direct public sharing and removal behavior', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const policy = await readFile(new URL('../docs/PRIVACY.md', import.meta.url), 'utf8');
   const netlify = await readFile(new URL('../netlify.toml', import.meta.url), 'utf8');
   assert.match(html, /id="privacy-footer-link"/);
   assert.match(html, /id="privacy-dialog"/);
   assert.match(html, /Anyone visiting Mission Alive may read it or play its audio/);
-  assert.match(html, /there is currently no automatic end-of-year deletion/);
-  assert.match(policy, /Every submission remains pending until the teacher reviews it/);
+  assert.match(html, /It goes public straight away/);
+  assert.match(html, /press Remove from everyone at any time/);
+  assert.doesNotMatch(html, /teacher key|Classroom voices/);
+  assert.match(policy, /shared greetings are published immediately, with no review queue/);
+  assert.match(policy, /One report hides the greeting immediately/);
   assert.match(netlify, /Content-Security-Policy/);
   assert.match(netlify, /microphone=\(self\)/);
 });
