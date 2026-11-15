@@ -26,6 +26,7 @@ export function buildLunarRover(stage) {
   const gold = material('#c69749', .8, .3), dark = material('#1f2529', .3, .6);
   const rubber = material('#333538', .25, .85);
   const wheels = [];
+  const fenders = [];
   for (const x of [-1.15, 1.15]) for (const z of [-.95, .95]) {
     const wheel = cylinder(.75, .75, .3, 24, rubber, rover, [x, .78, z]);
     wheel.rotation.x = Math.PI / 2; wheels.push(wheel);
@@ -42,8 +43,11 @@ export function buildLunarRover(stage) {
     cylinder(.18, .18, .37, 12, gold, rover, [x, .78, z]).rotation.x = Math.PI / 2;
     rod([x * .65, 1.35, 0], [x, .78, z], .045, silver, rover);
     if (!(x < 0 && z > 0)) {
-      const fender = mesh(new T.CylinderGeometry(.81, .81, .38, 16, 1, true, 0, Math.PI), gold, rover, [x, .78, z]);
-      fender.rotation.x = Math.PI / 2; fender.rotation.z = Math.PI / 2;
+      // The wheel axle runs along Z. Rotate the cylinder axis onto Z, with
+      // its half-arc above the hub; an additional Z rotation turns it sideways.
+      const fender = mesh(new T.CylinderGeometry(.81, .81, .38, 16, 1, true, -Math.PI / 2, Math.PI), gold, rover, [x, .78, z]);
+      fender.rotation.x = -Math.PI / 2;
+      fenders.push(fender);
     }
   }
   box([2.65, .14, 1.45], silver, rover, [0, 1.35, 0]);
@@ -69,7 +73,7 @@ export function buildLunarRover(stage) {
   cylinder(.07, .07, .15, 12, dark, rover, [-.8, 2.5, .61]).rotation.x = Math.PI / 2;
   box([.75, .15, 1.15], dark, rover, [1.1, 1.48, 0]);
   for (const z of [-.5, .5]) rod([.8, 1.5, z], [1.5, 1.8, z], .024, silver, rover);
-  return { rover, wheels };
+  return { rover, wheels, fenders };
 }
 
 export function buildSurveyor(stage) {

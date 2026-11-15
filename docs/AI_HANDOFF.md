@@ -7,8 +7,9 @@ This is the shared handoff for every AI collaborator. Claude starts from `CLAUDE
 Whoever commits (Claude, Codex, or a human) updates this section and adds an entry to section 9 **in the same commit**. The next collaborator should be able to continue from this section alone, then confirm with `git log` and `git status`.
 
 - **Active branch:** `main`. The owner has authorized direct commits and pushes to `origin/main` after validation; Netlify auto-deploys from that branch.
-- **Last change:** Apollo has a material-placement repair workbench and visible draggable/key-controlled patch drawing; Surveyor has a pull probe and sweepable excavation strips. All six missions now place action and goal guidance in the actual active gameplay step, replacing generic incident cards.
-- **Last verification:** 139 tests/build pass. Production Apollo keyboard assembly/reshaping and Surveyor two-force/three-strip investigation both reached a pass and stamp offer. At 390 px, actual probe pulling and excavation swiping produced model data; all six guidance surfaces fit without horizontal overflow, with ES/VI guidance inspected. Reset now also synchronizes the probe's force display.
+- **Release authorization:** the owner has now explicitly requested pushing the previously held local changes to `main`.
+- **Last change:** corrected Apollo fender arches; incremental Curiosity commands preserve executed progress, rock impacts enter the hazard tile and disable the rover with grey smoke, and anatomy markers hide during motion. Moon stages allow early trials and Voyager has a private 6×6 cover-painting grid.
+- **Last verification:** `npm test` 141/141 and production build pass. Local keyboard play confirmed row 5 → row 4 → hazard row 3 without restarting; integrity reaches zero, grey smoke is visible, and anatomy markers hide during motion then return at rest. Voyager drawing survived reload. Fender geometry and two viewing angles were checked in the preceding local preview. `HEAD` and `origin/main` matched before this release.
 - **Not yet verified:** all three Ingenuity terrain outcomes, both flight pacing modes, the two Moon challenge canvases, and production security headers remain due for verification.
 - **Playtest findings not yet fixed (2026-11-14, child persona):**
   - Lobby hook “Kids love space but rarely see themselves in it” is written for adults; suggest a line aimed at the child.
@@ -196,6 +197,12 @@ If prose conflicts with the implementation, do not guess. Report the mismatch an
 Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, mandatory tutorials, or speculative mission facts. Small, verified changes preserve the working end-to-end journey.
 
 ## 9. Handoff log
+
+### 2026-11-14 — Codex — `main`
+- **Commit:** Release rover gameplay and mission experiments
+- **Changed:** released the held Apollo fender correction, incremental Curiosity execution/hazard damage/smoke, moving-rover hotspot visibility, early Moon trials, and local Voyager cover drawing. Synchronized the pending documentation with the owner's push authorization.
+- **Verified:** 141 tests, production build and diff checks; local browser keyboard progression and hazard entry, hidden/returned anatomy markers, visible reduced-motion smoke, and Voyager cover persistence across reload. Retained Claude's already-committed Golden Record logo.
+- **Left for next:** production smoke/marker check after Netlify deployment; physical-device/screen-reader testing and a fresh six-stamp finale run remain separate verification work.
 
 ### 2026-11-14 — Claude — `main`
 - **Commit:** Replace the header mark and favicon with the Golden Record logo

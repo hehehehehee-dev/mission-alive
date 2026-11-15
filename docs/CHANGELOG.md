@@ -4,11 +4,26 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-14
 
+### Rover gameplay and mission experiments
+
+- Curiosity's numbered anatomy hotspots hide during driving/command motion and return when it stops.
+
+- Appending Curiosity commands preserves a matching executed prefix; entering a rock tile disables the rover and turns its particle effect into rising grey smoke.
+- Moon steps permit early experimentation; Surveyor recommendations still require evidence.
+- Voyager adds a locally saved, keyboard-operable record-cover painting grid.
+- Verified incremental movement, hazard damage and smoke, marker visibility, and cover persistence locally; released after the owner's explicit push request.
+
 ### Golden Record logo
 
 - Replaced the “M•” mark and the unrelated triangle favicon with one logo: Voyager's Golden Record with a heartbeat shaped like an M. The header mark and the browser-tab icon now share the same shape.
 - The heartbeat redraws slowly in the header only when motion is allowed; with reduced motion it stays still. The mark is decorative (`aria-hidden`); the link keeps its text name.
 - Original Mission Alive artwork; no NASA logo or NASA image is used.
+
+### Rover fender orientation
+
+- Corrected the three fixed Apollo rover fenders to form upper wheel arches aligned with the Z wheel axles. The previous extra rotation turned their arcs sideways and below the hubs.
+- Added a geometry regression for all three fixed fenders; the fourth wheel remains exposed for the repair challenge.
+- The owner approved releasing the previously held local correction with the mission gameplay changes.
 
 ### Make mission actions distinct and explain each active step
 

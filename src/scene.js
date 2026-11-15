@@ -877,6 +877,10 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
     render(dt) {
       time += dt;
       if (id === "curiosity") {
+        const driving = Boolean(st.programRunning || (st.freeExplore && st.exploreMoving) || st.motionUntil > performance.now());
+        hotspotLayer.style.visibility = driving ? 'hidden' : '';
+        hotspotLayer.style.pointerEvents = driving ? 'none' : '';
+        hotspotLayer.setAttribute('aria-hidden', String(driving));
         const nextX = st.freeExplore
           ? st.exploreX || 0
           : -3 + (st.roverX || 0) * 1.5;
@@ -926,19 +930,22 @@ export function createScene(host, id, onFailure, onInspect = () => {}, onViewCha
         lastRoverPosition.set(root.position.x, 0, root.position.z);
         lastRoverProgress = st.programCounter || 0;
         if (dust && dustMaterial) {
-          const active = moving && !reduced;
+          const smoking = st.health <= 0;
+          const active = smoking || (moving && !reduced);
+          dustMaterial.color.set(smoking ? '#565b60' : '#bd9770');
+          dustMaterial.size = smoking ? .24 : .075;
           dustMaterial.opacity +=
             ((active ? 0.52 : 0) - dustMaterial.opacity) * Math.min(1, dt * 9);
           const positions = dust.geometry.attributes.position;
           const forwardX = Math.cos(root.rotation.y),
             forwardZ = -Math.sin(root.rotation.y);
           for (let i = 0; i < positions.count; i++) {
-            const life = (time * 0.7 + i / positions.count) % 1;
+            const life = reduced ? i / positions.count : (time * 0.7 + i / positions.count) % 1;
             const lateral = Math.sin(i * 2.39996) * (0.18 + life * 0.65);
             positions.setXYZ(
               i,
               root.position.x - forwardX * (0.65 + life * 1.9) - forwardZ * lateral,
-              0.06 + life * 0.42,
+              smoking ? .8 + life * 2.3 : 0.06 + life * 0.42,
               root.position.z - forwardZ * (0.65 + life * 1.9) + forwardX * lateral,
             );
           }

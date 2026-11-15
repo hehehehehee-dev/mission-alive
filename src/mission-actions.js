@@ -34,6 +34,31 @@ export function mountMissionDirections(id) {
     voyager: [['.greeting-library', 'voyagerListen'], ['.personal-record-studio', 'voyagerReply']],
   };
   for (const [selector, key] of locations[id] || []) find(selector)?.insertAdjacentHTML('afterbegin', directionMarkup(key));
+  if (id === 'voyager') {
+    const cover = document.createElement('section');
+    cover.className = 'record-cover-editor';
+    cover.innerHTML = '<h4>Draw your record cover</h4><p>Paint a symbol for Earth. Your drawing stays in this browser.</p><div class="record-pixels" role="group" aria-label="Draw your record cover"></div>';
+    const grid = cover.querySelector('.record-pixels');
+    let cells = Array(36).fill(false), painting = false, ink = true;
+    try { const saved = JSON.parse(localStorage.getItem('mission-alive-record-cover') || 'null'); if (Array.isArray(saved) && saved.length === 36) cells = saved.map(value => value === true); } catch {}
+    const paint = (button, value) => {
+      cells[Number(button.dataset.pixel)] = value;
+      button.setAttribute('aria-pressed', String(value));
+      try { localStorage.setItem('mission-alive-record-cover', JSON.stringify(cells)); } catch {}
+    };
+    cells.forEach((value, index) => {
+      const button = document.createElement('button');
+      button.type = 'button'; button.dataset.pixel = index;
+      button.setAttribute('aria-label', `${Math.floor(index / 6) + 1}, ${index % 6 + 1}`);
+      button.setAttribute('aria-pressed', String(value));
+      button.onpointerdown = event => { event.preventDefault(); painting = true; ink = !cells[index]; paint(button, ink); };
+      button.onpointerenter = () => { if (painting) paint(button, ink); };
+      button.onclick = event => { if (event.detail === 0) paint(button, !cells[index]); };
+      grid.append(button);
+    });
+    grid.onpointerup = grid.onpointercancel = grid.onpointerleave = () => { painting = false; };
+    find('.personal-record-studio .mission-direction')?.after(cover);
+  }
 }
 
 export function probeForceFromPull(distance, height) {

@@ -1,4 +1,7 @@
 const rows = [
+  ['Rover damaged. Reset the exhibit to try a safer route.', 'Rover averiado. Reinicia el módulo para probar una ruta más segura.', 'Xe đã hỏng. Đặt lại nhiệm vụ để thử tuyến đường an toàn hơn.'],
+  ['Draw your record cover', 'Dibuja la portada de tu disco', 'Vẽ bìa đĩa của bạn'],
+  ['Paint a symbol for Earth. Your drawing stays in this browser.', 'Dibuja un símbolo de la Tierra. Tu dibujo se guarda en este navegador.', 'Vẽ một biểu tượng cho Trái Đất. Hình vẽ được giữ trong trình duyệt này.'],
   ['Pull the white tip.', 'Tira de la punta blanca.', 'Kéo đầu màu trắng.'],
   ['Do this', 'Haz esto', 'Cách làm'],
   ['Goal', 'Objetivo', 'Mục tiêu'],

@@ -1586,10 +1586,13 @@ function resetRoverSimulation() {
   state.loadedRevision = -1;
   state.programRunning = false;
   state.failed = false;
+  state.health = 100;
+  state.wrecked = false;
   state.motionType = null;
   state.motionUntil = 0;
   machineAudio.stop();
   setMeter("energy", 100);
+  setMeter("health", state.health);
   if ($("#program-status"))
     $("#program-status").textContent = "Ready at the start tile.";
   drawRoverGrid();
@@ -1738,7 +1741,6 @@ function addRoverCommand(command) {
     return;
   state.program.push(command);
   state.programRevision += 1;
-  resetRoverSimulation();
   updateRoverProgramUI();
   $("#program-status").textContent = `${roverCommands[command].label} added.`;
 }
@@ -1772,7 +1774,8 @@ function prepareRoverExecution() {
     beep(175, 0.25);
     return false;
   }
-  resetRoverSimulation();
+  const canContinue = !state.failed && state.loadedRevision >= 0 && state.execution.slice(0, state.programCounter).every((command, index) => compiled.commands[index] === command);
+  if (!canContinue) resetRoverSimulation();
   state.execution = compiled.commands;
   state.loadedRevision = state.programRevision;
   $("#program-status").textContent =
@@ -1848,7 +1851,12 @@ function executeRoverCommand(now = performance.now()) {
     const blocked = roverMission.obstacles.has(roverCellKey(nextX, nextY));
     if (outside || blocked) {
       state.energy = Math.max(0, state.energy - 15);
-      if (blocked) state.health = Math.max(0, state.health - 20);
+      if (blocked) {
+        state.roverX = nextX;
+        state.roverY = nextY;
+        state.health = 0;
+        state.wrecked = true;
+      }
       state.failed = true;
       state.programRunning = false;
       state.motionType = "collision";
@@ -1857,7 +1865,7 @@ function executeRoverCommand(now = performance.now()) {
       machineAudio.pulse("crunch", 1);
       $("#program-status").textContent = frictionFeedback.failure("curiosity", outside
         ? "Boundary collision · turn before leaving the map."
-        : `Rock collision · integrity ${state.health}%. Reroute the program.`);
+        : "Rover damaged. Reset the exhibit to try a safer route.");
       setStatus("ROVER STOPPED · DEBUG YOUR PROGRAM");
       void machineVoices.playMid("curiosity");
       beep(145, 0.4);
@@ -1898,7 +1906,7 @@ function runRoverProgram() {
 }
 
 function stepRoverProgram() {
-  if (state.done || state.programRunning) return;
+  if (state.done || state.programRunning || state.health <= 0) return;
   if (
     state.loadedRevision !== state.programRevision ||
     state.programCounter >= state.execution.length

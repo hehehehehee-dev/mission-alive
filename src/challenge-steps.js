@@ -84,7 +84,8 @@ export function mountMoonChallengeSteps(lrvRoot, surveyorRoot) {
     assembled = nextAssembly;
     const nextEvidence = surveyor.dataset.surveyorEvidence === 'complete';
     if (nextEvidence && !evidence) surveyorSteps.unlock(2);
-    if (!nextEvidence) surveyorSteps.lock(2);
+    // Landing trials remain available; the model still requires evidence
+    // before accepting a recommendation and offering a stamp.
     evidence = nextEvidence;
   });
   observer.observe(lrv, { attributes: true, attributeFilter: ['data-lrv-assembly'] });
@@ -94,5 +95,6 @@ export function mountMoonChallengeSteps(lrvRoot, surveyorRoot) {
     if (event.target.closest('[data-surveyor-action="restart"]')) { evidence = false; surveyorSteps.reset(); }
   };
   surveyor.addEventListener('click', selectPatch);
+  for (const root of [lrv, surveyor]) root.querySelectorAll('.challenge-step-nav button').forEach(button => { button.disabled = false; });
   return { dispose() { observer.disconnect(); surveyor.removeEventListener('click', selectPatch); } };
 }
