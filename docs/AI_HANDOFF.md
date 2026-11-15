@@ -204,6 +204,12 @@ Avoid broad rewrites of `src/main.js`, new frameworks, a second design system, m
 ## 9. Handoff log
 
 ### 2026-11-15 — Claude — `main`
+- **Commit:** Keep the site header on the Moon mission pages
+- **Changed:** `src/moon-stories.js` (route pages use non-modal `dialog.show()` placed under the header via `--moon-route-top`; `main` is inert while open; a late `close` event is ignored if the page reopened), `src/readable-type.css`, `tests/readable-type.test.js`.
+- **Verified:** 188 tests; build; local browser at 1024 and 390 px: Home, About, module switching to Curiosity, Moon to Moon, and Back to `#apollo17` all leave the header usable and the lobby locked only while a Moon page is open.
+- **Left for next:** the non-route Moon dialog (`play()`/`open()`) still uses `showModal`; it is not reachable from the current UI.
+
+### 2026-11-15 — Claude — `main`
 - **Commit:** Add a Home link, separate the map cards, and hide an empty DSN card
 - **Changed:** `index.html` (Home link), `src/readable-type.css` (Home styles, Mars and Moon callout offsets), `src/voyager-contact.js` (card hidden while unavailable), one row in `src/locales/nov14.js`, tests.
 - **Verified:** 187 tests; build; local browser: Home from Voyager returns to the lobby; Mars gap 46–58 px and Moon gap 21–36 px at 390, 768, 1366 and 1920 px; no horizontal overflow; DSN card hidden with no local API.

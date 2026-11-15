@@ -344,7 +344,37 @@ export function mountMoonPanel(root, options = {}) {
     const button = event.target.closest('[data-route-mission]');
     if (button) options.onNavigate?.(button.dataset.routeMission);
   });
+  // Moon mission pages sit under the site header, like the other four missions,
+  // instead of covering it with a modal and a separate "Back" bar.
+  const siteHeader = () => document.querySelector('#app > header');
+  const siteMain = () => document.querySelector('#app > main');
+  let headerWatch = null;
+  const placeUnderHeader = () => {
+    const bottom = Math.max(0, Math.round(siteHeader()?.getBoundingClientRect().bottom || 0));
+    dialog.style.setProperty('--moon-route-top', `${bottom}px`);
+  };
+  const enterPageMode = () => {
+    window.scrollTo(0, 0);
+    document.body.classList.add('moon-route-open');
+    const main = siteMain();
+    if (main) main.inert = true;
+    placeUnderHeader();
+    if (!headerWatch && typeof ResizeObserver !== 'undefined' && siteHeader()) {
+      headerWatch = new ResizeObserver(placeUnderHeader);
+      headerWatch.observe(siteHeader());
+    }
+    window.addEventListener('resize', placeUnderHeader);
+  };
+  const leavePageMode = () => {
+    document.body.classList.remove('moon-route-open');
+    const main = siteMain();
+    if (main) main.inert = false;
+    headerWatch?.disconnect();
+    headerWatch = null;
+    window.removeEventListener('resize', placeUnderHeader);
+  };
   const leaveRouteMode = () => {
+    leavePageMode();
     routeExit = null;
     routeId = null;
     dialog.classList.remove('is-route-page');
@@ -375,6 +405,8 @@ export function mountMoonPanel(root, options = {}) {
     routeExit();
   });
   dialog.addEventListener("close", () => {
+    // "close" fires asynchronously; if the page was reopened meanwhile, keep it.
+    if (!dialog.open) leavePageMode();
     if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
     returnFocus = null;
   });
@@ -428,7 +460,9 @@ export function mountMoonPanel(root, options = {}) {
       credit.dataset.i18nSkip = '';
       credit.textContent = `${story.reveal.credit.replace(/^Image credit:\s*/i, '')} ↗`;
       credit.href = story.reveal.source[1];
-      if (!dialog.open) dialog.showModal();
+      if (dialog.open && dialog.matches(':modal')) dialog.close();
+      if (!dialog.open) dialog.show();
+      enterPageMode();
       labs.play(id);
       dialog.scrollTop = 0;
       return true;

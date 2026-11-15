@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Moon pages keep the site header
+
+- Apollo 17 and Surveyor 3 pages now open below the same header as every other page (Home, Sources & credits, For Teachers, Display & access, Mission notes, Impact, About, language and stamps) instead of a full-screen modal with only “← Back to academy”.
+- While a Moon page is open, the lobby behind it cannot be scrolled or reached with the keyboard. Browser Back/Forward, Home, header pages and switching between missions were checked.
+
 ### Home button, separated map cards, and no empty DSN card
 
 - Added a Home link as the first header link on every page (Spanish “Inicio”, Vietnamese “Trang chủ”).

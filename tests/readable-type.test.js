@@ -59,3 +59,14 @@ test("map cards around the same planet are pushed apart so they cannot overlap",
   assert.match(css, /#location-map-slot \.mars-curiosity \.diagram-callout \{ top: 84px; \}/);
   assert.match(css, /#location-map-slot \.moon-surveyor \.diagram-callout \{ top: 115px; \}/);
 });
+
+test("Moon mission pages sit under the shared site header instead of covering it", async () => {
+  const moon = await readFile(new URL("../src/moon-stories.js", import.meta.url), "utf8");
+  const openRoute = moon.slice(moon.indexOf("openRoute(id, onExit)"));
+  assert.match(openRoute, /if \(!dialog\.open\) dialog\.show\(\);\s*enterPageMode\(\);/, "route pages are non-modal so Home, Sources and About stay usable");
+  assert.doesNotMatch(openRoute.slice(0, openRoute.indexOf("return true")), /showModal/);
+  assert.match(moon, /main\.inert = true/, "the page behind cannot be tabbed into while a Moon page is open");
+  assert.match(moon, /if \(!dialog\.open\) leavePageMode\(\);/, "a late close event cannot undo a reopened page");
+  assert.match(css, /\.moon-panel\.is-route-page\[open\] \{[^}]*position: fixed;[^}]*inset: var\(--moon-route-top, 0px\) 0 0 0;/s);
+  assert.match(css, /\.moon-panel\.is-route-page \.dialog-top \{ display: none; \}/);
+});
