@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Reduce Surveyor 3 reading load
+
+- Shortened the visible Surveyor 3 instructions to one action per step: pick, push, dig, test.
+- Renamed the controls with direct child-readable verbs and moved width/pressure math plus the measurement log behind native disclosures.
+- Updated English, Spanish, and Vietnamese copy and regression coverage. The evidence model, 3D probe boom, and six-stamp certification path are unchanged.
+
 ### Clarify Surveyor 3 soil-testing game and anchor its probe
 
 - Reworded the Surveyor 3 mission around one clear loop for children: pick one soil spot, press with two different strengths, dig the hidden layer, then test a landing footprint.

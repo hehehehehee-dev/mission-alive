@@ -170,6 +170,12 @@ html:has(#moon-panel[open]), body:has(#moon-panel[open]) { overflow: hidden; }
 .surveyor-force-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .surveyor-force-buttons button { font-size: .9375rem; }
 .surveyor-pad-stepper > button { flex: 1 1 120px; }
+.surveyor-one-line { margin: 8px 0 12px !important; font-size: .9rem !important; line-height: 1.4 !important; color: #c7d6df; }
+.surveyor-science-note { margin: 12px 0; border-top: 1px solid #647987; border-bottom: 1px solid #647987; }
+.surveyor-science-note > summary, .surveyor-log-details > summary { cursor: pointer; min-height: 44px; padding: 10px 0; color: #e9d1a7; font-weight: 600; }
+.surveyor-science-note > p { margin: 8px 0; }
+.surveyor-log-details { margin-top: 14px; border-top: 1px solid #647987; }
+.surveyor-log-details .surveyor-log { margin-top: 0; border-top: 0; }
 .surveyor-controls > button { display: block; width: 100%; margin-top: 14px; }
 .surveyor-lander { max-width: 360px; margin-inline: auto; }
 .moon-game .surveyor-ending { display: block; padding: 24px 0 0; background: none; border: 0; border-top: 1px solid #647987; border-radius: 0; box-shadow: none; }

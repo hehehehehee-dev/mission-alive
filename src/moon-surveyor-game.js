@@ -15,49 +15,49 @@ export const surveyorCopy = Object.freeze({
   eyebrow: 'MOON TRAINING · ABOUT 3 MINUTES',
   missionLabel: 'MISSION · SURVEYOR 3',
   incidentTitle: 'MISSION MOMENT · THE GROUND SURPRISES YOU',
-  incident: 'The first probe sinks farther than expected. Before anyone lands, you need to find a patch that can hold.',
+  incident: 'The first probe sank. Find ground that can hold.',
   title: 'Surveyor 3: test the ground',
-  intro: 'Choose one spot, test it with two pushes, dig to see the hidden layer, then try a landing footprint.',
+  intro: 'Find ground that can hold.',
   disclaimer: 'Illustrated simulation · not NASA test data.',
   units: 'All forces, areas, pressures, and depths below use dimensionless simulation units. The three patches and their layers are invented; they do not describe actual variations in Moon soil.',
   history: 'In 1967, Surveyor 3 used its surface sampler to dig trenches, press on the soil in bearing tests, and perform impact tests. Its findings helped scientists assess support for Apollo landings.',
   historySource: 'NASA · Surveyor 3 surface experiments',
-  select: '1. Pick one soil spot',
+  select: '1. Pick a spot',
   patchA: 'Sample point A',
   patchB: 'Sample point B',
   patchC: 'Sample point C',
-  patchADetail: 'Even, shallow cover',
-  patchBDetail: 'Even, deep cover',
-  patchCDetail: 'Uneven cover · tilt risk',
-  cutawayCaption: 'The blue probe is attached to Surveyor 3. Press twice, then dig to reveal the layer below. Measurements stay in your field log.',
-  investigate: '2. Press, then dig',
-  force: 'Choose a push',
+  patchADetail: 'Shallow · even',
+  patchBDetail: 'Deep · even',
+  patchCDetail: 'Uneven · risky',
+  cutawayCaption: 'Press twice. Dig. Test.',
+  investigate: '2. Push + dig',
+  force: 'Push strength',
   force1: 'Light push',
   force2: 'Medium push',
   force3: 'Firm push',
   force4: 'Hard push',
-  probeArea: 'Try a light push and a hard push. A deeper sink means softer ground.',
-  press: 'Press the probe',
-  trench: 'Dig the full trench',
-  probePrompt: 'Make two different pushes on this spot. Compare the sinking depth.',
-  trenchPrompt: 'No trench inspected here yet. The surface alone does not reveal the layer below.',
-  trenchA: 'Trench: a thin softer cover, 0.45 units deep, sits over a firmer layer. Its thickness is even across the two test points.',
-  trenchB: 'Trench: a deeper softer cover, 1 unit deep, sits over a firmer layer. Its thickness is even across the two test points.',
-  trenchC: 'Trench: the softer cover is 0.3 units deep on one side and 1.2 on the other, above a firmer layer. Unequal sinking could tilt a lander.',
-  landing: '3. Try a landing footprint',
-  separation: 'Use the pretend landing feet to check whether this patch can hold a lander. This test does not change Surveyor 3 or the Apollo lunar module.',
-  width: 'Square footpad width',
-  narrower: 'Narrower pad',
-  wider: 'Wider pad',
+  probeArea: 'Light + hard push. More sink = softer ground.',
+  press: 'Push probe',
+  trench: 'Reveal layer',
+  probePrompt: 'Push twice with different strength.',
+  trenchPrompt: 'Dig once to reveal the layer.',
+  trenchA: 'Soft top, firm below. Even.',
+  trenchB: 'Deep soft top, firm below. Even.',
+  trenchC: 'Soft layer changes depth. Uneven ground can tilt a lander.',
+  landing: '3. Test landing',
+  separation: 'Use the test feet. Wider feet spread the load.',
+  width: 'Foot size',
+  narrower: 'Small feet',
+  wider: 'Wide feet',
   load: 'Each pad carries a fixed simulated load of 12 units. Pad area = width × width. Pressure = load ÷ area.',
   limits: 'Simulation safety limits: sinking at each pad ≤ 1.4 units; difference between pads ≤ 0.5 units.',
   touchdown: 'Test this footprint',
-  landingPrompt: 'Use your evidence, choose a footprint, and test it. A recommendation needs two pushes and a trench on this spot.',
-  incomplete: 'Trial only: gather the missing evidence on this patch and test again. A stable-looking result alone is not a recommendation.',
-  stable: 'Stable in this model.',
-  sinking: 'Too much sinking in this model. Spread the same load over more area, or investigate another patch, then retry.',
-  tilting: 'The pads sink unequally, so this model lander tilts too far. Compare the trench layers and try a lower pressure.',
-  accepted: 'Landing recommendation supported! Your force comparisons and trench inspection support this stable footprint. Other footprints can work too; keep experimenting.',
+  landingPrompt: 'Collect two pushes, dig once, then test.',
+  incomplete: 'Need two pushes + one dig.',
+  stable: 'Level and safe.',
+  sinking: 'Too deep. Try wider feet.',
+  tilting: 'Uneven. Try another spot.',
+  accepted: 'Safe landing footprint.',
   logTitle: 'Measurement log',
   emptyLog: 'No measurements yet. Your observations will stay here while you try different patches.',
   endingLabel: 'SURVEYOR 3 · AN IMAGINED VOICE',
@@ -164,21 +164,21 @@ export function surveyorGameMarkup() {
   const id = `surveyor-game-${++surveyorInstance}`;
   const c = surveyorCopy;
   return `<section class="moon-game surveyor-game" aria-labelledby="${id}-title" data-surveyor-game>
-    <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3><p class="moon-challenge-identity">${c.missionLabel}</p><aside class="mission-incident" aria-label="Mission moment"><p class="eyebrow">${c.incidentTitle}</p><p>${c.incident}</p><p class="fine">Pick one spot, press twice, dig, then test the feet.</p></aside>
+    <p class="eyebrow">${c.eyebrow}</p><h3 id="${id}-title">${c.title}</h3><p class="moon-challenge-identity">${c.missionLabel}</p><aside class="mission-incident" aria-label="Mission moment"><p class="eyebrow">${c.incidentTitle}</p><p>${c.incident}</p><p class="fine">Pick. Push. Dig. Test.</p></aside>
     ${quickStartMarkup('surveyor3')}
     ${whyMarkup(`<p>${c.intro}</p><p class="surveyor-disclaimer">${c.disclaimer}</p><p class="surveyor-model-label">${c.units}</p><p>${c.history} <a href="https://science.nasa.gov/mission/surveyor-3/" target="_blank" rel="noopener noreferrer">${c.historySource} ↗</a></p>`)}
     <div class="surveyor-study-layout"><fieldset class="surveyor-controls surveyor-site-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}"><strong>${c[patchCopy[soil.id]]}</strong><small>${c[`${patchCopy[soil.id]}Detail`]}</small></button>`).join('')}</div></fieldset>
-    <figure class="surveyor-figure"><div class="moon-challenge-canvas" data-surveyor-challenge-3d></div><div class="moon-challenge-2d">${soilIllustration(id)}</div><figcaption class="surveyor-model-label"><span class="moon-challenge-3d-caption">Interactive 3D training simulation. Use the controls on this page; every result is also explained in text.</span><span class="moon-challenge-2d-caption">${c.cutawayCaption}</span></figcaption></figure>
+    <figure class="surveyor-figure"><div class="moon-challenge-canvas" data-surveyor-challenge-3d></div><div class="moon-challenge-2d">${soilIllustration(id)}</div><figcaption class="surveyor-model-label"><span class="moon-challenge-3d-caption">Watch the probe move.</span><span class="moon-challenge-2d-caption">${c.cutawayCaption}</span></figcaption></figure>
     <div class="surveyor-investigation-grid"><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.investigate}</legend>
       <p class="surveyor-model-label">${c.force}</p><div class="surveyor-force-buttons" role="group" aria-label="${c.force}">${surveyorModel.forces.map((force) => `<button type="button" data-surveyor-force="${force}" aria-pressed="${force === 1}">${c[`force${force}`]}</button>`).join('')}</div>
-      <p class="surveyor-model-label">${c.probeArea}</p><button type="button" data-surveyor-action="probe">${c.press}</button><button type="button" data-surveyor-action="trench">${c.trench}</button>
+      <p class="surveyor-one-line">${c.probeArea}</p><button type="button" data-surveyor-action="probe">${c.press}</button><button type="button" data-surveyor-action="trench">${c.trench}</button>
       <p class="surveyor-readout" data-surveyor-probe-readout>${c.probePrompt}</p><p class="surveyor-readout" data-surveyor-trench-readout>${c.trenchPrompt}</p><p class="surveyor-readout" data-surveyor-evidence></p>
-    </fieldset><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.landing}</legend><p>${c.separation}</p>
+    </fieldset><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.landing}</legend><p class="surveyor-one-line">${c.separation}</p>
       ${landerIllustration()}<p class="surveyor-model-label">${c.width}</p><div class="surveyor-pad-stepper"><button type="button" data-surveyor-action="narrower">${c.narrower}</button><button type="button" data-surveyor-action="wider">${c.wider}</button></div>
-      <p class="surveyor-readout" data-surveyor-pad-readout></p><p class="surveyor-model-label">${c.load}</p><p class="surveyor-model-label">${c.limits}</p><button type="button" data-surveyor-action="touchdown">${c.touchdown}</button>
+      <p class="surveyor-readout" data-surveyor-pad-readout></p><details class="surveyor-science-note"><summary>Why does width matter?</summary><p>${c.load}</p><p>${c.limits}</p></details><button type="button" data-surveyor-action="touchdown">${c.touchdown}</button>
     </fieldset></div></div>
     <div class="surveyor-result" role="status" aria-live="polite" aria-atomic="true" data-surveyor-result>${c.landingPrompt}</div>
-    <section class="surveyor-log" aria-labelledby="${id}-log" tabindex="0"><h4 id="${id}-log">${c.logTitle}</h4><p data-surveyor-empty-log>${c.emptyLog}</p><ol data-surveyor-log></ol></section>
+    <details class="surveyor-log-details"><summary>${c.logTitle}</summary><section class="surveyor-log" aria-labelledby="${id}-log" tabindex="0"><h4 id="${id}-log" class="visually-hidden">${c.logTitle}</h4><p data-surveyor-empty-log>${c.emptyLog}</p><ol data-surveyor-log></ol></section></details>
     <aside class="surveyor-ending" data-surveyor-ending hidden><p class="eyebrow">${c.endingLabel}</p><blockquote>${c.ending}</blockquote><p>${c.home}</p><a href="https://www.jpl.nasa.gov/blog/2012/1/surveyor-3-camera-returned-from-the-moon" target="_blank" rel="noopener noreferrer">${c.homeSource} ↗</a></aside>
     <button type="button" data-surveyor-action="restart">${c.restart}</button>
   </section>`;

@@ -7,9 +7,9 @@ export const missionDirections = Object.freeze({
   // Apollo renders this guidance inside its spatial board rather than as duplicate cards.
   apolloBuild: ['Rebuild the dust shield', 'The fender broke, so every wheel turn throws dust at the crew and equipment.', 'Drag or tap the map panels into the glow. Tape the seams. Clamp the shield to the rover.', 'Build all seven repair pieces.'],
   apolloShape: ['Shape and test the shield', 'The repair is attached. Now make it catch the dust without hitting the rover.', 'Pull Shield reach, then run the dust test. Fine controls are optional.', 'Catch at least 9 of 12 paths and keep the repair clear.'],
-  surveyorChoose: ['Pick a soil spot', 'I am already standing on the Moon. These marks are places to test, not landing zones.', 'Tap A, B, or C. Start with the spot you want to understand.', 'Choose one spot for your field log.'],
-  surveyorDig: ['Press and dig', 'A hard push can sink farther. Digging shows what the surface is hiding.', 'Pull the probe twice with different strength, then sweep all three strips.', 'Record two pushes and reveal the hidden layer.'],
-  surveyorLand: ['Try the landing feet', 'Small feet press hard. Wide feet spread the same load.', 'Choose a footprint, drop the test feet, and compare the two sides.', 'Find a footprint that stays level and does not sink too far.'],
+  surveyorChoose: ['Pick a soil spot', 'I am already standing on the Moon. These marks are places to test, not landing zones.', 'Tap A, B, or C.', 'Choose one spot.'],
+  surveyorDig: ['Press and dig', 'A hard push can sink farther. Digging shows what the surface is hiding.', 'Push twice. Reveal the layer.', 'Collect two pushes and one dig.'],
+  surveyorLand: ['Try the landing feet', 'Small feet press hard. Wide feet spread the same load.', 'Choose a size. Test the feet.', 'Find a level footprint.'],
   curiosity: ['Send a plan, then debug it', 'I cannot wait for Earth to steer every turn. Your commands must guide me.', 'Build MOVE and TURN blocks. ANALYZE at the outcrop, then reach UPLINK. Use Step to debug.', 'Analyze the rock, upload the data, and choose the claim the evidence supports.'],
   ingenuityPlan: ['Plan a safe return to the ground', 'Flying is only half the job. A slope or boulder can end the flight.', 'Choose terrain and the onboard controller, then test the link.', 'Prepare a flight that can land safely.'],
   ingenuityPower: ['Make lift in thin air', 'My blades need speed before I can leave the ground.', 'Power the rotors, then move on to flight control.', 'Reach the marked safe rotor band.'],
@@ -23,6 +23,9 @@ export const missionDirections = Object.freeze({
 
 export function directionMarkup(key) {
   const [title, story, action, goal] = missionDirections[key];
+  if (key.startsWith('surveyor')) {
+    return `<aside class="mission-direction mission-direction-compact"><h4>${title}</h4><p>${action}</p></aside>`;
+  }
   return `<aside class="mission-direction"><h4>${title}</h4><p class="direction-voice">${story}</p><p><strong>Do this</strong> <span>${action}</span></p><p class="direction-goal"><strong>Goal</strong> <span>${goal}</span></p></aside>`;
 }
 
