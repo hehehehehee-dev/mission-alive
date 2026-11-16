@@ -54,8 +54,10 @@ test('markup keeps fictional model, real history, accessible controls, and homec
   const markup = surveyorGameMarkup();
   assert.match(markup, /MISSION · SURVEYOR 3/);
   assert.equal((markup.match(/data-surveyor-patch=/g) || []).length, 3);
-  assert.match(markup, /Surveyor 3: read the ground/);
+  assert.match(markup, /Surveyor 3: test the ground/);
   assert.match(markup, /Sample point A/);
+  assert.match(markup, /Light push/);
+  assert.match(markup, /Hard push/);
   assert.match(markup, /Even, shallow cover/);
   assert.match(markup, /Even, deep cover/);
   assert.match(markup, /Uneven cover · tilt risk/);
@@ -64,7 +66,7 @@ test('markup keeps fictional model, real history, accessible controls, and homec
   assert.match(markup, /Illustrated simulation · not NASA test data\./);
   assert.match(markup, /dimensionless simulation units/);
   assert.match(markup, /patches and their layers are invented/);
-  assert.match(markup, /Drop a separate two-foot pressure rig onto the soil/);
+  assert.match(markup, /Use the pretend landing feet to check whether this patch can hold a lander/);
   assert.match(markup, /I am still here\. But part of me made it home\./);
   assert.match(markup, /1969, Apollo 12 astronauts returned Surveyor 3’s television camera and soil scoop/);
   assert.match(markup, /https:\/\/science\.nasa\.gov\/mission\/surveyor-3\//);
@@ -82,7 +84,9 @@ test('the 3D study is a geology transect with a separate pressure rig, not three
   const source = readFileSync(new URL('../src/moon-challenge-scenes.js', import.meta.url), 'utf8');
   assert.match(source, /surveyor-transect/);
   assert.match(source, /separate two-foot rig/i);
-  assert.match(source, /lander\.position\.set\(0, \.28, -1\.45\)/);
+  assert.match(source, /lander\.position\.set\(0, \.28, -\.78\)/);
+  assert.match(source, /const probeBoom = rod\(/);
+  assert.match(source, /updateBoom\(sampleX\)/);
   assert.doesNotMatch(source, /const pad = cylinder\(1, 1\.1, \.35/);
 });
 

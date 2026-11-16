@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Clarify Surveyor 3 soil-testing game and anchor its probe
+
+- Reworded the Surveyor 3 mission around one clear loop for children: pick one soil spot, press with two different strengths, dig the hidden layer, then test a landing footprint.
+- Renamed the active step tabs and quick-start labels so the next action is visible without decoding technical terms.
+- Added a visible 3D sampling boom from the Surveyor lander to the selected transect point and moved the lander closer to the transect, fixing the detached probe look while keeping the existing model and measurement logic.
+- Updated English, Spanish, and Vietnamese mission guidance and regression coverage. The six-stamp certification path is unchanged.
+
 ### Split paired impact scores into Before and After columns
 
 - Interest and belonging cards now use labeled Before and After columns with a shared `/ 5` scale, making the direction of change readable without parsing an inline arrow.

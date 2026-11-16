@@ -65,9 +65,9 @@ export function mountMoonChallengeSteps(lrvRoot, surveyorRoot) {
   side.className = 'surveyor-step-controls';
   layout.append(side);
   const surveyorSteps = mountChallengeSteps(side, [
-    { title: '01 · Sample point', nodes: [surveyor.querySelector('.surveyor-site-controls')] },
-    { title: '02 · Probe & dig', nodes: [fieldsets[0]] },
-    { title: '03 · Test footprint', nodes: [fieldsets[1], surveyor.querySelector('.surveyor-result')] },
+    { title: '01 · Pick a spot', nodes: [surveyor.querySelector('.surveyor-site-controls')] },
+    { title: '02 · Press & dig', nodes: [fieldsets[0]] },
+    { title: '03 · Test the feet', nodes: [fieldsets[1], surveyor.querySelector('.surveyor-result')] },
   ]);
   surveyor.querySelector('.surveyor-investigation-grid').remove();
   collapseChallengeNotes(surveyor.querySelector('.surveyor-log'), 'Flight log');

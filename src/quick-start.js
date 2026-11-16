@@ -4,7 +4,7 @@ const missions = Object.freeze({
   webb: [["↔", "Unfold", "Pull both gold wings out."], ["✦", "Focus", "Move three stars to center."], ["🌈", "Reveal", "Explore infrared light."]],
   voyager: [["▶", "Listen", "Play one Earth greeting."], ["💬", "Reply", "Write or record yours."], ["✓", "Save", "Your stamp unlocks."]],
   apollo17: [["🧰", "Build", "Add maps, tape, and clamps."], ["↕", "Shape", "Pull the white tip."], ["💨", "Test", "Keep dust off the gear."]],
-  surveyor3: [["↓", "Probe", "Compare two pushes."], ["⛏", "Dig", "Reveal the hidden layer."], ["▰", "Footprint", "Spread pressure safely."]],
+  surveyor3: [["↓", "Press", "Try light and hard."], ["⛏", "Dig", "Reveal the hidden layer."], ["▰", "Test", "Find a level footprint."]],
 });
 
 export function quickStartMarkup(mission) {

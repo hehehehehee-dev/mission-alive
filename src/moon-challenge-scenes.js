@@ -219,8 +219,21 @@ export function mountSurveyorChallengeScene(host) {
 
   const { lander } = buildSurveyor(stage);
   lander.scale.setScalar(.78);
-  lander.position.set(0, .28, -1.45);
+  // Keep the lander close enough to the transect that the sampling action
+  // reads as one machine, not a disconnected prop floating elsewhere on the
+  // terrain. The arm below makes the selected point explicit from every angle.
+  lander.position.set(0, .28, -.78);
   const probe = cylinder(.055, .055, 1.2, 10, blue, scene, [-2.25, 1.3, .15]);
+  const probeBoom = rod([0, 1.72, -.62], [-2.25, 1.3, .15], .032, frame, scene);
+  const probeBoomLength = probeBoom.geometry.parameters.height;
+  const probeAnchor = new T.Vector3(0, 1.72, -.62);
+  const updateBoom = (sampleX) => {
+    const target = new T.Vector3(sampleX, 1.3, .15);
+    const delta = target.clone().sub(probeAnchor);
+    probeBoom.position.copy(probeAnchor).add(target).multiplyScalar(.5);
+    probeBoom.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), delta.normalize());
+    probeBoom.scale.y = probeAnchor.distanceTo(target) / probeBoomLength;
+  };
 
   // The final pressure experiment uses a separate two-foot rig. It does not
   // move Surveyor or imitate Ingenuity's takeoff and landing.
@@ -243,6 +256,8 @@ export function mountSurveyorChallengeScene(host) {
     });
     const sampleX = patches[patchIndex].surface.position.x;
     probe.position.x = sampleX;
+    probe.position.y = 1.3;
+    updateBoom(sampleX);
     footprint.position.set(sampleX, .34, .15);
     footprint.rotation.z = 0;
     footprint.visible = false;

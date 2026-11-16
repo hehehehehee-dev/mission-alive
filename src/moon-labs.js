@@ -20,7 +20,7 @@ export function moonLabMarkup() {
   return `<p class="moon-lab-intro">Two Moon missions. Build, investigate, and earn a stamp for each.</p>
     <div class="moon-lab-launches" role="group" aria-label="Moon training missions">
       <button type="button" data-moon-play="apollo17" aria-controls="moon-lrv-lab" aria-pressed="false"><span>Apollo 17 LRV</span><strong>Repair my dust shield</strong><small>Build · test · revise</small><span aria-hidden="true">↗</span></button>
-      <button type="button" data-moon-play="surveyor3" aria-controls="moon-surveyor-lab" aria-pressed="false"><span>Surveyor 3</span><strong>Can this ground hold?</strong><small>Probe · compare · land</small><span aria-hidden="true">↗</span></button>
+      <button type="button" data-moon-play="surveyor3" aria-controls="moon-surveyor-lab" aria-pressed="false"><span>Surveyor 3</span><strong>Can this ground hold?</strong><small>Pick · press · test</small><span aria-hidden="true">↗</span></button>
     </div>
     <section class="moon-lab-workspace" id="moon-lab-workspace" hidden>
       <div class="moon-lab-toolbar"><button type="button" data-moon-back>← Back to Moon training</button><p class="eyebrow">MOON TRAINING · EARN YOUR STAMP</p></div>
