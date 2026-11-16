@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Align the Apollo repair preview
+
+- Added a small full-rover overview to the Apollo 17 repair diagram so the three map panels read as a missing fender on the same machine shown in the 3D preview.
+- Kept the close-up wheel interaction, measurements, seven-piece assembly, and six-stamp flow unchanged.
+
 ### Restore quick module access
 
 - Restored the compact six-module switcher on exhibit pages so learners can jump directly between missions.

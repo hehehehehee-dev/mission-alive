@@ -296,6 +296,17 @@ function svgMarkup(result) {
     <rect width="720" height="430" rx="20" fill="#111d2c"/>
     <path d="M0 390Q100 382 186 389T366 387T552 391T720 387V430H0Z" fill="#343945"/>
     <path d="M24 407h36m60-12h21m198 15h40m143-12h22m83 16h22" stroke="#69717b" stroke-width="2"/>
+    <g class="lrv-overview" transform="translate(444 22) scale(.42)" aria-hidden="true">
+      <text x="0" y="0" fill="#b9c6cb" font-family="system-ui, sans-serif" font-size="22" font-weight="700" letter-spacing="2">${copy.missionLabel}</text>
+      <path d="M26 91H258M42 88l28-38h162l34 38M62 49h162" fill="none" stroke="#a4b1b7" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M71 30h60v43H71z" fill="#9b6b2e" stroke="#d2a65c" stroke-width="3"/>
+      <path d="M137 38h61v35h-61z" fill="#252f36" stroke="#718088" stroke-width="3"/>
+      <path d="M145 5h33v48h-33zM183-4h33v57h-33z" fill="#dce2df" stroke="#fff" stroke-width="3" transform="skewX(-7)"/>
+      <circle cx="47" cy="103" r="30" fill="#202e39" stroke="#91a2a9" stroke-width="5"/><circle cx="47" cy="103" r="22" fill="none" stroke="#657b86" stroke-width="2"/>
+      <circle cx="223" cy="103" r="30" fill="#202e39" stroke="#91a2a9" stroke-width="5"/><circle cx="223" cy="103" r="22" fill="none" stroke="#657b86" stroke-width="2"/>
+      <path d="M16 84Q29 42 57 53" fill="none" stroke="#efaf6b" stroke-width="8" stroke-dasharray="8 7"/>
+      <path d="M32 73l-14 12m14-12l-3 18" stroke="#ff9f82" stroke-width="4"/>
+    </g>
     <g class="lrv-seat-equipment">
       <path d="M270 298H602M287 296l38-51h230l43 51M329 246H560" fill="none" stroke="#a4b1b7" stroke-width="9" stroke-linejoin="round"/>
       <path d="M335 226h92v58h-92z" fill="#9b6b2e" stroke="#d2a65c" stroke-width="3"/>
