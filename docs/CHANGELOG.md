@@ -4,6 +4,11 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Restore quick module access
+
+- Restored the compact six-module switcher on exhibit pages so learners can jump directly between missions.
+- Kept the lobby journey map as the primary discovery surface; the switcher is quick access, not a second lobby.
+
 ### Reduce mission reading load
 
 - Kept the lobby journey map as the single mission picker and hid the repeated six-card switcher on exhibit pages, leaving the header Home link and passport as the return path.

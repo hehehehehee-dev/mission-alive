@@ -2470,11 +2470,10 @@ async function render(id) {
   updateBackgroundCredit(id);
   $("#lobby").hidden = true;
   $("#teachers-page").hidden = true;
-  // The lobby map is the single mission picker. Keeping the six-card switcher
-  // on every exhibit duplicated the same choice and pushed the actual mission
-  // below the fold, especially on phones. The header link still returns to the
-  // map, and progress remains available through the passport.
-  nav.hidden = true;
+  // Keep the compact module switcher as quick access between missions. The
+  // lobby map remains the primary way to discover the journey, while this bar
+  // helps a learner jump to a different module without returning home.
+  nav.hidden = false;
   $(".exhibit").hidden = false;
   $("#discovery").hidden = false;
   if (enteringExhibit) window.scrollTo({ top: 0, behavior: "instant" });
