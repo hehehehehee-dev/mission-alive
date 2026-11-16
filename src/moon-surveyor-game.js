@@ -22,13 +22,13 @@ export const surveyorCopy = Object.freeze({
   units: 'All forces, areas, pressures, and depths below use dimensionless simulation units. The three patches and their layers are invented; they do not describe actual variations in Moon soil.',
   history: 'In 1967, Surveyor 3 used its surface sampler to dig trenches, press on the soil in bearing tests, and perform impact tests. Its findings helped scientists assess support for Apollo landings.',
   historySource: 'NASA · Surveyor 3 surface experiments',
-  select: '1. Pick a spot',
-  patchA: 'Sample point A',
-  patchB: 'Sample point B',
-  patchC: 'Sample point C',
-  patchADetail: 'Shallow · even',
-  patchBDetail: 'Deep · even',
-  patchCDetail: 'Uneven · risky',
+  select: 'Game 1 · Find firm ground',
+  patchA: 'A · Firm ground',
+  patchB: 'B · Soft ground',
+  patchC: 'C · Uneven ground',
+  patchADetail: 'Even surface',
+  patchBDetail: 'Deep soft layer',
+  patchCDetail: 'Tilt risk',
   cutawayCaption: 'Press twice. Dig. Test.',
   investigate: '2. Push + dig',
   force: 'Push strength',
@@ -44,7 +44,7 @@ export const surveyorCopy = Object.freeze({
   trenchA: 'Soft top, firm below. Even.',
   trenchB: 'Deep soft top, firm below. Even.',
   trenchC: 'Soft layer changes depth. Uneven ground can tilt a lander.',
-  landing: '3. Test landing',
+  landing: 'Game 2 · Make a safe landing',
   separation: 'Use the test feet. Wider feet spread the load.',
   width: 'Foot size',
   narrower: 'Small feet',
@@ -170,9 +170,9 @@ export function surveyorGameMarkup() {
     <div class="surveyor-study-layout"><fieldset class="surveyor-controls surveyor-site-controls"><legend class="surveyor-model-label">${c.select}</legend><div class="surveyor-patches">${surveyorSoils.map((soil) => `<button type="button" data-surveyor-patch="${soil.id}" aria-pressed="${soil.id === 'a'}"><strong>${c[patchCopy[soil.id]]}</strong><small>${c[`${patchCopy[soil.id]}Detail`]}</small></button>`).join('')}</div></fieldset>
     <figure class="surveyor-figure"><div class="moon-challenge-canvas" data-surveyor-challenge-3d></div><div class="moon-challenge-2d">${soilIllustration(id)}</div><figcaption class="surveyor-model-label"><span class="moon-challenge-3d-caption">Watch the probe move.</span><span class="moon-challenge-2d-caption">${c.cutawayCaption}</span></figcaption></figure>
     <div class="surveyor-investigation-grid"><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.investigate}</legend>
-      <p class="surveyor-model-label">${c.force}</p><div class="surveyor-force-buttons" role="group" aria-label="${c.force}">${surveyorModel.forces.map((force) => `<button type="button" data-surveyor-force="${force}" aria-pressed="${force === 1}">${c[`force${force}`]}</button>`).join('')}</div>
+      <div class="surveyor-native-controls" hidden><p class="surveyor-model-label">${c.force}</p><div class="surveyor-force-buttons" role="group" aria-label="${c.force}">${surveyorModel.forces.map((force) => `<button type="button" data-surveyor-force="${force}" aria-pressed="${force === 1}">${c[`force${force}`]}</button>`).join('')}</div>
       <p class="surveyor-one-line">${c.probeArea}</p><button type="button" data-surveyor-action="probe">${c.press}</button><button type="button" data-surveyor-action="trench">${c.trench}</button>
-      <p class="surveyor-readout" data-surveyor-probe-readout>${c.probePrompt}</p><p class="surveyor-readout" data-surveyor-trench-readout>${c.trenchPrompt}</p><p class="surveyor-readout" data-surveyor-evidence></p>
+      <p class="surveyor-readout" data-surveyor-probe-readout>${c.probePrompt}</p><p class="surveyor-readout" data-surveyor-trench-readout>${c.trenchPrompt}</p><p class="surveyor-readout" data-surveyor-evidence></p></div>
     </fieldset><fieldset class="surveyor-controls"><legend class="surveyor-model-label">${c.landing}</legend><p class="surveyor-one-line">${c.separation}</p>
       ${landerIllustration()}<p class="surveyor-model-label">${c.width}</p><div class="surveyor-pad-stepper"><button type="button" data-surveyor-action="narrower">${c.narrower}</button><button type="button" data-surveyor-action="wider">${c.wider}</button></div>
       <p class="surveyor-readout" data-surveyor-pad-readout></p><details class="surveyor-science-note"><summary>Why does width matter?</summary><p>${c.load}</p><p>${c.limits}</p></details><button type="button" data-surveyor-action="touchdown">${c.touchdown}</button>

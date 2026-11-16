@@ -1,5 +1,5 @@
-import { collapseChallengeNotes } from './challenge-steps.js';
 import { mergeMissionHelp } from './quick-start.js';
+import { t } from './i18n.js';
 
 // These tools send the same native actions as the existing simulation controls.
 // Pointer, touch and keyboard paths therefore share measurements and completion.
@@ -7,9 +7,9 @@ export const missionDirections = Object.freeze({
   // Apollo renders this guidance inside its spatial board rather than as duplicate cards.
   apolloBuild: ['Rebuild the dust shield', 'The fender broke, so every wheel turn throws dust at the crew and equipment.', 'Drag or tap the map panels into the glow. Tape the seams. Clamp the shield to the rover.', 'Build all seven repair pieces.'],
   apolloShape: ['Shape and test the shield', 'The repair is attached. Now make it catch the dust without hitting the rover.', 'Pull Shield reach, then run the dust test. Fine controls are optional.', 'Catch at least 9 of 12 paths and keep the repair clear.'],
-  surveyorChoose: ['Pick a soil spot', 'I am already standing on the Moon. These marks are places to test, not landing zones.', 'Tap A, B, or C.', 'Choose one spot.'],
+  surveyorChoose: ['Game 1 · Find firm ground', 'I am already standing on the Moon. These marks are places to test, not landing zones.', 'Pick A, B, or C. Then run a light and hard test.', 'Choose the spot that holds up best.'],
   surveyorDig: ['Press and dig', 'A hard push can sink farther. Digging shows what the surface is hiding.', 'Push twice. Reveal the layer.', 'Collect two pushes and one dig.'],
-  surveyorLand: ['Try the landing feet', 'Small feet press hard. Wide feet spread the same load.', 'Choose a size. Test the feet.', 'Find a level footprint.'],
+  surveyorLand: ['Game 2 · Make a safe landing', 'Small feet press hard. Wide feet spread the same load.', 'Choose small or wide feet, then test.', 'Keep both feet level.'],
   curiosity: ['Send a plan, then debug it', 'I cannot wait for Earth to steer every turn. Your commands must guide me.', 'Build MOVE and TURN blocks. ANALYZE at the outcrop, then reach UPLINK. Use Step to debug.', 'Analyze the rock, upload the data, and choose the claim the evidence supports.'],
   ingenuityPlan: ['Plan a safe return to the ground', 'Flying is only half the job. A slope or boulder can end the flight.', 'Choose terrain and the onboard controller, then test the link.', 'Prepare a flight that can land safely.'],
   ingenuityPower: ['Make lift in thin air', 'My blades need speed before I can leave the ground.', 'Power the rotors, then move on to flight control.', 'Reach the marked safe rotor band.'],
@@ -58,62 +58,37 @@ export function mountMoonTools(lrvRoot, surveyorRoot) {
   surveyor.querySelectorAll('.mission-incident').forEach(node => node.remove());
 
   const surveyorPanels = surveyor.querySelectorAll('.challenge-step');
-  ['surveyorChoose', 'surveyorDig', 'surveyorLand'].forEach((key, i) => surveyorPanels[i].insertAdjacentHTML('afterbegin', directionMarkup(key)));
-  const investigation = surveyorPanels[1].querySelector('fieldset');
+  ['surveyorChoose', 'surveyorLand'].forEach((key, i) => surveyorPanels[i].insertAdjacentHTML('afterbegin', directionMarkup(key)));
+  const investigation = surveyorPanels[0].querySelector('.surveyor-controls:not(.surveyor-site-controls)');
   const fieldTools = document.createElement('div');
-  fieldTools.className = 'soil-field-tools';
-  fieldTools.innerHTML = `<div class="probe-station"><button type="button" class="probe-pull" aria-label="Pull the probe. Arrow keys choose force; Enter measures."><svg viewBox="0 0 70 120" aria-hidden="true"><path d="M20 8h30v16H20zM35 24v82M22 106h26"/></svg><span>Pull down, then release</span><output data-probe-force>1</output></button><div class="probe-scale" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><div class="soil-sweep" role="group" aria-label="Excavate three soil strips">${[0, 1, 2].map(i => `<button type="button" data-soil-strip="${i}" aria-label="Excavate strip ${i + 1}"><span>${i + 1}</span></button>`).join('')}</div><p class="soil-tool-help">Sweep a strip sideways to dig. You can also tap each strip.</p><p class="soil-measurement" role="status"></p>`;
+  fieldTools.className = 'soil-field-tools surveyor-simple-tools';
+  fieldTools.innerHTML = `<p class="soil-tool-title">${t('Game 1 · Find firm ground')}</p><p class="soil-tool-help">${t('Test the spot you picked. A light push and a hard push show how soft it is.')}</p><div class="surveyor-simple-actions" role="group" aria-label="${t('Soil tests')}"><button type="button" data-soil-tool="light">${t('Light test')}</button><button type="button" data-soil-tool="hard">${t('Hard test')}</button><button type="button" data-soil-tool="reveal">${t('Reveal layer')}</button></div><p class="soil-measurement" role="status"></p>`;
   investigation.querySelector('legend').after(fieldTools);
-  const numericControls = document.createElement('div');
-  for (const node of [...investigation.children]) {
-    if (node === fieldTools || node.tagName === 'LEGEND' || node.matches('[data-surveyor-probe-readout], [data-surveyor-trench-readout], [data-surveyor-evidence]')) continue;
-    numericControls.append(node);
-  }
-  investigation.append(numericControls);
-  collapseChallengeNotes(numericControls, 'Button controls');
-  const probe = fieldTools.querySelector('.probe-pull');
-  surveyor.querySelector('[data-surveyor-probe-readout]').hidden = true;
-  let force = 1, pull = null, stripDrag = null;
-  const setForce = value => {
-    force = value;
-    probe.style.setProperty('--probe-pull', `${(force - 1) * 17}px`);
-    fieldTools.querySelector('[data-probe-force]').textContent = String(force);
+  const runProbe = force => {
     surveyor.querySelector(`[data-surveyor-force="${force}"]`).click();
+    surveyor.querySelector('[data-surveyor-action="probe"]').click();
   };
-  const measure = () => surveyor.querySelector('[data-surveyor-action="probe"]').click();
-  listen(probe, 'pointerdown', event => { event.preventDefault(); pull = { start: event.clientY, moved: false }; probe.setPointerCapture(event.pointerId); });
-  listen(probe, 'pointermove', event => { if (!pull) return; const dy = event.clientY - pull.start; pull.moved ||= Math.abs(dy) > 5; setForce(probeForceFromPull(dy, 100)); });
-  listen(probe, 'pointerup', () => { if (pull) measure(); pull = null; });
-  listen(probe, 'pointercancel', () => { pull = null; });
-  listen(probe, 'keydown', event => {
-    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
-      event.preventDefault(); setForce(event.key === 'Home' ? 1 : event.key === 'End' ? 4 : Math.max(1, Math.min(4, force + (event.key === 'ArrowDown' ? 1 : -1))));
-    }
+  const revealLayer = () => {
+    for (let i = 0; i < 3; i += 1) surveyor.querySelector('[data-surveyor-action="trench"]').click();
+  };
+  listen(fieldTools, 'click', event => {
+    const tool = event.target.closest?.('[data-soil-tool]')?.dataset.soilTool;
+    if (tool === 'light') runProbe(1);
+    if (tool === 'hard') runProbe(4);
+    if (tool === 'reveal') revealLayer();
   });
-  listen(probe, 'click', event => { if (event.detail === 0) measure(); });
-  let patch = 'a', excavated = 0, suppressStripClick = false;
-  const dig = () => { if (excavated < 3) surveyor.querySelector('[data-surveyor-action="trench"]').click(); };
-  for (const strip of fieldTools.querySelectorAll('[data-soil-strip]')) {
-    listen(strip, 'click', () => { if (suppressStripClick) { suppressStripClick = false; return; } if (!strip.disabled) dig(); });
-    listen(strip, 'pointerdown', event => { stripDrag = event.clientX; strip.setPointerCapture(event.pointerId); });
-    listen(strip, 'pointerup', event => { if (stripDrag !== null && Math.abs(event.clientX - stripDrag) > 24 && !strip.disabled) { suppressStripClick = true; dig(); event.preventDefault(); setTimeout(() => { suppressStripClick = false; }, 0); } stripDrag = null; });
-    listen(strip, 'pointercancel', () => { stripDrag = null; });
-  }
   const syncSoil = () => {
-    patch = surveyor.dataset.surveyorSelectedPatch || 'a';
-    force = Number(surveyor.dataset.surveyorSelectedForce || 1);
-    probe.style.setProperty('--probe-pull', `${(force - 1) * 17}px`);
-    fieldTools.querySelector('[data-probe-force]').textContent = String(force);
-    excavated = Number(surveyor.dataset.surveyorDigs || 0);
-    fieldTools.dataset.patch = patch;
-    fieldTools.querySelectorAll('[data-soil-strip]').forEach((button, i) => { button.disabled = i < excavated; button.classList.toggle('is-excavated', i < excavated); });
-    const source = surveyor.querySelector('[data-surveyor-probe-readout]');
+    fieldTools.dataset.patch = surveyor.dataset.surveyorSelectedPatch || 'a';
+    const probe = surveyor.querySelector('[data-surveyor-probe-readout]');
+    const trench = surveyor.querySelector('[data-surveyor-trench-readout]');
     const output = fieldTools.querySelector('.soil-measurement');
-    if (output.textContent !== source.textContent) output.textContent = source.textContent;
+    const next = [probe?.textContent, trench?.textContent].filter(Boolean).join(' ');
+    if (next && output.textContent !== next) output.textContent = next;
   };
   const soilObserver = new MutationObserver(syncSoil);
   soilObserver.observe(surveyor, { attributes: true, attributeFilter: ['data-surveyor-selected-patch', 'data-surveyor-selected-force', 'data-surveyor-digs'] });
   soilObserver.observe(surveyor.querySelector('[data-surveyor-probe-readout]'), { childList: true, characterData: true, subtree: true });
+  soilObserver.observe(surveyor.querySelector('[data-surveyor-trench-readout]'), { childList: true, characterData: true, subtree: true });
   disposers.push(() => soilObserver.disconnect());
   syncSoil();
   return { dispose() { disposers.forEach(dispose => dispose()); } };

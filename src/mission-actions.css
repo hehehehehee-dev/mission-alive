@@ -7,6 +7,12 @@
 .mission-direction-compact { margin-bottom: 12px; padding-bottom: 10px; }
 .mission-direction-compact h4 { margin-bottom: 4px; font-size: 1.05rem; }
 .mission-direction-compact p { margin: 4px 0; }
+.surveyor-simple-tools { margin-top: 14px; padding: 16px; border: 1px solid #647987; border-radius: 6px; background: #122531; }
+.surveyor-simple-tools .soil-tool-title { margin: 0 0 4px; color: #f0c88b; font-weight: 700; }
+.surveyor-simple-tools .soil-tool-help { margin: 0 0 12px; color: #c7d6df; font-size: .92rem; line-height: 1.45; }
+.surveyor-simple-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.surveyor-simple-actions button { min-height: 48px; }
+.surveyor-simple-actions button[data-soil-tool="reveal"] { border-color: #72c9d4; }
 .repair-assembly { display: grid; gap: 14px; }
 .repair-toolbox { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .repair-toolbox button { display: grid; gap: 8px; place-items: center; min-width: 0; min-height: 96px; padding: 12px 6px; touch-action: none; }
@@ -40,4 +46,4 @@
 .soil-measurement { padding: 10px 12px; background: #0c1822; border-left: 3px solid #9adce6; }
 .repair-toolbox button:focus-visible, .repair-drop:focus-visible, .soil-sweep button:focus-visible, .probe-pull:focus-visible { outline: 3px solid #b6e8ff; outline-offset: 3px; }
 body.high-contrast :is(.mission-direction, .repair-drop, .probe-station, .soil-measurement) { background: #000; border-color: #fff; color: #fff; }
-@media (max-width: 600px) { .mission-direction h4 { font-size: 1.125rem; } .repair-toolbox { gap: 6px; } .repair-toolbox button { font-size: .875rem; } }
+@media (max-width: 600px) { .mission-direction h4 { font-size: 1.125rem; } .repair-toolbox { gap: 6px; } .repair-toolbox button { font-size: .875rem; } .surveyor-simple-actions { grid-template-columns: 1fr 1fr; } .surveyor-simple-actions button[data-soil-tool="reveal"] { grid-column: 1 / -1; } }

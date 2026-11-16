@@ -65,12 +65,10 @@ export function mountMoonChallengeSteps(lrvRoot, surveyorRoot) {
   side.className = 'surveyor-step-controls';
   layout.append(side);
   const surveyorSteps = mountChallengeSteps(side, [
-    { title: '01 · Pick a spot', nodes: [surveyor.querySelector('.surveyor-site-controls')] },
-    { title: '02 · Press & dig', nodes: [fieldsets[0]] },
-    { title: '03 · Test the feet', nodes: [fieldsets[1], surveyor.querySelector('.surveyor-result')] },
+    { title: '01 · Find firm ground', nodes: [surveyor.querySelector('.surveyor-site-controls'), fieldsets[0]] },
+    { title: '02 · Make a safe landing', nodes: [fieldsets[1], surveyor.querySelector('.surveyor-result')] },
   ]);
   surveyor.querySelector('.surveyor-investigation-grid').remove();
-  collapseChallengeNotes(surveyor.querySelector('.surveyor-log'), 'Flight log');
   let assembled = false, evidence = false;
   const observer = new MutationObserver(() => {
     const nextAssembly = lrv.dataset.lrvAssembly === 'complete';
@@ -85,10 +83,7 @@ export function mountMoonChallengeSteps(lrvRoot, surveyorRoot) {
   });
   observer.observe(lrv, { attributes: true, attributeFilter: ['data-lrv-assembly'] });
   observer.observe(surveyor, { attributes: true, attributeFilter: ['data-surveyor-evidence'] });
-  const selectPatch = event => {
-    if (event.target.closest('button[data-surveyor-patch]')) surveyorSteps.unlock(1);
-    if (event.target.closest('[data-surveyor-action="restart"]')) { evidence = false; surveyorSteps.reset(); }
-  };
+  const selectPatch = event => { if (event.target.closest('[data-surveyor-action="restart"]')) { evidence = false; surveyorSteps.reset(); } };
   surveyor.addEventListener('click', selectPatch);
   // Apollo's second stage unlocks when the physical assembly puzzle is complete.
   // Surveyor keeps its stages browsable because learners compare evidence across them.

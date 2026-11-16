@@ -4,6 +4,12 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Turn Surveyor 3 into two clear games
+
+- Replaced the confusing three-stage learner flow with **Game 1: Find firm ground** and **Game 2: Make a safe landing**.
+- Game 1 now uses three explicit ground choices, Light test, Hard test, and one Reveal layer action. Game 2 uses Small feet, Wide feet, and Test this footprint.
+- Removed the visible drag probe and soil-strip controls while preserving the existing evidence model, 3D probe attachment, and stamp logic.
+
 ### Reduce Surveyor 3 reading load
 
 - Shortened the visible Surveyor 3 instructions to one action per step: pick, push, dig, test.
