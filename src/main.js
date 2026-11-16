@@ -767,7 +767,7 @@ function updateMissionProgress() {
 
 function briefingMarkup(id) {
   const briefing = briefings[id];
-  return `<div class="briefing-copy"><p class="eyebrow">BEFORE YOU TAKE CONTROL · ${briefing.label}</p><h2 id="briefing-title">${briefing.title}</h2><p>${briefing.summary}</p><a href="${facts[id].source_url}" target="_blank" rel="noopener">Learn from ${facts[id].source_title} ↗</a></div><div class="briefing-points">${briefing.points.map(([label, text]) => `<article><span>${label}</span><p>${text}</p></article>`).join("")}</div><div class="briefing-challenge"><div><strong>YOUR OBJECTIVE</strong><p>${briefing.challenge}</p></div><button id="begin-challenge">Go to challenge ↓</button></div>`;
+  return `<div class="briefing-copy"><p class="eyebrow">BEFORE YOU TAKE CONTROL · ${briefing.label}</p><h2 id="briefing-title">${briefing.title}</h2><p>${briefing.summary}</p><p class="briefing-training">${trainingBriefs[id]}</p><a href="${facts[id].source_url}" target="_blank" rel="noopener">Learn from ${facts[id].source_title} ↗</a></div><div class="briefing-challenge"><div><strong>YOUR OBJECTIVE</strong><p>${briefing.challenge}</p></div><button id="begin-challenge">Go to challenge ↓</button></div><details class="briefing-facts"><summary>Mission facts</summary><div class="briefing-points">${briefing.points.map(([label, text]) => `<article><span>${label}</span><p>${text}</p></article>`).join("")}</div></details>`;
 }
 
 const storyDialog = $("#exhibit-story-dialog");
@@ -1191,6 +1191,36 @@ function controls() {
   if (current === "webb")
     return `<p class="eyebrow">YOUR MISSION</p><h2>Bring the stars together.</h2><p>Drag both folded mirror wings away from the center, then align the scattered star images.</p>${challengeIncidentMarkup("webb")}<div class="webb-step"><strong>01 · DRAG THE MIRROR OPEN</strong><p class="fine">Pull the gold LEFT and RIGHT mirror wings toward their matching outer brackets.</p><div class="webb-deploy-field" id="webb-deploy-field" aria-label="Mirror wing deployment field"><span class="webb-deploy-rail" aria-hidden="true"></span><span class="webb-deploy-core" aria-hidden="true"></span><button class="webb-wing-handle is-left" data-wing="left" aria-label="Left mirror wing, folded. Drag left or use arrow keys"><span>⬡</span><small>LEFT</small></button><button class="webb-wing-handle is-right" data-wing="right" aria-label="Right mirror wing, folded. Drag right or use arrow keys"><span>⬡</span><small>RIGHT</small></button></div></div><div class="webb-step" id="webb-focus-step" hidden><strong>02 · ALIGN THE IMAGES</strong><p class="fine">Drag each light point into the gold target circle (CROSSHAIR) and it will snap to focus. Arrow keys now move in 5% steps.</p><div class="webb-focus-field" id="webb-focus-field" aria-label="Star alignment field"><span class="webb-focus-grid" aria-hidden="true"></span><span class="webb-focus-target" aria-hidden="true"></span><button class="webb-star" data-star="0" aria-label="Star image A. Drag to the center or use arrow keys">A</button><button class="webb-star" data-star="1" aria-label="Star image B. Drag to the center or use arrow keys">B</button><button class="webb-star" data-star="2" aria-label="Star image C. Drag to the center or use arrow keys">C</button></div><output class="webb-focus-count" id="webb-focus-count">0 / 3 images focused</output></div><p class="fine" id="webb-state" role="status">Drag the left and right mirror wings outward.</p><p class="fine">This challenge simplifies Webb’s mirror alignment. The real observatory also deployed its five-layer sunshield and other structures.</p>`;
   return `<p class="eyebrow">YOUR MISSION</p><h2>Listen, then answer.</h2><p>Hear a message from Earth if you want. Send your own written or recorded greeting to earn the Voyager stamp. No microphone is required.</p>${challengeIncidentMarkup("voyager")}<ol class="voyager-objectives" aria-label="Voyager mission objectives"><li data-voyager-step="listen">Hear Earth <span class="optional-label">optional</span></li><li data-voyager-step="greeting">Send your own message <span class="required-label">required for the stamp</span></li></ol><div class="record-views" role="group" aria-label="Choose an artifact to view"><button data-record-face="front" aria-pressed="true">Record front</button><button data-record-face="cover" aria-pressed="false">Protective cover</button></div><p class="fine" id="record-caption">${recordArtifacts.front.caption}</p><a class="record-credit" id="record-source" href="${recordArtifacts.front.source}" target="_blank" rel="noopener">Photo: ${recordCredit}</a><label for="record">Turn the Golden Record <span class="optional-label">optional</span></label><input id="record" type="range" min="0" max="360" value="0"><div class="voyager-listen-actions" role="group" aria-label="Voyager message actions"><button id="open-greetings">Hear Earth</button><button class="primary" id="open-your-record">Send yours</button></div><p class="fine">NASA’s 1977 greetings and today’s visitor voices stay together below. Your own greeting is the mission action.</p><section class="voyager-live" aria-labelledby="voyager-live-heading"><p class="eyebrow" id="voyager-live-heading">DISTANCE FROM EARTH · LIVE ESTIMATE</p><output class="readout" id="voyager-live-distance">Awaiting mission data…</output><span id="voyager-live-light-time">${lightDayLink()}</span><p class="fine" id="voyager-live-status" role="status">Checking mission data…</p><a class="fine" href="https://ssd-api.jpl.nasa.gov/doc/horizons.html" target="_blank" rel="noopener">How this estimate works ↗</a></section><label for="distance">Imagine the journey outward <span class="optional-label">optional</span></label><input id="distance" type="range" min="0" max="100" value="0"><p class="fine">Projected milestone · 18 NOV 2026<span class="readout">${facts.distance.value} billion km</span>One-way signal time: ${facts.distance.signal_hours} hours.<br>NASA projection, not live telemetry.</p>`;
+}
+function condenseControlCopy(id) {
+  const root = $("#controls");
+  if (!root) return;
+  const heading = root.querySelector("h2");
+  const intro = heading?.nextElementSibling?.matches("p") ? heading.nextElementSibling : null;
+  if (id === "curiosity") {
+    if (heading) heading.textContent = t("Drive → drill → uplink.");
+    if (intro) intro.textContent = t("Reach the cyan outcrop, drill a sample, then send the data to Earth.");
+    root.querySelectorAll("[data-field-step]").forEach((item, index) => {
+      item.textContent = t(["Survey outcrop", "Drill rock", "Uplink data"][index]) || item.textContent;
+    });
+    const guidance = root.querySelector("#mission-guidance");
+    if (guidance) guidance.textContent = t("Drive to the cyan outcrop.");
+    const status = root.querySelector("#program-status");
+    if (status) status.textContent = t("Choose blocks, then Run.");
+  }
+  if (id === "webb") {
+    root.querySelector(".mission-incident")?.remove();
+    if (heading) heading.textContent = t("Open → focus → reveal.");
+    if (intro) intro.textContent = t("Open the wings, join the stars, then look through infrared.");
+  }
+  if (id === "voyager") {
+    root.querySelector(".mission-incident")?.remove();
+    if (heading) heading.textContent = t("Send a hello from Earth.");
+    if (intro) intro.textContent = t("Hear one voice, then send yours. Writing is enough; a microphone is optional.");
+    const reply = root.querySelector('[data-voyager-step="greeting"]');
+    if (reply) reply.firstChild.textContent = `${t("Send yours")} `;
+    root.querySelector(".voyager-listen-actions")?.setAttribute("aria-label", t("Choose how to continue"));
+  }
 }
 function bindHold(el, on, off) {
   el.onpointerdown = (e) => {
@@ -2440,7 +2470,11 @@ async function render(id) {
   updateBackgroundCredit(id);
   $("#lobby").hidden = true;
   $("#teachers-page").hidden = true;
-  nav.hidden = false;
+  // The lobby map is the single mission picker. Keeping the six-card switcher
+  // on every exhibit duplicated the same choice and pushed the actual mission
+  // below the fold, especially on phones. The header link still returns to the
+  // map, and progress remains available through the passport.
+  nav.hidden = true;
   $(".exhibit").hidden = false;
   $("#discovery").hidden = false;
   if (enteringExhibit) window.scrollTo({ top: 0, behavior: "instant" });
@@ -2580,6 +2614,7 @@ async function render(id) {
     : "Drag or arrow keys to orbit · Scroll or +/− to zoom · 0 resets";
   $("#controls").innerHTML =
     controls() + learningMarkup(id) + '<button class="secondary" id="reset">Reset exhibit</button>';
+  condenseControlCopy(id);
   const missionHeading = $("#controls h2");
   const missionIntro = missionHeading?.nextElementSibling?.matches("p")
     ? missionHeading.nextElementSibling

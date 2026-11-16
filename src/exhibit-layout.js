@@ -125,7 +125,15 @@ export function mountExhibitLayout(id) {
     archive.open = true;
     move(archive, story);
   }
-  for (const selector of ["#module-training", "#briefing"]) move(find(selector), brief);
+  move(find("#module-training"), brief);
+  // The one-line training frame now lives inside the compact briefing copy.
+  // Keep the original node for lifecycle restoration, but do not show it as
+  // a second card with the same mission explanation.
+  const training = find("#module-training");
+  const trainingWasHidden = training?.hidden;
+  if (training) training.hidden = true;
+  if (training) restored.push(() => { training.hidden = trainingWasHidden; });
+  move(find("#briefing"), brief);
   story.append(brief);
   if (id === "webb") {
     const controlIntro = create("div", { class: "webb-control-intro" });

@@ -33,9 +33,11 @@ export function mountMissionDirections(id) {
   const find = selector => document.querySelector(selector);
   find('#controls')?.querySelectorAll('.mission-incident').forEach(node => node.remove());
   const locations = {
-    curiosity: [['#program-workspace', 'curiosity']],
+    // Curiosity and Webb already show their active action beside the game.
+    // Adding another direction card here repeats the same instruction.
+    curiosity: [],
     ingenuity: [], // The flight deck gives the active instruction beside the 3D model.
-    webb: [['#webb-deploy-step', 'webbOpen'], ['#webb-focus-step', 'webbFocus'], ['#webb-infrared-step', 'webbInfrared']],
+    webb: [],
     // Voyager's objective, player caption and studio intro already give these
     // instructions. A second pair of instruction cards repeats the same task.
     voyager: [],

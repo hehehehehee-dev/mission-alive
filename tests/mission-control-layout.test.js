@@ -30,3 +30,9 @@ test('a failed Ingenuity landing has visible 3D damage instead of only text feed
   assert.match(scene, /rotors\[0\]\.rotation\.z/);
   assert.match(scene, /st\.crashed \? \.96 : 0/);
 });
+
+test('exhibits keep the lobby map as the single mission picker', () => {
+  assert.match(main, /nav\.hidden = true;/);
+  assert.match(main, /class="briefing-facts"/);
+  assert.match(styles, /\.briefing-facts\s*\{/);
+});

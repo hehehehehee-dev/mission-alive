@@ -4,6 +4,13 @@ Claude and other collaborators should read this file after `CLAUDE.md`. Every pr
 
 ## 2026-11-15
 
+### Reduce mission reading load
+
+- Kept the lobby journey map as the single mission picker and hid the repeated six-card switcher on exhibit pages, leaving the header Home link and passport as the return path.
+- Folded the repeated training sentence into the opening briefing, moved longer mission facts behind one **Mission facts** disclosure, and removed duplicate Curiosity/Webb direction cards.
+- Shortened the active Curiosity, Webb, and Voyager control copy, tightened spacing, and kept the six-mission stamp flow unchanged.
+- Added EN/ES/VI strings and a regression check for the single-picker layout.
+
 ### Turn Surveyor 3 into two clear games
 
 - Replaced the confusing three-stage learner flow with **Game 1: Find firm ground** and **Game 2: Make a safe landing**.

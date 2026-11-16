@@ -1358,12 +1358,12 @@ aside {
 .story-controls button { border-color: #ffffff35; }
 .story-controls button:last-child { border-color: var(--accent); color: var(--accent); }
 .mission-briefing {
-  min-height: 520px;
+  min-height: 0;
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.35fr);
-  gap: 34px 64px;
-  align-content: center;
-  padding: 70px 0;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr);
+  gap: 24px 42px;
+  align-content: start;
+  padding: 34px 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
@@ -1380,8 +1380,16 @@ aside {
 }
 .briefing-copy > p:not(.eyebrow) {
   max-width: 620px;
-  color: #bcc6cd;
-  line-height: 1.75;
+  color: #c7d1d7;
+  line-height: 1.55;
+  margin: 12px 0;
+}
+.briefing-copy .briefing-training {
+  padding-left: 14px;
+  border-left: 2px solid var(--accent);
+  color: #f0e5d2;
+  font-size: .92rem;
+  line-height: 1.5;
 }
 .briefing-copy > a {
   font-size: 0.76rem;
@@ -1391,6 +1399,19 @@ aside {
   display: grid;
   gap: 10px;
 }
+.briefing-facts {
+  grid-column: 1 / -1;
+  border-top: 1px solid #ffffff17;
+  padding-top: 12px;
+}
+.briefing-facts > summary {
+  width: fit-content;
+  padding: 6px 0;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 700;
+}
+.briefing-facts > .briefing-points { margin-top: 12px; }
 .briefing-points article {
   display: grid;
   grid-template-columns: 72px 1fr;
@@ -1413,13 +1434,11 @@ aside {
   line-height: 1.65;
 }
 .briefing-challenge {
-  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 30px;
-  padding-top: 24px;
-  border-top: 1px solid #ffffff17;
+  padding: 14px 0 0;
 }
 .briefing-challenge strong {
   color: var(--accent);
@@ -1437,7 +1456,7 @@ aside {
   border-color: var(--accent);
 }
 .challenge-heading {
-  padding: 85px 0 18px;
+  padding: 42px 0 18px;
   scroll-margin-top: 20px;
 }
 .challenge-heading h2 {
@@ -1948,7 +1967,7 @@ body[data-exhibit="voyager"] .voyager-main .voyager-arrival { margin-top: 26px; 
 @media (prefers-reduced-motion: reduce) { body:not(.motion-allowed) .signal-beam i.is-sent { animation: none; width: 100%; } }
 .field-mission {
   margin-top: 14px;
-  padding: 13px;
+  padding: 11px;
   border: 1px solid #46535d;
   border-radius: 7px;
   background: #0a1117;
@@ -1969,7 +1988,7 @@ body[data-exhibit="voyager"] .voyager-main .voyager-arrival { margin-top: 26px; 
   padding: 7px 8px 7px 31px;
   border-left: 2px solid #39454e;
   color: #78858d;
-  font: 0.66rem/1.35 monospace;
+  font: 0.72rem/1.35 monospace;
   counter-increment: field-mission;
 }
 .field-mission li::before {
@@ -1992,7 +2011,7 @@ body[data-exhibit="voyager"] .voyager-main .voyager-arrival { margin-top: 26px; 
   float: right;
 }
 .field-mission #mission-guidance {
-  min-height: 30px;
+  min-height: 0;
   margin: 11px 0 7px;
   color: var(--accent);
   font: 0.67rem/1.45 monospace;
@@ -2711,20 +2730,21 @@ dialog a {
 }
 .voyager-objectives {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
-  margin: 16px 0 20px;
+  margin: 12px 0 16px;
   padding: 0;
   list-style: none;
   counter-reset: voyager-step;
 }
 .voyager-objectives li {
   counter-increment: voyager-step;
-  padding: 10px 12px;
+  padding: 9px 10px;
   border: 1px solid rgba(196, 174, 114, 0.25);
   border-radius: 8px;
   color: #bec8ce;
   background: rgba(16, 27, 38, 0.65);
-  font: 0.73rem/1.35 monospace;
+  font: 0.72rem/1.3 monospace;
 }
 .voyager-objectives li::before {
   content: "0" counter(voyager-step) " · ";
@@ -3451,6 +3471,7 @@ body[data-exhibit="voyager"] {
   }
 }
 @media (max-width: 680px) {
+  .voyager-objectives { grid-template-columns: 1fr; }
   .certificate-maker > div { flex-direction: column; }
   .machine-story-section { padding: 52px 0; }
   .machine-story-reader { padding: 14px; }
@@ -3689,7 +3710,7 @@ body[data-exhibit="voyager"] {
   .mission-briefing {
     grid-template-columns: 1fr;
     min-height: 0;
-    padding: 60px 0;
+    padding: 28px 0;
   }
   .briefing-challenge {
     flex-direction: column;
@@ -3699,7 +3720,7 @@ body[data-exhibit="voyager"] {
     width: 100%;
   }
   .challenge-heading {
-    padding-top: 65px;
+    padding-top: 38px;
   }
   .challenge-layout {
     display: flex;
